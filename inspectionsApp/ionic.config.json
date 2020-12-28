@@ -1,0 +1,7 @@
+{
+  "name": "inspections",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
