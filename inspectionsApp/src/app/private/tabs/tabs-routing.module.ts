@@ -20,9 +20,11 @@ const routes: Routes = [
           ),
       },
       {
-        path: "tab2",
+        path: "scheduling",
         loadChildren: () =>
-          import("../tab2/tab2.module").then((m) => m.Tab2PageModule),
+          import("../scheduling/scheduling.module").then(
+            (m) => m.SchedulingPageModule
+          ),
       },
       {
         path: "tab3",
