@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
-      import("./tabs/tabs.module").then((m) => m.TabsPageModule),
+      import("./private/tabs/tabs.module").then((m) => m.TabsPageModule),
   },
   {
     path: "login",
@@ -18,7 +18,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () =>
       import("./private/home/home.module").then((m) => m.HomePageModule),
-  },
+  }
+  
 ];
 @NgModule({
   imports: [

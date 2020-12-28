@@ -6,11 +6,7 @@ const routes: Routes = [
     path: "home",
     loadChildren: () =>
       import("./home/home.module").then((m) => m.HomePageModule),
-  },
-  {
-    path: 'pending-inspections',
-    loadChildren: () => import('./pending-inspections/pending-inspections.module').then( m => m.PendingInspectionsPageModule)
-  },
+  }
 ];
 
 @NgModule({
