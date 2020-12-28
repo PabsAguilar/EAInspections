@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { fromEventPattern } from "rxjs";
 
 @Component({
   selector: "app-scheduling",
@@ -7,9 +8,20 @@ import { FormBuilder, FormControl, Validators } from "@angular/forms";
   styleUrls: ["./scheduling.page.scss"],
 })
 export class SchedulingPage implements OnInit {
+  today = new Date();
+  minDate: string = this.formatDate(this.today);
+  maxDate: string = this.formatDate(
+    this.today.setFullYear(this.today.getFullYear() + 1)
+  );
+
+  selectedDate = new Date();
+
   constructor(public formBuilder: FormBuilder) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.minDate);
+    console.log(this.maxDate);
+  }
 
   validations_form = this.formBuilder.group({
     email: new FormControl(
@@ -54,6 +66,15 @@ export class SchedulingPage implements OnInit {
     ],
   };
 
+  formatDate(date) {
+    let d = new Date(date),
+      day = "" + d.getDate(),
+      month = "" + (d.getMonth() + 1),
+      year = d.getFullYear();
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+    return [year, month, day].join("-");
+  }
   onSubmit(values) {
     if (true) {
       console.log(values);

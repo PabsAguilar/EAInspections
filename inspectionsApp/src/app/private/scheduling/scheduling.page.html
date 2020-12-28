@@ -252,6 +252,8 @@
     <ion-item>
       <ion-label>Select date</ion-label>
       <ion-datetime
+        [min]="minDate"
+        [max]="maxDate"
         formControlName="date"
         class="form-controll"
         placeholder="Select Date"
