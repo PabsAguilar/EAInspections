@@ -7,6 +7,11 @@ const routes: Routes = [
     path: "tabs",
     component: TabsPage,
     children: [
+      // {
+      //   path: "tab1",
+      //   loadChildren: () =>
+      //     import("../tab1/tab1.module").then((m) => m.Tab1PageModule),
+      // },
       {
         path: "pending-inspections",
         loadChildren: () =>
@@ -26,7 +31,7 @@ const routes: Routes = [
       },
       {
         path: "",
-        redirectTo: "../pending-inspections",
+        redirectTo: "/tabs/pending-inspections",
         pathMatch: "full",
       },
     ],

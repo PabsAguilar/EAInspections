@@ -7,12 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { PendingInspectionsPageRoutingModule } from './pending-inspections-routing.module';
 
 import { PendingInspectionsPage } from './pending-inspections.page';
+import { ExploreContainerComponentModule } from 'src/app/explore-container/explore-container.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    ExploreContainerComponentModule,
     PendingInspectionsPageRoutingModule
   ],
   declarations: [PendingInspectionsPage]
