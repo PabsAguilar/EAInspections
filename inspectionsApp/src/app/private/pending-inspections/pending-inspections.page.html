@@ -1,9 +1,100 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>pending-inspections</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title> Pending Inspections</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content
+  ><ion-list>
+    <ion-list-header><p>{{today | date}}</p></ion-list-header>
+    <ion-item-sliding>
+      <ion-item-options side="end">
+        <ion-item-option (click)="create(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #041e66"
+            name="create-outline"
+          ></ion-icon
+        ></ion-item-option>
+        <ion-item-option (click)="call(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #04660c"
+            name="call-outline"
+          ></ion-icon
+        ></ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <div class="ion-text-center">
+          <ion-icon style="font-size: large" name="time-outline"></ion-icon>
+          <ion-label><p>9:10 AM</p></ion-label>
+        </div>
+        <div style="padding-left: 15px">
+          <ion-label>
+            <h2>Finn Willson</h2>
+            <h3>Environmental Inspection</h3>
+            <p>12529 State Road 535. Orlando FL 32836</p>
+          </ion-label>
+        </div>
+      </ion-item>
+    </ion-item-sliding>
 
+    <ion-item-sliding>
+      <ion-item-options side="end">
+        <ion-item-option (click)="create(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #041e66"
+            name="create-outline"
+          ></ion-icon
+        ></ion-item-option>
+        <ion-item-option (click)="call(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #04660c"
+            name="call-outline"
+          ></ion-icon
+        ></ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <div class="ion-text-center">
+          <ion-icon style="font-size: large" name="time-outline"></ion-icon>
+          <ion-label><p>10:15 AM</p></ion-label>
+        </div>
+        <div style="padding-left: 15px">
+          <ion-label>
+            <h2>Abraham Wong</h2>
+            <h3>Enviromental Inspection</h3>
+            <p>2855 South Orange Ave Orlando FL 32806</p>
+          </ion-label>
+        </div>
+      </ion-item>
+    </ion-item-sliding>
+
+    <ion-item-sliding>
+      <ion-item-options side="end">
+        <ion-item-option (click)="create(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #041e66"
+            name="create-outline"
+          ></ion-icon
+        ></ion-item-option>
+        <ion-item-option (click)="call(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #04660c"
+            name="call-outline"
+          ></ion-icon
+        ></ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <div class="ion-text-center">
+          <ion-icon style="font-size: large" name="time-outline"></ion-icon>
+          <ion-label><p>12:30 PM</p></ion-label>
+        </div>
+        <div style="padding-left: 15px">
+          <ion-label>
+            <h2>Contact Name</h2>
+            <h3>Inspection Type</h3>
+            <p>Service Address....</p>
+          </ion-label>
+        </div>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>
