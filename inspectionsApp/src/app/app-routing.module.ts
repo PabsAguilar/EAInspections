@@ -5,8 +5,8 @@ import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 const routes: Routes = [
   {
     path: "",
-    loadChildren: () =>
-      import("./private/tabs/tabs.module").then((m) => m.TabsPageModule),
+    redirectTo: "login",
+    pathMatch: "full",
   },
   {
     path: "login",
@@ -14,12 +14,11 @@ const routes: Routes = [
       import("./public/login/login.module").then((m) => m.LoginPageModule),
   },
   {
-    path: "home",
+    path: "menu",
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import("./private/home/home.module").then((m) => m.HomePageModule),
-  }
-  
+      import("./private/menu/menu.module").then((m) => m.MenuPageModule),
+  },
 ];
 @NgModule({
   imports: [

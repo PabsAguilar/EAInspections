@@ -22,6 +22,11 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {}
 
+  ionViewDidEnter() {
+ 
+  }
+  email: string = "";
+  password: string = "";
   validations_form = this.formBuilder.group({
     username: new FormControl(
       "",

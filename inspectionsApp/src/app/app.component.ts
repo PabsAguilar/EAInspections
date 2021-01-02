@@ -16,22 +16,25 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private authenticationService: AuthenticationService,
+    private auth: AuthenticationService,
     private router: Router
   ) {
     this.initializeApp();
   }
-
+  userWantsToLogout() {
+    //this.router.navigate(["login"]);
+    this.auth.logout();
+  }
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
-      this.authenticationService.authenticationState.subscribe((state) => {
+      this.auth.authenticationState.subscribe((state) => {
         if (state) {
-          this.router.navigate(["tabs"]);
+          this.router.navigate(["/menu/tabs"]);
         } else {
-          this.router.navigate(["login"]);
+          this.router.navigate(["/login"]);
         }
       });
     });

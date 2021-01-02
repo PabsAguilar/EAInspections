@@ -8,7 +8,6 @@ import { PendingInspectionsPageRoutingModule } from "./pending-inspections-routi
 
 import { PendingInspectionsPage } from "./pending-inspections.page";
 import { ExploreContainerComponentModule } from "src/app/explore-container/explore-container.module";
-import { CallNumber } from "@ionic-native/call-number/ngx";
 
 @NgModule({
   imports: [

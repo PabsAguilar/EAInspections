@@ -7,16 +7,18 @@ const routes: Routes = [
     path: "tabs",
     component: TabsPage,
     children: [
-      // {
-      //   path: "tab1",
-      //   loadChildren: () =>
-      //     import("../tab1/tab1.module").then((m) => m.Tab1PageModule),
-      // },
       {
         path: "pending-inspections",
         loadChildren: () =>
           import("../pending-inspections/pending-inspections.module").then(
             (m) => m.PendingInspectionsPageModule
+          ),
+      },
+      {
+        path: "pending-inspections/details",
+        loadChildren: () =>
+          import("../inspections-details/inspections-details.module").then(
+            (m) => m.InspectionsDetailsPageModule
           ),
       },
       {
@@ -31,16 +33,11 @@ const routes: Routes = [
         loadChildren: () =>
           import("../tab3/tab3.module").then((m) => m.Tab3PageModule),
       },
-      {
-        path: "",
-        redirectTo: "/tabs/pending-inspections",
-        pathMatch: "full",
-      },
     ],
   },
   {
     path: "",
-    redirectTo: "/tabs/pending-inspections",
+    redirectTo: "tabs/pending-inspections",
     pathMatch: "full",
   },
 ];

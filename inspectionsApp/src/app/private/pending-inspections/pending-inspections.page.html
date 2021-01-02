@@ -1,15 +1,18 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title> Pending Inspections</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content
+<ion-content fullscreen content-id="main-content"
   ><ion-list>
     <ion-list-header><p>{{today | date}}</p></ion-list-header>
     <ion-item-sliding>
       <ion-item-options side="end">
-        <ion-item-option (click)="create(item)" color="white">
+        <ion-item-option (click)="startInspection(item)" color="white">
           <ion-icon
             style="font-size: xx-large; color: #041e66"
             name="create-outline"
@@ -21,8 +24,14 @@
             name="call-outline"
           ></ion-icon
         ></ion-item-option>
+        <ion-item-option (click)="seeDetails(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #665704"
+            name="book-outline"
+          ></ion-icon
+        ></ion-item-option>
       </ion-item-options>
-      <ion-item>
+      <ion-item (click)="presentActionSheet()">
         <div class="ion-text-center">
           <ion-icon style="font-size: large" name="time-outline"></ion-icon>
           <ion-label><p>9:10 AM</p></ion-label>
@@ -39,7 +48,7 @@
 
     <ion-item-sliding>
       <ion-item-options side="end">
-        <ion-item-option (click)="create(item)" color="white">
+        <ion-item-option (click)="startInspection(item)" color="white">
           <ion-icon
             style="font-size: xx-large; color: #041e66"
             name="create-outline"
@@ -51,8 +60,14 @@
             name="call-outline"
           ></ion-icon
         ></ion-item-option>
+        <ion-item-option (click)="seeDetails(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #665704"
+            name="book-outline"
+          ></ion-icon
+        ></ion-item-option>
       </ion-item-options>
-      <ion-item>
+      <ion-item (click)="presentActionSheet()">
         <div class="ion-text-center">
           <ion-icon style="font-size: large" name="time-outline"></ion-icon>
           <ion-label><p>10:15 AM</p></ion-label>
@@ -69,7 +84,7 @@
 
     <ion-item-sliding>
       <ion-item-options side="end">
-        <ion-item-option (click)="create(item)" color="white">
+        <ion-item-option (click)="startInspection(item)" color="white">
           <ion-icon
             style="font-size: xx-large; color: #041e66"
             name="create-outline"
@@ -81,8 +96,14 @@
             name="call-outline"
           ></ion-icon
         ></ion-item-option>
+        <ion-item-option (click)="seeDetails(item)" color="white">
+          <ion-icon
+            style="font-size: xx-large; color: #665704"
+            name="book-outline"
+          ></ion-icon
+        ></ion-item-option>
       </ion-item-options>
-      <ion-item>
+      <ion-item (click)="presentActionSheet()">
         <div class="ion-text-center">
           <ion-icon style="font-size: large" name="time-outline"></ion-icon>
           <ion-label><p>12:30 PM</p></ion-label>
