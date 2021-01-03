@@ -18,6 +18,7 @@ export class MenuPage implements OnInit {
   ngOnInit() {}
 
   pages = [{ title: "Workspace", url: "/menu/tabs" }];
+  
   userWantsToLogout() {
     this.authservice.logout();
   }

@@ -9,7 +9,9 @@
 
 <ion-content fullscreen content-id="main-content"
   ><ion-list>
+    <ion-searchbar></ion-searchbar>
     <ion-list-header><p>{{today | date}}</p></ion-list-header>
+
     <ion-item-sliding>
       <ion-item-options side="end">
         <ion-item-option (click)="startInspection(item)" color="white">
@@ -119,3 +121,22 @@
     </ion-item-sliding>
   </ion-list>
 </ion-content>
+
+<script>
+  const searchbar = document.querySelector("ion-searchbar");
+  const items = Array.from(document.querySelector("ion-list").children);
+  console.log("init");
+  searchbar.addEventListener("ionInput", handleInput);
+
+  function handleInput(event) {
+    const query = event.target.value.toLowerCase();
+    console.log(query);
+    requestAnimationFrame(() => {
+      console.log(item);
+      items.forEach((item) => {
+        const shouldShow = item.textContent.toLowerCase().indexOf(query) > -1;
+        item.style.display = shouldShow ? "block" : "none";
+      });
+    });
+  }
+</script>

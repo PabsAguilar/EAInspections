@@ -1,6 +1,6 @@
 import { Router } from "@angular/router";
 import { AuthenticationService } from "./services/authentication.service";
-import { Component } from "@angular/core";
+import { Component, NgZone } from "@angular/core";
 
 import { Platform } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
@@ -21,10 +21,7 @@ export class AppComponent {
   ) {
     this.initializeApp();
   }
-  userWantsToLogout() {
-    //this.router.navigate(["login"]);
-    this.auth.logout();
-  }
+
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();

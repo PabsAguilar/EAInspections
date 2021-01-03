@@ -1,35 +1,40 @@
-
-  <ion-menu side="start" contentId="main">
-    <ion-header class="card-background-page">
-      <ion-card>
-        <img src="../../../assets/images/b1.png" />
-        <div class="card-title">Inspections App</div>
-        <div class="card-subtitle">InspectorA@domain</div>
-        <div class="card-subtitle2">v1.1.1</div>
-      </ion-card>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
-          <ion-item
-            [routerLink]="page.url"
-            routerDirection="root"
-            [class.active-menu]="page.url.startsWith(activePath)"
-          >
-            {{page.title}}
-          </ion-item>
-        </ion-menu-toggle>
-      </ion-list>
-    </ion-content>
-    <ion-footer>
-      <ion-list>
-        <ion-item button (click)="userWantsToLogout()" menuClose>
-          <ion-icon name="power" slot="start"></ion-icon>
-          <ion-label>Sign out</ion-label>
+<ion-menu side="start" contentId="main">
+  <ion-header class="card-background-page">
+    <ion-card>
+      <img src="../../../assets/images/b1.png" />
+      <div class="card-title">Inspections App</div>
+      <div class="card-subtitle">InspectorA@domain</div>
+      <div class="card-subtitle2">v1.1.1</div>
+    </ion-card>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
+        <ion-item
+          class="clickable"
+          button
+          [routerLink]="page.url"
+          routerDirection="root"
+          [class.active-menu]="page.url.startsWith(activePath)"
+        >
+          {{page.title}}
         </ion-item>
-      </ion-list>
-    </ion-footer>
-  </ion-menu>
+      </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+  <ion-footer>
+    <ion-list>
+      <ion-item
+        button
+        (click)="userWantsToLogout()"
+        menuClose
+       
+      >
+        <ion-icon name="power" slot="start"></ion-icon>
+        <ion-label>Sign out</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-footer>
+</ion-menu>
 
-  <ion-router-outlet id="main" main></ion-router-outlet>
-
+<ion-router-outlet id="main" main></ion-router-outlet>
