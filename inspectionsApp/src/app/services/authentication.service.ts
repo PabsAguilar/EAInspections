@@ -2,7 +2,6 @@ import { Platform } from "@ionic/angular";
 import { Injectable } from "@angular/core";
 import { Storage } from "@ionic/storage";
 import { BehaviorSubject } from "rxjs";
-import { Router } from "@angular/router";
 
 const TOKEN_KEY = "auth-token";
 

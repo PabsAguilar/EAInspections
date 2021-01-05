@@ -9,6 +9,7 @@ import { PendingInspectionsPageRoutingModule } from "./pending-inspections-routi
 import { PendingInspectionsPage } from "./pending-inspections.page";
 import { ExploreContainerComponentModule } from "src/app/explore-container/explore-container.module";
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -16,8 +17,9 @@ import { ExploreContainerComponentModule } from "src/app/explore-container/explo
     IonicModule,
     ExploreContainerComponentModule,
     PendingInspectionsPageRoutingModule,
+    
   ],
-
+  providers: [Storage],
   declarations: [PendingInspectionsPage],
 })
 export class PendingInspectionsPageModule {}

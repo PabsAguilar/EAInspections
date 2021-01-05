@@ -7,136 +7,51 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen content-id="main-content"
-  ><ion-list>
-    <ion-searchbar></ion-searchbar>
-    <ion-list-header><p>{{today | date}}</p></ion-list-header>
+<ion-content fullscreen content-id="main-content" class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-    <ion-item-sliding>
+  <ion-list>
+    <!-- <ion-searchbar></ion-searchbar> -->
+    <ion-list-header> <p>{{today | date}}</p></ion-list-header>
+
+    <ion-item-sliding *ngFor="let task of inspectionTasks">
       <ion-item-options side="end">
-        <ion-item-option (click)="startInspection(item)" color="white">
+        <ion-item-option (click)="startInspection(task)" color="white">
           <ion-icon
             style="font-size: xx-large; color: #041e66"
             name="create-outline"
           ></ion-icon
         ></ion-item-option>
-        <ion-item-option (click)="call(item)" color="white">
+        <ion-item-option (click)="call(task)" color="white">
           <ion-icon
             style="font-size: xx-large; color: #04660c"
             name="call-outline"
           ></ion-icon
         ></ion-item-option>
-        <ion-item-option (click)="seeDetails(item)" color="white">
+        <ion-item-option (click)="seeDetails(task)" color="white">
           <ion-icon
             style="font-size: xx-large; color: #665704"
             name="book-outline"
           ></ion-icon
         ></ion-item-option>
       </ion-item-options>
-      <ion-item (click)="presentActionSheet()">
+      <ion-item (click)="presentActionSheet(task)">
         <div class="ion-text-center">
           <ion-icon style="font-size: large" name="time-outline"></ion-icon>
-          <ion-label><p>9:10 AM</p></ion-label>
+          <ion-label
+            ><p>{{task.scheduleDateTime | date: 'hh:mm a'}}</p></ion-label
+          >
         </div>
         <div style="padding-left: 15px">
           <ion-label>
-            <h2>Finn Willson</h2>
-            <h3>Environmental Inspection</h3>
-            <p>12529 State Road 535. Orlando FL 32836</p>
-          </ion-label>
-        </div>
-      </ion-item>
-    </ion-item-sliding>
-
-    <ion-item-sliding>
-      <ion-item-options side="end">
-        <ion-item-option (click)="startInspection(item)" color="white">
-          <ion-icon
-            style="font-size: xx-large; color: #041e66"
-            name="create-outline"
-          ></ion-icon
-        ></ion-item-option>
-        <ion-item-option (click)="call(item)" color="white">
-          <ion-icon
-            style="font-size: xx-large; color: #04660c"
-            name="call-outline"
-          ></ion-icon
-        ></ion-item-option>
-        <ion-item-option (click)="seeDetails(item)" color="white">
-          <ion-icon
-            style="font-size: xx-large; color: #665704"
-            name="book-outline"
-          ></ion-icon
-        ></ion-item-option>
-      </ion-item-options>
-      <ion-item (click)="presentActionSheet()">
-        <div class="ion-text-center">
-          <ion-icon style="font-size: large" name="time-outline"></ion-icon>
-          <ion-label><p>10:15 AM</p></ion-label>
-        </div>
-        <div style="padding-left: 15px">
-          <ion-label>
-            <h2>Abraham Wong</h2>
-            <h3>Enviromental Inspection</h3>
-            <p>2855 South Orange Ave Orlando FL 32806</p>
-          </ion-label>
-        </div>
-      </ion-item>
-    </ion-item-sliding>
-
-    <ion-item-sliding>
-      <ion-item-options side="end">
-        <ion-item-option (click)="startInspection(item)" color="white">
-          <ion-icon
-            style="font-size: xx-large; color: #041e66"
-            name="create-outline"
-          ></ion-icon
-        ></ion-item-option>
-        <ion-item-option (click)="call(item)" color="white">
-          <ion-icon
-            style="font-size: xx-large; color: #04660c"
-            name="call-outline"
-          ></ion-icon
-        ></ion-item-option>
-        <ion-item-option (click)="seeDetails(item)" color="white">
-          <ion-icon
-            style="font-size: xx-large; color: #665704"
-            name="book-outline"
-          ></ion-icon
-        ></ion-item-option>
-      </ion-item-options>
-      <ion-item (click)="presentActionSheet()">
-        <div class="ion-text-center">
-          <ion-icon style="font-size: large" name="time-outline"></ion-icon>
-          <ion-label><p>12:30 PM</p></ion-label>
-        </div>
-        <div style="padding-left: 15px">
-          <ion-label>
-            <h2>Contact Name</h2>
-            <h3>Inspection Type</h3>
-            <p>Service Address....</p>
+            <h2>{{task.contactName}}</h2>
+            <h3>{{task.inspectionType}}</h3>
+            <p>{{task.serviceAddress}}</p>
           </ion-label>
         </div>
       </ion-item>
     </ion-item-sliding>
   </ion-list>
 </ion-content>
-
-<script>
-  const searchbar = document.querySelector("ion-searchbar");
-  const items = Array.from(document.querySelector("ion-list").children);
-  console.log("init");
-  searchbar.addEventListener("ionInput", handleInput);
-
-  function handleInput(event) {
-    const query = event.target.value.toLowerCase();
-    console.log(query);
-    requestAnimationFrame(() => {
-      console.log(item);
-      items.forEach((item) => {
-        const shouldShow = item.textContent.toLowerCase().indexOf(query) > -1;
-        item.style.display = shouldShow ? "block" : "none";
-      });
-    });
-  }
-</script>
