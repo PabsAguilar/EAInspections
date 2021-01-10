@@ -20,16 +20,22 @@
           {{page.title}}
         </ion-item>
       </ion-menu-toggle>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item lines="none">
+          <ion-icon slot="start" name="moon"></ion-icon>
+          <ion-label> Toggle Dark Theme </ion-label>
+          <ion-toggle
+            (ionChange)="userWantsToChangeTheme($event)"
+            id="themeToggle"
+            slot="end"
+          ></ion-toggle>
+        </ion-item>
+      </ion-menu-toggle>
     </ion-list>
   </ion-content>
   <ion-footer>
     <ion-list>
-      <ion-item
-        button
-        (click)="userWantsToLogout()"
-        menuClose
-       
-      >
+      <ion-item button (click)="userWantsToLogout()" menuClose>
         <ion-icon name="power" slot="start"></ion-icon>
         <ion-label>Sign out</ion-label>
       </ion-item>

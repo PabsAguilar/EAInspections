@@ -1,5 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { AuthGuardTaskParam } from "src/app/guards/auth.guard-task-param";
+
 import { TabsPage } from "./tabs.page";
 
 const routes: Routes = [
@@ -14,13 +16,7 @@ const routes: Routes = [
             (m) => m.PendingInspectionsPageModule
           ),
       },
-      {
-        path: "pending-inspections/details",
-        loadChildren: () =>
-          import("../inspections-details/inspections-details.module").then(
-            (m) => m.InspectionsDetailsPageModule
-          ),
-      },
+    
       {
         path: "scheduling",
         loadChildren: () =>

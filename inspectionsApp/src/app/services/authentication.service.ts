@@ -4,6 +4,7 @@ import { Storage } from "@ionic/storage";
 import { BehaviorSubject } from "rxjs";
 
 const TOKEN_KEY = "auth-token";
+const THEME_KEY = "theme-style";
 
 @Injectable({
   providedIn: "root",
@@ -14,6 +15,7 @@ export class AuthenticationService {
   constructor(private storage: Storage, private plt: Platform) {
     this.plt.ready().then(() => {
       this.checkToken();
+      this.setTheme();
     });
   }
 
@@ -37,6 +39,16 @@ export class AuthenticationService {
     });
   }
 
+  setTheme() {
+    this.storage.get(THEME_KEY).then((res) => {
+      if (res) {
+        console.log("set theme" + res);
+        document.body.setAttribute("data-theme", res);
+      } else {
+        this.storage.set(THEME_KEY, "light");
+      }
+    });
+  }
   isAuthenticated() {
     return this.authenticationState.value;
   }

@@ -14,25 +14,32 @@
 
   <ion-list>
     <!-- <ion-searchbar></ion-searchbar> -->
-    <ion-list-header> <p>{{today | date}}</p></ion-list-header>
+    <ion-list-header>
+      <ion-item>
+        <ion-label> <p>Last Sync {{lastSync | date: 'MMMM dd, yyyy hh:mm a'}}</p></ion-label>
+      </ion-item>
+    </ion-list-header>
 
     <ion-item-sliding *ngFor="let task of inspectionTasks">
       <ion-item-options side="end">
         <ion-item-option (click)="startInspection(task)" color="white">
           <ion-icon
-            style="font-size: xx-large; color: #041e66"
+            color="primary"
+            style="font-size: xx-large"
             name="create-outline"
           ></ion-icon
         ></ion-item-option>
         <ion-item-option (click)="call(task)" color="white">
           <ion-icon
-            style="font-size: xx-large; color: #04660c"
+            color="success"
+            style="font-size: xx-large"
             name="call-outline"
           ></ion-icon
         ></ion-item-option>
         <ion-item-option (click)="seeDetails(task)" color="white">
           <ion-icon
-            style="font-size: xx-large; color: #665704"
+            color="secondary"
+            style="font-size: xx-large"
             name="book-outline"
           ></ion-icon
         ></ion-item-option>

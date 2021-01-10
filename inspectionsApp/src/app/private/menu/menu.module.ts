@@ -7,9 +7,15 @@ import { IonicModule } from "@ionic/angular";
 import { MenuPageRoutingModule } from "./menu-routing.module";
 
 import { MenuPage } from "./menu.page";
+import { IonicStorageModule } from "@ionic/storage";
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, MenuPageRoutingModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    MenuPageRoutingModule,
+  ],
   declarations: [MenuPage],
 })
 export class MenuPageModule {}

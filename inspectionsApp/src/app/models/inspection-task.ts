@@ -18,17 +18,20 @@ export class InspectionTask implements IStorageModel {
 /*
 [
   {
-    'repeat(5, 10)': {
+    'repeat(5, 30)': {
       id: '{{index()}}',
       scheduleDateTime:
       '{{moment(this.date( new Date(), new Date(2021, 1, 6))).format("LLLL")}}',
-      contactName: '{{firstName()}} {{surname()}}',
       name: {
         first: '{{firstName()}}',
         last: '{{surname()}}'
+      },     
+      contactName(tags) {
+        return `${this.name.first} ${this.name.last}`;
       },
+      
       serviceAddress:
-      '{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
+      '{{integer(100, 999)}} {{street()}}, {{random("Orlando", "Miami","Daytona Beach","Melbourne")}}, FL, {{integer(100, 10000)}}',
       contactPhone: '+1 {{phone()}}',
       company: '{{company().toUpperCase()}}',
       contactEmail(tags) {
@@ -37,14 +40,13 @@ export class InspectionTask implements IStorageModel {
         }${tags.domainZone()}`.toLowerCase();
       },
       
-      //contactEmail: string,
       referalPartnerContact: '{{firstName()}} {{surname()}}',
-      referalPartnerCompany(tags) {return  `${this.company}`},
+      referalPartnerCompany: '{{company().toUpperCase()}}',
       inspectorName: 'Inspector A',
       inspectorUserId: 25,      
       inspectionsInstructions: '{{lorem(1, "paragraphs")}}',
       inspectionType: '{{random("Environmental Inspection", "Comprehensive Inspection")}}'
-       ,
+       
     },
   },
 ]

@@ -1,4 +1,4 @@
-import { Router } from "@angular/router";
+import { NavigationStart, Router, RouterEvent } from "@angular/router";
 import { AuthenticationService } from "./services/authentication.service";
 import { Component, NgZone } from "@angular/core";
 
@@ -26,6 +26,8 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
+ 
 
       this.auth.authenticationState.subscribe((state) => {
         if (state) {

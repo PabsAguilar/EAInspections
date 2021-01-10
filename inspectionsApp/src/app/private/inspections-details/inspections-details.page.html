@@ -3,8 +3,89 @@
     <ion-buttons slot="start">
       <ion-back-button defaulthref=""> </ion-back-button>
     </ion-buttons>
-    <ion-title>inspections-details</ion-title>
+    <ion-title>Details </ion-title>
+    <ion-badge
+      slot="end"
+      [color]="task.inspectionType =='Environmental Inspection' ? 'environmental' : 'comprehensive'"
+      style="margin-right: 1em"
+      >{{task.inspectionType}}</ion-badge
+    >
   </ion-toolbar>
 </ion-header>
 
-<ion-content> {{task.id}} </ion-content>
+<ion-content>
+  <ion-card>
+    <ion-header>
+      <ion-item>
+        <ion-label> <p>{{task.scheduleDateTime}}</p></ion-label>
+      </ion-item>
+    </ion-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <h1 style="text-align: center">{{task.contactName}}</h1>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-row class="row-center">
+                <ion-label class="ion-text-center">
+                  <h2 style="text-align: center">{{task.contactPhone}}</h2>
+                </ion-label></ion-row
+              >
+              <ion-row class="row-center">
+                <ion-chip
+                  color="primary"
+                  (click)="email()"
+                  class="ion-text-center"
+                >
+                  <ion-icon name="mail-outline" color="primary"></ion-icon>
+                  <ion-label>{{task.contactEmail}}</ion-label>
+                </ion-chip>
+              </ion-row>
+              <ion-row class="row-center">
+                <ion-label class="ion-text-center">
+                  {{task.serviceAddress}}
+                </ion-label>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-label>
+        <h2>Inspection Instructions:</h2>
+      </ion-label>
+      <p>{{task.inspectionsInstructions}}</p>
+      <ion-item-divider></ion-item-divider>
+      <ion-label>
+        <h2>Referal Partner:</h2>
+      </ion-label>
+
+      <p>Contact: <strong>{{task.referalPartnerContact}}</strong></p>
+      <p></p>
+      <p>Company: <strong>{{task.referalPartnerCompany}}</strong></p>
+      <p></p>
+    </ion-card-content>
+
+    <ion-footer>
+      <ion-grid
+        ><ion-row>
+          <ion-col>
+            <ion-chip color="primary">
+              <ion-icon name="create-outline" color="primary"></ion-icon>
+              <ion-label>Start Inspection</ion-label>
+            </ion-chip></ion-col
+          >
+          <ion-col>
+            <ion-chip color="success" (click)="call()">
+              <ion-icon name="call" color="success"></ion-icon>
+              <ion-label>call ({{task.contactPhone}})</ion-label>
+            </ion-chip>
+          </ion-col>
+        </ion-row></ion-grid
+      >
+    </ion-footer>
+  </ion-card>
+</ion-content>

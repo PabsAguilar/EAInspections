@@ -3,7 +3,7 @@ import { NavigationExtras, Router } from "@angular/router";
 import { CallNumber } from "@ionic-native/call-number/ngx";
 import { ActionSheetController } from "@ionic/angular";
 import { InspectionTask } from "src/app/models/inspection-task";
-import { InspectionsService } from "src/app/services/inspections.service";
+import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
 @Component({
   selector: "app-pending-inspections",
@@ -12,30 +12,35 @@ import { InspectionsService } from "src/app/services/inspections.service";
 })
 export class PendingInspectionsPage implements OnInit {
   today = Date.now();
+  lastSync = Date.now();
   inspectionTasks = Array<InspectionTask>();
 
   constructor(
     public callNumber: CallNumber,
     public actionSheetController: ActionSheetController,
     public router: Router,
-    public inspectionService: InspectionsService
+    public inspectionStorageService: InspectionsStorageService
   ) {}
 
   async ionViewWillEnter() {
     //TODO: Validate connection to internet
-    this.inspectionTasks = await this.inspectionService.getAll();
+    this.inspectionTasks = await this.inspectionStorageService.getAll();
 
     if (this.inspectionTasks == null) {
-      this.inspectionService.syncExternal();
-      this.inspectionTasks = await this.inspectionService.getAll();
+      await this.inspectionStorageService.syncExternal();
+      this.inspectionTasks = await this.inspectionStorageService.getAll();
     }
+    this.lastSync = await this.inspectionStorageService.getSyncStamp();
     console.log(this.inspectionTasks);
+    console.log("lastSync: " + this.lastSync);
   }
   async doRefresh(event) {
     console.log("Pull Event Triggered!");
-    this.inspectionTasks = await this.inspectionService.getAll();
+    this.inspectionTasks = await this.inspectionStorageService.getAll();
     event.target.complete();
   }
+
+  ngOnInit() {}
 
   call(item: InspectionTask) {
     console.log("call " + item.contactPhone);
@@ -44,7 +49,6 @@ export class PendingInspectionsPage implements OnInit {
       .then((res) => console.log("Launched dialer!", res))
       .catch((err) => console.log("Error launching dialer", err));
   }
-  ngOnInit() {}
 
   async startInspection(task: InspectionTask) {
     console.log("Start clicked");
@@ -56,10 +60,7 @@ export class PendingInspectionsPage implements OnInit {
         task: task,
       },
     };
-    this.router.navigate(
-      ["menu/tabs/tabs/pending-inspections/details"],
-      navigationExtras
-    );
+    this.router.navigate(["menu/details"], navigationExtras);
   }
 
   async presentActionSheet(task: InspectionTask) {

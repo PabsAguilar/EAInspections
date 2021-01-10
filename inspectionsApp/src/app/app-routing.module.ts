@@ -1,15 +1,12 @@
 import { NgModule } from "@angular/core";
 import { AuthGuard } from "./guards/auth.guard";
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
+import { AuthGuardExternal } from "./guards/auth.guard-external";
 
 const routes: Routes = [
   {
-    path: "",
-    redirectTo: "login",
-    pathMatch: "full",
-  },
-  {
     path: "login",
+    canActivate: [AuthGuardExternal],
     loadChildren: () =>
       import("./public/login/login.module").then((m) => m.LoginPageModule),
   },

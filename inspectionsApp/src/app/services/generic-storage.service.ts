@@ -29,7 +29,7 @@ export class GenericStorageService implements IStorage {
         items.concat(newItems);
         return this.storage.set(this.collectionName, items);
       } else {
-        return this.storage.set(this.collectionName, [newItems]);
+        return this.storage.set(this.collectionName, newItems);
       }
     });
   }
@@ -47,6 +47,7 @@ export class GenericStorageService implements IStorage {
           newItems.push(i);
         }
       }
+
       return this.storage.set(this.collectionName, newItems);
     });
   }
