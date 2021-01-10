@@ -12,7 +12,8 @@
     <ion-row>
       <ion-col
         ><ion-icon
-          style="font-size: 70px; color: #021858"
+          color="primary"
+          style="font-size: 70px"
           name="person-circle-outline"
         ></ion-icon>
       </ion-col>
@@ -35,14 +36,10 @@
     <div class="validation-errors">
       <ng-container *ngFor="let validation of validation_messages.username">
         <div
-          style="color: red"
           *ngIf="validations_form.get('username').hasError(validation.type) && (validations_form.get('username').dirty || validations_form.get('username').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -59,14 +56,10 @@
     <div class="validation-errors">
       <ng-container *ngFor="let validation of validation_messages.password">
         <div
-          style="color: red"
           *ngIf="validations_form.get('password').hasError(validation.type) && (validations_form.get('password').dirty || validations_form.get('password').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>

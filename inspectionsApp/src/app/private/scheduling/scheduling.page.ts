@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { fromEventPattern } from "rxjs";
+import { Scheduling } from "src/app/models/scheduling";
+import { SchedulingStorageService } from "src/app/services/scheduling-storage.service";
 
 @Component({
   selector: "app-scheduling",
@@ -15,8 +17,12 @@ export class SchedulingPage implements OnInit {
   );
 
   selectedDate = new Date();
+  scheduling: Scheduling;
 
-  constructor(public formBuilder: FormBuilder) {}
+  constructor(
+    public formBuilder: FormBuilder,
+    public schedulingStorageService: SchedulingStorageService
+  ) {}
 
   ngOnInit() {
     console.log(this.minDate);
@@ -24,7 +30,7 @@ export class SchedulingPage implements OnInit {
   }
 
   validations_form = this.formBuilder.group({
-    email: new FormControl(
+    contactEmail: new FormControl(
       "",
       Validators.compose([
         Validators.minLength(5),
@@ -32,21 +38,45 @@ export class SchedulingPage implements OnInit {
         Validators.required,
       ])
     ),
-    firstname: new FormControl("", Validators.compose([Validators.required])),
-    lastname: new FormControl("", Validators.compose([Validators.required])),
-    phone: new FormControl("", Validators.compose([Validators.required])),
-    address: new FormControl("", Validators.compose([Validators.required])),
-    insurancecompany: new FormControl(
+    firstName: new FormControl("", Validators.compose([Validators.required])),
+    lastName: new FormControl("", Validators.compose([Validators.required])),
+    contactPhone: new FormControl(
       "",
       Validators.compose([Validators.required])
     ),
-    notes: new FormControl("", Validators.compose([Validators.required])),
-    employee: new FormControl("", Validators.compose([Validators.required])),
-    service: new FormControl("", Validators.compose([Validators.required])),
-    date: new FormControl("", Validators.compose([Validators.required])),
+    serviceAddress: new FormControl(
+      "",
+      Validators.compose([Validators.required])
+    ),
+    insuranceCompany: new FormControl(
+      "",
+      Validators.compose([Validators.required])
+    ),
+    notes: new FormControl(),
+    openClaims: new FormControl(),
+    inspectorName: new FormControl(
+      "",
+      Validators.compose([Validators.required])
+    ),
+    serviceType: new FormControl("", Validators.compose([Validators.required])),
+    scheduleDateTime: new FormControl(
+      "",
+      Validators.compose([Validators.required])
+    ),
   });
   validation_messages = {
-    username: [
+    firstName: [
+      { type: "required", message: "First Name is required." },
+      {
+        type: "minlength",
+        message: "First Name  must be at least 2 characters long.",
+      },
+      {
+        type: "pattern",
+        message: "Enter a valid email.",
+      },
+    ],
+    contactEmail: [
       { type: "required", message: "Email is required." },
       {
         type: "minlength",
@@ -57,13 +87,14 @@ export class SchedulingPage implements OnInit {
         message: "Enter a valid email.",
       },
     ],
-    password: [
-      { type: "required", message: "Password is required." },
-      {
-        type: "minlength",
-        message: "Password must be at least 5 characters long.",
-      },
+    lastName: [{ type: "required", message: "Last Name is required." }],
+    inspectorName: [{ type: "required", message: "Inspector is required." }],
+    contactPhone: [{ type: "required", message: "Phone is required." }],
+    serviceAddress: [{ type: "required", message: "Address is required." }],
+    insuranceCompany: [
+      { type: "required", message: "Insurance Company is required." },
     ],
+    serviceType: [{ type: "required", message: "Service is required." }],
   };
 
   formatDate(date) {
@@ -76,8 +107,9 @@ export class SchedulingPage implements OnInit {
     return [year, month, day].join("-");
   }
   onSubmit(values) {
-    if (true) {
-      console.log(values);
-    }
+    this.scheduling = values;
+    console.log(this.scheduling);
+    this.schedulingStorageService.add(this.scheduling);
+    this.validations_form.reset();
   }
 }

@@ -14,8 +14,7 @@ export class AuthenticationService {
 
   constructor(private storage: Storage, private plt: Platform) {
     this.plt.ready().then(() => {
-      this.checkToken();
-      this.setTheme();
+      this.checkToken(); 
     });
   }
 
@@ -46,6 +45,17 @@ export class AuthenticationService {
         document.body.setAttribute("data-theme", res);
       } else {
         this.storage.set(THEME_KEY, "light");
+      }
+    });
+  }
+
+  getTheme(): Promise<string> {
+    return this.storage.get(THEME_KEY).then((res) => {
+      if (res) {
+        return res.toString();
+      } else {
+        this.storage.set(THEME_KEY, "light");
+        return "light";
       }
     });
   }

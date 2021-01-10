@@ -14,6 +14,14 @@ export class MenuPage implements OnInit {
     private auth: AuthenticationService,
     private router: Router
   ) {
+    auth.getTheme().then((result) => {
+      if (result == "dark") {
+        this.darkMode = true;
+      } else {
+        this.darkMode = false;
+      }
+    });
+
     this.router.events.subscribe((event: RouterEvent) => {
       this.activePath = event.url;
     });
@@ -21,6 +29,7 @@ export class MenuPage implements OnInit {
   authservice = this.auth;
   activePath = "";
   ngOnInit() {}
+  darkMode: boolean;
 
   pages = [{ title: "Workspace", url: "/menu/tabs" }];
   userWantsToChangeTheme(event) {

@@ -17,23 +17,19 @@
     <ion-item lines="full">
       <ion-label position="floating">First Name</ion-label>
       <ion-input
-        formControlName="firstname"
+        formControlName="firstName"
         class="form-controll"
         type="text"
         required
       ></ion-input>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.firstname">
+      <ng-container *ngFor="let validation of validation_messages.firstName">
         <div
-          style="color: red"
-          *ngIf="validations_form.get('firstname').hasError(validation.type) && (validations_form.get('firstname').dirty || validations_form.get('firstname').touched)"
+          *ngIf="validations_form.get('firstName').hasError(validation.type) && (validations_form.get('firstName').dirty || validations_form.get('firstName').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+          <ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -42,23 +38,19 @@
     <ion-item lines="full">
       <ion-label position="floating">Last Name</ion-label>
       <ion-input
-        formControlName="lastname"
+        formControlName="lastName"
         class="form-controll"
         type="text"
         required
       ></ion-input>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.lastname">
+      <ng-container *ngFor="let validation of validation_messages.lastName">
         <div
-          style="color: red"
-          *ngIf="validations_form.get('lastname').hasError(validation.type) && (validations_form.get('lastname').dirty || validations_form.get('lastname').touched)"
+          *ngIf="validations_form.get('lastName').hasError(validation.type) && (validations_form.get('lastName').dirty || validations_form.get('lastName').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -66,23 +58,19 @@
     <ion-item lines="full">
       <ion-label position="floating">Phone</ion-label>
       <ion-input
-        formControlName="phone"
+        formControlName="contactPhone"
         class="form-controll"
-        type="text"
+        type="tel"
         required
       ></ion-input>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.phone">
+      <ng-container *ngFor="let validation of validation_messages.contactPhone">
         <div
-          style="color: red"
-          *ngIf="validations_form.get('phone').hasError(validation.type) && (validations_form.get('phone').dirty || validations_form.get('phone').touched)"
+          *ngIf="validations_form.get('contactPhone').hasError(validation.type) && (validations_form.get('contactPhone').dirty || validations_form.get('contactPhone').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -91,23 +79,19 @@
     <ion-item lines="full">
       <ion-label position="floating">Email</ion-label>
       <ion-input
-        formControlName="email"
+        formControlName="contactEmail"
         class="form-controll"
-        type="text"
+        type="email"
         required
       ></ion-input>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.email">
+      <ng-container *ngFor="let validation of validation_messages.contactEmail">
         <div
-          style="color: red"
-          *ngIf="validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)"
+          *ngIf="validations_form.get('contactEmail').hasError(validation.type) && (validations_form.get('contactEmail').dirty || validations_form.get('contactEmail').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -116,23 +100,21 @@
     <ion-item lines="full">
       <ion-label position="floating">Address</ion-label>
       <ion-input
-        formControlName="address"
+        formControlName="serviceAddress"
         class="form-controll"
         type="text"
         required
       ></ion-input>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.address">
+      <ng-container
+        *ngFor="let validation of validation_messages.serviceAddress"
+      >
         <div
-          style="color: red"
-          *ngIf="validations_form.get('address').hasError(validation.type) && (validations_form.get('address').dirty || validations_form.get('address').touched)"
+          *ngIf="validations_form.get('serviceAddress').hasError(validation.type) && (validations_form.get('serviceAddress').dirty || validations_form.get('serviceAddress').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -141,7 +123,7 @@
     <ion-item lines="full">
       <ion-label position="floating">Insurance Company</ion-label>
       <ion-input
-        formControlName="insurancecompany"
+        formControlName="insuranceCompany"
         class="form-controll"
         type="text"
         required
@@ -149,17 +131,13 @@
     </ion-item>
     <div class="validation-errors">
       <ng-container
-        *ngFor="let validation of validation_messages.insurancecompany"
+        *ngFor="let validation of validation_messages.insuranceCompany"
       >
         <div
-          style="color: red"
-          *ngIf="validations_form.get('insurancecompany').hasError(validation.type) && (validations_form.get('insurancecompany').dirty || validations_form.get('insurancecompany').touched)"
+          *ngIf="validations_form.get('insuranceCompany').hasError(validation.type) && (validations_form.get('insuranceCompany').dirty || validations_form.get('insuranceCompany').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -176,14 +154,10 @@
     <div class="validation-errors">
       <ng-container *ngFor="let validation of validation_messages.notes">
         <div
-          style="color: red"
           *ngIf="validations_form.get('notes').hasError(validation.type) && (validations_form.get('notes').dirty || validations_form.get('notes').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -192,7 +166,13 @@
     <ion-item lines="full">
       <ion-item>
         <ion-label>Open Claims</ion-label>
-        <ion-toggle slot="start" name="cherry" color="danger"></ion-toggle>
+        <ion-toggle
+          formControlName="openClaims"
+          class="form-controll"
+          slot="start"
+          name="cherry"
+          color="danger"
+        ></ion-toggle>
       </ion-item>
     </ion-item>
 
@@ -201,7 +181,7 @@
       <ion-label>Select Employee</ion-label>
       <ion-select
         interface="action-sheet"
-        formControlName="employee"
+        formControlName="inspectorName"
         class="form-controll"
       >
         <ion-select-option value="Inspector A">Inspector A</ion-select-option>
@@ -209,16 +189,14 @@
       </ion-select>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.employee">
+      <ng-container
+        *ngFor="let validation of validation_messages.inspectorName"
+      >
         <div
-          style="color: red"
-          *ngIf="validations_form.get('employee').hasError(validation.type) && (validations_form.get('employee').dirty || validations_form.get('employee').touched)"
+          *ngIf="validations_form.get('inspectorName').hasError(validation.type) && (validations_form.get('inspectorName').dirty || validations_form.get('inspectorName').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -228,7 +206,7 @@
       <ion-label>Select Service</ion-label>
       <ion-select
         interface="action-sheet"
-        formControlName="service"
+        formControlName="serviceType"
         class="form-controll"
       >
         <ion-select-option value="1"
@@ -237,16 +215,12 @@
       </ion-select>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.service">
+      <ng-container *ngFor="let validation of validation_messages.serviceType">
         <div
-          style="color: red"
-          *ngIf="validations_form.get('service').hasError(validation.type) && (validations_form.get('service').dirty || validations_form.get('service').touched)"
+          *ngIf="validations_form.get('serviceType').hasError(validation.type) && (validations_form.get('serviceType').dirty || validations_form.get('serviceType').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
@@ -257,22 +231,20 @@
       <ion-datetime
         [min]="minDate"
         [max]="maxDate"
-        formControlName="date"
+        formControlName="scheduleDateTime"
         class="form-controll"
         placeholder="Select Date"
       ></ion-datetime>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.date">
+      <ng-container
+        *ngFor="let validation of validation_messages.scheduleDateTime"
+      >
         <div
-          style="color: red"
-          *ngIf="validations_form.get('date').hasError(validation.type) && (validations_form.get('service').dirty || validations_form.get('date').touched)"
+          *ngIf="validations_form.get('scheduleDateTime').hasError(validation.scheduleDateTime) && (validations_form.get('scheduleDateTime').dirty || validations_form.get('scheduleDateTime').touched)"
         >
-          <ion-icon
-            style="color: red"
-            name="information-circle-outline"
-          ></ion-icon
-          >{{ validation.message }}
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
         </div>
       </ng-container>
     </div>
