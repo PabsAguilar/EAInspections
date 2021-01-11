@@ -13,6 +13,7 @@ export class InspectionTask implements IStorageModel {
   inspectorUserId: number;
   inspectionType: string;
   inspectionsInstructions: string;
+  internalStatus: string;
 }
 
 /*

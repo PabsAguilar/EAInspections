@@ -36,13 +36,51 @@ export class InspectionsStorageService implements IStorage {
     return this.genericStorage.delete(item);
   }
 
+  async getPendingInspections() {
+    var list = await this.getAll();
+    var pending;
+    if (list != null) {
+      pending = list
+        .filter((item) => {
+          return item.internalStatus === "New";
+        })
+        .sort(
+          (a, b) =>
+            this.getTime(a.scheduleDateTime) - this.getTime(b.scheduleDateTime)
+        );
+    }
+
+    return pending;
+  }
+
+  async getCompletedInspections() {
+    var list = await this.getAll();
+    if (list != null) {
+      var completed = list
+        .filter((item) => {
+          return item.internalStatus !== "New";
+        })
+        .sort(
+          (a, b) =>
+            this.getTime(a.scheduleDateTime) - this.getTime(b.scheduleDateTime)
+        );
+      return completed;
+    }
+    return [];
+  }
+
   private getTime(date?: Date) {
     return date != null ? new Date(date).getTime() : 0;
   }
 
   syncExternal() {
     this.storage.set(SYNCSTAMPKEY, new Date());
-    return this.genericStorage.addItems(this.getInspectionMockedJson());
+
+    var list = this.getInspectionMockedJson();
+    list.forEach((item: any) => {
+      item.internalStatus = "New";
+    });
+    return this.genericStorage.addItems(list);
   }
 
   async getSyncStamp() {

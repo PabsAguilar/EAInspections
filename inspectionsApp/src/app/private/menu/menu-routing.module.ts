@@ -22,6 +22,14 @@ const routes: Routes = [
             (m) => m.InspectionsDetailsPageModule
           ),
       },
+      {
+        path: "start-inspection",
+        canActivate: [AuthGuardTaskParam],
+        loadChildren: () =>
+          import("../start-inspection/start-inspection.module").then(
+            (m) => m.StartInspectionPageModule
+          ),
+      },
     ],
   },
   { path: "", redirectTo: "tabs", pathMatch: "full" },

@@ -15,9 +15,12 @@
   <ion-list>
     <!-- <ion-searchbar></ion-searchbar> -->
     <ion-list-header>
-      <ion-item>
-        <ion-label> <p>Last Sync {{lastSync | date: 'MMMM dd, yyyy hh:mm a'}}</p></ion-label>
-      </ion-item>
+      <ion-label>
+        <p>
+          Last Sync
+          <strong> {{lastSync | date: 'MMMM dd, yyyy hh:mm a'}} </strong>
+        </p>
+      </ion-label>
     </ion-list-header>
 
     <ion-item-sliding *ngFor="let task of inspectionTasks">

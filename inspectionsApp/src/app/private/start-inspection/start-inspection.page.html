@@ -1,9 +1,21 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>start-inspection</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Inspection </ion-title>
+    <ion-badge
+      slot="end"
+      [color]="task.inspectionType =='Environmental Inspection' ? 'environmental' : 'comprehensive'"
+      style="margin-right: 1em"
+      >{{task.inspectionType}}</ion-badge
+    >
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-list>
+    <ion-item>
+      <ion-button (click)="completeTask()" expand="block" full color="success">
+        Complete Inspection
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

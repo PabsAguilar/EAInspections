@@ -1,9 +1,82 @@
 <ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-title>Summary</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+
   <ion-toolbar>
-    <ion-title>summary</ion-title>
+    <ion-segment value="Inspections" [(ngModel)]="segmentOption">
+      <ion-segment-button value="inspections">
+        <ion-label>Inspections</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="scheduling">
+        <ion-label>Scheduling</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-list *ngIf="segmentOption === 'inspections'">
+    <ion-item-sliding *ngFor="let task of inspectionTasks">
+      <ion-item-options side="end">
+        <ion-item-option (click)="call(task)" color="white">
+          <ion-icon
+            color="success"
+            style="font-size: xx-large"
+            name="call-outline"
+          ></ion-icon
+        ></ion-item-option>
+        <ion-item-option (click)="seeDetails(task)" color="white">
+          <ion-icon
+            color="secondary"
+            style="font-size: xx-large"
+            name="book-outline"
+          ></ion-icon
+        ></ion-item-option>
+      </ion-item-options>
+      <ion-item (click)="presentActionSheet(task)">
+        <!-- <div class="ion-text-center">
+          <ion-icon style="font-size: large" name="time-outline"></ion-icon>
+          <ion-label
+            ><p>{{task.scheduleDateTime | date: 'hh:mm a'}}</p></ion-label
+          >
+        </div> -->
+        <div style="padding-left: 15px">
+          <ion-label>
+            <h2>{{task.contactName}}</h2>
+            <h3>{{task.inspectionType}}</h3>
+            <p>{{task.serviceAddress}}</p>
+          </ion-label>
+        </div>
+        <ion-badge
+          *ngIf="task.internalStatus === 'Completed'"
+          color="success"
+          slot="end"
+          >Completed</ion-badge
+        >
+        <ion-badge
+          color="warning"
+          *ngIf="task.internalStatus === 'Pending'"
+          slot="end"
+          >Pending Sync</ion-badge
+        >
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
 
+  <ion-list *ngIf="segmentOption === 'scheduling'">
+    <ion-item-sliding *ngFor="let item of schedulingList">
+      <ion-item-options side="end"> </ion-item-options>
+      <ion-item>
+        <ion-label>
+          <h2>{{item.firstName +" "+ item.lastName}}</h2>
+          <h3>{{item.serviceType}}</h3>
+          <p>{{item.scheduleDateTime | date: 'MMMM dd, yyyy hh:mm a'}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

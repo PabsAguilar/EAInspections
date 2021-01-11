@@ -5,6 +5,9 @@ import { BehaviorSubject } from "rxjs";
 
 const TOKEN_KEY = "auth-token";
 const THEME_KEY = "theme-style";
+const SYNCSTAMP_KEY = "inspection-stamp-key";
+const INSPECTIONS_KEY = "inspections-task";
+const SCHEDULINGS_KEY = "scheduling-form";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +17,7 @@ export class AuthenticationService {
 
   constructor(private storage: Storage, private plt: Platform) {
     this.plt.ready().then(() => {
-      this.checkToken(); 
+      this.checkToken();
     });
   }
 
@@ -33,7 +36,10 @@ export class AuthenticationService {
   }
 
   logout() {
-    return this.storage.remove(TOKEN_KEY).then(() => {
+    return this.storage.remove(TOKEN_KEY).then(async () => {
+      await this.storage.remove(SYNCSTAMP_KEY);
+      await this.storage.remove(INSPECTIONS_KEY);
+      await this.storage.remove(SCHEDULINGS_KEY);
       this.authenticationState.next(false);
     });
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, NavigationExtras, Router } from "@angular/router";
 import { CallNumber } from "@ionic-native/call-number/ngx";
+import { AlertController } from "@ionic/angular";
 import { InspectionTask } from "src/app/models/inspection-task";
 
 @Component({
@@ -13,7 +14,8 @@ export class InspectionsDetailsPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    public callNumber: CallNumber
+    public callNumber: CallNumber,
+    public alertController: AlertController
   ) {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -40,6 +42,40 @@ export class InspectionsDetailsPage implements OnInit {
       this.task.inspectionType +
       " " +
       this.task.id;
+  }
+
+  async startInspection() {
+    console.log("Start clicked");
+    this.presentAlertConfirmStartInspection();
+  }
+  async presentAlertConfirmStartInspection() {
+    const alert = await this.alertController.create({
+      header: "Confirm action",
+      message: "Are you sure you want to start the inspection?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+          cssClass: "secondary",
+          handler: () => {
+            console.log("Cancel action");
+          },
+        },
+        {
+          text: "Okay",
+          handler: () => {
+            let navigationExtras: NavigationExtras = {
+              state: {
+                task: this.task,
+              },
+            };
+            this.router.navigate(["menu/start-inspection"], navigationExtras);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
   // addressNavigate() {
   //   console.log("Navigate to" + this.task.serviceAddress);

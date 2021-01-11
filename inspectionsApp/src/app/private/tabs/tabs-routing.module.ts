@@ -10,13 +10,13 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: "pending-inspections",
+        path: "pending-inspections/:reload",
         loadChildren: () =>
           import("../pending-inspections/pending-inspections.module").then(
             (m) => m.PendingInspectionsPageModule
           ),
       },
-    
+
       {
         path: "scheduling",
         loadChildren: () =>
@@ -25,15 +25,15 @@ const routes: Routes = [
           ),
       },
       {
-        path: "tab3",
+        path: "summary",
         loadChildren: () =>
-          import("../tab3/tab3.module").then((m) => m.Tab3PageModule),
+          import("../summary/summary.module").then((m) => m.SummaryPageModule),
       },
     ],
   },
   {
     path: "",
-    redirectTo: "tabs/pending-inspections",
+    redirectTo: "tabs/pending-inspections/1",
     pathMatch: "full",
   },
 ];
