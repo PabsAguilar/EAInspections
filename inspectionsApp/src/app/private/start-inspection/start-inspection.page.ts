@@ -30,7 +30,6 @@ export class StartInspectionPage implements OnInit {
     console.log("Task Completed" + this.task.id);
     this.task.internalStatus = "Pending";
     var random = Math.floor(Math.random() * 10) + 2;
-    console.log(random);
     await this.inspectionStorageService.update(this.task);
     await this.navController.navigateRoot(
       "menu/tabs/tabs/pending-inspections/" + random

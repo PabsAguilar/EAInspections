@@ -28,11 +28,12 @@ export class AppComponent {
       this.splashScreen.hide();
       this.auth.setTheme();
 
- 
-
       this.auth.authenticationState.subscribe((state) => {
         if (state) {
-          this.router.navigate(["/menu/tabs"]);
+          var random = Math.floor(Math.random() * 100) + 2;
+          this.router.navigate([
+            "menu/tabs/tabs/pending-inspections/" + random.toString(),
+          ]);
         } else {
           this.router.navigate(["/login"]);
         }

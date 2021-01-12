@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'start-inspection',
     loadChildren: () => import('./start-inspection/start-inspection.module').then( m => m.StartInspectionPageModule)
   },
+  {
+    path: 'scheduling-detail',
+    loadChildren: () => import('./scheduling-detail/scheduling-detail.module').then( m => m.SchedulingDetailPageModule)
+  },
 ];
 
 @NgModule({

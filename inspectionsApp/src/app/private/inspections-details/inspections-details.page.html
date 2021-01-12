@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaulthref=""> </ion-back-button>
     </ion-buttons>
-    <ion-title>Details </ion-title>
+    <ion-title>Details</ion-title>
     <ion-badge
       slot="end"
       [color]="task.inspectionType =='Environmental Inspection' ? 'environmental' : 'comprehensive'"
@@ -17,47 +17,67 @@
   <ion-card>
     <ion-header>
       <ion-item>
-        <ion-label> <p>{{task.scheduleDateTime}}</p></ion-label>
+        <ion-badge
+          *ngIf="task.internalStatus === 'Completed'"
+          color="success"
+          slot="end"
+          >Completed</ion-badge
+        >
+        <ion-badge
+          color="warning"
+          *ngIf="task.internalStatus === 'Pending'"
+          slot="end"
+          >Pending Sync</ion-badge
+        >
+        <ion-badge
+          color="medium"
+          *ngIf="task.internalStatus === 'New'"
+          slot="end"
+          >New</ion-badge
+        >
+
+        <ion-label>
+          <p>
+            {{task.scheduleDateTime | date: 'MMM dd, yyyy hh:mm a'}}
+          </p></ion-label
+        >
       </ion-item>
     </ion-header>
     <ion-card-content>
-      <ion-item>
-        <ion-grid>
-          <ion-row>
-            <ion-col>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-label>
               <h1 style="text-align: center">{{task.contactName}}</h1>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-row class="row-center">
-                <ion-label class="ion-text-center">
-                  <h2 style="text-align: center">{{task.contactPhone}}</h2>
-                </ion-label></ion-row
-              >
-              <ion-row class="row-center">
-                <ion-chip
-                  color="primary"
-                  (click)="email()"
-                  class="ion-text-center"
-                >
-                  <ion-icon name="mail-outline" color="primary"></ion-icon>
-                  <ion-label>{{task.contactEmail}}</ion-label>
-                </ion-chip>
-              </ion-row>
-              <ion-row class="row-center">
-                <ion-label class="ion-text-center">
-                  {{task.serviceAddress}}
-                </ion-label>
-              </ion-row>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-item>
-      <ion-label>
-        <h2>Inspection Instructions:</h2>
-      </ion-label>
-      <p>{{task.inspectionsInstructions}}</p>
+              <h3 style="text-align: center">{{task.contactPhone}}</h3>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="row-center">
+            <ion-chip color="primary" (click)="email()" class="ion-text-center">
+              <ion-icon name="mail-outline" color="primary"></ion-icon>
+              <ion-label>{{task.contactEmail}}</ion-label>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label> {{task.serviceAddress}} </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              <h2>Inspection Instructions:</h2>
+            </ion-label>
+            <div class="ion-text-justify">
+              <p>{{task.inspectionsInstructions}}</p>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
       <ion-item-divider></ion-item-divider>
       <ion-label>
         <h2>Referal Partner:</h2>
@@ -72,16 +92,20 @@
     <ion-footer>
       <ion-grid
         ><ion-row>
-          <ion-col>
-            <ion-chip color="primary" (click)="startInspection()">
+          <ion-col class="row-center">
+            <ion-chip
+              color="primary"
+              (click)="startInspection()"
+              *ngIf="task.internalStatus === 'New'"
+            >
               <ion-icon name="create-outline" color="primary"></ion-icon>
               <ion-label>Start Inspection</ion-label>
             </ion-chip></ion-col
           >
-          <ion-col>
+          <ion-col class="row-center">
             <ion-chip color="success" (click)="call()">
               <ion-icon name="call" color="success"></ion-icon>
-              <ion-label>call ({{task.contactPhone}})</ion-label>
+              <ion-label>{{task.contactPhone}}</ion-label>
             </ion-chip>
           </ion-col>
         </ion-row></ion-grid

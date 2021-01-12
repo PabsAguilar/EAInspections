@@ -1,6 +1,14 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title> Pending Inspections</ion-title>
+    <ion-buttons slot="end">
+      <ion-button slot="end" (click)="presentPopover($event)">
+        <ion-icon
+          slot="icon-only"
+          ios="ellipsis-vertical"
+          md="ellipsis-vertical"
+        ></ion-icon> </ion-button
+    ></ion-buttons>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -12,15 +20,17 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-list>
+  <ion-list class="ion-no-padding">
     <!-- <ion-searchbar></ion-searchbar> -->
-    <ion-list-header>
-      <ion-label>
-        <p>
-          Last Sync
-          <strong> {{lastSync | date: 'MMMM dd, yyyy hh:mm a'}} </strong>
-        </p>
-      </ion-label>
+    <ion-list-header class="ion-no-padding ion-text-end">
+      <div class="">
+        <ion-label>
+          <p>
+            Last Sync
+            <strong> {{lastSync | date: 'MMMM dd, yyyy hh:mm a'}} </strong>
+          </p>
+        </ion-label>
+      </div>
     </ion-list-header>
 
     <ion-item-sliding *ngFor="let task of inspectionTasks">
@@ -47,14 +57,14 @@
           ></ion-icon
         ></ion-item-option>
       </ion-item-options>
-      <ion-item (click)="presentActionSheet(task)">
+      <ion-item class="ion-no-padding" (click)="presentActionSheet(task)">
         <div class="ion-text-center">
           <ion-icon style="font-size: large" name="time-outline"></ion-icon>
           <ion-label
             ><p>{{task.scheduleDateTime | date: 'hh:mm a'}}</p></ion-label
           >
         </div>
-        <div style="padding-left: 15px">
+        <div style="padding-left: 10px">
           <ion-label>
             <h2>{{task.contactName}}</h2>
             <h3>{{task.inspectionType}}</h3>

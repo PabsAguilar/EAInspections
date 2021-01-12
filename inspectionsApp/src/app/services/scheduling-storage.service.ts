@@ -18,11 +18,14 @@ export class SchedulingStorageService implements IStorage {
     this.storage
   );
 
-  add(item: Scheduling): Promise<any> {    
+  add(item: Scheduling): Promise<any> {
     return this.genericStorage.add(item);
   }
   addItems(item: IStorageModel[]): Promise<any> {
     return this.genericStorage.addItems(item);
+  }
+  updateAll(items: IStorageModel[]): Promise<any> {
+    return this.genericStorage.updateAll(items);
   }
   update(item: Scheduling): Promise<any> {
     return this.genericStorage.update(item);
@@ -35,5 +38,18 @@ export class SchedulingStorageService implements IStorage {
   }
   delete(item: any): Promise<Scheduling> {
     return this.genericStorage.delete(item);
+  }
+
+  async syncPending() {
+    var list = await this.getAll();
+    if (list == null || list.length == 0) {
+      return false;
+    }
+    list.forEach((element) => {
+      if (element.internalStatus === "Pending") {
+        element.internalStatus = "Completed";
+      }
+    });
+    return await this.updateAll(list);
   }
 }

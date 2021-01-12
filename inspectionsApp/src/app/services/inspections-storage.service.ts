@@ -26,6 +26,9 @@ export class InspectionsStorageService implements IStorage {
   update(item: InspectionTask): Promise<any> {
     return this.genericStorage.update(item);
   }
+  updateAll(items: IStorageModel[]): Promise<any> {
+    return this.genericStorage.updateAll(items);
+  }
   getAll(): Promise<InspectionTask[]> {
     return this.genericStorage.getAll();
   }
@@ -73,18 +76,44 @@ export class InspectionsStorageService implements IStorage {
     return date != null ? new Date(date).getTime() : 0;
   }
 
-  syncExternal() {
+  async getExternal() {
     this.storage.set(SYNCSTAMPKEY, new Date());
 
-    var list = this.getInspectionMockedJson();
-    list.forEach((item: any) => {
+    var completed = await this.getCompletedInspections();
+
+    var list = await this.getInspectionMockedJson();
+    for (let index = 0; index < list.length; index++) {
+      var item = list[index] as any;
       item.internalStatus = "New";
-    });
+
+      var itemCompleted = null;
+      if (completed != null && completed.length > 0) {
+        itemCompleted = completed.find((x) => {
+          return x.id === item.id;
+        });
+      }
+
+      list[index] = itemCompleted ? itemCompleted : item;
+    }
+
     return this.genericStorage.addItems(list);
   }
 
   async getSyncStamp() {
     return await this.storage.get(SYNCSTAMPKEY);
+  }
+
+  async syncPendingTask() {
+    var list = await this.getAll();
+    if (list == null || list.length == 0) {
+      return false;
+    }
+    list.forEach((element) => {
+      if (element.internalStatus == "Pending") {
+        element.internalStatus = "Completed";
+      }
+    });
+    return await this.updateAll(list);
   }
 
   getInspectionMockedJson() {

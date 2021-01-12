@@ -1,4 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { NavigationExtras, Router } from "@angular/router";
+import { CallNumber } from "@ionic-native/call-number/ngx";
+import { PopoverController } from "@ionic/angular";
+import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { Scheduling } from "src/app/models/scheduling";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
@@ -11,8 +15,11 @@ import { SchedulingStorageService } from "src/app/services/scheduling-storage.se
 })
 export class SummaryPage implements OnInit {
   constructor(
+    public callNumber: CallNumber,
     public schedulingStorageService: SchedulingStorageService,
-    public inspectionStorageService: InspectionsStorageService
+    public inspectionStorageService: InspectionsStorageService,
+    private router: Router,
+    public popoverController: PopoverController
   ) {}
   segmentOption: string = "inspections";
   inspectionTasks: InspectionTask[];
@@ -22,5 +29,84 @@ export class SummaryPage implements OnInit {
   async ionViewWillEnter() {
     this.schedulingList = await this.schedulingStorageService.getAll();
     this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+  }
+
+  async doRefresh(event) {
+    console.log("Pull inspections Event Triggered!");
+    if (this.segmentOption === "inspections") {
+      this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+    } else {
+      this.schedulingList = await this.schedulingStorageService.getAll();
+    }
+
+    event.target.complete();
+  }
+
+  async presentPopover(ev: any) {
+    var settings = [
+      {
+        name: "Sync",
+        color: "secondary",
+        event: "syncToServer",
+        iconName: "cloud-upload-outline",
+      },
+    ];
+    const popover = await this.popoverController.create({
+      component: GenericListPopOverComponent,
+      componentProps: {
+        items: settings,
+      },
+      event: ev,
+      translucent: true,
+    });
+
+    popover.onDidDismiss().then(async (result) => {
+      if (!result.data) {
+        return;
+      }
+      switch (result.data.event) {
+        case "syncToServer":
+          console.log("dummySync");
+          await this.inspectionStorageService.syncPendingTask();
+          await this.schedulingStorageService.syncPending();
+          this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+          this.schedulingList = await this.schedulingStorageService.getAll();
+
+          break;
+
+        default:
+          console.log("Unknow event for generic list");
+          break;
+      }
+    });
+    return await popover.present();
+  }
+
+  call(item: InspectionTask) {
+    console.log("call " + item.contactPhone);
+    this.callNumber
+      .callNumber(item.contactPhone, true)
+      .then((res) => console.log("Launched dialer!", res))
+      .catch((err) => console.log("Error launching dialer", err));
+  }
+
+  async seeInspectionDetails(task) {
+    console.log("Details clicked");
+    let navigationExtras: NavigationExtras = {
+      state: {
+        task: task,
+      },
+    };
+    this.router.navigate(["menu/details"], navigationExtras);
+  }
+  async seeSchedulingDetails(scheduling: Scheduling) {
+    console.log("Details clicked");
+    console.log(scheduling);
+    let navigationExtras: NavigationExtras = {
+      state: {
+        scheduling: scheduling,
+      },
+    };
+    this.router.navigate(["menu/scheduling-details"], navigationExtras);
   }
 }

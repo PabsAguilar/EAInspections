@@ -22,9 +22,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {}
 
-  ionViewDidEnter() {
- 
-  }
+  ionViewDidEnter() {}
   email: string = "";
   password: string = "";
   validations_form = this.formBuilder.group({
@@ -61,6 +59,7 @@ export class LoginPage implements OnInit {
 
   onSubmit(values) {
     if (true) {
+      this.validations_form.reset();
       console.log(values);
       this.authService.login();
     }

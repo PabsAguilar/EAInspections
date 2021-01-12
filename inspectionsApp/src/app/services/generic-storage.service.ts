@@ -51,6 +51,11 @@ export class GenericStorageService implements IStorage {
       return this.storage.set(this.collectionName, newItems);
     });
   }
+
+  updateAll(items: IStorageModel[]) {
+    return this.storage.set(this.collectionName, items);
+  }
+
   getAll(): Promise<any> {
     return this.storage.get(this.collectionName);
   }

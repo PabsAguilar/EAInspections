@@ -14,4 +14,5 @@ export class Scheduling implements IStorageModel {
   inspectorUserId: number;
   serviceType: string;
   scheduleDateTime: Date;
+  internalStatus: string;
 }

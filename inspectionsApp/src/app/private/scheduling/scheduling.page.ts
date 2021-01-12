@@ -108,6 +108,7 @@ export class SchedulingPage implements OnInit {
   }
   onSubmit(values) {
     this.scheduling = values;
+    this.scheduling.internalStatus = "Pending";
     console.log(this.scheduling);
     this.schedulingStorageService.add(this.scheduling);
     this.validations_form.reset();

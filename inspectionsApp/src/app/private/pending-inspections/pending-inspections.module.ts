@@ -8,7 +8,7 @@ import { PendingInspectionsPageRoutingModule } from "./pending-inspections-routi
 
 import { PendingInspectionsPage } from "./pending-inspections.page";
 import { ExploreContainerComponentModule } from "src/app/explore-container/explore-container.module";
-
+import { GenericListPopOverComponentModule } from "src/app/components/generic-list-pop-over/generic-list-pop-over.componentModule";
 
 @NgModule({
   imports: [
@@ -17,7 +17,7 @@ import { ExploreContainerComponentModule } from "src/app/explore-container/explo
     IonicModule,
     ExploreContainerComponentModule,
     PendingInspectionsPageRoutingModule,
-    
+    GenericListPopOverComponentModule,
   ],
   providers: [Storage],
   declarations: [PendingInspectionsPage],

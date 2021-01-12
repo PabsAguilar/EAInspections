@@ -1,0 +1,8 @@
+<ion-list>
+  <ion-list-header>Options</ion-list-header>
+
+  <ion-item *ngFor="let item of items" button (click)="action(item)">
+    <ion-icon [name]="item.iconName" [color]="item.color"></ion-icon>
+    <ion-label class="ion-padding">{{ item.name }}</ion-label>
+  </ion-item>
+</ion-list>

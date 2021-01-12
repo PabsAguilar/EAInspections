@@ -5,9 +5,10 @@ import {
   ActionSheetController,
   AlertController,
   NavController,
+  PopoverController,
 } from "@ionic/angular";
 import { Subscription } from "rxjs";
-import { OnEnter } from "src/app/interfaces/OnEnter";
+import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
@@ -28,7 +29,8 @@ export class PendingInspectionsPage implements OnInit {
     public router: Router,
     public inspectionStorageService: InspectionsStorageService,
     public alertController: AlertController,
-    public navController: NavController
+    public navController: NavController,
+    public popoverController: PopoverController
   ) {}
 
   public ngOnDestroy(): void {}
@@ -44,7 +46,7 @@ export class PendingInspectionsPage implements OnInit {
     this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
 
     if (this.inspectionTasks == null) {
-      await this.inspectionStorageService.syncExternal();
+      await this.inspectionStorageService.getExternal();
       this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
     }
     this.lastSync = await this.inspectionStorageService.getSyncStamp();
@@ -116,6 +118,44 @@ export class PendingInspectionsPage implements OnInit {
     await alert.present();
   }
 
+  async presentPopover(ev: any) {
+    var settings = [
+      {
+        name: "Get task from Bitrix24",
+        color: "primary",
+        event: "getFromServer",
+        iconName: "cloud-download-outline",
+      },
+    ];
+    const popover = await this.popoverController.create({
+      component: GenericListPopOverComponent,
+      componentProps: {
+        items: settings,
+      },
+      event: ev,
+      translucent: true,
+    });
+
+    popover.onDidDismiss().then(async (result) => {
+      if (!result.data) {
+        return;
+      }
+      switch (result.data.event) {
+        case "getFromServer":
+          console.log("getExternal");
+          await this.inspectionStorageService.getExternal();
+          this.lastSync = await this.inspectionStorageService.getSyncStamp();
+          this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+          break;
+
+        default:
+          console.log("Unknow event for generic list");
+          break;
+      }
+    });
+    return await popover.present();
+  }
+
   async presentActionSheet(task: InspectionTask) {
     const actionSheet = await this.actionSheetController.create({
       header: "Inspection Options",
@@ -123,7 +163,6 @@ export class PendingInspectionsPage implements OnInit {
       buttons: [
         {
           text: "Start",
-          role: "destructive",
           icon: "arrow-forward-circle-outline",
           handler: () => {
             this.startInspection(task);

@@ -1,0 +1,125 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaulthref=""> </ion-back-button>
+    </ion-buttons>
+    <ion-title>Scheduling Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-card>
+    <ion-header>
+      <ion-item>
+        <ion-badge
+          *ngIf="scheduling.internalStatus === 'Completed'"
+          color="success"
+          slot="end"
+          >Completed</ion-badge
+        >
+        <ion-badge
+          color="warning"
+          *ngIf="scheduling.internalStatus === 'Pending'"
+          slot="end"
+          >Pending Sync</ion-badge
+        >
+        <ion-label>
+          <p>
+            {{scheduling.scheduleDateTime | date: 'MMM dd, yyyy hh:mm a'}}
+          </p></ion-label
+        >
+      </ion-item>
+    </ion-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <h1 style="text-align: center">
+              {{scheduling.firstName + ' ' + scheduling.lastName}}
+            </h1>
+            <h3 style="text-align: center">{{scheduling.serviceType}}</h3>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-row class="row-center">
+              <ion-chip color="success" (click)="call()">
+                <ion-icon name="call" color="success"></ion-icon>
+                <ion-label>{{scheduling.contactPhone}}</ion-label>
+              </ion-chip>
+            </ion-row>
+
+            <ion-row class="row-center">
+              <ion-chip
+                color="primary"
+                (click)="email()"
+                class="ion-text-center"
+              >
+                <ion-icon name="mail-outline" color="primary"></ion-icon>
+                <ion-label>{{scheduling.contactEmail}}</ion-label>
+              </ion-chip>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <div class="ion-text-center">{{scheduling.serviceAddress}}</div>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              <h2>Notes:</h2>
+            </ion-label>
+            <p>{{scheduling.notes}}</p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              <h2>Insurance Company:</h2>
+            </ion-label>
+            <p>{{scheduling.insuranceCompany}}</p>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              <h2>Open claims:</h2>
+            </ion-label>
+            <ion-toggle
+              disabled
+              name="openClaims"
+              [(ngModel)]="scheduling.openClaims"
+              color="danger"
+            ></ion-toggle>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+
+    <!-- <ion-footer>
+      <ion-grid
+        ><ion-row>
+          <ion-col class="row-center">
+            <ion-chip color="secondary" (click)="manualSync()">
+              <ion-icon
+                name="cloud-upload-outline"
+                color="secondary"
+              ></ion-icon>
+              <ion-label>Manually Sync</ion-label>
+            </ion-chip></ion-col
+          >
+          <ion-col class="row-center">
+            <ion-chip color="success" (click)="call()">
+              <ion-icon name="call" color="success"></ion-icon>
+              <ion-label>{{scheduling.contactPhone}}</ion-label>
+            </ion-chip>
+          </ion-col>
+        </ion-row></ion-grid
+      >
+    </ion-footer> -->
+  </ion-card>
+</ion-content>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationExtras, Router } from "@angular/router";
 import { CallNumber } from "@ionic-native/call-number/ngx";
-import { AlertController } from "@ionic/angular";
+import { AlertController, NavController } from "@ionic/angular";
 import { InspectionTask } from "src/app/models/inspection-task";
 
 @Component({
@@ -15,7 +15,8 @@ export class InspectionsDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     public callNumber: CallNumber,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public navController: NavController
   ) {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -62,14 +63,17 @@ export class InspectionsDetailsPage implements OnInit {
           },
         },
         {
-          text: "Okay",
+          text: "Ok",
           handler: () => {
             let navigationExtras: NavigationExtras = {
               state: {
                 task: this.task,
               },
             };
-            this.router.navigate(["menu/start-inspection"], navigationExtras);
+            this.navController.navigateForward(
+              ["menu/start-inspection"],
+              navigationExtras
+            );
           },
         },
       ],
