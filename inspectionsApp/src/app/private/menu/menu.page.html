@@ -2,8 +2,11 @@
   <ion-header class="card-background-page">
     <ion-card>
       <img src="../../../assets/images/b1.png" />
+      <ion-avatar class="card-avatar ion-margin">
+        <img src="{{user.image}}" />
+      </ion-avatar>
       <div class="card-title">Inspections App</div>
-      <div class="card-subtitle">InspectorA@domain</div>
+      <div class="card-subtitle">{{user.completeName}}</div>
       <div class="card-subtitle2">v1.1.1</div>
     </ion-card>
   </ion-header>

@@ -2,6 +2,7 @@ import { Platform } from "@ionic/angular";
 import { Injectable } from "@angular/core";
 import { Storage } from "@ionic/storage";
 import { BehaviorSubject } from "rxjs";
+import { User } from "../models/user";
 
 const TOKEN_KEY = "auth-token";
 const THEME_KEY = "theme-style";
@@ -29,8 +30,15 @@ export class AuthenticationService {
     });
   }
 
-  login() {
-    return this.storage.set(TOKEN_KEY, "loaded").then(() => {
+  public getUser(): Promise<User> {
+    return this.storage.get(TOKEN_KEY).then((res) => {
+      if (res) {
+        return res;
+      }
+    });
+  }
+  login(user: User) {
+    return this.storage.set(TOKEN_KEY, user).then(() => {
       this.authenticationState.next(true);
     });
   }

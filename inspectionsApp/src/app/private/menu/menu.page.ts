@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router, RouterEvent } from "@angular/router";
 import { AuthenticationService } from "src/app/services/authentication.service";
 import { Storage } from "@ionic/storage";
+import { User } from "src/app/models/user";
 const THEME_KEY = "theme-style";
 @Component({
   selector: "app-menu",
@@ -27,9 +28,16 @@ export class MenuPage implements OnInit {
     });
   }
   authservice = this.auth;
+  user: User = new User();
   activePath = "";
+
   ngOnInit() {}
   darkMode: boolean;
+
+  async ionViewWillEnter() {
+    //TODO: Validate connection to internet
+    this.user = await this.authservice.getUser();
+  }
 
   pages = [{ title: "Workspace", url: "/menu/tabs" }];
   userWantsToChangeTheme(event) {

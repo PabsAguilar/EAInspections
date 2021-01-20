@@ -1,8 +1,17 @@
-class User {
+export class User {
   email: string;
   name: string;
-  constructor(email: string, name: string) {
-    this.email = email;
-    this.name = name;
+  lastName: string;
+  completeName: string;
+  image: string;
+  userId: number;
+  userType: string;
+  constructor(values: Object = {}) {
+    this.name = values["NAME"];
+    this.lastName = values["LAST_NAME"];
+    this.completeName = values["NAME"] + " " + values["LAST_NAME"];
+    this.email = values["EMAIL"];
+    this.image = values["PERSONAL_PHOTO"];
+    this.userType = values["USER_TYPE"];
   }
 }

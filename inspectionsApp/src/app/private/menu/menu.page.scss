@@ -15,7 +15,7 @@
 
   .card-title {
     position: absolute;
-    top: 36%;
+    top: 50%;
     font-size: 2em;
     width: 100%;
     font-weight: bold;
@@ -25,29 +25,20 @@
   .card-subtitle {
     font-size: 1.2em;
     position: absolute;
-    top: 60%;
+    top: 70%;
     width: 100%;
     color: #fff;
+  }
+
+  .card-avatar {
+    position: absolute;
   }
 
   .card-subtitle2 {
     font-size: 1em;
     position: absolute;
-    top: 80%;
+    top: 82%;
     width: 100%;
     color: #fff;
   }
 }
-
-// .custom-menu-item.item {
-//   pointer-events: auto !important;
-// }
-
-// .menu-content-open.item {
-//   cursor: pointer;
-//   touch-action: manipulation;
-//   pointer-events: auto !important;
-// }
-// .clickable {
-//   pointer-events: auto !important;
-// }
