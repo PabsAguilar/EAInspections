@@ -1,0 +1,43 @@
+<ion-item (click)="toggleAccordion()" lines="full">
+  <ion-label>
+    <h2>General</h2>
+  </ion-label>
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-list>
+    <ion-item>
+      <ion-label>Property Year</ion-label>
+      <ion-datetime
+        (ionChange)="changeModel($event)"
+        displayFormat="YYYY"
+        [min]="minDate"
+        [max]="maxDate"
+        [(ngModel)]="generalInfoInspection.propertyYearDate"
+      ></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Property Type</ion-label>
+      <ion-select
+        interface="popover"
+        (ionChange)="changeModel($event)"
+        [(ngModel)]="generalInfoInspection.propertyType"
+      >
+        <ion-select-option value="Single Family Home"
+          >Single-Family-Home</ion-select-option
+        >
+        <ion-select-option value="Condo/Apartment"
+          >Condo/Apartment</ion-select-option
+        >
+        <ion-select-option value="Townhouse">Townhouse</ion-select-option>
+        <ion-select-option value="Multi-family">Multi-family</ion-select-option>
+        <ion-select-option value="Commercial">Commercial</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+</div>

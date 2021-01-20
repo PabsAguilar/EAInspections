@@ -13,5 +13,6 @@ export class User {
     this.email = values["EMAIL"];
     this.image = values["PERSONAL_PHOTO"];
     this.userType = values["USER_TYPE"];
+    this.userId = values["ID"];
   }
 }

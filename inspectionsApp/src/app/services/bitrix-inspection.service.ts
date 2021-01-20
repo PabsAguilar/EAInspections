@@ -15,6 +15,4 @@ export class BitrixInspectionService {
     var key = "av26roukw3tcyfyf";
     return this.http.get(`${this.url}/${key}/user.get.json?email=${email}`);
   }
-
-
 }

@@ -1,4 +1,5 @@
 import { IStorageModel } from "../interfaces/Istorage-model";
+import { GeneralInfoInspection } from "./general-info-inspection";
 
 export class InspectionTask implements IStorageModel {
   id: number;
@@ -14,6 +15,7 @@ export class InspectionTask implements IStorageModel {
   inspectionType: string;
   inspectionsInstructions: string;
   internalStatus: string;
+  generalInfoInspection: GeneralInfoInspection;
 }
 
 /*

@@ -11,6 +11,11 @@
 </ion-header>
 
 <ion-content>
+  <app-inspection-general
+    ngDefaultControl
+    [(ngModel)]="task.generalInfoInspection"
+  >
+  </app-inspection-general>
   <ion-list>
     <ion-item>
       <ion-button (click)="completeTask()" expand="block" full color="success">
