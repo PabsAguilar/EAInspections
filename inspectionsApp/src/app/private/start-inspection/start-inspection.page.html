@@ -13,6 +13,7 @@
 <ion-content>
   <app-inspection-general
     ngDefaultControl
+    (generalInfoChanged)="GeneralInfoCompleted()"
     [(generalInfo)]="task.generalInfoInspection"
   >
   </app-inspection-general>

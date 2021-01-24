@@ -6,7 +6,7 @@ export class GeneralInfoInspection {
 
   constructor() {
     this.picturesFrontHouse = [];
-    this.propertyYear = new Date().getFullYear();
+    this.propertyYear = null;
     this.pictureHouseNumbers = "";
     this.propertyType = "";
   }

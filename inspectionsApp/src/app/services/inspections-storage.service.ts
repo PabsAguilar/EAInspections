@@ -45,7 +45,10 @@ export class InspectionsStorageService implements IStorage {
     if (list != null) {
       pending = list
         .filter((item) => {
-          return item.internalStatus === "New";
+          return (
+            item.internalStatus === "New" ||
+            item.internalStatus === "In Progress"
+          );
         })
         .sort(
           (a, b) =>

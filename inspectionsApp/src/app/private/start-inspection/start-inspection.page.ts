@@ -40,4 +40,11 @@ export class StartInspectionPage implements OnInit {
       "menu/tabs/tabs/pending-inspections/" + random
     );
   }
+
+  public async GeneralInfoCompleted(): Promise<void> {
+    console.log("General Info Completed!!!!");
+    this.task.internalStatus = "In Progress";
+    await this.inspectionStorageService.update(this.task);
+
+  }
 }

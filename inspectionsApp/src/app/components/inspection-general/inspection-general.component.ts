@@ -44,6 +44,7 @@ export class InspectionGeneralComponent implements OnInit {
   }
   set generalInfo(value: GeneralInfoInspection) {
     this.generalInfoInspection = value;
+    this.changeModel(null);
     // }
   }
 
