@@ -1,9 +1,13 @@
 export class GeneralInfoInspection {
   propertyYear: number;
-  propertyYearDate: Date;
-  pictureHouse: string;
+  pictureHouseNumbers: string;
   picturesFrontHouse: string[];
   propertyType: string;
 
-  constructor() {}
+  constructor() {
+    this.picturesFrontHouse = [];
+    this.propertyYear = new Date().getFullYear();
+    this.pictureHouseNumbers = "";
+    this.propertyType = "";
+  }
 }

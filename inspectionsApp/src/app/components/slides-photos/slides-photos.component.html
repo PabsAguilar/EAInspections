@@ -1,0 +1,34 @@
+<ion-item lines="none">
+  <ion-label>{{ title }}</ion-label>
+  <ion-badge
+    slot="start"
+    [color]="_photoArray.length > 0 ? 'success' : 'warning'"
+    >{{ _photoArray.length }}</ion-badge
+  >
+  <ion-fab-button (click)="takePicture()" class="ion-margin">
+    <ion-icon name="camera"></ion-icon>
+  </ion-fab-button>
+</ion-item>
+
+<ion-card>
+  <ion-slides #slides [options]="sliderConfig" pager="true">
+    <ion-slide *ngFor="let x of _photoArray; let i = index">
+      <img [src]="x" tappable (click)="openPreview(x)" />
+      <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+        <ion-fab-button color="danger" (click)="deletePictureFrontHouse(i)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-slide>
+  </ion-slides>
+</ion-card>
+
+<!-- <ion-slides #slides [options]="sliderConfig" pager="true">
+  <ion-slide *ngFor="let x of _photoArray; let i = index">
+    <ion-card>
+      <ion-card-content>
+        <ion-img [src]="x" tappable (click)="openPreview(x)"></ion-img>
+      </ion-card-content>
+    </ion-card>
+  </ion-slide>
+</ion-slides> -->

@@ -15,7 +15,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () =>
       import("./private/menu/menu.module").then((m) => m.MenuPageModule),
+  },  {
+    path: 'image-modal',
+    loadChildren: () => import('./components/image-modal/image-modal.module').then( m => m.ImageModalPageModule)
   },
+
 ];
 @NgModule({
   imports: [

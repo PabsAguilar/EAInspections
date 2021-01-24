@@ -1,5 +1,16 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { GeneralInfoInspection } from "src/app/models/general-info-inspection";
+import { PhotoService } from "src/app/services/photo.service";
+import { ImageModalPage } from "../image-modal/image-modal.page";
 
 @Component({
   selector: "app-inspection-general",
@@ -13,10 +24,10 @@ export class InspectionGeneralComponent implements OnInit {
   public progressPercentage: number = 0.05;
   public progressColor: string = "danger";
   public today: Date = new Date();
-  maxDate: string = this.formatDate(this.today);
-  minDate: string = this.formatDate(
-    this.today.setFullYear(this.today.getFullYear() - 100)
-  );
+  maxDate: number = this.today.getFullYear();
+  minDate: number = this.today.setFullYear(this.today.getFullYear() - 100);
+
+  generalInfoInspection: GeneralInfoInspection = new GeneralInfoInspection();
   formatDate(date) {
     let d = new Date(date),
       day = "" + d.getDate(),
@@ -27,28 +38,36 @@ export class InspectionGeneralComponent implements OnInit {
     return [year, month, day].join("-");
   }
 
-  @Input("ngModel")
-  public generalInfoInspection: GeneralInfoInspection;
-
-  constructor() {
-    this.generalInfoInspection = new GeneralInfoInspection();
+  @Input()
+  get generalInfo(): GeneralInfoInspection {
+    return this.generalInfoInspection;
   }
+  set generalInfo(value: GeneralInfoInspection) {
+    this.generalInfoInspection = value;
+    // }
+  }
+
+  @Output() generalInfoChanged: any = new EventEmitter();
+
+  private onChange: Function = (value: GeneralInfoInspection) => {};
+  private onTouch: Function = () => {};
+  private disabled: boolean = false;
+
+  constructor(public photoService: PhotoService) {}
 
   ngOnInit() {}
   changeModel($event) {
-    console.log($event);
-    console.log("selection change");
     this.filledProperties = 0;
-    if (this.generalInfoInspection.propertyYearDate) {
-      this.generalInfoInspection.propertyYear = new Date(
-        this.generalInfoInspection.propertyYearDate
-      ).getFullYear();
+    if (
+      this.generalInfoInspection.propertyYear &&
+      this.generalInfoInspection.propertyYear > 0
+    ) {
       this.filledProperties++;
     }
     if (this.generalInfoInspection.propertyType) {
       this.filledProperties++;
     }
-    if (this.generalInfoInspection.pictureHouse) {
+    if (this.generalInfoInspection.pictureHouseNumbers) {
       this.filledProperties++;
     }
     if (
@@ -57,23 +76,40 @@ export class InspectionGeneralComponent implements OnInit {
     ) {
       this.filledProperties++;
     }
-    this.progressPercentage = this.filledProperties / this.totalProperties;
-    console.log(this.progressPercentage);
+    this.progressPercentage =
+      this.filledProperties == 0
+        ? 0
+        : this.filledProperties / this.totalProperties;
+
+    this.generalInfoChanged.emit(this.generalInfoInspection);
+
     switch (true) {
       case this.progressPercentage < 0.5:
         this.progressColor = "danger";
         break;
-      case this.progressPercentage < 0.75:
+      case this.progressPercentage <= 0.75:
         this.progressColor = "warning";
         break;
       case this.progressPercentage >= 1:
-        this.progressColor = "sucess";
+        this.progressColor = "success";
         break;
-
       default:
         this.progressColor = "danger";
         break;
     }
+  }
+
+  onChangeYear(event: any, value: number) {
+    this.generalInfoInspection.propertyYear = value;
+    this.changeModel(event);
+  }
+
+  public async takePictureHouseNumbers() {
+    this.generalInfoInspection.pictureHouseNumbers = await this.photoService.takePhoto();
+    this.changeModel(null);
+  }
+  public photoEvent(): void {
+    console.log("event!!!!");
   }
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;

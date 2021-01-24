@@ -21,7 +21,9 @@ export class StartInspectionPage implements OnInit {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.task = this.router.getCurrentNavigation().extras.state.task;
-        this.task.generalInfoInspection = new GeneralInfoInspection();
+        if (!this.task.generalInfoInspection) {
+          this.task.generalInfoInspection = new GeneralInfoInspection();
+        }
       }
     });
   }
@@ -30,6 +32,7 @@ export class StartInspectionPage implements OnInit {
 
   async completeTask() {
     console.log("Task Completed" + this.task.id);
+    console.log(this.task);
     this.task.internalStatus = "Pending";
     var random = Math.floor(Math.random() * 10) + 2;
     await this.inspectionStorageService.update(this.task);
