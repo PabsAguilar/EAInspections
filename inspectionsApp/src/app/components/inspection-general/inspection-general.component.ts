@@ -21,7 +21,7 @@ export class InspectionGeneralComponent implements OnInit {
   public totalProperties: number = 4;
   public filledProperties: number = 0;
   public isMenuOpen: boolean = false;
-  public progressPercentage: number = 0.05;
+  public progressPercentage: number = 0;
   public progressColor: string = "danger";
   public today: Date = new Date();
   maxDate: number = this.today.getFullYear();
@@ -45,14 +45,9 @@ export class InspectionGeneralComponent implements OnInit {
   set generalInfo(value: GeneralInfoInspection) {
     this.generalInfoInspection = value;
     this.changeModel(null);
-    // }
   }
 
   @Output() generalInfoChanged: any = new EventEmitter();
-
-  private onChange: Function = (value: GeneralInfoInspection) => {};
-  private onTouch: Function = () => {};
-  private disabled: boolean = false;
 
   constructor(public photoService: PhotoService) {}
 

@@ -13,10 +13,17 @@
 <ion-content>
   <app-inspection-general
     ngDefaultControl
-    (generalInfoChanged)="GeneralInfoCompleted()"
+    (generalInfoChanged)="UpdateEntity($event)"
     [(generalInfo)]="task.generalInfoInspection"
   >
   </app-inspection-general>
+  <app-areas
+    ngDefaultControl
+    (AreasListChanged)="UpdateEntity($event)"
+    [(InspectionAreas)]="task.listAreas"
+  >
+  </app-areas>
+
   <ion-list>
     <ion-item>
       <ion-button (click)="completeTask()" expand="block" full color="success">

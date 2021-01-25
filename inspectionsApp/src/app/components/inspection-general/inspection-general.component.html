@@ -2,6 +2,7 @@
   <ion-label>
     <h2>General</h2>
   </ion-label>
+
   <ion-icon
     slot="start"
     color="success"
@@ -21,6 +22,7 @@
     <ion-input
       [(ngModel)]="generalInfoInspection.propertyYear"
       (ionChange)="changeModel($event)"
+      name="propertyYear"
       type="number"
       required
     ></ion-input>

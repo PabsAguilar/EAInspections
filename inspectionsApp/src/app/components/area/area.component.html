@@ -1,0 +1,77 @@
+<ion-header class="ion-padding" (click)="toggleAccordion()">
+  <ion-label color="primary">
+    {{ title }}
+  </ion-label>
+</ion-header>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item>
+    <ion-label position="floating">Area Name</ion-label>
+    <ion-select
+      interface="popover"
+      name="name"
+      [(ngModel)]="area.name"
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option value="Bedroom 1">Bedroom 1</ion-select-option>
+      <ion-select-option value="Bedroom 2">Bedroom 2</ion-select-option>
+      <ion-select-option value="Bedroom 3">Bedroom 3</ion-select-option>
+      <ion-select-option value="Bedroom 4">Bedroom 4</ion-select-option>
+      <ion-select-option value="Bedroom 5">Bedroom 5</ion-select-option>
+      <ion-select-option value="Bedroom 6">Bedroom 6</ion-select-option>
+      <ion-select-option value="Living Room">Living Room</ion-select-option>
+      <ion-select-option value="Dining Room">Dining Room</ion-select-option>
+      <ion-select-option value="Florida Room">Florida Room</ion-select-option>
+      <ion-select-option value="Other">Other</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Conditions</ion-label>
+    <ion-chip slot="end" color="warning">{{ area.condition.length }}</ion-chip>
+  </ion-item>
+  <ion-item *ngFor="let item of conditions; let i = index">
+    <ion-checkbox
+      slot="start"
+      color="warning"
+      (ionChange)="onConditionChange($event, i)"
+      [(ngModel)]="item.checked"
+    ></ion-checkbox>
+    <ion-label>{{ item.name }}</ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Moisture Level</ion-label>
+    <ion-input
+      [(ngModel)]="area.moistureLevel"
+      (ionChange)="changeModel($event)"
+      type="number"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label>Picture</ion-label>
+    <ion-fab-button (click)="takePicture()" class="ion-margin">
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
+  </ion-item>
+  <ion-item>
+    <app-photo
+      ngDefaultControl
+      name="picture"
+      [(ngModel)]="area.picture"
+    ></app-photo>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="area.notes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+</div>

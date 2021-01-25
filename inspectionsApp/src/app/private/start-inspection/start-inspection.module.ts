@@ -10,6 +10,8 @@ import { StartInspectionPage } from "./start-inspection.page";
 import { InspectionGeneralComponent } from "src/app/components/inspection-general/inspection-general.component";
 import { SlidesPhotosComponent } from "src/app/components/slides-photos/slides-photos.component";
 import { PhotoComponent } from "src/app/components/photo/photo.component";
+import { AreaComponent } from "src/app/components/area/area.component";
+import { AreasComponent } from "src/app/components/areas/areas.component";
 
 @NgModule({
   imports: [
@@ -23,6 +25,8 @@ import { PhotoComponent } from "src/app/components/photo/photo.component";
     InspectionGeneralComponent,
     SlidesPhotosComponent,
     PhotoComponent,
+    AreaComponent,
+    AreasComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NavController } from "@ionic/angular";
+import { Area } from "src/app/models/area";
 import { GeneralInfoInspection } from "src/app/models/general-info-inspection";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
@@ -24,6 +25,12 @@ export class StartInspectionPage implements OnInit {
         if (!this.task.generalInfoInspection) {
           this.task.generalInfoInspection = new GeneralInfoInspection();
         }
+        if (!this.task.listAreas) {
+          this.task.listAreas = [];
+          for (let index = 0; index < 8; index++) {
+            this.task.listAreas.push(new Area());
+          }
+        }
       }
     });
   }
@@ -41,10 +48,9 @@ export class StartInspectionPage implements OnInit {
     );
   }
 
-  public async GeneralInfoCompleted(): Promise<void> {
-    console.log("General Info Completed!!!!");
+  public async UpdateEntity($event): Promise<void> {
+    console.log($event);
     this.task.internalStatus = "In Progress";
     await this.inspectionStorageService.update(this.task);
-
   }
 }

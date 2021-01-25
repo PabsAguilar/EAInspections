@@ -1,0 +1,63 @@
+<ion-item (click)="toggleAccordion()" lines="full">
+  <ion-label>
+    <h2>Areas</h2>
+  </ion-label>
+  <ion-chip slot="start" color="success" *ngIf="filledAreas >= 1">
+    {{ filledAreas }}</ion-chip
+  >
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <app-area
+    ngDefaultControl
+    title="Area 1"
+    (InspectionAreaChanged)="AreaUpdated()"
+    [(InspectionArea)]="areas[0]"
+  ></app-area>
+  <app-area
+    ngDefaultControl
+    title="Area 2"
+    (InspectionAreaChanged)="AreaUpdated()"
+    [(InspectionArea)]="areas[1]"
+  ></app-area>
+  <app-area
+    ngDefaultControl
+    title="Area 3"
+    (InspectionAreaChanged)="AreaUpdated()"
+    [(InspectionArea)]="areas[2]"
+  ></app-area>
+  <app-area
+    ngDefaultControl
+    title="Area 4"
+    (InspectionAreaChanged)="AreaUpdated()"
+    [(InspectionArea)]="areas[3]"
+  ></app-area>
+  <app-area
+    ngDefaultControl
+    title="Area 5"
+    (InspectionAreaChanged)="AreaUpdated()"
+    [(InspectionArea)]="areas[4]"
+  ></app-area>
+  <app-area
+    ngDefaultControl
+    title="Area 6"
+    (InspectionAreaChanged)="AreaUpdated()"
+    [(InspectionArea)]="areas[5]"
+  ></app-area>
+  <app-area
+    ngDefaultControl
+    title="Area 7"
+    (InspectionAreaChanged)="AreaUpdated()"
+    [(InspectionArea)]="areas[6]"
+  ></app-area>
+  <app-area
+    ngDefaultControl
+    title="Area 8"
+    [(InspectionArea)]="areas[7]"
+  ></app-area>
+</div>

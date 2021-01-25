@@ -7,6 +7,8 @@ import { InspectionGeneralComponent } from "./inspection-general/inspection-gene
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { IonicModule } from "@ionic/angular";
 import { PhotoComponent } from "./photo/photo.component";
+import { AreaComponent } from "./area/area.component";
+import { AreasComponent } from "./areas/areas.component";
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
@@ -15,12 +17,16 @@ import { PhotoComponent } from "./photo/photo.component";
     SlidesPhotosComponent,
     InspectionGeneralComponent,
     PhotoComponent,
+    AreaComponent,
+    AreasComponent,
   ],
   exports: [
     GenericListPopOverComponent,
     SlidesPhotosComponent,
     InspectionGeneralComponent,
     PhotoComponent,
+    AreaComponent,
+    AreasComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

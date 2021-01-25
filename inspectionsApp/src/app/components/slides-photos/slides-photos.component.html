@@ -1,9 +1,9 @@
 <ion-item lines="none">
   <ion-label>{{ title }}</ion-label>
-  <ion-badge
+  <ion-chip
     slot="start"
     [color]="_photoArray.length > 0 ? 'success' : 'warning'"
-    >{{ _photoArray.length }}</ion-badge
+    >{{ _photoArray.length }}</ion-chip
   >
   <ion-fab-button (click)="takePicture()" class="ion-margin">
     <ion-icon name="camera"></ion-icon>
