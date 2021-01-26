@@ -57,7 +57,14 @@
           ></ion-icon
         ></ion-item-option>
       </ion-item-options>
-      <ion-item class="ion-no-padding" (click)="presentActionSheet(task)">
+      <ion-item (click)="presentActionSheet(task)">
+        <ion-icon
+          *ngIf="task.internalStatus == 'In Progress'"
+          color="warning"
+          slot="end"
+          name="timer-outline"
+          >In Progress</ion-icon
+        >
         <div class="ion-text-center">
           <ion-icon style="font-size: large" name="time-outline"></ion-icon>
           <ion-label

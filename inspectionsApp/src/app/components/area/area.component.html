@@ -1,6 +1,9 @@
-<ion-header class="ion-padding" (click)="toggleAccordion()">
-  <ion-label color="primary"> {{ title }} {{ area.name }} </ion-label>
-</ion-header>
+<ion-item (click)="toggleAccordion()">
+  <ion-label color="primary"> {{ title }} </ion-label>
+  <ion-chip *ngIf="area.name" color="secondary" slot="end">
+    {{ area.name }}
+  </ion-chip>
+</ion-item>
 <ion-progress-bar
   color="{{ progressColor }}"
   value="{{ progressPercentage }}"

@@ -24,10 +24,17 @@
           >Completed</ion-badge
         >
         <ion-badge
-          color="warning"
+          color="danger"
           *ngIf="task.internalStatus === 'Pending'"
           slot="end"
           >Pending Sync</ion-badge
+        >
+
+        <ion-badge
+          color="warning"
+          *ngIf="task.internalStatus === 'In Progress'"
+          slot="end"
+          >In Progress</ion-badge
         >
         <ion-badge
           color="medium"
