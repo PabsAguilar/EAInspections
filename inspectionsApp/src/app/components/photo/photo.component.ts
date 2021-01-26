@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { IonSlides, ModalController } from "@ionic/angular";
 import { ImageModalPage } from "../image-modal/image-modal.page";
 
@@ -18,9 +24,18 @@ export class PhotoComponent implements OnInit {
     this.image = value;
   }
   image: string = "";
-
+  private first: boolean = true;
+  @ViewChild("slides") ionSlides: IonSlides;
   ngOnInit() {}
 
+  async ngAfterViewInit() {}
+
+  async ionSlidedrag() {
+    if (this.first) {
+      await this.ionSlides.update();
+      this.first = false;
+    }
+  }
   async openPreview(image: string) {
     const modal = await this.modalController.create({
       component: ImageModalPage,

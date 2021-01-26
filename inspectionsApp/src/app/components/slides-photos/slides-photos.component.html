@@ -11,7 +11,12 @@
 </ion-item>
 
 <ion-card>
-  <ion-slides #slides [options]="sliderConfig" pager="true">
+  <ion-slides
+    #slides
+    [options]="sliderConfig"
+    pager="true"
+    (ionSlideDrag)="ionSlidedrag()"
+  >
     <ion-slide *ngFor="let x of _photoArray; let i = index">
       <img [src]="x" tappable (click)="openPreview(x)" />
       <ion-fab horizontal="end" vertical="bottom" slot="fixed">

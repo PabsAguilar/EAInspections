@@ -16,9 +16,9 @@ import { ImageModalPage } from "../image-modal/image-modal.page";
   styleUrls: ["./slides-photos.component.scss"],
 })
 export class SlidesPhotosComponent implements OnInit {
-  // @Input("ngModel")
-  // photoArray: string[];
+  private first: boolean = true;
   @ViewChild("slides") ionSlides: IonSlides;
+
   @Input()
   title: string;
 
@@ -55,6 +55,7 @@ export class SlidesPhotosComponent implements OnInit {
     await this.ionSlides.update();
     this.ionSlides.slideTo(this._photoArray.length + 1);
     this.photoChanged.emit({ value: this._photoArray });
+    this.first = false;
   }
 
   sliderConfig = {
@@ -64,10 +65,15 @@ export class SlidesPhotosComponent implements OnInit {
   };
   ngOnInit() {}
 
+  async ionSlidedrag() {
+    if (this.first) {
+      await this.ionSlides.update();
+      this.first = false;
+    }
+  }
   public async deletePictureFrontHouse(index) {
     console.log("delete " + index);
     this._photoArray.splice(index, 1);
-    console.log(this._photoArray);
     await this.ionSlides.update();
     this.photoChanged.emit({ value: this._photoArray });
   }

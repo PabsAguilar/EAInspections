@@ -1,7 +1,12 @@
 <!-- Background drop while zoom -->
 
 <ion-card>
-  <ion-slides #slides [options]="sliderConfig" pager="false">
+  <ion-slides
+    #slides
+    [options]="sliderConfig"
+    pager="false"
+    (ionSlideDrag)="ionSlidedrag()"
+  >
     <ion-slide *ngFor="let x of [image]; let i = index">
       <img [src]="x" tappable (click)="openPreview(x)" />
     </ion-slide>
