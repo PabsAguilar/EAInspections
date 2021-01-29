@@ -22,11 +22,11 @@ import { AreasComponent } from "src/app/components/areas/areas.component";
   ],
   declarations: [
     StartInspectionPage,
-    InspectionGeneralComponent,
-    SlidesPhotosComponent,
-    PhotoComponent,
-    AreaComponent,
-    AreasComponent,
+    // InspectionGeneralComponent,
+    // SlidesPhotosComponent,
+    // PhotoComponent,
+    // AreaComponent,
+    // AreasComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

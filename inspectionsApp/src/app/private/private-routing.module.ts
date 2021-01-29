@@ -23,6 +23,14 @@ const routes: Routes = [
     path: 'scheduling-detail',
     loadChildren: () => import('./scheduling-detail/scheduling-detail.module').then( m => m.SchedulingDetailPageModule)
   },
+  {
+    path: 'comprehensive-inspection',
+    loadChildren: () => import('./comprehensive-inspection/comprehensive-inspection.module').then( m => m.ComprehensiveInspectionPageModule)
+  },
+  {
+    path: 'environmental-inspection',
+    loadChildren: () => import('./environmental-inspection/environmental-inspection.module').then( m => m.EnvironmentalInspectionPageModule)
+  },
 ];
 
 @NgModule({

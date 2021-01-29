@@ -1,0 +1,56 @@
+<ion-item (click)="toggleAccordion()" lines="full">
+  <ion-label>
+    <h2>Bathrooms</h2>
+  </ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="filledAreas >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+  <ion-chip slot="end" color="success" *ngIf="filledAreas >= 1">
+    {{ filledAreas }}</ion-chip
+  >
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <app-area-general-condition
+    *ngFor="let bathroom of bathrooms; let i = index"
+    ngDefaultControl
+    [title]="'Bathroom ' + (i + 1)"
+    [conditions]="conditions"
+    type="Bathroom"
+    (InspectionAreaGeneralChanged)="AreaUpdated($event)"
+    [(InspectionArea)]="bathrooms[i]"
+  ></app-area-general-condition>
+
+  <!-- <app-area-general-condition
+      ngDefaultControl
+      title="Bathroom 1"
+      id="1"
+      [conditions]="(conditions)"
+      (InspectionAreaGeneralChanged)="AreaUpdated()"
+      [(InspectionArea)]="bathroom"
+    ></app-area-general-condition>
+    <app-area-general-condition
+      ngDefaultControl
+      title="Bathroom 2"
+      id="2"
+      (conditions)="(conditions)"
+      (InspectionAreaGeneralChanged)="AreaUpdated()"
+      [(InspectionArea)]="bathrooms[1]"
+    ></app-area-general-condition>
+    <app-area-general-condition
+      ngDefaultControl
+      id="3"
+      title="Bathroom 3"
+      (conditions)="(conditions)"
+      (InspectionAreaGeneralChanged)="AreaUpdated()"
+      [(InspectionArea)]="bathrooms[2]"
+    ></app-area-general-condition> -->
+</div>

@@ -35,6 +35,21 @@ const routes: Routes = [
             (m) => m.StartInspectionPageModule
           ),
       },
+      {
+        path: "comprehensive-inspection",
+        loadChildren: () =>
+          import(
+            "../comprehensive-inspection/comprehensive-inspection.module"
+          ).then((m) => m.ComprehensiveInspectionPageModule),
+      },
+
+      {
+        path: "environmental-inspection",
+        loadChildren: () =>
+          import(
+            "../environmental-inspection/environmental-inspection.module"
+          ).then((m) => m.EnvironmentalInspectionPageModule),
+      },
     ],
   },
   { path: "", redirectTo: "tabs", pathMatch: "full" },

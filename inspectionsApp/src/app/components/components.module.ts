@@ -9,6 +9,8 @@ import { IonicModule } from "@ionic/angular";
 import { PhotoComponent } from "./photo/photo.component";
 import { AreaComponent } from "./area/area.component";
 import { AreasComponent } from "./areas/areas.component";
+import { BathroomsComponent } from "./bathrooms/bathrooms.component";
+import { AreaGeneralConditionComponent } from "./area-general-condition/area-general-condition.component";
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
@@ -19,6 +21,8 @@ import { AreasComponent } from "./areas/areas.component";
     PhotoComponent,
     AreaComponent,
     AreasComponent,
+    BathroomsComponent,
+    AreaGeneralConditionComponent,
   ],
   exports: [
     GenericListPopOverComponent,
@@ -27,6 +31,8 @@ import { AreasComponent } from "./areas/areas.component";
     PhotoComponent,
     AreaComponent,
     AreasComponent,
+    BathroomsComponent,
+    AreaGeneralConditionComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

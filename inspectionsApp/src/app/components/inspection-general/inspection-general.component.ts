@@ -7,10 +7,8 @@ import {
   Output,
   ViewChild,
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { GeneralInfoInspection } from "src/app/models/general-info-inspection";
 import { PhotoService } from "src/app/services/photo.service";
-import { ImageModalPage } from "../image-modal/image-modal.page";
 
 @Component({
   selector: "app-inspection-general",
@@ -43,6 +41,9 @@ export class InspectionGeneralComponent implements OnInit {
     return this.generalInfoInspection;
   }
   set generalInfo(value: GeneralInfoInspection) {
+    if (!value) {
+      value = new GeneralInfoInspection();
+    }
     this.generalInfoInspection = value;
     this.changeModel(null);
   }
@@ -83,7 +84,7 @@ export class InspectionGeneralComponent implements OnInit {
       case this.progressPercentage < 0.5:
         this.progressColor = "danger";
         break;
-      case this.progressPercentage <= 0.75:
+      case this.progressPercentage < 1:
         this.progressColor = "warning";
         break;
       case this.progressPercentage >= 1:
@@ -104,9 +105,7 @@ export class InspectionGeneralComponent implements OnInit {
     this.generalInfoInspection.pictureHouseNumbers = await this.photoService.takePhoto();
     this.changeModel(null);
   }
-  public photoEvent(): void {
-    console.log("event!!!!");
-  }
+  public photoEvent(): void {}
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }

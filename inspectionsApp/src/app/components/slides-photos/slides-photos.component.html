@@ -6,7 +6,7 @@
     >{{ _photoArray.length }}</ion-chip
   >
   <ion-fab-button (click)="takePicture()" class="ion-margin">
-    <ion-icon name="camera"></ion-icon>
+    <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-item>
 
@@ -27,13 +27,3 @@
     </ion-slide>
   </ion-slides>
 </ion-card>
-
-<!-- <ion-slides #slides [options]="sliderConfig" pager="true">
-  <ion-slide *ngFor="let x of _photoArray; let i = index">
-    <ion-card>
-      <ion-card-content>
-        <ion-img [src]="x" tappable (click)="openPreview(x)"></ion-img>
-      </ion-card-content>
-    </ion-card>
-  </ion-slide>
-</ion-slides> -->

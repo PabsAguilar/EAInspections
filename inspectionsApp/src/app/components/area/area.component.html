@@ -53,19 +53,13 @@
     ></ion-input>
   </ion-item>
 
-  <ion-item lines="none">
-    <ion-label>Picture</ion-label>
-    <ion-fab-button (click)="takePicture()" class="ion-margin">
-      <ion-icon name="camera"></ion-icon>
-    </ion-fab-button>
-  </ion-item>
-  <ion-item>
-    <app-photo
-      ngDefaultControl
-      name="picture"
-      [(ngModel)]="area.picture"
-    ></app-photo>
-  </ion-item>
+  <app-slides-photos
+    title="Pictures"
+    ngDefaultControl
+    name="pictures"
+    [(ngModel)]="area.pictures"
+    (photoChanged)="changeModel($event)"
+  ></app-slides-photos>
 
   <ion-item>
     <ion-label position="floating">Notes</ion-label>

@@ -1,0 +1,54 @@
+<ion-item (click)="toggleAccordion()">
+  <ion-label color="primary"> {{ title }} </ion-label>
+  <ion-chip *ngIf="generalCondition.name" color="secondary" slot="end">
+    {{ generalCondition.name }}
+  </ion-chip>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item>
+    <ion-label>Select conditions:</ion-label>
+    <ion-chip slot="end" color="warning">{{
+      generalCondition.condition.length
+    }}</ion-chip>
+  </ion-item>
+  <ion-item *ngFor="let item of _conditions; let i = index" lines="none">
+    <ion-checkbox
+      slot="start"
+      color="warning"
+      (ionChange)="onConditionChange($event, i)"
+      [(ngModel)]="item.checked"
+    ></ion-checkbox>
+    <ion-label>{{ item.name }}</ion-label>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Moisture Level</ion-label>
+    <ion-input
+      [(ngModel)]="generalCondition.moistureLevel"
+      (ionChange)="changeModel($event)"
+      type="number"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <app-slides-photos
+    ngDefaultControl
+    title="Pictures"
+    name="pictures"
+    (photoChanged)="changeModel($event)"
+    [(ngModel)]="generalCondition.pictures"
+  ></app-slides-photos>
+
+  <ion-item>
+    <ion-label position="floating">Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="generalCondition.notes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+</div>

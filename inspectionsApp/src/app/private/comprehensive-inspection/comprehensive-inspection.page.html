@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Comprehensive Inspection</ion-title>
+    <!-- <ion-badge
+      slot="end"
+      [color]="task.inspectionType =='Environmental Inspection' ? 'environmental' : 'comprehensive'"
+      style="margin-right: 1em"
+      >{{task.inspectionType}}</ion-badge
+    > -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-inspection-general
+    ngDefaultControl
+    (generalInfoChanged)="UpdateEntity($event)"
+    [(generalInfo)]="task.comprehesiveForm.generalInfoInspection"
+  >
+  </app-inspection-general>
+
+  <app-areas
+    ngDefaultControl
+    (AreasListChanged)="UpdateEntity($event)"
+    [(InspectionAreas)]="task.comprehesiveForm.areas"
+  >
+  </app-areas>
+
+  <app-bathrooms
+    ngDefaultControl
+    (AreasListChanged)="UpdateEntity($event)"
+    [(InspectionAreas)]="task.comprehesiveForm.bathrooms"
+  >
+  </app-bathrooms>
+
+
+
+  <ion-list>
+    <ion-item>
+      <ion-button (click)="completeTask()" expand="block" full color="success">
+        Complete Inspection
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

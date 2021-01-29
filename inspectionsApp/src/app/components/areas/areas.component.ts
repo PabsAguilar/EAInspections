@@ -32,8 +32,9 @@ export class AreasComponent implements OnInit {
   ngOnInit() {}
 
   AreaUpdated() {
-    console.log("AreaUpdated");
-    this.filledAreas = this.areas.filter((y) => y.name != "").length;
+    this.filledAreas = !this.areas
+      ? 0
+      : this.areas.filter((y) => y.name != "").length;
     if (this.filledAreas >= 1) {
       this.progressColor = "success";
       this.progressPercentage = 1;

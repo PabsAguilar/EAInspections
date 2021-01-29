@@ -2,7 +2,13 @@
   <ion-label>
     <h2>Areas</h2>
   </ion-label>
-  <ion-chip slot="start" color="success" *ngIf="filledAreas >= 1">
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="filledAreas >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+  <ion-chip slot="end" color="success" *ngIf="filledAreas >= 1">
     {{ filledAreas }}</ion-chip
   >
   <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>

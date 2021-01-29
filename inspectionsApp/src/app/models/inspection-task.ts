@@ -1,5 +1,6 @@
 import { IStorageModel } from "../interfaces/Istorage-model";
 import { Area } from "./area";
+import { ComprehensiveForm } from "./comprehensive-form";
 import { GeneralInfoInspection } from "./general-info-inspection";
 
 export class InspectionTask implements IStorageModel {
@@ -16,8 +17,8 @@ export class InspectionTask implements IStorageModel {
   inspectionType: string;
   inspectionsInstructions: string;
   internalStatus: string;
-  generalInfoInspection: GeneralInfoInspection;
-  listAreas: Area[];
+  comprehesiveForm: ComprehensiveForm;
+  constructor() {}
 }
 
 /*

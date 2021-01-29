@@ -1,14 +1,12 @@
-export class Area {
-  name: string;
+export class GeneralCondition {
   condition: string[];
   moistureLevel: number;
   pictures: string[];
   notes: string;
   constructor() {
-    this.name = "";
-    this.condition = [];
-    this.moistureLevel = null;
     this.pictures = [];
-    this.notes = "";
+    this.moistureLevel = null;
+    this.notes = null;
+    this.condition = [];
   }
 }

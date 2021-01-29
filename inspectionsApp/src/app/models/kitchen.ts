@@ -1,11 +1,12 @@
-export class Area {
-  name: string;
+import { GeneralCondition } from "./general-condition";
+
+export class Kitchen implements GeneralCondition {
   condition: string[];
   moistureLevel: number;
   pictures: string[];
   notes: string;
+  waterQualityTest: boolean;
   constructor() {
-    this.name = "";
     this.condition = [];
     this.moistureLevel = null;
     this.pictures = [];

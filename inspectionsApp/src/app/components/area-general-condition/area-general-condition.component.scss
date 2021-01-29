@@ -1,0 +1,21 @@
+div {
+  position: relative;
+  padding: 1em;
+
+  ion-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+/* Following classes display/hide the 'menu'
+       // based on the state change detection in the
+       // component class */
+.active {
+  display: block;
+}
+
+.inactive {
+  display: none;
+}

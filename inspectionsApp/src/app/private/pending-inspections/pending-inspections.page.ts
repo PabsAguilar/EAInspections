@@ -9,7 +9,10 @@ import {
 } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
+import { ComprehensiveForm } from "src/app/models/comprehensive-form";
+import { InspectionType } from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
+
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
 @Component({
@@ -100,16 +103,25 @@ export class PendingInspectionsPage implements OnInit {
         {
           text: "Ok",
           handler: () => {
+            if (!this.selectedTask.comprehesiveForm) {
+              this.selectedTask.comprehesiveForm = new ComprehensiveForm();
+            }
             let navigationExtras: NavigationExtras = {
               state: {
                 task: this.selectedTask,
               },
             };
-
-            this.navController.navigateForward(
-              ["menu/start-inspection"],
-              navigationExtras
-            );
+            var path = "";
+            if (
+              this.selectedTask.inspectionType == InspectionType.Comprehensive
+            ) {
+              path = "menu/comprehensive-inspection";
+            } else if (
+              this.selectedTask.inspectionType == InspectionType.Environmental
+            ) {
+              path = "menu/environmental-inspection";
+            }
+            this.navController.navigateForward([path], navigationExtras);
           },
         },
       ],

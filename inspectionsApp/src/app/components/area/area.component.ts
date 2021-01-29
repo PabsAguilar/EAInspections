@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, Output } from "@angular/core";
 import { EventEmitter } from "@angular/core";
-import { filter } from "rxjs/operators";
 import { Area } from "src/app/models/area";
-import { PhotoService } from "src/app/services/photo.service";
 
 @Component({
   selector: "app-area",
@@ -35,7 +33,7 @@ export class AreaComponent implements OnInit {
   @Input() title: string = "";
   @Output() InspectionAreaChanged: any = new EventEmitter();
 
-  constructor(public photoService: PhotoService) {}
+  constructor() {}
 
   ngOnInit() {}
 
@@ -54,7 +52,7 @@ export class AreaComponent implements OnInit {
     if (this.area.moistureLevel) {
       this.filledProperties++;
     }
-    if (this.area.picture) {
+    if (this.area.pictures.length > 0) {
       this.filledProperties++;
     }
     if (this.area.notes) {
@@ -71,7 +69,7 @@ export class AreaComponent implements OnInit {
       case this.progressPercentage < 0.5:
         this.progressColor = "danger";
         break;
-      case this.progressPercentage <= 0.75:
+      case this.progressPercentage < 1:
         this.progressColor = "warning";
         break;
       case this.progressPercentage >= 1:
@@ -91,10 +89,6 @@ export class AreaComponent implements OnInit {
     this.changeModel(null);
   }
 
-  public async takePicture() {
-    this.area.picture = await this.photoService.takePhoto();
-    this.changeModel(null);
-  }
   conditions: any[] = [
     { name: "Ceiling stains", checked: false },
     { name: "Visible mold", checked: false },
