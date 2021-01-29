@@ -32,7 +32,38 @@
   >
   </app-bathrooms>
 
+  <app-kitchen
+    ngDefaultControl
+    (kitchenChanged)="UpdateEntity($event)"
+    title="Kitchen"
+    type="Kitchen"
+    [(InspectionAreas)]="task.comprehesiveForm.kitchen"
+  >
+  </app-kitchen>
 
+  <app-area-general-condition
+    ngDefaultControl
+    title="HVAC / AC"
+    type="HVAC_AC"
+    (InspectionAreaGeneralChanged)="UpdateEntity($event)"
+    [(InspectionArea)]="task.comprehesiveForm.HVAC_AC"
+  ></app-area-general-condition>
+
+  <app-area-general-condition
+    ngDefaultControl
+    title="Utility Room"
+    type="UtilityRoom"
+    (InspectionAreaGeneralChanged)="UpdateEntity($event)"
+    [(InspectionArea)]="task.comprehesiveForm.utilityRoom"
+  ></app-area-general-condition>
+
+  <app-area-general-condition
+    ngDefaultControl
+    title="Atic"
+    type="Atic"
+    (InspectionAreaGeneralChanged)="UpdateEntity($event)"
+    [(InspectionArea)]="task.comprehesiveForm.atic"
+  ></app-area-general-condition>
 
   <ion-list>
     <ion-item>

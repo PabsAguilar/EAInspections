@@ -1,9 +1,9 @@
 <ion-item (click)="toggleAccordion()" lines="none">
-  <ion-label [color]="titleColor"> {{ title }} </ion-label>
+  <ion-label> {{ title }} </ion-label>
   <ion-icon
     slot="start"
     color="success"
-    *ngIf="showSuccess && progressPercentage >= 1"
+    *ngIf="progressPercentage >= 1"
     name="checkmark-circle-outline"
   ></ion-icon>
 </ion-item>
@@ -15,7 +15,7 @@
   <ion-item>
     <ion-label>Select conditions:</ion-label>
     <ion-chip slot="end" color="warning">{{
-      generalCondition.condition.length
+      kitchen.condition.length
     }}</ion-chip>
   </ion-item>
   <ion-item *ngFor="let item of _conditions; let i = index" lines="none">
@@ -31,11 +31,21 @@
   <ion-item lines="inset">
     <ion-label position="floating">Moisture Level</ion-label>
     <ion-input
-      [(ngModel)]="generalCondition.moistureLevel"
+      [(ngModel)]="kitchen.moistureLevel"
       (ionChange)="changeModel($event)"
       type="number"
       required
     ></ion-input>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label>Water Quality Test</ion-label>
+    <ion-toggle
+      slot="start"
+      name="qualityTest"
+      color="primary"
+      [(ngModel)]="kitchen.waterQualityTest"
+    ></ion-toggle>
   </ion-item>
 
   <app-slides-photos
@@ -43,13 +53,13 @@
     title="Pictures"
     name="pictures"
     (photoChanged)="changeModel($event)"
-    [(ngModel)]="generalCondition.pictures"
+    [(ngModel)]="kitchen.pictures"
   ></app-slides-photos>
 
   <ion-item>
     <ion-label position="floating">Notes</ion-label>
     <ion-textarea
-      [(ngModel)]="generalCondition.notes"
+      [(ngModel)]="kitchen.notes"
       (ionChange)="changeModel($event)"
       type="text"
     ></ion-textarea>

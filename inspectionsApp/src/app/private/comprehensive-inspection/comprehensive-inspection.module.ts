@@ -14,6 +14,7 @@ import { AreasComponent } from "src/app/components/areas/areas.component";
 import { AreaComponent } from "src/app/components/area/area.component";
 import { BathroomsComponent } from "src/app/components/bathrooms/bathrooms.component";
 import { AreaGeneralConditionComponent } from "src/app/components/area-general-condition/area-general-condition.component";
+import { KitchenComponent } from "src/app/components/kitchen/kitchen.component";
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { AreaGeneralConditionComponent } from "src/app/components/area-general-c
     AreasComponent,
     BathroomsComponent,
     AreaGeneralConditionComponent,
+    KitchenComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

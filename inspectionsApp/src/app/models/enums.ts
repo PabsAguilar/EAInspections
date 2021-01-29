@@ -11,6 +11,10 @@ export enum InspectionStatus {
 
 export enum AreaConditionType {
   Bathroom = "Bathroom",
+  Kitchen = "Kitchen",
+  HVAC_AC = "HVAC_AC",
+  UtilityRoom = "UtilityRoom",
+  Atic = "Atic",
 }
 export var AreaConditions = [
   { name: "Ceiling stains", checked: false },

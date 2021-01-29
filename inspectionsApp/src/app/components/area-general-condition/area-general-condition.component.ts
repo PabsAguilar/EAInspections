@@ -12,10 +12,11 @@ export class AreaGeneralConditionComponent implements OnInit {
   totalProperties: number = 4;
   filledProperties: number = 0;
   isMenuOpen: boolean = false;
+  showSuccess: boolean = false;
   progressPercentage: number = 0;
   progressColor: string = "danger";
   _conditions: any[];
-
+  titleColor = "primary";
   @Input()
   set InspectionArea(value: GeneralCondition) {
     if (!value.condition) {
@@ -44,6 +45,41 @@ export class AreaGeneralConditionComponent implements OnInit {
           { name: "Leak behind walls", checked: false },
           { name: "Shower head / Faucet", checked: false },
           { name: "Damaged Flooring", checked: false },
+          { name: "Visible Mold", checked: false },
+        ];
+        break;
+      case AreaConditionType.HVAC_AC.toString():
+        this.titleColor = "";
+        this.showSuccess = true;
+        this._conditions = [
+          { name: "AC Leak", checked: false },
+          { name: "Drain pipe leak", checked: false },
+          { name: "Damaged baseboards / Drywall / Flooring", checked: false },
+          { name: "Dirty Filter", checked: false },
+          { name: "Dirty Coil", checked: false },
+          { name: "Visible Mold", checked: false },
+        ];
+        break;
+      case AreaConditionType.Atic.toString():
+        this.titleColor = "";
+        this.showSuccess = true;
+        this._conditions = [
+          { name: "Visible water stains", checked: false },
+          { name: "Mold Smell", checked: false },
+          { name: "Wet insulation", checked: false },
+          { name: "Visible Mold", checked: false },
+        ];
+        break;
+      case AreaConditionType.UtilityRoom.toString():
+        this.titleColor = "";
+        this.showSuccess = true;
+        this._conditions = [
+          { name: "Washer Leak", checked: false },
+          { name: "Drain Pipe Leak", checked: false },
+          { name: "Leak Under Sink", checked: false },
+          { name: "Supply Line Leak", checked: false },
+          { name: "Drain Line Leak", checked: false },
+          { name: "Damaged Baseboards / Flooring", checked: false },
           { name: "Visible Mold", checked: false },
         ];
         break;
