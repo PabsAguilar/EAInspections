@@ -16,6 +16,10 @@ import { BathroomsComponent } from "src/app/components/comprehensive-form/bathro
 import { AreaGeneralConditionComponent } from "src/app/components/comprehensive-form/area-general-condition/area-general-condition.component";
 import { KitchenComponent } from "src/app/components/comprehensive-form/kitchen/kitchen.component";
 import { EnviromentalSectionComponent } from "src/app/components/comprehensive-form/enviromental-section/enviromental-section.component";
+import { ExteriorComponent } from "src/app/components/comprehensive-form/exterior/exterior.component";
+import { RecomendationsComponent } from "src/app/components/comprehensive-form/recomendations/recomendations.component";
+import { InsuranceComponent } from "src/app/components/comprehensive-form/insurance/insurance.component";
+import { RemindersComponent } from "src/app/components/comprehensive-form/reminders/reminders.component";
 
 @NgModule({
   imports: [
@@ -35,6 +39,10 @@ import { EnviromentalSectionComponent } from "src/app/components/comprehensive-f
     AreaGeneralConditionComponent,
     KitchenComponent,
     EnviromentalSectionComponent,
+    ExteriorComponent,
+    RecomendationsComponent,
+    InsuranceComponent,
+    RemindersComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

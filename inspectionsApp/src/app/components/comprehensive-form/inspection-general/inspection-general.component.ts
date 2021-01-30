@@ -41,7 +41,7 @@ export class InspectionGeneralComponent implements OnInit {
     return this.generalInfoInspection;
   }
   set generalInfo(value: GeneralInfoInspection) {
-    if (!value) {
+    if (!value) { 
       value = new GeneralInfoInspection();
     }
     this.generalInfoInspection = value;

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NavController } from "@ionic/angular";
+import { ComprehensiveForm } from "src/app/models/comprehensive-form/comprehensive-form";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
@@ -19,6 +20,10 @@ export class ComprehensiveInspectionPage implements OnInit {
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
+      if (!this.task.comprehesiveForm) {
+        this.task.comprehesiveForm = new ComprehensiveForm();
+      }
+      console.log(this.task);
     }
   }
 

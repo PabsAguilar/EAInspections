@@ -12,6 +12,10 @@ import { AreasComponent } from "./comprehensive-form/areas/areas.component";
 import { BathroomsComponent } from "./comprehensive-form/bathrooms/bathrooms.component";
 import { AreaGeneralConditionComponent } from "./comprehensive-form/area-general-condition/area-general-condition.component";
 import { EnviromentalSectionComponent } from "./comprehensive-form/enviromental-section/enviromental-section.component";
+import { ExteriorComponent } from "./comprehensive-form/exterior/exterior.component";
+import { RecomendationsComponent } from "./comprehensive-form/recomendations/recomendations.component";
+import { InsuranceComponent } from "./comprehensive-form/insurance/insurance.component";
+import { RemindersComponent } from "./comprehensive-form/reminders/reminders.component";
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
@@ -24,7 +28,11 @@ import { EnviromentalSectionComponent } from "./comprehensive-form/enviromental-
     AreasComponent,
     BathroomsComponent,
     AreaGeneralConditionComponent,
-    EnviromentalSectionComponent, 
+    EnviromentalSectionComponent,
+    ExteriorComponent,
+    RecomendationsComponent,
+    InsuranceComponent,
+    RemindersComponent,
   ],
   exports: [
     GenericListPopOverComponent,
@@ -36,6 +44,10 @@ import { EnviromentalSectionComponent } from "./comprehensive-form/enviromental-
     BathroomsComponent,
     AreaGeneralConditionComponent,
     EnviromentalSectionComponent,
+    ExteriorComponent,
+    RecomendationsComponent,
+    InsuranceComponent,
+    RemindersComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

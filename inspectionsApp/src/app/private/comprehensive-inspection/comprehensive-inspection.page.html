@@ -71,6 +71,13 @@
     [(data)]="task.comprehesiveForm.enviromentalSection"
   ></app-enviromental-section>
 
+  <app-exterior
+    ngDefaultControl
+    (dataChanged)="UpdateEntity($event)"
+    type="Exterior"
+    [(data)]="task.comprehesiveForm.exterior"
+  ></app-exterior>
+
   <ion-list>
     <ion-item>
       <ion-button (click)="completeTask()" expand="block" full color="success">

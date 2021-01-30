@@ -1,3 +1,55 @@
-<p>
-  exterior works!
-</p>
+<ion-item (click)="toggleAccordion()" lines="none">
+  <ion-label> Exterior </ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="progressPercentage >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item>
+    <ion-label>Select conditions:</ion-label>
+    <ion-chip slot="end" color="warning">{{ _data.condition.length }}</ion-chip>
+  </ion-item>
+  <ion-item *ngFor="let item of _conditions; let i = index" lines="none">
+    <ion-checkbox
+      slot="start"
+      color="warning"
+      (ionChange)="onConditionChange($event, i)"
+      [(ngModel)]="item.checked"
+    ></ion-checkbox>
+    <ion-label>{{ item.name }}</ion-label>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Other condition</ion-label>
+    <ion-input
+      [(ngModel)]="_data.conditionOther"
+      (ionChange)="changeModel($event)"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <app-slides-photos
+    ngDefaultControl
+    title="Pictures"
+    name="pictures"
+    (photoChanged)="changeModel($event)"
+    [(ngModel)]="_data.pictures"
+  ></app-slides-photos>
+
+  <ion-item>
+    <ion-label position="floating">Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="_data.notes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+</div>

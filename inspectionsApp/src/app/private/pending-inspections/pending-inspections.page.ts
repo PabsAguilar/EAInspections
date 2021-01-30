@@ -103,9 +103,6 @@ export class PendingInspectionsPage implements OnInit {
         {
           text: "Ok",
           handler: () => {
-            if (!this.selectedTask.comprehesiveForm) {
-              this.selectedTask.comprehesiveForm = new ComprehensiveForm();
-            }
             let navigationExtras: NavigationExtras = {
               state: {
                 task: this.selectedTask,
