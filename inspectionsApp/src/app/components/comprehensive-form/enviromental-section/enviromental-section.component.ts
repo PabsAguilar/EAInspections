@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { ComprehensiveEnvironmentalSection } from "src/app/models/comprehensive-environmental-section";
+import { ComprehensiveEnvironmentalSection } from "src/app/models/comprehensive-form/comprehensive-environmental-section";
 
 @Component({
   selector: "app-enviromental-section",

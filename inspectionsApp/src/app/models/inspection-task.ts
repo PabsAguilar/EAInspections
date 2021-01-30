@@ -1,7 +1,7 @@
 import { IStorageModel } from "../interfaces/Istorage-model";
-import { Area } from "./area";
-import { ComprehensiveForm } from "./comprehensive-form";
-import { GeneralInfoInspection } from "./general-info-inspection";
+import { Area } from "./comprehensive-form/area";
+import { ComprehensiveForm } from "./comprehensive-form/comprehensive-form";
+import { GeneralInfoInspection } from "./comprehensive-form/general-info-inspection";
 
 export class InspectionTask implements IStorageModel {
   id: number;

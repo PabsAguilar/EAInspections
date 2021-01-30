@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild,
 } from "@angular/core";
-import { GeneralInfoInspection } from "src/app/models/general-info-inspection";
+import { GeneralInfoInspection } from "src/app/models/comprehensive-form/general-info-inspection";
 import { PhotoService } from "src/app/services/photo.service";
 
 @Component({

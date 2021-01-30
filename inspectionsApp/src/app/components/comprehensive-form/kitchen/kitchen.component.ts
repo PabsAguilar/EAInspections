@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { AreaConditionType } from "src/app/models/enums";
-import { Kitchen } from "src/app/models/kitchen";
+import { Kitchen } from "src/app/models/comprehensive-form/kitchen";
 
 @Component({
   selector: "app-kitchen",

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output } from "@angular/core";
 import { EventEmitter } from "@angular/core";
-import { Area } from "src/app/models/area";
+import { Area } from "src/app/models/comprehensive-form/area";
 
 @Component({
   selector: "app-area",

@@ -9,7 +9,7 @@ import {
 } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
-import { ComprehensiveForm } from "src/app/models/comprehensive-form";
+import { ComprehensiveForm } from "src/app/models/comprehensive-form/comprehensive-form";
 import { InspectionType } from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
 

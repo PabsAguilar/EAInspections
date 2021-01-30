@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { Area } from "src/app/models/area";
+import { Area } from "src/app/models/comprehensive-form/area";
 import { BathroomConditions } from "src/app/models/enums";
-import { GeneralCondition } from "src/app/models/general-condition";
+import { GeneralCondition } from "src/app/models/comprehensive-form/general-condition";
 
 @Component({
   selector: "app-bathrooms",
