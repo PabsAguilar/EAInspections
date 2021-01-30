@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { StartInspectionPage } from './start-inspection.page';
+import { EnviromentalSectionComponent } from './enviromental-section.component';
 
-describe('StartInspectionPage', () => {
-  let component: StartInspectionPage;
-  let fixture: ComponentFixture<StartInspectionPage>;
+describe('EnviromentalSectionComponent', () => {
+  let component: EnviromentalSectionComponent;
+  let fixture: ComponentFixture<EnviromentalSectionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StartInspectionPage ],
+      declarations: [ EnviromentalSectionComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(StartInspectionPage);
+    fixture = TestBed.createComponent(EnviromentalSectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

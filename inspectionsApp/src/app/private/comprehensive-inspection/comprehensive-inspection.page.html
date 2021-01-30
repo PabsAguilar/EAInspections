@@ -65,6 +65,12 @@
     [(InspectionArea)]="task.comprehesiveForm.atic"
   ></app-area-general-condition>
 
+  <app-enviromental-section
+    ngDefaultControl
+    (dataChanged)="UpdateEntity($event)"
+    [(data)]="task.comprehesiveForm.enviromentalSection"
+  ></app-enviromental-section>
+
   <ion-list>
     <ion-item>
       <ion-button (click)="completeTask()" expand="block" full color="success">

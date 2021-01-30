@@ -29,13 +29,6 @@ const routes: Routes = [
           ),
       },
       {
-        path: "start-inspection",
-        loadChildren: () =>
-          import("../start-inspection/start-inspection.module").then(
-            (m) => m.StartInspectionPageModule
-          ),
-      },
-      {
         path: "comprehensive-inspection",
         loadChildren: () =>
           import(

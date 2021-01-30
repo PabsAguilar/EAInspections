@@ -7,14 +7,15 @@ import { IonicModule } from "@ionic/angular";
 import { ComprehensiveInspectionPageRoutingModule } from "./comprehensive-inspection-routing.module";
 
 import { ComprehensiveInspectionPage } from "./comprehensive-inspection.page";
-import { InspectionGeneralComponent } from "src/app/components/inspection-general/inspection-general.component";
+import { InspectionGeneralComponent } from "src/app/components/comprehensive-form/inspection-general/inspection-general.component";
 import { SlidesPhotosComponent } from "src/app/components/slides-photos/slides-photos.component";
 import { PhotoComponent } from "src/app/components/photo/photo.component";
-import { AreasComponent } from "src/app/components/areas/areas.component";
-import { AreaComponent } from "src/app/components/area/area.component";
-import { BathroomsComponent } from "src/app/components/bathrooms/bathrooms.component";
-import { AreaGeneralConditionComponent } from "src/app/components/area-general-condition/area-general-condition.component";
-import { KitchenComponent } from "src/app/components/kitchen/kitchen.component";
+import { AreasComponent } from "src/app/components/comprehensive-form/areas/areas.component";
+import { AreaComponent } from "src/app/components/comprehensive-form/area/area.component";
+import { BathroomsComponent } from "src/app/components/comprehensive-form/bathrooms/bathrooms.component";
+import { AreaGeneralConditionComponent } from "src/app/components/comprehensive-form/area-general-condition/area-general-condition.component";
+import { KitchenComponent } from "src/app/components/comprehensive-form/kitchen/kitchen.component";
+import { EnviromentalSectionComponent } from "src/app/components/comprehensive-form/enviromental-section/enviromental-section.component";
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { KitchenComponent } from "src/app/components/kitchen/kitchen.component";
     BathroomsComponent,
     AreaGeneralConditionComponent,
     KitchenComponent,
+    EnviromentalSectionComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

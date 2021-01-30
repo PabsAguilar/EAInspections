@@ -1,0 +1,68 @@
+<ion-item (click)="toggleAccordion()" lines="none">
+  <ion-label>Environmental Test</ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="progressPercentage >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item lines="inset">
+    <ion-label>Mold Sample Taken</ion-label>
+    <ion-toggle
+      slot="start"
+      name="MoldSampleTaken"
+      color="primary"
+      [(ngModel)]="_data.MoldSampleTaken"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Mold Sample Location</ion-label>
+    <ion-input
+      [(ngModel)]="_data.MoldSampleLocation"
+      (ionChange)="changeModel($event)"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <app-slides-photos
+    ngDefaultControl
+    title="Mold Location Pictures"
+    name="pictures"
+    (photoChanged)="changeModel($event)"
+    [(ngModel)]="_data.MoldLocationPicture"
+  ></app-slides-photos>
+
+  <ion-item lines="inset">
+    <ion-label>Water Sample Taken</ion-label>
+    <ion-toggle
+      slot="start"
+      name="WaterSampleTaken"
+      color="primary"
+      [(ngModel)]="_data.WaterSampleTaken"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Water Sample location</ion-label>
+    <ion-select
+      interface="popover"
+      name="propertyType"
+      (ionChange)="changeModel($event)"
+      [(ngModel)]="_data.WaterSamplelocation"
+    >
+      <ion-select-option value="Kitchen">Kitchen</ion-select-option>
+      <ion-select-option value="Bathroom">Bathroom</ion-select-option>
+      <ion-select-option value="Refrigerator">Refrigerator</ion-select-option>
+      <ion-select-option value="Water filter">Water filter</ion-select-option>
+      <ion-select-option value="Other">Other</ion-select-option>
+    </ion-select>
+  </ion-item>
+</div>

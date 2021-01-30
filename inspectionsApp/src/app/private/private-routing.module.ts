@@ -8,28 +8,37 @@ const routes: Routes = [
       import("./menu/menu.module").then((m) => m.MenuPageModule),
   },
   {
-    path: 'inspections-details',
-    loadChildren: () => import('./inspections-details/inspections-details.module').then( m => m.InspectionsDetailsPageModule)
+    path: "inspections-details",
+    loadChildren: () =>
+      import("./inspections-details/inspections-details.module").then(
+        (m) => m.InspectionsDetailsPageModule
+      ),
   },
   {
-    path: 'summary',
-    loadChildren: () => import('./summary/summary.module').then( m => m.SummaryPageModule)
+    path: "summary",
+    loadChildren: () =>
+      import("./summary/summary.module").then((m) => m.SummaryPageModule),
   },
   {
-    path: 'start-inspection',
-    loadChildren: () => import('./start-inspection/start-inspection.module').then( m => m.StartInspectionPageModule)
+    path: "scheduling-detail",
+    loadChildren: () =>
+      import("./scheduling-detail/scheduling-detail.module").then(
+        (m) => m.SchedulingDetailPageModule
+      ),
   },
   {
-    path: 'scheduling-detail',
-    loadChildren: () => import('./scheduling-detail/scheduling-detail.module').then( m => m.SchedulingDetailPageModule)
-  },
+    path: "comprehensive-inspection",
+    loadChildren: () =>
+      import("./comprehensive-inspection/comprehensive-inspection.module").then(
+        (m) => m.ComprehensiveInspectionPageModule
+      ),
+  }, 
   {
-    path: 'comprehensive-inspection',
-    loadChildren: () => import('./comprehensive-inspection/comprehensive-inspection.module').then( m => m.ComprehensiveInspectionPageModule)
-  },
-  {
-    path: 'environmental-inspection',
-    loadChildren: () => import('./environmental-inspection/environmental-inspection.module').then( m => m.EnvironmentalInspectionPageModule)
+    path: "environmental-inspection",
+    loadChildren: () =>
+      import("./environmental-inspection/environmental-inspection.module").then(
+        (m) => m.EnvironmentalInspectionPageModule
+      ),
   },
 ];
 
