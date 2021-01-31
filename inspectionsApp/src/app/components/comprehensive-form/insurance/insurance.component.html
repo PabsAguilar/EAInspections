@@ -1,3 +1,130 @@
-<p>
-  insurance works!
-</p>
+<ion-item (click)="toggleAccordion()" lines="none" button>
+  <ion-label> Insurance </ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="progressPercentage >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item lines="inset">
+    <ion-label>Do you have insurance?</ion-label>
+    <ion-toggle
+      slot="start"
+      name="haveInsurance"
+      color="primary"
+      (ionChange)="changeModel($event)"
+      [(ngModel)]="_data.haveInsurance"
+    >
+    </ion-toggle>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Who is your Insurance Carrier?</ion-label>
+    <ion-input
+      [(ngModel)]="_data.insuranceCarrier"
+      (ionChange)="changeModel($event)"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <app-slides-photos
+    ngDefaultControl
+    title="Insurance Policy Images"
+    name="picturesPolicy"
+    (photoChanged)="changeModel($event)"
+    [(ngModel)]="_data.picturesPolicy"
+  ></app-slides-photos>
+
+  <ion-item lines="inset">
+    <ion-label
+      >Have you filed a claim for any of the above damages before?</ion-label
+    >
+    <ion-toggle
+      slot="start"
+      (ionChange)="changeModel($event)"
+      name="claimForDamageBefore"
+      color="primary"
+      [(ngModel)]="_data.claimForDamageBefore"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label>Have you made a claim in the last (5) five years?</ion-label>
+    <ion-toggle
+      slot="start"
+      (ionChange)="changeModel($event)"
+      name="claimInLast5Years"
+      color="primary"
+      [(ngModel)]="_data.claimInLast5Years"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">What was the claim for?</ion-label>
+    <ion-input
+      [(ngModel)]="_data.reasonForClaim"
+      (ionChange)="changeModel($event)"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label>Did you use a public adjuster or lawyer?</ion-label>
+    <ion-toggle
+      slot="start"
+      (ionChange)="changeModel($event)"
+      name="usePublicAdjuster"
+      color="primary"
+      [(ngModel)]="_data.usePublicAdjuster"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item lines="inset" *ngIf="_data.usePublicAdjuster">
+    <ion-label position="floating">public adjuster / lawyer name?</ion-label>
+    <ion-input
+      [(ngModel)]="_data.adjusterName"
+      (ionChange)="changeModel($event)"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">How many checks did you receive?</ion-label>
+    <ion-input
+      [(ngModel)]="_data.quantityOfChecks"
+      (ionChange)="changeModel($event)"
+      type="number"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="_data.notes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+  <ion-item lines="inset">
+    <ion-label>Assign to PA or Attorney</ion-label>
+    <ion-toggle
+      slot="start"
+      name="assignPAorAttorney"
+      color="primary"
+      (ionChange)="changeModel($event)"
+      [(ngModel)]="_data.assignPAorAttorney"
+    ></ion-toggle>
+  </ion-item>
+</div>

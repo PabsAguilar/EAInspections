@@ -1,3 +1,65 @@
-<p>
-  reminders works!
-</p>
+<ion-item (click)="toggleAccordion()" lines="none" button>
+  <ion-label> Reminders! </ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="progressPercentage >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item lines="inset">
+    <ion-label>Put sticker on HVAC and Water Heater</ion-label>
+    <ion-toggle
+      slot="start"
+      name="sticker"
+      (ionChange)="changeModel($event)"
+      color="primary"
+      (ionChange)="changeModel($event)"
+      [(ngModel)]="_data.sticker"
+    >
+    </ion-toggle>
+  </ion-item>
+  <ion-item lines="inset">
+    <ion-label
+      >Remind Homeowner they can call once a year for free inspection</ion-label
+    >
+    <ion-toggle
+      slot="start"
+      name="freeInspection"
+      color="primary"
+      (ionChange)="changeModel($event)"
+      [(ngModel)]="_data.freeInspection"
+    >
+    </ion-toggle>
+  </ion-item>
+  <ion-item lines="inset">
+    <ion-label>Give them company brochure</ion-label>
+    <ion-toggle
+      slot="start"
+      name="brochure"
+      color="primary"
+      (ionChange)="changeModel($event)"
+      [(ngModel)]="_data.brochure"
+    >
+    </ion-toggle>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label>Offer financing (If applicable)</ion-label>
+    <ion-toggle
+      slot="start"
+      name="offerFinancing"
+      color="primary"
+      (ionChange)="changeModel($event)"
+      [(ngModel)]="_data.offerFinancing"
+    >
+    </ion-toggle>
+  </ion-item>
+</div>

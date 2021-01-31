@@ -1,8 +1,10 @@
-<ion-item (click)="toggleAccordion()" lines="none">
+<ion-item (click)="toggleAccordion()" lines="none" button>
   <ion-label color="primary"> {{ title }} </ion-label>
   <ion-chip *ngIf="area.name" color="secondary" slot="end">
     {{ area.name }}
   </ion-chip>
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
 </ion-item>
 <ion-progress-bar
   color="{{ progressColor }}"

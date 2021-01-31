@@ -1,3 +1,52 @@
-<p>
-  recomendations works!
-</p>
+<ion-item (click)="toggleAccordion()" lines="none" button>
+  <ion-label> Recomendations </ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="progressPercentage >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item lines="inset">
+    <ion-label>Damage Found?</ion-label>
+    <ion-toggle
+      slot="start"
+      name="qualityTest"
+      color="primary"
+      (ionChange)="changeModel($event)"
+      [(ngModel)]="_data.damagesFound"
+    ></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label>Recomendations:</ion-label>
+    <ion-chip slot="end" color="warning">{{
+      _data.inspectionRecomendation.length
+    }}</ion-chip>
+  </ion-item>
+  <ion-item *ngFor="let item of _conditions; let i = index" lines="none">
+    <ion-checkbox
+      slot="start"
+      color="warning"
+      (ionChange)="onConditionChange($event, i)"
+      [(ngModel)]="item.checked"
+    ></ion-checkbox>
+    <ion-label>{{ item.name }}</ion-label>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Other recomendation</ion-label>
+    <ion-input
+      [(ngModel)]="_data.recomendation"
+      (ionChange)="changeModel($event)"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+</div>

@@ -10,7 +10,7 @@ import {
 import { Subscription } from "rxjs";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { ComprehensiveForm } from "src/app/models/comprehensive-form/comprehensive-form";
-import { InspectionType } from "src/app/models/enums";
+import { InspectionStatus, InspectionType } from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
 
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
@@ -85,7 +85,28 @@ export class PendingInspectionsPage implements OnInit {
   async startInspection(task: InspectionTask) {
     console.log("Start clicked");
     this.selectedTask = task;
-    this.presentAlertConfirmStartInspection();
+
+    if (task.internalStatus == InspectionStatus.InProgress) {
+      await this.openInspectionPage();
+    } else {
+      await this.presentAlertConfirmStartInspection();
+    }
+  }
+  async openInspectionPage() {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        task: this.selectedTask,
+      },
+    };
+    var path = "";
+    if (this.selectedTask.inspectionType == InspectionType.Comprehensive) {
+      path = "menu/comprehensive-inspection";
+    } else if (
+      this.selectedTask.inspectionType == InspectionType.Environmental
+    ) {
+      path = "menu/environmental-inspection";
+    }
+    this.navController.navigateForward([path], navigationExtras);
   }
   async presentAlertConfirmStartInspection() {
     const alert = await this.alertController.create({
@@ -102,23 +123,8 @@ export class PendingInspectionsPage implements OnInit {
         },
         {
           text: "Ok",
-          handler: () => {
-            let navigationExtras: NavigationExtras = {
-              state: {
-                task: this.selectedTask,
-              },
-            };
-            var path = "";
-            if (
-              this.selectedTask.inspectionType == InspectionType.Comprehensive
-            ) {
-              path = "menu/comprehensive-inspection";
-            } else if (
-              this.selectedTask.inspectionType == InspectionType.Environmental
-            ) {
-              path = "menu/environmental-inspection";
-            }
-            this.navController.navigateForward([path], navigationExtras);
+          handler: async () => {
+            await this.openInspectionPage();
           },
         },
       ],

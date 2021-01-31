@@ -7,6 +7,7 @@ export enum InspectionStatus {
   InProgress = "In Progress",
   New = "New",
   Completed = "Completed",
+  Pending = "Pending",
 }
 
 export enum AreaConditionType {
@@ -16,6 +17,7 @@ export enum AreaConditionType {
   UtilityRoom = "UtilityRoom",
   Atic = "Atic",
   Exterior = "Exterior",
+  InspectionRecommendations = "InspectionRecommendations",
 }
 export var AreaConditions = [
   { name: "Ceiling stains", checked: false },

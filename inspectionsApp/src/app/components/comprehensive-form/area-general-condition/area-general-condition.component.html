@@ -1,4 +1,4 @@
-<ion-item (click)="toggleAccordion()" lines="none">
+<ion-item (click)="toggleAccordion()" lines="none" button>
   <ion-label [color]="titleColor"> {{ title }} </ion-label>
   <ion-icon
     slot="start"
@@ -6,6 +6,8 @@
     *ngIf="showSuccess && progressPercentage >= 1"
     name="checkmark-circle-outline"
   ></ion-icon>
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
 </ion-item>
 <ion-progress-bar
   color="{{ progressColor }}"

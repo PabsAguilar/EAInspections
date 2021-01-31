@@ -9,7 +9,7 @@ export class Insurance {
   adjusterName: string;
   quantityOfChecks: number;
   notes: string;
-  assignPAorAttorney: string;
+  assignPAorAttorney: boolean;
   constructor() {
     this.haveInsurance = false;
     this.insuranceCarrier = false;
@@ -21,6 +21,6 @@ export class Insurance {
     this.adjusterName = "";
     this.quantityOfChecks = null;
     this.notes = "";
-    this.assignPAorAttorney = "";
+    this.assignPAorAttorney = false;
   }
 }

@@ -77,12 +77,29 @@
     type="Exterior"
     [(data)]="task.comprehesiveForm.exterior"
   ></app-exterior>
+  <app-recomendations
+    ngDefaultControl
+    (dataChanged)="UpdateEntity($event)"
+    type="InspectionRecommendations"
+    [(data)]="task.comprehesiveForm.recomendations"
+  ></app-recomendations>
 
-  <ion-list>
-    <ion-item>
-      <ion-button (click)="completeTask()" expand="block" full color="success">
-        Complete Inspection
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <app-insurance
+    ngDefaultControl
+    (dataChanged)="UpdateEntity($event)"
+    [(data)]="task.comprehesiveForm.insurance"
+  ></app-insurance>
+
+  <app-reminders
+    ngDefaultControl
+    (dataChanged)="UpdateEntity($event)"
+    [(data)]="task.comprehesiveForm.reminders"
+  ></app-reminders>
+
+  <ion-item class="ion-margin" lines="none">
+    <ion-label>Complete Inspection</ion-label>
+    <ion-fab-button color="success" (click)="completeTask()" class="ion-margin">
+      <ion-icon name="walk-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-item>
 </ion-content>
