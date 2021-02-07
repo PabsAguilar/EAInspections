@@ -11,6 +11,20 @@
 </ion-header>
 
 <ion-content>
+  <app-inspection-general
+    ngDefaultControl
+    (generalInfoChanged)="UpdateEntity($event)"
+    [(generalInfo)]="task.environmentalForm.generalInfoInspection"
+  >
+  </app-inspection-general>
+
+  <app-areas-mold
+    ngDefaultControl
+    (modelChanged)="UpdateEntity($event)"
+    [(model)]="task.environmentalForm.moldAreas"
+  >
+  </app-areas-mold>
+
   <ion-list>
     <ion-item>
       <ion-button (click)="completeTask()" expand="block" full color="success">

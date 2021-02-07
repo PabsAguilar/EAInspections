@@ -2,7 +2,7 @@ import { NavigationStart, Router, RouterEvent } from "@angular/router";
 import { AuthenticationService } from "./services/authentication.service";
 import { Component, NgZone } from "@angular/core";
 
-import { Platform } from "@ionic/angular";
+import { LoadingController, Platform } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
 
@@ -17,7 +17,8 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private auth: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private loadingController: LoadingController
   ) {
     this.initializeApp();
   }
@@ -28,8 +29,12 @@ export class AppComponent {
       this.splashScreen.hide();
       this.auth.setTheme();
 
-      this.auth.authenticationState.subscribe((state) => {
+      this.auth.authenticationState.subscribe(async (state) => {
         if (state) {
+          const loading = await this.loadingController.create({
+            message: "Please wait...",
+          });
+          await loading.present();
           var random = Math.floor(Math.random() * 100) + 2;
           this.router.navigate([
             "menu/tabs/tabs/pending-inspections/" + random.toString(),

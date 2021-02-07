@@ -16,6 +16,9 @@ import { ExteriorComponent } from "./comprehensive-form/exterior/exterior.compon
 import { RecomendationsComponent } from "./comprehensive-form/recomendations/recomendations.component";
 import { InsuranceComponent } from "./comprehensive-form/insurance/insurance.component";
 import { RemindersComponent } from "./comprehensive-form/reminders/reminders.component";
+import { MultipleRadioComponent } from "./multiple-radio/multiple-radio.component";
+import { AreaMoldComponent } from "./environmental-form/area-mold/area-mold.component";
+import { AreasMoldComponent } from "./environmental-form/areas-mold/areas-mold.component";
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
@@ -33,6 +36,9 @@ import { RemindersComponent } from "./comprehensive-form/reminders/reminders.com
     RecomendationsComponent,
     InsuranceComponent,
     RemindersComponent,
+    MultipleRadioComponent,
+    AreaMoldComponent,
+    AreasMoldComponent,
   ],
   exports: [
     GenericListPopOverComponent,
@@ -48,6 +54,9 @@ import { RemindersComponent } from "./comprehensive-form/reminders/reminders.com
     RecomendationsComponent,
     InsuranceComponent,
     RemindersComponent,
+    MultipleRadioComponent,
+    AreaMoldComponent,
+    AreasMoldComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -1,0 +1,229 @@
+<ion-item (click)="toggleAccordion()" lines="none" button>
+  <ion-label [color]="titleColor"> {{ title }} </ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="showSuccess && progressPercentage >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+  <ion-chip *ngIf="_model.areaName" color="secondary" slot="end">
+    {{ _model.areaName }}
+  </ion-chip>
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item>
+    <ion-label position="floating">Area Name</ion-label>
+    <ion-select
+      interface="popover"
+      name="name"
+      [(ngModel)]="_model.areaName"
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option value="Bedroom 1"> Bedroom 1</ion-select-option>
+      <ion-select-option value="Bedroom 2"> Bedroom 2</ion-select-option>
+      <ion-select-option value="Bedroom 3"> Bedroom 3</ion-select-option>
+      <ion-select-option value="Bedroom 4"> Bedroom 4 </ion-select-option>
+      <ion-select-option value="Bedroom 5"> Bedroom 5</ion-select-option>
+      <ion-select-option value="Bedroom 6"> Bedroom 6</ion-select-option>
+      <ion-select-option value="Living"> Living</ion-select-option>
+      <ion-select-option value="Room"> Room</ion-select-option>
+      <ion-select-option value="Dining Room"> Dining Room</ion-select-option>
+      <ion-select-option value="Florida Room"> Florida Room</ion-select-option>
+      <ion-select-option value="Bathroom 1"> Bathroom 1 </ion-select-option>
+      <ion-select-option value="Bathroom 2"> Bathroom 2</ion-select-option>
+      <ion-select-option value="Bathroom 3"> Bathroom 3</ion-select-option>
+      <ion-select-option value="Bathroom 4"> Bathroom 4</ion-select-option>
+      <ion-select-option value="Bathroom 5"> Bathroom 5</ion-select-option>
+      <ion-select-option value="Laundry"> Laundry</ion-select-option>
+      <ion-select-option value="Garage"> Garage</ion-select-option>
+      <ion-select-option value="Utility Room"> Utility Room</ion-select-option>
+      <ion-select-option value="Kitchen"> Kitchen</ion-select-option>
+      <ion-select-option value="Attic"> Attic</ion-select-option>
+      <ion-select-option value="Other"> Other</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <app-multiple-radio
+    title="Area Conditions"
+    ngDefaultControl
+    name="areaCondition"
+    [options]="conditions"
+    [(data)]="_model.areaCondition"
+    (dataChange)="changeModel($event)"
+  ></app-multiple-radio>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Area Relative Humidity %</ion-label>
+    <ion-input
+      [(ngModel)]="_model.areaRH"
+      (ionChange)="changeModel($event)"
+      type="number"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <app-slides-photos
+    *ngIf="isMenuOpen"
+    ngDefaultControl
+    title="Area Pictures"
+    name="areaPictures"
+    (photoChanged)="changeModel($event)"
+    [(ngModel)]="_model.areaPictures"
+  ></app-slides-photos>
+
+  <ion-item>
+    <ion-label position="floating">Area Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="model.areaNotes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label>Remove Ceiling </ion-label>
+    <ion-toggle
+      slot="start"
+      (ionChange)="changeModel($event)"
+      name="removeCeiling"
+      color="primary"
+      [(ngModel)]="_model.removeCeiling"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Ceiling Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="_model.ceilingNotes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label>Remove Drywall </ion-label>
+    <ion-toggle
+      slot="start"
+      (ionChange)="changeModel($event)"
+      name="removeDrywall"
+      color="primary"
+      [(ngModel)]="_model.removeDrywall"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Drywall Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="_model.drywallNotes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label>Remove Baseboards</ion-label>
+    <ion-toggle
+      slot="start"
+      (ionChange)="changeModel($event)"
+      name="removeBaseboards"
+      color="primary"
+      [(ngModel)]="_model.removeBaseboards"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Baseboards Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="_model.baseboardsNotes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label>Remove Flooring </ion-label>
+    <ion-toggle
+      slot="start"
+      (ionChange)="changeModel($event)"
+      name="removeFlooring"
+      color="primary"
+      [(ngModel)]="_model.removeFlooring"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Flooring Notes</ion-label>
+    <ion-textarea
+      [(ngModel)]="_model.flooringNotes"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+
+  <app-multiple-radio
+    title="Decontamination"
+    ngDefaultControl
+    name="decontamination"
+    [options]="decontaminationOptions"
+    [(data)]="_model.decontamination"
+    (dataChange)="changeModel($event)"
+  ></app-multiple-radio>
+
+  <ion-radio-group
+    radio-group
+    [(ngModel)]="_model.furnitureOption"
+    name="furnitureOption"
+    (ionChange)="changeModel($event)"
+    ngDefaultControl
+  >
+    <ion-list-header lines="inset"> Furniture: </ion-list-header>
+    <ion-item lines="none">
+      <ion-label>Discard</ion-label>
+      <ion-radio value="Discard" slot="start"></ion-radio>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>Clean</ion-label>
+      <ion-radio value="Clean" slot="start"></ion-radio>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label> N/A</ion-label>
+      <ion-radio value="N/A" slot="start"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+
+  <ion-radio-group
+    [(ngModel)]="_model.beddingsOption"
+    ngDefaultControl
+    (ionChange)="changeModel($event)"
+    name="beddingsOption"
+  >
+    <ion-list-header lines="inset"> Beddings: </ion-list-header>
+    <ion-item lines="none">
+      <ion-label>Discard</ion-label>
+      <ion-radio value="Discard" slot="start"></ion-radio>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>Clean</ion-label>
+      <ion-radio value="Clean" slot="start"></ion-radio>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label> N/A</ion-label>
+      <ion-radio value=" N/A" slot="start"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+
+  <ion-item>
+    <ion-label position="floating">Observations and Recommendations</ion-label>
+    <ion-textarea
+      [(ngModel)]="_model.observations"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+</div>

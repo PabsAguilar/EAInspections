@@ -36,7 +36,11 @@ export class MenuPage implements OnInit {
 
   async ionViewWillEnter() {
     //TODO: Validate connection to internet
-    this.user = await this.authservice.getUser();
+    try {
+      this.user = await this.authservice.getUser();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   pages = [{ title: "Workspace", url: "/menu/tabs" }];

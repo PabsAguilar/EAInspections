@@ -41,8 +41,8 @@ export class InspectionGeneralComponent implements OnInit {
     return this.generalInfoInspection;
   }
   set generalInfo(value: GeneralInfoInspection) {
-    if (!value) { 
-      value = new GeneralInfoInspection();
+    if (value.environmentalInspection) {
+      this.totalProperties = 7;
     }
     this.generalInfoInspection = value;
     this.changeModel(null);
@@ -54,6 +54,7 @@ export class InspectionGeneralComponent implements OnInit {
 
   ngOnInit() {}
   changeModel($event) {
+    console.log(this.generalInfoInspection);
     this.filledProperties = 0;
     if (
       this.generalInfoInspection.propertyYear &&
@@ -73,6 +74,24 @@ export class InspectionGeneralComponent implements OnInit {
     ) {
       this.filledProperties++;
     }
+    if (this.generalInfoInspection.environmentalInspection) {
+      if (this.generalInfoInspection.interiorTemperature) {
+        this.filledProperties++;
+      }
+      if (this.generalInfoInspection.exteriorRelativeHumidity) {
+        this.filledProperties++;
+      }
+      if (this.generalInfoInspection.HVACSystemCondition.length > 0) {
+        this.filledProperties++;
+      }
+      if (this.generalInfoInspection.atticCondition.length > 0) {
+        this.filledProperties++;
+      }
+      if (this.generalInfoInspection.ductsCondition.length > 0) {
+        this.filledProperties++;
+      }
+    }
+
     this.progressPercentage =
       this.filledProperties == 0
         ? 0
@@ -109,4 +128,23 @@ export class InspectionGeneralComponent implements OnInit {
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
+
+  HHVACConditions: any[] = [
+    { name: "Ok ", checked: false },
+    { name: "Dirty", checked: false },
+    { name: "Visible Mold", checked: false },
+  ];
+
+  DuctConditions: any[] = [
+    { name: "Ok ", checked: false },
+    { name: "Dirty", checked: false },
+    { name: "Visible Mold", checked: false },
+  ];
+
+  AticConditions: any[] = [
+    { name: "Ok ", checked: false },
+    { name: "Wet plywood", checked: false },
+    { name: "Wet insulation", checked: false },
+    { name: "Visible Mold", checked: false },
+  ];
 }

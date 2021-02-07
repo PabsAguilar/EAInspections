@@ -25,6 +25,7 @@ export class ComprehensiveForm {
 
   constructor() {
     this.generalInfoInspection = new GeneralInfoInspection();
+    this.generalInfoInspection.environmentalInspection = false;
     this.startDate = new Date();
     this.kitchen = new Kitchen();
     this.areas = [];
@@ -45,3 +46,4 @@ export class ComprehensiveForm {
     }
   }
 }
+ 

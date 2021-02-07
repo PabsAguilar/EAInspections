@@ -1,0 +1,49 @@
+<ion-item (click)="toggleAccordion()" lines="full">
+  <ion-label>
+    <h2>Mold Inspection</h2>
+  </ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="filledAreas >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+  <ion-chip slot="end" color="success" *ngIf="filledAreas >= 1">
+    {{ filledAreas }}</ion-chip
+  >
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item>
+    <ion-label position="floating">Inspection Type</ion-label>
+    <ion-select
+      interface="popover"
+      name="type"
+      [(ngModel)]="_model.moldInspectionType"
+      (ionChange)="AreaUpdated($event)"
+    >
+      <ion-select-option value="Pre Mold Inspection"
+        >Pre Mold Inspection</ion-select-option
+      >
+      <ion-select-option value="Mold Samples Only"
+        >Mold Samples Only</ion-select-option
+      >
+      <ion-select-option value="Post Mold Inspection (Clearance)"
+        >Post Mold Inspection (Clearance)</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+
+  <app-area-mold
+    *ngFor="let area of _model.areasMold; let i = index"
+    ngDefaultControl
+    [title]="'Area ' + (i + 1)"
+    (modelChanged)="AreaUpdated($event)"
+    [(model)]="_model.areasMold[i]"
+  ></app-area-mold>
+</div>

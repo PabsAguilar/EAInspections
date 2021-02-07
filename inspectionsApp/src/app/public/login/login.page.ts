@@ -7,7 +7,7 @@ import {
   FormControl,
 } from "@angular/forms";
 import { BitrixInspectionService } from "src/app/services/bitrix-inspection.service";
-import { AlertController } from "@ionic/angular";
+import { AlertController, LoadingController } from "@ionic/angular";
 import { User } from "src/app/models/user";
 
 @Component({
@@ -22,12 +22,23 @@ export class LoginPage implements OnInit {
     private authService: AuthenticationService,
     private bitrix: BitrixInspectionService,
     public formBuilder: FormBuilder,
-    public alertController: AlertController
+    public alertController: AlertController,
+    private loadingController: LoadingController
   ) {}
 
   ngOnInit() {}
 
-  ionViewDidEnter() {}
+  async ionViewDidEnter() {
+    try {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   email: string = "";
   password: string = "";
   validations_form = this.formBuilder.group({
@@ -63,27 +74,36 @@ export class LoginPage implements OnInit {
   };
 
   async onSubmit(values) {
-    this.bitrix.getUserByEmail(values.username).subscribe(async (data) => {
-      if (data.result.length > 0) {
-        var user = new User(data.result[0]);
-        console.log(user);
-        this.validations_form.reset();
-        this.authService.login(user);
-      } else {
-        await this.presentAlert();
-      }
-    });
+    try {
+      this.bitrix.getUserByEmail(values.username).subscribe(async (data) => {
+        if (data.result.length > 0) {
+          var user = new User(data.result[0]);
+          console.log(user);
+
+          this.validations_form.reset();
+          this.authService.login(user);
+        } else {
+          await this.presentAlert();
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async presentAlert() {
-    const alert = await this.alertController.create({
-      cssClass: "my-custom-class",
-      header: "Error",
-      //subHeader: "Invalid credentials",
-      message: "Incorrect user or password.",
-      buttons: ["OK"],
-    });
+    try {
+      const alert = await this.alertController.create({
+        cssClass: "my-custom-class",
+        header: "Error",
+        //subHeader: "Invalid credentials",
+        message: "Incorrect user or password.",
+        buttons: ["OK"],
+      });
 
-    await alert.present();
+      await alert.present();
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

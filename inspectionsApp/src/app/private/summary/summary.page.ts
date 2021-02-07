@@ -27,59 +27,71 @@ export class SummaryPage implements OnInit {
   ngOnInit() {}
 
   async ionViewWillEnter() {
-    this.schedulingList = await this.schedulingStorageService.getAll();
-    this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+    try {
+      this.schedulingList = await this.schedulingStorageService.getAll();
+      this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async doRefresh(event) {
-    console.log("Pull inspections Event Triggered!");
-    if (this.segmentOption === "inspections") {
-      this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
-    } else {
-      this.schedulingList = await this.schedulingStorageService.getAll();
-    }
+    try {
+      console.log("Pull inspections Event Triggered!");
+      if (this.segmentOption === "inspections") {
+        this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+      } else {
+        this.schedulingList = await this.schedulingStorageService.getAll();
+      }
 
-    event.target.complete();
+      event.target.complete();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async presentPopover(ev: any) {
-    var settings = [
-      {
-        name: "Sync",
-        color: "secondary",
-        event: "syncToServer",
-        iconName: "cloud-upload-outline",
-      },
-    ];
-    const popover = await this.popoverController.create({
-      component: GenericListPopOverComponent,
-      componentProps: {
-        items: settings,
-      },
-      event: ev,
-      translucent: true,
-    });
+    try {
+      var settings = [
+        {
+          name: "Sync",
+          color: "secondary",
+          event: "syncToServer",
+          iconName: "cloud-upload-outline",
+        },
+      ];
+      const popover = await this.popoverController.create({
+        component: GenericListPopOverComponent,
+        componentProps: {
+          items: settings,
+        },
+        event: ev,
+        translucent: true,
+      });
 
-    popover.onDidDismiss().then(async (result) => {
-      if (!result.data) {
-        return;
-      }
-      switch (result.data.event) {
-        case "syncToServer":
-          console.log("dummySync");
-          await this.inspectionStorageService.syncPendingTask();
-          await this.schedulingStorageService.syncPending();
-          this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
-          this.schedulingList = await this.schedulingStorageService.getAll();
+      popover.onDidDismiss().then(async (result) => {
+        if (!result.data) {
+          return;
+        }
+        switch (result.data.event) {
+          case "syncToServer":
+            console.log("dummySync");
+            await this.inspectionStorageService.syncPendingTask();
+            await this.schedulingStorageService.syncPending();
+            this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+            this.schedulingList = await this.schedulingStorageService.getAll();
 
-          break;
+            break;
 
-        default:
-          console.log("Unknow event for generic list");
-          break;
-      }
-    });
-    return await popover.present();
+          default:
+            console.log("Unknow event for generic list");
+            break;
+        }
+      });
+      return await popover.present();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   call(item: InspectionTask) {
@@ -91,22 +103,30 @@ export class SummaryPage implements OnInit {
   }
 
   async seeInspectionDetails(task) {
-    console.log("Details clicked");
-    let navigationExtras: NavigationExtras = {
-      state: {
-        task: task,
-      },
-    };
-    this.router.navigate(["menu/details"], navigationExtras);
+    try {
+      console.log("Details clicked");
+      let navigationExtras: NavigationExtras = {
+        state: {
+          task: task,
+        },
+      };
+      this.router.navigate(["menu/details"], navigationExtras);
+    } catch (error) {
+      console.log(error);
+    }
   }
   async seeSchedulingDetails(scheduling: Scheduling) {
-    console.log("Details clicked");
-    console.log(scheduling);
-    let navigationExtras: NavigationExtras = {
-      state: {
-        scheduling: scheduling,
-      },
-    };
-    this.router.navigate(["menu/scheduling-details"], navigationExtras);
+    try {
+      console.log("Details clicked");
+      console.log(scheduling);
+      let navigationExtras: NavigationExtras = {
+        state: {
+          scheduling: scheduling,
+        },
+      };
+      this.router.navigate(["menu/scheduling-details"], navigationExtras);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

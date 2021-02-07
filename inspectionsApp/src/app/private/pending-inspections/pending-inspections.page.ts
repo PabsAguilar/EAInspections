@@ -4,6 +4,7 @@ import { CallNumber } from "@ionic-native/call-number/ngx";
 import {
   ActionSheetController,
   AlertController,
+  LoadingController,
   NavController,
   PopoverController,
 } from "@ionic/angular";
@@ -32,6 +33,7 @@ export class PendingInspectionsPage implements OnInit {
     public router: Router,
     public inspectionStorageService: InspectionsStorageService,
     public alertController: AlertController,
+    public loadingController: LoadingController,
     public navController: NavController,
     public popoverController: PopoverController
   ) {}
@@ -39,27 +41,50 @@ export class PendingInspectionsPage implements OnInit {
   public ngOnDestroy(): void {}
 
   async ionViewWillEnter() {
-    //TODO: Validate connection to internet
-    console.log("ionViewWillEnter");
-    await this.loadData();
+    try {
+      //TODO: Validate connection to internet
+      console.log("ionViewWillEnter");
+      await this.loadData();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async ionViewDidEnter() {
+    try {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async loadData() {
-    console.log("load data");
-    this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
-
-    if (this.inspectionTasks == null) {
-      await this.inspectionStorageService.getExternal();
+    try {
+      console.log("load data");
       this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+
+      if (this.inspectionTasks == null) {
+        await this.inspectionStorageService.getExternal();
+        this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+      }
+      this.lastSync = await this.inspectionStorageService.getSyncStamp();
+      console.log(this.inspectionTasks);
+      console.log("lastSync: " + this.lastSync);
+    } catch (error) {
+      console.log(error);
     }
-    this.lastSync = await this.inspectionStorageService.getSyncStamp();
-    console.log(this.inspectionTasks);
-    console.log("lastSync: " + this.lastSync);
   }
   async doRefresh(event) {
-    console.log("Pull Event Triggered!");
-    this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
-    event.target.complete();
+    try {
+      console.log("Pull Event Triggered!");
+      this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+      event.target.complete();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public async ngOnInit() {}
@@ -73,141 +98,169 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   async seeDetails(task: InspectionTask) {
-    console.log("Details clicked");
-    let navigationExtras: NavigationExtras = {
-      state: {
-        task: task,
-      },
-    };
-    this.router.navigate(["menu/details"], navigationExtras);
+    try {
+      console.log("Details clicked");
+      let navigationExtras: NavigationExtras = {
+        state: {
+          task: task,
+        },
+      };
+      this.router.navigate(["menu/details"], navigationExtras);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async startInspection(task: InspectionTask) {
-    console.log("Start clicked");
-    this.selectedTask = task;
+    try {
+      console.log("Start clicked");
+      this.selectedTask = task;
 
-    if (task.internalStatus == InspectionStatus.InProgress) {
-      await this.openInspectionPage();
-    } else {
-      await this.presentAlertConfirmStartInspection();
+      if (task.internalStatus == InspectionStatus.InProgress) {
+        await this.openInspectionPage();
+      } else {
+        await this.presentAlertConfirmStartInspection();
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
   async openInspectionPage() {
-    let navigationExtras: NavigationExtras = {
-      state: {
-        task: this.selectedTask,
-      },
-    };
-    var path = "";
-    if (this.selectedTask.inspectionType == InspectionType.Comprehensive) {
-      path = "menu/comprehensive-inspection";
-    } else if (
-      this.selectedTask.inspectionType == InspectionType.Environmental
-    ) {
-      path = "menu/environmental-inspection";
+    try {
+      const loading = await this.loadingController.create({
+        message: "Please wait...",
+      });
+      await loading.present();
+      let navigationExtras: NavigationExtras = {
+        state: {
+          task: this.selectedTask,
+        },
+      };
+      var path = "";
+      if (this.selectedTask.inspectionType == InspectionType.Comprehensive) {
+        path = "menu/comprehensive-inspection";
+      } else if (
+        this.selectedTask.inspectionType == InspectionType.Environmental
+      ) {
+        path = "menu/environmental-inspection";
+      }
+      this.navController.navigateForward([path], navigationExtras);
+    } catch (error) {
+      console.log(error);
     }
-    this.navController.navigateForward([path], navigationExtras);
   }
   async presentAlertConfirmStartInspection() {
-    const alert = await this.alertController.create({
-      header: "Confirm action",
-      message: "Are you sure you want to start the inspection?",
-      buttons: [
-        {
-          text: "Cancel",
-          role: "cancel",
-          cssClass: "secondary",
-          handler: () => {
-            console.log("Cancel action");
+    try {
+      const alert = await this.alertController.create({
+        header: "Confirm action",
+        message: "Are you sure you want to start the inspection?",
+        buttons: [
+          {
+            text: "Cancel",
+            role: "cancel",
+            cssClass: "secondary",
+            handler: () => {
+              console.log("Cancel action");
+            },
           },
-        },
-        {
-          text: "Ok",
-          handler: async () => {
-            await this.openInspectionPage();
+          {
+            text: "Ok",
+            handler: async () => {
+              await this.openInspectionPage();
+            },
           },
-        },
-      ],
-    });
+        ],
+      });
 
-    await alert.present();
+      await alert.present();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async presentPopover(ev: any) {
-    var settings = [
-      {
-        name: "Get task from Bitrix24",
-        color: "primary",
-        event: "getFromServer",
-        iconName: "cloud-download-outline",
-      },
-    ];
-    const popover = await this.popoverController.create({
-      component: GenericListPopOverComponent,
-      componentProps: {
-        items: settings,
-      },
-      event: ev,
-      translucent: true,
-    });
+    try {
+      var settings = [
+        {
+          name: "Get task from Bitrix24",
+          color: "primary",
+          event: "getFromServer",
+          iconName: "cloud-download-outline",
+        },
+      ];
+      const popover = await this.popoverController.create({
+        component: GenericListPopOverComponent,
+        componentProps: {
+          items: settings,
+        },
+        event: ev,
+        translucent: true,
+      });
 
-    popover.onDidDismiss().then(async (result) => {
-      if (!result.data) {
-        return;
-      }
-      switch (result.data.event) {
-        case "getFromServer":
-          console.log("getExternal");
-          await this.inspectionStorageService.getExternal();
-          this.lastSync = await this.inspectionStorageService.getSyncStamp();
-          this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
-          break;
+      popover.onDidDismiss().then(async (result) => {
+        if (!result.data) {
+          return;
+        }
+        switch (result.data.event) {
+          case "getFromServer":
+            console.log("getExternal");
+            await this.inspectionStorageService.getExternal();
+            this.lastSync = await this.inspectionStorageService.getSyncStamp();
+            this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+            break;
 
-        default:
-          console.log("Unknow event for generic list");
-          break;
-      }
-    });
-    return await popover.present();
+          default:
+            console.log("Unknow event for generic list");
+            break;
+        }
+      });
+      return await popover.present();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async presentActionSheet(task: InspectionTask) {
-    const actionSheet = await this.actionSheetController.create({
-      header: "Inspection Options",
-      cssClass: "my-custom-class",
-      buttons: [
-        {
-          text: "Start",
-          icon: "arrow-forward-circle-outline",
-          handler: () => {
-            this.startInspection(task);
+    try {
+      const actionSheet = await this.actionSheetController.create({
+        header: "Inspection Options",
+        cssClass: "my-custom-class",
+        buttons: [
+          {
+            text: "Start",
+            icon: "arrow-forward-circle-outline",
+            handler: () => {
+              this.startInspection(task);
+            },
           },
-        },
-        {
-          text: "Details",
-          icon: "book-outline",
-          handler: () => {
-            this.seeDetails(task);
+          {
+            text: "Details",
+            icon: "book-outline",
+            handler: () => {
+              this.seeDetails(task);
+            },
           },
-        },
-        {
-          text: "Call",
-          icon: "call-outline",
-          handler: () => {
-            console.log("Call clicked");
-            this.call(task);
+          {
+            text: "Call",
+            icon: "call-outline",
+            handler: () => {
+              console.log("Call clicked");
+              this.call(task);
+            },
           },
-        },
-        {
-          text: "Cancel",
-          icon: "close",
-          role: "cancel",
-          handler: () => {
-            console.log("Cancel clicked");
+          {
+            text: "Cancel",
+            icon: "close",
+            role: "cancel",
+            handler: () => {
+              console.log("Cancel clicked");
+            },
           },
-        },
-      ],
-    });
-    await actionSheet.present();
+        ],
+      });
+      await actionSheet.present();
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

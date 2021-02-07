@@ -2,6 +2,7 @@ import { IStorageModel } from "../interfaces/Istorage-model";
 import { Area } from "./comprehensive-form/area";
 import { ComprehensiveForm } from "./comprehensive-form/comprehensive-form";
 import { GeneralInfoInspection } from "./comprehensive-form/general-info-inspection";
+import { EnvironmentalForm } from "./environmental-form";
 
 export class InspectionTask implements IStorageModel {
   id: number;
@@ -18,6 +19,7 @@ export class InspectionTask implements IStorageModel {
   inspectionsInstructions: string;
   internalStatus: string;
   comprehesiveForm: ComprehensiveForm;
+  environmentalForm: EnvironmentalForm;
   constructor() {}
 }
 

@@ -20,6 +20,7 @@ import { ExteriorComponent } from "src/app/components/comprehensive-form/exterio
 import { RecomendationsComponent } from "src/app/components/comprehensive-form/recomendations/recomendations.component";
 import { InsuranceComponent } from "src/app/components/comprehensive-form/insurance/insurance.component";
 import { RemindersComponent } from "src/app/components/comprehensive-form/reminders/reminders.component";
+import { MultipleRadioComponent } from "src/app/components/multiple-radio/multiple-radio.component";
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import { RemindersComponent } from "src/app/components/comprehensive-form/remind
     ExteriorComponent,
     RecomendationsComponent,
     InsuranceComponent,
-    RemindersComponent
+    RemindersComponent,
+    MultipleRadioComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -46,40 +46,48 @@ export class InspectionsDetailsPage implements OnInit {
   }
 
   async startInspection() {
-    console.log("Start clicked");
-    this.presentAlertConfirmStartInspection();
+    try {
+      console.log("Start clicked");
+      this.presentAlertConfirmStartInspection();
+    } catch (error) {
+      console.log(error);
+    }
   }
   async presentAlertConfirmStartInspection() {
-    const alert = await this.alertController.create({
-      header: "Confirm action",
-      message: "Are you sure you want to start the inspection?",
-      buttons: [
-        {
-          text: "Cancel",
-          role: "cancel",
-          cssClass: "secondary",
-          handler: () => {
-            console.log("Cancel action");
+    try {
+      const alert = await this.alertController.create({
+        header: "Confirm action",
+        message: "Are you sure you want to start the inspection?",
+        buttons: [
+          {
+            text: "Cancel",
+            role: "cancel",
+            cssClass: "secondary",
+            handler: () => {
+              console.log("Cancel action");
+            },
           },
-        },
-        {
-          text: "Ok",
-          handler: () => {
-            let navigationExtras: NavigationExtras = {
-              state: {
-                task: this.task,
-              },
-            };
-            this.navController.navigateForward(
-              ["menu/start-inspection"],
-              navigationExtras
-            );
+          {
+            text: "Ok",
+            handler: () => {
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  task: this.task,
+                },
+              };
+              this.navController.navigateForward(
+                ["menu/start-inspection"],
+                navigationExtras
+              );
+            },
           },
-        },
-      ],
-    });
+        ],
+      });
 
-    await alert.present();
+      await alert.present();
+    } catch (error) {
+      console.log(error);
+    }
   }
   // addressNavigate() {
   //   console.log("Navigate to" + this.task.serviceAddress);

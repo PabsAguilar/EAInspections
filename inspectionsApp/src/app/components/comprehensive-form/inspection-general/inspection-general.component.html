@@ -69,4 +69,37 @@
     [(ngModel)]="generalInfoInspection.picturesFrontHouse"
     (photoChanged)="changeModel($event)"
   ></app-slides-photos>
+
+  <div *ngIf="generalInfoInspection.environmentalInspection === true">
+    <ion-item>
+      <ion-label position="floating">Interior temperature</ion-label>
+      <ion-input
+        [(ngModel)]="generalInfoInspection.interiorTemperature"
+        (ionChange)="changeModel($event)"
+        name="interiorTemperature"
+        type="number"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Exterior Relative Humidity %</ion-label>
+      <ion-input
+        [(ngModel)]="generalInfoInspection.exteriorRelativeHumidity"
+        (ionChange)="changeModel($event)"
+        name="exteriorRelativeHumidity"
+        type="number"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <app-multiple-radio
+      title="HVAC System Condition"
+      ngDefaultControl
+      name="HVACSystemCondition"
+      [options]="HHVACConditions"
+      [(data)]="generalInfoInspection.HVACSystemCondition"
+      (dataChange)="changeModel($event)"
+    ></app-multiple-radio>
+  </div>
 </div>
