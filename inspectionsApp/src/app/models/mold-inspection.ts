@@ -1,3 +1,5 @@
+import { Sample } from "./environmental-form/sample";
+
 export class MoldInspection {
   areaName: string;
   areaCondition: string[];
@@ -16,9 +18,16 @@ export class MoldInspection {
   furnitureOption: string;
   beddingsOption: string;
   observations: string;
+  samples: Sample[];
+  recomendations: string;
+
   constructor() {
     this.decontamination = [];
     this.areaPictures = [];
     this.areaCondition = [];
+    this.samples = [];
+    for (let index = 0; index < 3; index++) {
+      this.samples.push(new Sample());
+    }
   }
 }

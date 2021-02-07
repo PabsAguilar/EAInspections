@@ -8,7 +8,7 @@ import { MoldInspection } from "src/app/models/mold-inspection";
   styleUrls: ["./area-mold.component.scss"],
 })
 export class AreaMoldComponent implements OnInit {
-  public totalProperties: number = 17;
+  public totalProperties: number = 21;
   public filledProperties: number = 0;
   public isMenuOpen: boolean = false;
   public progressPercentage: number = 0;
@@ -85,6 +85,14 @@ export class AreaMoldComponent implements OnInit {
     if (this._model.removeCeiling) {
       this.filledProperties++;
     }
+    if (this._model.recomendations) {
+      this.filledProperties++;
+    }
+
+    this.filledProperties =
+      this.filledProperties +
+      this._model.samples.filter((x) => x.type && x.labResult).length;
+
     if (this._model.removeDrywall) {
       this.filledProperties++;
     }
