@@ -25,22 +25,22 @@
       interface="popover"
       [interfaceOptions]="{ cssClass: 'wider-popover' }"
       name="type"
-      [(ngModel)]="_model.moldInspectionType"
+      [(ngModel)]="_model.inspectionType"
       (ionChange)="AreaUpdated($event)"
     >
-      <ion-select-option
-        *ngFor="let value of damageInspectionType; let i = index"
-        [value]="value"
-        >{{ value }}</ion-select-option
+      <ion-select-option value="Pre Asbestos Inspection"
+        >Pre Asbestos Inspection</ion-select-option
+      >
+      <ion-select-option value="Post Asbestos Inspection"
+        >Post Asbestos Inspection</ion-select-option
       >
     </ion-select>
   </ion-item>
-
-  <app-area-mold
-    *ngFor="let area of _model.areasMold; let i = index"
+  <app-asbestos
+    *ngFor="let area of _model.asbestosAreas; let i = index"
     ngDefaultControl
     [title]="'Area ' + (i + 1)"
     (modelChanged)="AreaUpdated($event)"
-    [(model)]="_model.areasMold[i]"
-  ></app-area-mold>
+    [(model)]="_model.asbestosAreas[i]"
+  ></app-asbestos>
 </div>

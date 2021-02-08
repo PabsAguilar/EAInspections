@@ -1,6 +1,6 @@
 import { Sample } from "./environmental-form/sample";
 
-export class MoldInspection {
+export class DamageInspection {
   areaName: string;
   areaCondition: string[];
   areaRH: number;
@@ -20,14 +20,16 @@ export class MoldInspection {
   observations: string;
   samples: Sample[];
   recomendations: string;
+  type: string;
 
-  constructor() {
+  constructor(type: string) {
     this.decontamination = [];
     this.areaPictures = [];
     this.areaCondition = [];
     this.samples = [];
+    this.type = type;
     for (let index = 0; index < 3; index++) {
-      this.samples.push(new Sample());
+      this.samples.push(new Sample(type));
     }
   }
 }

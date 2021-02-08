@@ -19,11 +19,52 @@
   </app-inspection-general>
 
   <app-areas-mold
+    title="Mold Inspection"
     ngDefaultControl
     (modelChanged)="UpdateEntity($event)"
     [(model)]="task.environmentalForm.moldAreas"
   >
   </app-areas-mold>
+
+  <app-areas-mold
+    title="Bacteria (CAT3) Inspection"
+    ngDefaultControl
+    (modelChanged)="UpdateEntity($event)"
+    [(model)]="task.environmentalForm.bacteriasAreas"
+  >
+  </app-areas-mold>
+
+  <app-areas-mold
+    title="Soot Inspection"
+    ngDefaultControl
+    (modelChanged)="UpdateEntity($event)"
+    [(model)]="task.environmentalForm.sootAreas"
+  >
+  </app-areas-mold>
+
+  <app-areas-moisture-mapping
+    title="Moisture Mapping (MP)"
+    ngDefaultControl
+    (modelChanged)="UpdateEntity($event)"
+    [(model)]="task.environmentalForm.moistureMappingAreas"
+  >
+  </app-areas-moisture-mapping>
+
+  <app-areas-asbestos
+    title="Asbestos"
+    ngDefaultControl
+    (modelChanged)="UpdateEntity($event)"
+    [(model)]="task.environmentalForm.asbestosAreas"
+  >
+  </app-areas-asbestos>
+
+  <app-areas-lead
+    title="Lead"
+    ngDefaultControl
+    (modelChanged)="UpdateEntity($event)"
+    [(model)]="task.environmentalForm.leadAreas"
+  >
+  </app-areas-lead>
 
   <ion-list>
     <ion-item>

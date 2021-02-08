@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { Console } from "console";
-import { MoldInspection } from "src/app/models/mold-inspection";
+
+import { DamageInspection } from "src/app/models/damage-inspection";
+import { DamageAreaType } from "src/app/models/enums";
 
 @Component({
   selector: "app-area-mold",
@@ -13,17 +14,66 @@ export class AreaMoldComponent implements OnInit {
   public isMenuOpen: boolean = false;
   public progressPercentage: number = 0;
   public progressColor: string = "danger";
-
+  conditions: any[] = [];
+  decontaminationOptions: any[] = [];
   @Input()
-  get model(): MoldInspection {
+  get model(): DamageInspection {
     return this._model;
   }
-  set model(value: MoldInspection) {
+  set model(value: DamageInspection) {
     this._model = value;
+
+    if (value.type == DamageAreaType.Mold) {
+      this.conditions = [
+        { name: "Visible Mold-Like Substance", checked: false },
+        { name: "Moisture Stains Present", checked: false },
+        { name: "Mold Odor", checked: false },
+        { name: "Remove Insulation", checked: false },
+      ];
+
+      this.decontaminationOptions = [
+        { name: "Micro-clean Surfaces", checkde: false },
+        { name: "Horizontal Surface Cleaning", checkde: false },
+        { name: "Discard Carpets", checkde: false },
+        { name: "Content Cleaning", checkde: false },
+        { name: "Fog Area with anti-microbial", checkde: false },
+      ];
+    } else if (value.type == DamageAreaType.Soot) {
+      this.conditions = [
+        { name: "Visible Mold-Like Substance", checked: false },
+        { name: "Moisture Stains Present", checked: false },
+        { name: "Mold Odor", checked: false },
+        { name: "Remove Insulation", checked: false },
+      ];
+
+      this.decontaminationOptions = [
+        { name: "Micro-clean Surfaces", checked: false },
+        { name: "Horizontal Surface Cleaning", checked: false },
+        { name: "Discard Carpets", checked: false },
+        { name: "Content Cleaning", checked: false },
+        { name: "Fog Area with anti-microbial", checked: false },
+      ];
+    } else if (value.type == DamageAreaType.Bacteria) {
+      this.conditions = [
+        { name: "Visible Mold-Like Substance", checked: false },
+        { name: "Moisture Stains Present", checked: false },
+        { name: "Mold Odor", checked: false },
+        { name: "Remove Insulation", checked: false },
+      ];
+
+      this.decontaminationOptions = [
+        { name: "Micro-clean Surfaces", checked: false },
+        { name: "Horizontal Surface Cleaning", checked: false },
+        { name: "Discard Carpets", checked: false },
+        { name: "Content Cleaning", checked: false },
+        { name: "Fog Area with anti-microbial", checked: false },
+      ];
+    }
     this.changeModel(null);
   }
-  _model: MoldInspection = new MoldInspection();
+  _model: DamageInspection = new DamageInspection("");
   @Input() title: string = "";
+
   @Output() modelChanged: any = new EventEmitter();
 
   constructor() {}
@@ -121,19 +171,4 @@ export class AreaMoldComponent implements OnInit {
         break;
     }
   }
-
-  conditions: any[] = [
-    { name: "Visible Mold-Like Substance", checked: false },
-    { name: "Moisture Stains Present", checked: false },
-    { name: "Mold Odor", checked: false },
-    { name: "Remove Insulation", checked: false },
-  ];
-
-  decontaminationOptions: any[] = [
-    { name: "Micro-clean Surfaces", checkde: false },
-    { name: "Horizontal Surface Cleaning", checkde: false },
-    { name: "Discard Carpets", checkde: false },
-    { name: "Content Cleaning", checkde: false },
-    { name: "Fog Area with anti-microbial", checkde: false },
-  ];
 }

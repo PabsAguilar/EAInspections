@@ -34,10 +34,10 @@
 
   <app-kitchen
     ngDefaultControl
-    (kitchenChanged)="UpdateEntity($event)"
+    (KitchenChanged)="UpdateEntity($event)"
     title="Kitchen"
     type="Kitchen"
-    [(InspectionAreas)]="task.comprehesiveForm.kitchen"
+    [(Kitchen)]="task.comprehesiveForm.kitchen"
   >
   </app-kitchen>
 
@@ -59,7 +59,7 @@
 
   <app-area-general-condition
     ngDefaultControl
-    title="Atic"
+    title="Attic"
     type="Atic"
     (InspectionAreaGeneralChanged)="UpdateEntity($event)"
     [(InspectionArea)]="task.comprehesiveForm.atic"

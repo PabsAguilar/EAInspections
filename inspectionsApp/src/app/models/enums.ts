@@ -19,6 +19,13 @@ export enum AreaConditionType {
   Exterior = "Exterior",
   InspectionRecommendations = "InspectionRecommendations",
 }
+
+export enum DamageAreaType {
+  Mold = "Mold",
+  Soot = "Soot",
+  Bacteria = "Bacteria",
+}
+
 export var AreaConditions = [
   { name: "Ceiling stains", checked: false },
   { name: "Visible mold", checked: false },

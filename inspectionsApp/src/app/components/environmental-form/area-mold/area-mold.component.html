@@ -252,7 +252,24 @@
         <ion-select-option value="Bulk">Bulk</ion-select-option>
       </ion-select>
     </ion-item>
-
+    <ion-item lines="inset" *ngIf="item.sampleType == 'Mold'">
+      <ion-label position="floating">Volume</ion-label>
+      <ion-input
+        [(ngModel)]="item.volume"
+        (ionChange)="changeModel($event)"
+        type="number"
+        required
+      ></ion-input>
+    </ion-item>
+    <ion-item lines="inset" *ngIf="item.sampleType == 'Mold'">
+      <ion-label position="floating">Cassette Number</ion-label>
+      <ion-input
+        [(ngModel)]="item.cassetteNumber"
+        (ionChange)="changeModel($event)"
+        type="text"
+        required
+      ></ion-input>
+    </ion-item>
     <ion-item>
       <ion-label position="floating">Lab Result</ion-label>
       <ion-select
@@ -271,6 +288,32 @@
           Inconclusive</ion-select-option
         >
       </ion-select>
+    </ion-item>
+    <ion-item lines="inset" *ngIf="item.sampleType == 'Mold'">
+      <ion-label position="floating">Toxic Mold</ion-label>
+      <ion-select
+        interface="popover"
+        name="toxicMold"
+        [(ngModel)]="item.toxicMold"
+        (ionChange)="changeModel($event)"
+      >
+        <ion-select-option [value]="true"> Yes</ion-select-option>
+        <ion-select-option [value]="false"> No</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item
+      *ngIf="item.sampleType == 'Mold' && item.toxicMold"
+      color="danger"
+    >
+      <p>
+        TOXIC MOLD: Positive presence of toxic Mold (Stachybotrys / Chaetomium)
+        is in the tested area. It is suggested to perform the following
+        described recommendations and the instructions marked in the scope of
+        work. (Inspector Recommendations). It is suggested to keep exploring by
+        cutting as needed in areas with visible damage. Clean, fog with
+        anti-microbial, and encapsulate the area. Content cleaning and
+        decontamination is suggested.
+      </p>
     </ion-item>
   </div>
   <ion-item>

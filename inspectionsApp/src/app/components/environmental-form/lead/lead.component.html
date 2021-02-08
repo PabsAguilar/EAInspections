@@ -1,0 +1,120 @@
+<ion-item (click)="toggleAccordion()" lines="none" button>
+  <ion-label [color]="titleColor"> {{ title }} </ion-label>
+  <ion-icon
+    slot="start"
+    color="success"
+    *ngIf="showSuccess && progressPercentage >= 1"
+    name="checkmark-circle-outline"
+  ></ion-icon>
+  <ion-chip *ngIf="_model.sample" color="secondary" slot="end">
+    {{ _model.sample }}
+  </ion-chip>
+  <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
+<ion-progress-bar
+  color="{{ progressColor }}"
+  value="{{ progressPercentage }}"
+></ion-progress-bar>
+<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+  <ion-item>
+    <ion-label position="floating">Sample</ion-label>
+    <ion-select
+      interface="popover"
+      name="name"
+      [(ngModel)]="_model.sample"
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option value="Bedroom 1"> Bedroom 1</ion-select-option>
+      <ion-select-option value="Bedroom 2"> Bedroom 2</ion-select-option>
+      <ion-select-option value="Bedroom 3"> Bedroom 3</ion-select-option>
+      <ion-select-option value="Bedroom 4"> Bedroom 4 </ion-select-option>
+      <ion-select-option value="Bedroom 5"> Bedroom 5</ion-select-option>
+      <ion-select-option value="Bedroom 6"> Bedroom 6</ion-select-option>
+      <ion-select-option value="Living"> Living</ion-select-option>
+      <ion-select-option value="Room"> Room</ion-select-option>
+      <ion-select-option value="Dining Room"> Dining Room</ion-select-option>
+      <ion-select-option value="Florida Room"> Florida Room</ion-select-option>
+      <ion-select-option value="Bathroom 1"> Bathroom 1 </ion-select-option>
+      <ion-select-option value="Bathroom 2"> Bathroom 2</ion-select-option>
+      <ion-select-option value="Bathroom 3"> Bathroom 3</ion-select-option>
+      <ion-select-option value="Bathroom 4"> Bathroom 4</ion-select-option>
+      <ion-select-option value="Bathroom 5"> Bathroom 5</ion-select-option>
+      <ion-select-option value="Laundry"> Laundry</ion-select-option>
+      <ion-select-option value="Garage"> Garage</ion-select-option>
+      <ion-select-option value="Utility Room"> Utility Room</ion-select-option>
+      <ion-select-option value="Kitchen"> Kitchen</ion-select-option>
+      <ion-select-option value="Attic"> Attic</ion-select-option>
+      <ion-select-option value="Other"> Other</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Cardinal Direction </ion-label>
+    <ion-select
+      interface="popover"
+      name="cardinalDirection"
+      [(ngModel)]="_model.cardinalDirection"
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option value="North"> North</ion-select-option>
+      <ion-select-option value="South"> South</ion-select-option>
+      <ion-select-option value="East"> East</ion-select-option>
+      <ion-select-option value="West"> West</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Dimension cm2</ion-label>
+    <ion-input
+      [(ngModel)]="_model.dimensionCm2"
+      (ionChange)="changeModel($event)"
+      type="number"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Material</ion-label>
+    <ion-input
+      [(ngModel)]="_model.material"
+      (ionChange)="changeModel($event)"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Type of Sample</ion-label>
+    <ion-select
+      interface="popover"
+      name="condition"
+      [(ngModel)]="_model.typeOfSample"
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option value="Swab"> Swab</ion-select-option>
+      <ion-select-option value="Paint Chip"> Paint Chip</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Lab Results</ion-label>
+    <ion-select
+      interface="popover"
+      name="labResults"
+      [(ngModel)]="_model.labResults"
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option value="Positive"> Positive</ion-select-option>
+      <ion-select-option value="Negative"> Negative</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Observations and Recommendations</ion-label>
+    <ion-textarea
+      [(ngModel)]="_model.observations"
+      (ionChange)="changeModel($event)"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+</div>

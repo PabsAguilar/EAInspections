@@ -19,28 +19,20 @@
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
 <div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
-  <ion-item>
-    <ion-label position="floating">Inspection Type</ion-label>
-    <ion-select
-      interface="popover"
-      [interfaceOptions]="{ cssClass: 'wider-popover' }"
-      name="type"
-      [(ngModel)]="_model.moldInspectionType"
-      (ionChange)="AreaUpdated($event)"
-    >
-      <ion-select-option
-        *ngFor="let value of damageInspectionType; let i = index"
-        [value]="value"
-        >{{ value }}</ion-select-option
-      >
-    </ion-select>
+  <ion-item lines="inset">
+    <ion-label position="floating">Date Tesed</ion-label>
+    <ion-datetime
+      [(ngModel)]="_model.dateTesedString"
+      displayFormat="YYYY-MMMM-D h:mm A"
+      pickerFormat="DD MM YYYY h:mm A"
+    ></ion-datetime>
   </ion-item>
 
-  <app-area-mold
-    *ngFor="let area of _model.areasMold; let i = index"
+  <app-moisture-mapping
+    *ngFor="let area of _model.areamoistureMapping; let i = index"
     ngDefaultControl
     [title]="'Area ' + (i + 1)"
     (modelChanged)="AreaUpdated($event)"
-    [(model)]="_model.areasMold[i]"
-  ></app-area-mold>
+    [(model)]="_model.areamoistureMapping[i]"
+  ></app-moisture-mapping>
 </div>

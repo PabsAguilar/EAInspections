@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { MoldAreas } from "src/app/models/environmental-form/mold-areas";
-import { MoldInspection } from "src/app/models/mold-inspection";
+import { DamageAreas } from "src/app/models/environmental-form/damage-areas";
+import { DamageInspection } from "src/app/models/damage-inspection";
+import { DamageAreaType } from "src/app/models/enums";
 
 @Component({
   selector: "app-areas-mold",
@@ -16,15 +17,42 @@ export class AreasMoldComponent implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+  @Input() title: string = "";
   @Input()
-  get model(): MoldAreas {
+  get model(): DamageAreas {
     return this._model;
   }
-  set model(value: MoldAreas) {
+  set model(value: DamageAreas) {
     this._model = value;
-    this.AreaUpdated(null);
+    if (value) {
+      this._model = value;
+      switch (value.type) {
+        case DamageAreaType.Bacteria:
+          this.damageInspectionType = [
+            "Pre Bacteria (CAT3) Inspection",
+            "Post Bacteria (CAT3) Inspection (Clearance)",
+          ];
+          break;
+        case DamageAreaType.Mold:
+          this.damageInspectionType = [
+            "Pre Mold Inspection",
+            "Mold Samples Only",
+            "Post Mold Inspection (Clearance)",
+          ];
+          break;
+
+        case DamageAreaType.Soot:
+          this.damageInspectionType = [
+            "Pre Soot Inspection",
+            "Post Soot Inspection (Clearance)",
+          ];
+          break;
+      }
+      this.AreaUpdated(null);
+    }
   }
-  _model: MoldAreas = new MoldAreas();
+  _model: DamageAreas = new DamageAreas("");
+  damageInspectionType: any[] = [];
   @Output() modelChanged: any = new EventEmitter();
 
   constructor() {}

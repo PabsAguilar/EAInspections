@@ -19,6 +19,12 @@ import { RemindersComponent } from "./comprehensive-form/reminders/reminders.com
 import { MultipleRadioComponent } from "./multiple-radio/multiple-radio.component";
 import { AreaMoldComponent } from "./environmental-form/area-mold/area-mold.component";
 import { AreasMoldComponent } from "./environmental-form/areas-mold/areas-mold.component";
+import { MoistureMappingComponent } from "./environmental-form/moisture-mapping/moisture-mapping.component";
+import { AreasMoistureMappingComponent } from "./environmental-form/areas-moisture-mapping/areas-moisture-mapping.component";
+import { AreasAsbestosComponent } from "./environmental-form/areas-asbestos/areas-asbestos.component";
+import { AsbestosComponent } from "./environmental-form/asbestos/asbestos.component";
+import { Lead } from "../models/environmental-form/lead";
+import { LeadAreas } from "../models/environmental-form/lead-areas";
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
@@ -39,6 +45,12 @@ import { AreasMoldComponent } from "./environmental-form/areas-mold/areas-mold.c
     MultipleRadioComponent,
     AreaMoldComponent,
     AreasMoldComponent,
+    MoistureMappingComponent,
+    AreasMoistureMappingComponent,
+    AreasAsbestosComponent,
+    AsbestosComponent,
+    Lead,
+    LeadAreas,
   ],
   exports: [
     GenericListPopOverComponent,
@@ -57,6 +69,12 @@ import { AreasMoldComponent } from "./environmental-form/areas-mold/areas-mold.c
     MultipleRadioComponent,
     AreaMoldComponent,
     AreasMoldComponent,
+    MoistureMappingComponent,
+    AreasMoistureMappingComponent,
+    AreasAsbestosComponent,
+    AsbestosComponent,
+    Lead,
+    LeadAreas,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
