@@ -30,7 +30,6 @@ export class ComprehensiveInspectionPage implements OnInit {
       if (!this.task.comprehesiveForm) {
         this.task.comprehesiveForm = new ComprehensiveForm();
       }
-      console.log(this.task);
     }
   }
 
@@ -64,9 +63,6 @@ export class ComprehensiveInspectionPage implements OnInit {
                 message: "Please wait...",
               });
               await loading.present();
-
-              console.log("Task Completed" + this.task.id);
-              console.log(this.task);
 
               this.task.internalStatus = InspectionStatus.Pending;
               var random = Math.floor(Math.random() * 10) + 2;

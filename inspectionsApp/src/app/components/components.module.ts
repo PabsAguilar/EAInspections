@@ -23,8 +23,8 @@ import { MoistureMappingComponent } from "./environmental-form/moisture-mapping/
 import { AreasMoistureMappingComponent } from "./environmental-form/areas-moisture-mapping/areas-moisture-mapping.component";
 import { AreasAsbestosComponent } from "./environmental-form/areas-asbestos/areas-asbestos.component";
 import { AsbestosComponent } from "./environmental-form/asbestos/asbestos.component";
-import { Lead } from "../models/environmental-form/lead";
-import { LeadAreas } from "../models/environmental-form/lead-areas";
+import { LeadComponent } from "./environmental-form/lead/lead.component";
+import { AreasLeadComponent } from "./environmental-form/areas-lead/areas-lead.component";
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
@@ -49,8 +49,9 @@ import { LeadAreas } from "../models/environmental-form/lead-areas";
     AreasMoistureMappingComponent,
     AreasAsbestosComponent,
     AsbestosComponent,
-    Lead,
-    LeadAreas,
+
+    LeadComponent,
+    AreasLeadComponent,
   ],
   exports: [
     GenericListPopOverComponent,
@@ -73,8 +74,8 @@ import { LeadAreas } from "../models/environmental-form/lead-areas";
     AreasMoistureMappingComponent,
     AreasAsbestosComponent,
     AsbestosComponent,
-    Lead,
-    LeadAreas,
+    LeadComponent,
+    AreasLeadComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

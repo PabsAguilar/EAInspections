@@ -31,8 +31,7 @@
       <ion-select-option value="Bedroom 4"> Bedroom 4 </ion-select-option>
       <ion-select-option value="Bedroom 5"> Bedroom 5</ion-select-option>
       <ion-select-option value="Bedroom 6"> Bedroom 6</ion-select-option>
-      <ion-select-option value="Living"> Living</ion-select-option>
-      <ion-select-option value="Room"> Room</ion-select-option>
+      <ion-select-option value="Living Room">Living Room</ion-select-option>
       <ion-select-option value="Dining Room"> Dining Room</ion-select-option>
       <ion-select-option value="Florida Room"> Florida Room</ion-select-option>
       <ion-select-option value="Bathroom 1"> Bathroom 1 </ion-select-option>
@@ -247,6 +246,7 @@
         [(ngModel)]="item.type"
         (ionChange)="changeModel($event)"
       >
+        <ion-select-option value="Air">Air</ion-select-option>
         <ion-select-option value="Swab">Swab</ion-select-option>
         <ion-select-option value="Tape">Tape</ion-select-option>
         <ion-select-option value="Bulk">Bulk</ion-select-option>

@@ -3,6 +3,10 @@ import { ActivatedRoute, NavigationExtras, Router } from "@angular/router";
 import { CallNumber } from "@ionic-native/call-number/ngx";
 import { AlertController, NavController } from "@ionic/angular";
 import { InspectionTask } from "src/app/models/inspection-task";
+import {
+  LaunchNavigator,
+  LaunchNavigatorOptions,
+} from "@ionic-native/launch-navigator/ngx";
 
 @Component({
   selector: "app-inspections-details",
@@ -16,7 +20,8 @@ export class InspectionsDetailsPage implements OnInit {
     private router: Router,
     public callNumber: CallNumber,
     public alertController: AlertController,
-    public navController: NavController
+    public navController: NavController,
+    private launchNavigator: LaunchNavigator
   ) {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -33,6 +38,16 @@ export class InspectionsDetailsPage implements OnInit {
       .catch((err) => console.log("Error launching dialer", err));
   }
 
+  gpsNavigate() {
+    let options: LaunchNavigatorOptions = {
+      start: "Current Location",
+    };
+
+    this.launchNavigator.navigate(this.task.geoPointText, options).then(
+      (success) => console.log("Launched navigator"),
+      (error) => console.log("Error launching navigator", error)
+    );
+  }
   email() {
     console.log("Mailto" + this.task.contactEmail);
     window.location.href =
@@ -47,7 +62,6 @@ export class InspectionsDetailsPage implements OnInit {
 
   async startInspection() {
     try {
-      console.log("Start clicked");
       this.presentAlertConfirmStartInspection();
     } catch (error) {
       console.log(error);

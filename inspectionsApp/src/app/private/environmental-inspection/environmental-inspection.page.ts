@@ -4,6 +4,7 @@ import {
   AlertController,
   LoadingController,
   NavController,
+  ToastController,
 } from "@ionic/angular";
 import { EnvironmentalForm } from "src/app/models/environmental-form";
 import { InspectionTask } from "src/app/models/inspection-task";
@@ -21,14 +22,14 @@ export class EnvironmentalInspectionPage implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     public inspectionStorageService: InspectionsStorageService,
-    public navController: NavController
+    public navController: NavController,
+    private toast: ToastController
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
       if (!this.task.environmentalForm) {
         this.task.environmentalForm = new EnvironmentalForm();
       }
-      console.log(this.task);
     }
   }
 
@@ -39,7 +40,12 @@ export class EnvironmentalInspectionPage implements OnInit {
         await this.loadingController.dismiss();
       }
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
   ngOnInit() {}
@@ -50,22 +56,37 @@ export class EnvironmentalInspectionPage implements OnInit {
       console.log(this.task);
       this.task.internalStatus = "Pending";
       var random = Math.floor(Math.random() * 10) + 2;
+      var message = this.toast.create({
+        message: "Inspection is completed.",
+        color: "success",
+        duration: 5000,
+      });
+      (await message).present();
       await this.inspectionStorageService.update(this.task);
       await this.navController.navigateRoot(
         "menu/tabs/tabs/pending-inspections/" + random
       );
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 
   public async UpdateEntity($event): Promise<void> {
     try {
-      console.log(this.task);
       this.task.internalStatus = "In Progress";
       await this.inspectionStorageService.update(this.task);
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 }

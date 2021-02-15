@@ -3,12 +3,14 @@ import { Area } from "./comprehensive-form/area";
 import { ComprehensiveForm } from "./comprehensive-form/comprehensive-form";
 import { GeneralInfoInspection } from "./comprehensive-form/general-info-inspection";
 import { EnvironmentalForm } from "./environmental-form";
+import { TaskSubtype } from "./task-subtype";
 
 export class InspectionTask implements IStorageModel {
   id: number;
   scheduleDateTime: Date;
   contactName: string;
   serviceAddress: string;
+  geoPointText: string;
   contactPhone: string;
   contactEmail: string;
   referalPartnerContact: string;
@@ -16,6 +18,8 @@ export class InspectionTask implements IStorageModel {
   inspectorName: string;
   inspectorUserId: number;
   inspectionType: string;
+  inspectionSubTypes: TaskSubtype[];
+  inspectionSubTypesString: string;
   inspectionsInstructions: string;
   internalStatus: string;
   comprehesiveForm: ComprehensiveForm;

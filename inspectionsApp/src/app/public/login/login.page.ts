@@ -6,9 +6,10 @@ import {
   FormGroup,
   FormControl,
 } from "@angular/forms";
-import { BitrixInspectionService } from "src/app/services/bitrix-inspection.service";
+
 import { AlertController, LoadingController } from "@ionic/angular";
 import { User } from "src/app/models/user";
+import { BitrixItestService } from "src/app/services/bitrix-itest.service";
 
 @Component({
   selector: "app-login",
@@ -20,7 +21,7 @@ export class LoginPage implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
-    private bitrix: BitrixInspectionService,
+    private bitrix: BitrixItestService,
     public formBuilder: FormBuilder,
     public alertController: AlertController,
     private loadingController: LoadingController
@@ -75,17 +76,16 @@ export class LoginPage implements OnInit {
 
   async onSubmit(values) {
     try {
-      this.bitrix.getUserByEmail(values.username).subscribe(async (data) => {
-        if (data.result.length > 0) {
-          var user = new User(data.result[0]);
-          console.log(user);
+      var data = await this.bitrix.getUserByEmail(values.username);
+      if (data.result.length > 0) {
+        var user = new User(data.result[0]);
+        console.log(user);
 
-          this.validations_form.reset();
-          this.authService.login(user);
-        } else {
-          await this.presentAlert();
-        }
-      });
+        this.validations_form.reset();
+        this.authService.login(user);
+      } else {
+        await this.presentAlert();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -96,7 +96,6 @@ export class LoginPage implements OnInit {
       const alert = await this.alertController.create({
         cssClass: "my-custom-class",
         header: "Error",
-        //subHeader: "Invalid credentials",
         message: "Incorrect user or password.",
         buttons: ["OK"],
       });

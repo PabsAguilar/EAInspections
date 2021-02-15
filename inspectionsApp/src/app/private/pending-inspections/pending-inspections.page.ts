@@ -1,12 +1,18 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { NavigationEnd, NavigationExtras, Router } from "@angular/router";
+
 import { CallNumber } from "@ionic-native/call-number/ngx";
+import {
+  LaunchNavigator,
+  LaunchNavigatorOptions,
+} from "@ionic-native/launch-navigator/ngx";
 import {
   ActionSheetController,
   AlertController,
   LoadingController,
   NavController,
   PopoverController,
+  ToastController,
 } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
@@ -35,7 +41,9 @@ export class PendingInspectionsPage implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     public navController: NavController,
-    public popoverController: PopoverController
+    public popoverController: PopoverController,
+    public toast: ToastController,
+    private launchNavigator: LaunchNavigator
   ) {}
 
   public ngOnDestroy(): void {}
@@ -43,10 +51,14 @@ export class PendingInspectionsPage implements OnInit {
   async ionViewWillEnter() {
     try {
       //TODO: Validate connection to internet
-      console.log("ionViewWillEnter");
       await this.loadData();
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 
@@ -54,28 +66,26 @@ export class PendingInspectionsPage implements OnInit {
     try {
       var top = await this.loadingController.getTop();
       if (top) {
-        await this.loadingController.dismiss();
+        await top.dismiss();
       }
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 
   async loadData() {
-    try {
-      console.log("load data");
-      this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+    this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
 
-      if (this.inspectionTasks == null) {
-        await this.inspectionStorageService.getExternal();
-        this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
-      }
-      this.lastSync = await this.inspectionStorageService.getSyncStamp();
-      console.log(this.inspectionTasks);
-      console.log("lastSync: " + this.lastSync);
-    } catch (error) {
-      console.log(error);
+    if (this.inspectionTasks == null) {
+      await this.inspectionStorageService.getExternal();
+      this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
     }
+    this.lastSync = await this.inspectionStorageService.getSyncStamp();
   }
   async doRefresh(event) {
     try {
@@ -83,7 +93,12 @@ export class PendingInspectionsPage implements OnInit {
       this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
       event.target.complete();
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 
@@ -107,7 +122,12 @@ export class PendingInspectionsPage implements OnInit {
       };
       this.router.navigate(["menu/details"], navigationExtras);
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 
@@ -122,8 +142,23 @@ export class PendingInspectionsPage implements OnInit {
         await this.presentAlertConfirmStartInspection();
       }
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
+  }
+  async gpsNavigate(task: InspectionTask) {
+    let options: LaunchNavigatorOptions = {
+      start: "Current Location",
+    };
+
+    this.launchNavigator.navigate(task.geoPointText, options).then(
+      (success) => console.log("Launched navigator"),
+      (error) => console.log("Error launching navigator", error)
+    );
   }
   async openInspectionPage() {
     try {
@@ -146,7 +181,12 @@ export class PendingInspectionsPage implements OnInit {
       }
       this.navController.navigateForward([path], navigationExtras);
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
   async presentAlertConfirmStartInspection() {
@@ -174,7 +214,12 @@ export class PendingInspectionsPage implements OnInit {
 
       await alert.present();
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 
@@ -203,10 +248,23 @@ export class PendingInspectionsPage implements OnInit {
         }
         switch (result.data.event) {
           case "getFromServer":
-            console.log("getExternal");
-            await this.inspectionStorageService.getExternal();
-            this.lastSync = await this.inspectionStorageService.getSyncStamp();
-            this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+            console.log("getFromServer");
+            var loading = await this.loadingController.create({
+              message: "Loading Inspection Deals",
+            });
+            await loading.present();
+
+            try {
+              await this.inspectionStorageService.getExternal();
+              this.lastSync = await this.inspectionStorageService.getSyncStamp();
+              this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+            } catch (error) {
+              console.log(error);
+            }
+
+            if (loading) {
+              await this.loadingController.dismiss();
+            }
             break;
 
           default:
@@ -216,7 +274,12 @@ export class PendingInspectionsPage implements OnInit {
       });
       return await popover.present();
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 
@@ -249,6 +312,14 @@ export class PendingInspectionsPage implements OnInit {
             },
           },
           {
+            text: "Navigate",
+            icon: "navigate-outline",
+            handler: () => {
+              console.log("Navigate clicked");
+              this.gpsNavigate(task);
+            },
+          },
+          {
             text: "Cancel",
             icon: "close",
             role: "cancel",
@@ -260,7 +331,12 @@ export class PendingInspectionsPage implements OnInit {
       });
       await actionSheet.present();
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 }

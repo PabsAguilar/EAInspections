@@ -69,17 +69,37 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>
-            <ion-label> {{task.serviceAddress}} </ion-label>
+          <ion-col class="row-center">
+            <ion-chip color="primary" (click)="gpsNavigate()" class="ion-text-center">
+              <ion-icon name="navigate-outline" color="primary"></ion-icon>
+              <ion-label>{{task.serviceAddress}}</ion-label>
+            </ion-chip>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
             <ion-label>
-              <h2>Inspection Instructions:</h2>
+              <h2><strong>Inspection Instructions: </strong></h2>
             </ion-label>
             <div class="ion-text-justify">
               <p>{{task.inspectionsInstructions}}</p>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              <h2><strong>Inspection Types:</strong></h2>
+            </ion-label>
+            <div
+              class="ion-text-justify"
+              *ngFor="let item of task.inspectionSubTypes"
+            >
+              <p>
+                <ion-icon name="checkmark-outline" color="success"></ion-icon
+                >{{item.name}}
+              </p>
             </div>
           </ion-col>
         </ion-row>

@@ -10,6 +10,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { IonicStorageModule } from "@ionic/storage";
 import { CallNumber } from "@ionic-native/call-number/ngx";
+import { LaunchNavigator } from "@ionic-native/launch-navigator/ngx";
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +29,7 @@ import { CallNumber } from "@ionic-native/call-number/ngx";
     StatusBar,
     SplashScreen,
     CallNumber,
+    LaunchNavigator,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
