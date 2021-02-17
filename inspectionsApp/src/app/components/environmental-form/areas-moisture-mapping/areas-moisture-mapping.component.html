@@ -18,7 +18,7 @@
   color="{{ progressColor }}"
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
-<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+<div *ngIf="isMenuOpen">
   <ion-item lines="inset">
     <ion-label position="floating">Date Tesed</ion-label>
     <ion-datetime

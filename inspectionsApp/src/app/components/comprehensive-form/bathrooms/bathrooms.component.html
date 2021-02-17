@@ -18,7 +18,7 @@
   color="{{ progressColor }}"
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
-<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+<div *ngIf="isMenuOpen">
   <app-area-general-condition
     *ngFor="let bathroom of bathrooms; let i = index"
     ngDefaultControl

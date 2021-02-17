@@ -7,6 +7,7 @@ import {
   LaunchNavigator,
   LaunchNavigatorOptions,
 } from "@ionic-native/launch-navigator/ngx";
+import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 
 @Component({
   selector: "app-inspections-details",
@@ -21,7 +22,8 @@ export class InspectionsDetailsPage implements OnInit {
     public callNumber: CallNumber,
     public alertController: AlertController,
     public navController: NavController,
-    private launchNavigator: LaunchNavigator
+    private launchNavigator: LaunchNavigator,
+    private inspectionNavigate: InspectionNavigateService
   ) {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -43,7 +45,7 @@ export class InspectionsDetailsPage implements OnInit {
       start: "Current Location",
     };
 
-    this.launchNavigator.navigate(this.task.geoPointText, options).then(
+    this.launchNavigator.navigate(this.task.serviceAddress, options).then(
       (success) => console.log("Launched navigator"),
       (error) => console.log("Error launching navigator", error)
     );
@@ -62,51 +64,11 @@ export class InspectionsDetailsPage implements OnInit {
 
   async startInspection() {
     try {
-      this.presentAlertConfirmStartInspection();
+      this.inspectionNavigate.startInspection(this.task);
     } catch (error) {
       console.log(error);
     }
   }
-  async presentAlertConfirmStartInspection() {
-    try {
-      const alert = await this.alertController.create({
-        header: "Confirm action",
-        message: "Are you sure you want to start the inspection?",
-        buttons: [
-          {
-            text: "Cancel",
-            role: "cancel",
-            cssClass: "secondary",
-            handler: () => {
-              console.log("Cancel action");
-            },
-          },
-          {
-            text: "Ok",
-            handler: () => {
-              let navigationExtras: NavigationExtras = {
-                state: {
-                  task: this.task,
-                },
-              };
-              this.navController.navigateForward(
-                ["menu/start-inspection"],
-                navigationExtras
-              );
-            },
-          },
-        ],
-      });
 
-      await alert.present();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  // addressNavigate() {
-  //   console.log("Navigate to" + this.task.serviceAddress);
-  //   window.location.href =
-  //     "maps://maps.apple.com/?q=" + this.task.serviceAddress;
-  // }
   ngOnInit() {}
 }

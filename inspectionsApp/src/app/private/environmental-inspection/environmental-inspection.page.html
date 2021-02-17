@@ -5,6 +5,14 @@
     <ion-buttons slot="start">
       <ion-back-button defaulthref=""> </ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button slot="end" (click)="presentPopover($event)">
+        <ion-icon
+          slot="icon-only"
+          ios="ellipsis-vertical"
+          md="ellipsis-vertical"
+        ></ion-icon> </ion-button
+    ></ion-buttons>
   </ion-toolbar>
 </ion-header>
 

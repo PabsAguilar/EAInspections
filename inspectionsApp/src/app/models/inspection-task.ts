@@ -1,4 +1,5 @@
 import { IStorageModel } from "../interfaces/Istorage-model";
+import { Agreements } from "./agreements";
 import { Area } from "./comprehensive-form/area";
 import { ComprehensiveForm } from "./comprehensive-form/comprehensive-form";
 import { GeneralInfoInspection } from "./comprehensive-form/general-info-inspection";
@@ -24,7 +25,10 @@ export class InspectionTask implements IStorageModel {
   internalStatus: string;
   comprehesiveForm: ComprehensiveForm;
   environmentalForm: EnvironmentalForm;
-  constructor() {}
+  agreements: Agreements;
+  constructor() {
+    this.agreements = new Agreements();
+  }
 }
 
 /*

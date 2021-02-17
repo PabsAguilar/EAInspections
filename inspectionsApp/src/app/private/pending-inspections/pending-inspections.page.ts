@@ -19,6 +19,7 @@ import { GenericListPopOverComponent } from "src/app/components/generic-list-pop
 import { ComprehensiveForm } from "src/app/models/comprehensive-form/comprehensive-form";
 import { InspectionStatus, InspectionType } from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
+import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
@@ -34,16 +35,17 @@ export class PendingInspectionsPage implements OnInit {
   inspectionTasks = Array<InspectionTask>();
   selectedTask: InspectionTask;
   constructor(
-    public callNumber: CallNumber,
-    public actionSheetController: ActionSheetController,
-    public router: Router,
-    public inspectionStorageService: InspectionsStorageService,
-    public alertController: AlertController,
-    public loadingController: LoadingController,
-    public navController: NavController,
-    public popoverController: PopoverController,
-    public toast: ToastController,
-    private launchNavigator: LaunchNavigator
+    private callNumber: CallNumber,
+    private actionSheetController: ActionSheetController,
+    private router: Router,
+    private inspectionStorageService: InspectionsStorageService,
+    private alertController: AlertController,
+    private loadingController: LoadingController,
+    private navController: NavController,
+    private popoverController: PopoverController,
+    private toast: ToastController,
+    private launchNavigator: LaunchNavigator,
+    private inspectionNavigate: InspectionNavigateService
   ) {}
 
   public ngOnDestroy(): void {}
@@ -131,96 +133,23 @@ export class PendingInspectionsPage implements OnInit {
     }
   }
 
-  async startInspection(task: InspectionTask) {
-    try {
-      console.log("Start clicked");
-      this.selectedTask = task;
-
-      if (task.internalStatus == InspectionStatus.InProgress) {
-        await this.openInspectionPage();
-      } else {
-        await this.presentAlertConfirmStartInspection();
-      }
-    } catch (error) {
-      var message = this.toast.create({
-        message: error,
-        color: "danger",
-        duration: 2000,
-      });
-      (await message).present();
-    }
-  }
   async gpsNavigate(task: InspectionTask) {
     let options: LaunchNavigatorOptions = {
       start: "Current Location",
     };
 
-    this.launchNavigator.navigate(task.geoPointText, options).then(
+    this.launchNavigator.navigate(task.serviceAddress, options).then(
       (success) => console.log("Launched navigator"),
       (error) => console.log("Error launching navigator", error)
     );
   }
-  async openInspectionPage() {
-    try {
-      const loading = await this.loadingController.create({
-        message: "Please wait...",
-      });
-      await loading.present();
-      let navigationExtras: NavigationExtras = {
-        state: {
-          task: this.selectedTask,
-        },
-      };
-      var path = "";
-      if (this.selectedTask.inspectionType == InspectionType.Comprehensive) {
-        path = "menu/comprehensive-inspection";
-      } else if (
-        this.selectedTask.inspectionType == InspectionType.Environmental
-      ) {
-        path = "menu/environmental-inspection";
-      }
-      this.navController.navigateForward([path], navigationExtras);
-    } catch (error) {
-      var message = this.toast.create({
-        message: error,
-        color: "danger",
-        duration: 2000,
-      });
-      (await message).present();
-    }
-  }
-  async presentAlertConfirmStartInspection() {
-    try {
-      const alert = await this.alertController.create({
-        header: "Confirm action",
-        message: "Are you sure you want to start the inspection?",
-        buttons: [
-          {
-            text: "Cancel",
-            role: "cancel",
-            cssClass: "secondary",
-            handler: () => {
-              console.log("Cancel action");
-            },
-          },
-          {
-            text: "Ok",
-            handler: async () => {
-              await this.openInspectionPage();
-            },
-          },
-        ],
-      });
 
-      await alert.present();
-    } catch (error) {
-      var message = this.toast.create({
-        message: error,
-        color: "danger",
-        duration: 2000,
-      });
-      (await message).present();
-    }
+  async startInspection(task: InspectionTask) {
+    try {
+      console.log("Start clicked");
+      this.selectedTask = task;
+      this.inspectionNavigate.startInspection(task);
+    } catch (error) {}
   }
 
   async presentPopover(ev: any) {

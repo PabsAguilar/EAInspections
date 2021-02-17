@@ -4,10 +4,13 @@ import {
   AlertController,
   LoadingController,
   NavController,
+  PopoverController,
   ToastController,
 } from "@ionic/angular";
+import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { EnvironmentalForm } from "src/app/models/environmental-form";
 import { InspectionTask } from "src/app/models/inspection-task";
+import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
 @Component({
@@ -23,7 +26,9 @@ export class EnvironmentalInspectionPage implements OnInit {
     public loadingController: LoadingController,
     public inspectionStorageService: InspectionsStorageService,
     public navController: NavController,
-    private toast: ToastController
+    private toast: ToastController,
+    private inspectionNavigate: InspectionNavigateService,
+    private popoverController: PopoverController
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
@@ -39,6 +44,7 @@ export class EnvironmentalInspectionPage implements OnInit {
       if (top) {
         await this.loadingController.dismiss();
       }
+      await this.validateAgreements();
     } catch (error) {
       var message = this.toast.create({
         message: error,
@@ -49,6 +55,70 @@ export class EnvironmentalInspectionPage implements OnInit {
     }
   }
   ngOnInit() {}
+
+  async validateAgreements() {
+    if (
+      !this.task.agreements ||
+      (this.task.agreements.contacts.length <= 0 &&
+        !this.task.agreements.hasOpen)
+    ) {
+      await this.inspectionNavigate.openAgreementsPage(this.task);
+    }
+  }
+
+  async presentPopover(ev: any) {
+    try {
+      var settings = [
+        {
+          name: "See Agreements",
+          color: "primary",
+          event: "seeAgreement",
+          iconName: "reader-outline",
+        },
+      ];
+      const popover = await this.popoverController.create({
+        component: GenericListPopOverComponent,
+        componentProps: {
+          items: settings,
+        },
+        event: ev,
+        translucent: true,
+      });
+
+      popover.onDidDismiss().then(async (result) => {
+        if (!result.data) {
+          return;
+        }
+        switch (result.data.event) {
+          case "seeAgreement":
+            try {
+              await this.inspectionNavigate.openAgreementsPage(this.task);
+            } catch (error) {
+              var message = this.toast.create({
+                message: error,
+                color: "danger",
+                duration: 2000,
+              });
+              (await message).present();
+            }
+
+            break;
+
+          default:
+            console.log("Unknow event for generic list");
+            break;
+        }
+      });
+      return await popover.present();
+    } catch (error) {
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+    }
+  }
 
   async completeTask() {
     try {

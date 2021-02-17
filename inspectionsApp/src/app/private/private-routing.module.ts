@@ -32,12 +32,19 @@ const routes: Routes = [
       import("./comprehensive-inspection/comprehensive-inspection.module").then(
         (m) => m.ComprehensiveInspectionPageModule
       ),
-  }, 
+  },
   {
     path: "environmental-inspection",
     loadChildren: () =>
       import("./environmental-inspection/environmental-inspection.module").then(
         (m) => m.EnvironmentalInspectionPageModule
+      ),
+  },
+  {
+    path: "environmental-agreements",
+    loadChildren: () =>
+      import("./environmental-agreements/environmental-agreements.module").then(
+        (m) => m.EnvironmentalAgreementsPageModule
       ),
   },
 ];

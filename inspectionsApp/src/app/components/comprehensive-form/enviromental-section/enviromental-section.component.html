@@ -13,7 +13,7 @@
   color="{{ progressColor }}"
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
-<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+<div *ngIf="isMenuOpen">
   <ion-item lines="inset">
     <ion-label>Mold Sample Taken</ion-label>
     <ion-toggle

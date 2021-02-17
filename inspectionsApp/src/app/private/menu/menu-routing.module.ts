@@ -43,6 +43,14 @@ const routes: Routes = [
             "../environmental-inspection/environmental-inspection.module"
           ).then((m) => m.EnvironmentalInspectionPageModule),
       },
+
+      {
+        path: "environmental-agreements",
+        loadChildren: () =>
+          import(
+            "../environmental-agreements/environmental-agreements.module"
+          ).then((m) => m.EnvironmentalAgreementsPageModule),
+      },
     ],
   },
   { path: "", redirectTo: "tabs", pathMatch: "full" },

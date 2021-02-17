@@ -13,7 +13,7 @@
   color="{{ progressColor }}"
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
-<div [ngClass]="this.isMenuOpen ? 'active' : 'inactive'">
+<div *ngIf="isMenuOpen">
   <ion-item>
     <ion-label>Select conditions:</ion-label>
     <ion-chip slot="end" color="warning">{{ _data.condition.length }}</ion-chip>
