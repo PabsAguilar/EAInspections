@@ -19,6 +19,7 @@ import { GenericListPopOverComponent } from "src/app/components/generic-list-pop
 import { ComprehensiveForm } from "src/app/models/comprehensive-form/comprehensive-form";
 import { InspectionStatus, InspectionType } from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
+import { AuthenticationService } from "src/app/services/authentication.service";
 import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
@@ -34,6 +35,7 @@ export class PendingInspectionsPage implements OnInit {
   lastSync = Date.now();
   inspectionTasks = Array<InspectionTask>();
   selectedTask: InspectionTask;
+  segmentOption: string = "All";
   constructor(
     private callNumber: CallNumber,
     private actionSheetController: ActionSheetController,
@@ -45,10 +47,22 @@ export class PendingInspectionsPage implements OnInit {
     private popoverController: PopoverController,
     private toast: ToastController,
     private launchNavigator: LaunchNavigator,
-    private inspectionNavigate: InspectionNavigateService
+    private inspectionNavigate: InspectionNavigateService,
+    private autenticateService: AuthenticationService
   ) {}
 
   public ngOnDestroy(): void {}
+
+  groupBy(key) {
+    return function group(array) {
+      return array.reduce((acc, obj) => {
+        const property = obj[key];
+        acc[property] = acc[property] || [];
+        acc[property].push(obj);
+        return acc;
+      }, {});
+    };
+  }
 
   async ionViewWillEnter() {
     try {
@@ -64,6 +78,14 @@ export class PendingInspectionsPage implements OnInit {
     }
   }
 
+  async segmentChanged($event) {
+    this.inspectionTasks = (
+      await this.inspectionStorageService.getPendingInspections()
+    ).filter(
+      (task) =>
+        this.segmentOption == "All" || task.internalStatus == this.segmentOption
+    );
+  }
   async ionViewDidEnter() {
     try {
       var top = await this.loadingController.getTop();
@@ -84,7 +106,9 @@ export class PendingInspectionsPage implements OnInit {
     this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
 
     if (this.inspectionTasks == null) {
-      await this.inspectionStorageService.getExternal();
+      await this.inspectionStorageService.getExternal(
+        (await this.autenticateService.getUser()).userId
+      );
       this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
     }
     this.lastSync = await this.inspectionStorageService.getSyncStamp();
@@ -184,7 +208,9 @@ export class PendingInspectionsPage implements OnInit {
             await loading.present();
 
             try {
-              await this.inspectionStorageService.getExternal();
+              await this.inspectionStorageService.getExternal(
+                (await this.autenticateService.getUser()).userId
+              );
               this.lastSync = await this.inspectionStorageService.getSyncStamp();
               this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
             } catch (error) {

@@ -54,6 +54,11 @@
       <ion-grid>
         <ion-row>
           <ion-col>
+            <h3 style="text-align: center"><strong>{{task.title}} </strong></h3>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
             <ion-label>
               <h1 style="text-align: center">{{task.contactName}}</h1>
               <h3 style="text-align: center">{{task.contactPhone}}</h3>
@@ -70,7 +75,11 @@
         </ion-row>
         <ion-row>
           <ion-col class="row-center">
-            <ion-chip color="primary" (click)="gpsNavigate()" class="ion-text-center">
+            <ion-chip
+              color="primary"
+              (click)="gpsNavigate()"
+              class="ion-text-center"
+            >
               <ion-icon name="navigate-outline" color="primary"></ion-icon>
               <ion-label>{{task.serviceAddress}}</ion-label>
             </ion-chip>
@@ -123,7 +132,7 @@
             <ion-chip
               color="primary"
               (click)="startInspection()"
-              *ngIf="task.internalStatus === 'New'"
+              *ngIf="task.internalStatus === 'New' || task.internalStatus === 'In Progress' "
             >
               <ion-icon name="create-outline" color="primary"></ion-icon>
               <ion-label>Start Inspection</ion-label>

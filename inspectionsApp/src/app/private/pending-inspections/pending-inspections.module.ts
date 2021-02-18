@@ -9,6 +9,7 @@ import { PendingInspectionsPageRoutingModule } from "./pending-inspections-routi
 import { PendingInspectionsPage } from "./pending-inspections.page";
 import { ExploreContainerComponentModule } from "src/app/explore-container/explore-container.module";
 import { ComponentsModule } from "src/app/components/components.module";
+import { SharedModule } from "src/app/shared/shared.module";
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { ComponentsModule } from "src/app/components/components.module";
     IonicModule,
     ExploreContainerComponentModule,
     PendingInspectionsPageRoutingModule,
+    SharedModule,
     ComponentsModule,
   ],
   providers: [Storage],

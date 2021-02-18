@@ -8,7 +8,9 @@ import { TaskSubtype } from "./task-subtype";
 
 export class InspectionTask implements IStorageModel {
   id: number;
+  title: string;
   scheduleDateTime: Date;
+  scheduleDay: Date;
   contactName: string;
   serviceAddress: string;
   geoPointText: string;

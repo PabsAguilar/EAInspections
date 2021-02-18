@@ -6,7 +6,7 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-title>Environmental Inspection Agreements</ion-title>
+    <ion-title>Agreements</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -250,28 +250,17 @@
     <div
       [ngClass]=" this.task.agreements.contacts.length<=1 ? 'active' : 'inactive'"
     >
+      <!-- <ion-item>
+        <ion-label position="floating"> Client Signature</ion-label>
+      </ion-item> -->
+
       <ion-item>
-        <ion-label position="floating">Name</ion-label>
-        <ion-input [(ngModel)]="name" type="text" required></ion-input>
-      </ion-item>
-      <div class="validation-errors">
-        <ng-container>
-          <div *ngIf="!name && name == ''">
-            <ion-icon
-              color="danger"
-              name="information-circle-outline"
-            ></ion-icon>
-            <ion-label color="danger">Name is required.</ion-label>
-          </div>
-        </ng-container>
-      </div>
-      <ion-item>
-        <ion-label position="floating">Signature</ion-label>
+        <ion-label>Signature</ion-label>
         <ion-button
           color="primary"
           expand="full"
           slot="end"
-          [disabled]="canSave()"
+          [disabled]="isCanvasBlank()"
           (click)="save()"
         >
           <ion-label>Save</ion-label></ion-button

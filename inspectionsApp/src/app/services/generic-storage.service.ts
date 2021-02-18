@@ -26,7 +26,7 @@ export class GenericStorageService implements IStorage {
   addItems(newItems: IStorageModel[]): Promise<any> {
     return this.storage.get(this.collectionName).then((items) => {
       if (items) {
-        items.concat(newItems);
+        items = items.concat(newItems);
         return this.storage.set(this.collectionName, items);
       } else {
         return this.storage.set(this.collectionName, newItems);
@@ -87,5 +87,8 @@ export class GenericStorageService implements IStorage {
       }
       return this.storage.set(this.collectionName, keepItems);
     });
+  }
+  clear(): Promise<any> {
+    return this.storage.set(this.collectionName, null);
   }
 }

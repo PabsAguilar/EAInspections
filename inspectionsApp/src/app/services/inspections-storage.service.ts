@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Storage } from "@ionic/storage";
-import { find } from "rxjs/operators";
+import { find, takeLast } from "rxjs/operators";
 import { IStorage } from "../interfaces/Istorage";
 import { IStorageModel } from "../interfaces/Istorage-model";
 import { InspectionStatus, InspectionType } from "../models/enums";
@@ -108,12 +108,12 @@ export class InspectionsStorageService implements IStorage {
     return list;
   }
 
-  async getExternal() {
+  async getExternal(idUser: number) {
     this.storage.set(SYNCSTAMPKEY, new Date());
 
     var completed = await this.getCompletedInspections();
 
-    var list = await this.getInspectionMockedJson();
+    var list = await this.getInspectionITestJson(idUser);
     for (let index = 0; index < list.length; index++) {
       var item = list[index] as any;
       item.internalStatus = InspectionStatus.New;
@@ -127,7 +127,7 @@ export class InspectionsStorageService implements IStorage {
 
       list[index] = itemCompleted ? itemCompleted : item;
     }
-
+    await this.genericStorage.clear();
     return this.genericStorage.addItems(list);
   }
 
@@ -148,10 +148,10 @@ export class InspectionsStorageService implements IStorage {
     return await this.updateAll(list);
   }
 
-  async getInspectionMockedJson(): Promise<InspectionTask[]> {
+  async getInspectionITestJson(idUser: number): Promise<InspectionTask[]> {
     try {
       var subtypes = await this.getInspectionTasksTypesList();
-      var data = await this.bitrix.getInspectionsDeals(0);
+      var data = await this.bitrix.getInspectionsDeals(idUser);
 
       if (data.result.length > 0) {
         var list: InspectionTask[] = await Promise.all(
@@ -162,9 +162,12 @@ export class InspectionsStorageService implements IStorage {
               var task = new InspectionTask();
 
               task.id = x.ID;
+              task.title = x.TITLE;
               task.scheduleDateTime = x.UF_CRM_1612683055;
+              task.scheduleDay = new Date(x.UF_CRM_1612683055.split("T")[0]);
               task.contactName = contact.NAME + " " + contact.LAST_NAME;
               task.serviceAddress = x.UF_CRM_1606466289;
+
               var address = task.serviceAddress.split("|");
 
               if (address.length > 1) {

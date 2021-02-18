@@ -35,6 +35,9 @@ export class EnvironmentalInspectionPage implements OnInit {
       if (!this.task.environmentalForm) {
         this.task.environmentalForm = new EnvironmentalForm();
       }
+      if (this.task.agreements.contacts.length > 0) {
+        this.UpdateEntity(null);
+      }
     }
   }
 

@@ -82,9 +82,6 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
     }
   }
 
-  canSave(): boolean {
-    return !(!this.isCanvasBlank() && this.name && this.name != "");
-  }
   canAdd(): boolean {
     return this.task.agreements.contacts.length <= 2;
   }
@@ -92,7 +89,9 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
   async save() {
     try {
       var signature = new AgreementContact();
-      signature.name = this.name;
+      signature.name =
+        "Client Signature #" +
+        (this.task.agreements.contacts.length + 1).toString();
       signature.signature = this.signaturePad.toDataURL();
       this.task.agreements.contacts.push(signature);
       this.clear();
