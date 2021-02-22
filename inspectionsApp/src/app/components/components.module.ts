@@ -25,9 +25,16 @@ import { AreasAsbestosComponent } from "./environmental-form/areas-asbestos/area
 import { AsbestosComponent } from "./environmental-form/asbestos/asbestos.component";
 import { LeadComponent } from "./environmental-form/lead/lead.component";
 import { AreasLeadComponent } from "./environmental-form/areas-lead/areas-lead.component";
+import { SharedModule } from "../shared/shared.module";
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicModule,
+    SharedModule,
+  ],
   declarations: [
     GenericListPopOverComponent,
     SlidesPhotosComponent,

@@ -7,7 +7,11 @@ import {
   FormControl,
 } from "@angular/forms";
 
-import { AlertController, LoadingController } from "@ionic/angular";
+import {
+  AlertController,
+  LoadingController,
+  ToastController,
+} from "@ionic/angular";
 import { User } from "src/app/models/user";
 import { BitrixItestService } from "src/app/services/bitrix-itest.service";
 
@@ -24,23 +28,33 @@ export class LoginPage implements OnInit {
     private bitrix: BitrixItestService,
     public formBuilder: FormBuilder,
     public alertController: AlertController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private toast: ToastController
   ) {}
 
   ngOnInit() {}
 
   async ionViewDidEnter() {
     try {
+      var lastUser = await this.authService.getLastLoggedUser();
+      this.email = lastUser.email;
+      this.image = lastUser.image;
       var top = await this.loadingController.getTop();
       if (top) {
         await this.loadingController.dismiss();
       }
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 3000,
+      });
+      (await message).present();
     }
   }
 
   email: string = "";
+  image: string;
   password: string = "";
   validations_form = this.formBuilder.group({
     username: new FormControl(
@@ -75,7 +89,11 @@ export class LoginPage implements OnInit {
   };
 
   async onSubmit(values) {
+    const loading = await this.loadingController.create({
+      message: "Loading...",
+    });
     try {
+      await loading.present();
       var data = await this.bitrix.getUserByEmail(values.username);
       if (data.result.length > 0) {
         var user = new User(data.result[0]);
@@ -84,10 +102,17 @@ export class LoginPage implements OnInit {
         this.validations_form.reset();
         this.authService.login(user);
       } else {
+        loading.dismiss();
         await this.presentAlert();
       }
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 3000,
+      });
+      (await message).present();
+      loading.dismiss();
     }
   }
 
@@ -102,7 +127,12 @@ export class LoginPage implements OnInit {
 
       await alert.present();
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 3000,
+      });
+      (await message).present();
     }
   }
 }

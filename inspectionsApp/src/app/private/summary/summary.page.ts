@@ -1,12 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { NavigationExtras, Router } from "@angular/router";
 import { CallNumber } from "@ionic-native/call-number/ngx";
-import { PopoverController } from "@ionic/angular";
+import { PopoverController, ToastController } from "@ionic/angular";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { Scheduling } from "src/app/models/scheduling";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 import { SchedulingStorageService } from "src/app/services/scheduling-storage.service";
+import { SyncInspectionService } from "src/app/services/sync-inspection.service";
 
 @Component({
   selector: "app-summary",
@@ -19,10 +20,12 @@ export class SummaryPage implements OnInit {
     public schedulingStorageService: SchedulingStorageService,
     public inspectionStorageService: InspectionsStorageService,
     private router: Router,
-    public popoverController: PopoverController
+    private popoverController: PopoverController,
+    private toast: ToastController,
+    private syncInspection: SyncInspectionService
   ) {}
   segmentOption: string = "inspections";
-  inspectionTasks: InspectionTask[];
+  inspectionTasks = Array<InspectionTask>();
   schedulingList: Scheduling[];
   ngOnInit() {}
 
@@ -76,7 +79,7 @@ export class SummaryPage implements OnInit {
         switch (result.data.event) {
           case "syncToServer":
             console.log("dummySync");
-            await this.inspectionStorageService.syncPendingTask();
+            // await this.inspectionStorageService.syncPendingTask();
             await this.schedulingStorageService.syncPending();
             this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
             this.schedulingList = await this.schedulingStorageService.getAll();
@@ -115,6 +118,11 @@ export class SummaryPage implements OnInit {
       console.log(error);
     }
   }
+
+  async trySync(task) {
+    this.syncInspection.syncTask(task);
+  }
+
   async seeSchedulingDetails(scheduling: Scheduling) {
     try {
       console.log("Details clicked");

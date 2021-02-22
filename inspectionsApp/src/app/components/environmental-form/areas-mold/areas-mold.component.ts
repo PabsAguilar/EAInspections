@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { DamageAreas } from "src/app/models/environmental-form/damage-areas";
 import { DamageInspection } from "src/app/models/damage-inspection";
 import { DamageAreaType } from "src/app/models/enums";
+import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
 @Component({
   selector: "app-areas-mold",
@@ -25,29 +26,35 @@ export class AreasMoldComponent implements OnInit {
   set model(value: DamageAreas) {
     this._model = value;
     if (value) {
-      this._model = value;
-      switch (value.type) {
-        case DamageAreaType.Bacteria:
-          this.damageInspectionType = [
-            "Pre Bacteria (CAT3) Inspection",
-            "Post Bacteria (CAT3) Inspection (Clearance)",
-          ];
-          break;
-        case DamageAreaType.Mold:
-          this.damageInspectionType = [
-            "Pre Mold Inspection",
-            "Mold Samples Only",
-            "Post Mold Inspection (Clearance)",
-          ];
-          break;
+      this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
+        switch (value.type) {
+          case DamageAreaType.Bacteria:
+            this.damageInspectionType = data
+              .filter((x) => x.name.toLowerCase().indexOf("bacteria") >= 0)
+              .map((item) => {
+                return { name: item.name, value: item.id };
+              });
 
-        case DamageAreaType.Soot:
-          this.damageInspectionType = [
-            "Pre Soot Inspection",
-            "Post Soot Inspection (Clearance)",
-          ];
-          break;
-      }
+            break;
+          case DamageAreaType.Mold:
+            this.damageInspectionType = data
+              .filter((x) => x.name.toLowerCase().indexOf("mold") >= 0)
+              .map((item) => {
+                return { name: item.name, value: item.id };
+              });
+            break;
+
+          case DamageAreaType.Soot:
+            this.damageInspectionType = data
+              .filter((x) => x.name.toLowerCase().indexOf("soot") >= 0)
+              .map((item) => {
+                return { name: item.name, value: item.id };
+              });
+            break;
+        }
+      });
+      this._model = value;
+
       this.AreaUpdated(null);
     }
   }
@@ -55,14 +62,14 @@ export class AreasMoldComponent implements OnInit {
   damageInspectionType: any[] = [];
   @Output() modelChanged: any = new EventEmitter();
 
-  constructor() {}
+  constructor(private inspectionStorage: InspectionsStorageService) {}
 
   ngOnInit() {}
 
   AreaUpdated($event) {
-    this.filledAreas = !this.model.areasMold
+    this.filledAreas = !this.model.areasInspection
       ? 0
-      : this.model.areasMold.filter((y) => y.areaName).length;
+      : this.model.areasInspection.filter((y) => y.areaName).length;
 
     if (this.filledAreas >= 1 && this.model.moldInspectionType) {
       this.progressColor = "success";

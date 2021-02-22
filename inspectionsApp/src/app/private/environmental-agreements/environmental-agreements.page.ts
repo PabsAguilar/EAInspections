@@ -17,6 +17,7 @@ import { AgreementContact } from "src/app/models/agreement-contact";
 import { Agreements } from "src/app/models/agreements";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
+import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
 @Component({
   selector: "app-environmental-agreements",
@@ -35,7 +36,8 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
     private loadingController: LoadingController,
     private toast: ToastController,
     private inspectionNavigate: InspectionNavigateService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private inspectionStorageService: InspectionsStorageService
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
@@ -94,8 +96,30 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
         (this.task.agreements.contacts.length + 1).toString();
       signature.signature = this.signaturePad.toDataURL();
       this.task.agreements.contacts.push(signature);
+      if (this.task.agreements.contacts.length > 0) {
+        this.UpdateEntity();
+      }
       this.clear();
       this.name = null;
+    } catch (error) {
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+    }
+  }
+
+  dropSignature(index) {
+    this.task.agreements.contacts.splice(index, 1);
+    this.UpdateEntity();
+  }
+
+  public async UpdateEntity(): Promise<void> {
+    try {
+      this.task.internalStatus = "In Progress";
+      await this.inspectionStorageService.update(this.task);
     } catch (error) {
       var message = this.toast.create({
         message: error,

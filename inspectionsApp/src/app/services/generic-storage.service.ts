@@ -23,7 +23,7 @@ export class GenericStorageService implements IStorage {
     });
   }
 
-  addItems(newItems: IStorageModel[]): Promise<any> {
+  addItems(newItems): Promise<any> {
     return this.storage.get(this.collectionName).then((items) => {
       if (items) {
         items = items.concat(newItems);

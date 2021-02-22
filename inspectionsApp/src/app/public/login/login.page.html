@@ -10,8 +10,14 @@
 <ion-content fullscreen class="ion-padding ion-text-center form">
   <ion-grid>
     <ion-row>
-      <ion-col
-        ><ion-icon
+      <ion-col>
+        <center>
+          <ion-avatar *ngIf="image">
+            <img src="{{image}}" />
+          </ion-avatar>
+        </center>
+        <ion-icon
+          *ngIf="!image"
           color="primary"
           style="font-size: 70px"
           name="person-circle-outline"

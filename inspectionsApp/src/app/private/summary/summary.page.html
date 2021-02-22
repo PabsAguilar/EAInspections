@@ -32,32 +32,72 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list class="ion-no-padding" *ngIf="segmentOption === 'inspections'">
-    <ion-item-sliding *ngFor="let task of inspectionTasks">
-      <ion-item-options side="end">
-        <ion-item-option (click)="call(task)" color="white">
-          <ion-icon
-            color="success"
-            style="font-size: xx-large"
-            name="call-outline"
-          ></ion-icon
-        ></ion-item-option>
-        <ion-item-option (click)="seeDetails(task)" color="white">
-          <ion-icon
-            color="secondary"
-            style="font-size: xx-large"
-            name="book-outline"
-          ></ion-icon
-        ></ion-item-option>
-      </ion-item-options>
-      <ion-item class="ion-no-padding" (click)="seeInspectionDetails(task)">
-        <div>
-          <ion-label>
-            <h2>{{task.contactName}}</h2>
-            <h3>{{task.inspectionType}}</h3>
-            <p>{{task.serviceAddress}}</p>
-          </ion-label>
-        </div>
-        <ion-badge
+    <div *ngIf="this.inspectionTasks.length > 0; else noItems">
+      <ion-item-group
+        *ngFor="let group of this.inspectionTasks | groupBy: 'scheduleDay'"
+      >
+        <ion-item-divider color="light">
+          {{ group.key | date: 'MMMM dd, yyyy' }}
+        </ion-item-divider>
+
+        <ion-item-sliding *ngFor="let task of group.list ">
+          <ion-item-options side="end">
+            <ion-item-option (click)="call(task)" color="white">
+              <ion-icon
+                color="success"
+                style="font-size: xx-large"
+                name="call-outline"
+              ></ion-icon
+            ></ion-item-option>
+            <ion-item-option (click)="seeDetails(task)" color="white">
+              <ion-icon
+                color="secondary"
+                style="font-size: xx-large"
+                name="book-outline"
+              ></ion-icon
+            ></ion-item-option>
+
+            <ion-item-option
+              color="white"
+              (click)="trySync(task)"
+              *ngIf="task.internalStatus === 'Pending'"
+            >
+              <ion-icon
+                color="warning"
+                style="font-size: xx-large"
+                name="cloud-upload-outline"
+              ></ion-icon
+            ></ion-item-option>
+          </ion-item-options>
+          <ion-item class="ion-no-padding" (click)="seeInspectionDetails(task)">
+            <div class="ion-text-center ion-padding">
+              <ion-icon
+                *ngIf="task.internalStatus =='Pending'"
+                style="font-size: x-large"
+                name="cloud-offline-outline"
+                color="warning"
+              ></ion-icon>
+
+              <ion-icon
+                name="cloud-done-outline"
+                style="font-size: x-large"
+                *ngIf="task.internalStatus =='Completed'"
+                color="success"
+              ></ion-icon>
+            </div>
+            <div>
+              <ion-label>
+                <h4 style="font-size: small">
+                  <strong>{{task.title}}</strong>
+                </h4>
+                <h2>{{task.contactName}}</h2>
+
+                <p>{{task.serviceAddress}}</p>
+              </ion-label>
+            </div>
+          </ion-item>
+
+          <!-- <ion-badge
           class="ion-no-margin"
           *ngIf="task.internalStatus === 'Completed'"
           color="success"
@@ -71,8 +111,13 @@
           slot="end"
           >Pending Sync</ion-badge
         >
-      </ion-item>
-    </ion-item-sliding>
+      </ion-item> -->
+        </ion-item-sliding>
+      </ion-item-group>
+    </div>
+    <ng-template #noItems>
+      <ion-item> No deals found. </ion-item>
+    </ng-template>
   </ion-list>
 
   <ion-list *ngIf="segmentOption === 'scheduling'" class="ion-no-padding">

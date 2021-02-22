@@ -12,8 +12,10 @@ export class GeneralInfoInspection {
   HVACSystemCondition: string[];
   ductsCondition: string[];
   atticCondition: string[];
+  sync: boolean;
 
   constructor() {
+    this.sync = false;
     this.picturesFrontHouse = [];
     this.propertyYear = null;
     this.pictureHouseNumbers = "";

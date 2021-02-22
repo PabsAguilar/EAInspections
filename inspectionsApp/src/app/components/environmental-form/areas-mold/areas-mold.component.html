@@ -29,18 +29,18 @@
       (ionChange)="AreaUpdated($event)"
     >
       <ion-select-option
-        *ngFor="let value of damageInspectionType; let i = index"
-        [value]="value"
-        >{{ value }}</ion-select-option
+        *ngFor="let item of damageInspectionType; let i = index"
+        [value]="item.value"
+        >{{ item.name }}</ion-select-option
       >
     </ion-select>
   </ion-item>
 
   <app-area-mold
-    *ngFor="let area of _model.areasMold; let i = index"
+    *ngFor="let area of _model.areasInspection; let i = index"
     ngDefaultControl
     [title]="'Area ' + (i + 1)"
     (modelChanged)="AreaUpdated($event)"
-    [(model)]="_model.areasMold[i]"
+    [(model)]="_model.areasInspection[i]"
   ></app-area-mold>
 </div>

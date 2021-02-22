@@ -1,9 +1,20 @@
 import { Injectable } from "@angular/core";
 import { Storage } from "@ionic/storage";
+import { Observable } from "rxjs";
 import { find, takeLast } from "rxjs/operators";
 import { IStorage } from "../interfaces/Istorage";
 import { IStorageModel } from "../interfaces/Istorage-model";
-import { InspectionStatus, InspectionType } from "../models/enums";
+import { DamageInspection } from "../models/damage-inspection";
+
+import {
+  AreaConditionType,
+  bitrixMapping,
+  DamageAreaType,
+  InspectionStatus,
+  InspectionType,
+} from "../models/enums";
+import { EnvironmentalForm } from "../models/environmental-form";
+import { Sample } from "../models/environmental-form/sample";
 import { InspectionTask } from "../models/inspection-task";
 import { TaskSubtype } from "../models/task-subtype";
 import { BitrixItestService } from "./bitrix-itest.service";
@@ -16,6 +27,7 @@ export class InspectionsStorageService implements IStorage {
   constructor(private storage: Storage, private bitrix: BitrixItestService) {}
 
   collectionName: string = "inspections-task";
+  environmentalInspectionFieldsName: string = "environmental-inspection-fields";
   collectionTaskSubTypesName: string = "task-itest-subtypes-list";
   genericStorage: GenericStorageService = new GenericStorageService(
     this.collectionName,
@@ -24,6 +36,11 @@ export class InspectionsStorageService implements IStorage {
 
   inspectionTypesListService = new GenericStorageService(
     this.collectionTaskSubTypesName,
+    this.storage
+  );
+
+  environmentalInspectionFieldsListService = new GenericStorageService(
+    this.environmentalInspectionFieldsName,
     this.storage
   );
 
@@ -74,7 +91,29 @@ export class InspectionsStorageService implements IStorage {
     if (list != null) {
       var completed = list
         .filter((item) => {
-          return item.internalStatus !== InspectionStatus.New;
+          return (
+            item.internalStatus !== InspectionStatus.New &&
+            item.internalStatus !== InspectionStatus.InProgress
+          );
+        })
+        .sort(
+          (a, b) =>
+            this.getTime(a.scheduleDateTime) - this.getTime(b.scheduleDateTime)
+        );
+      return completed;
+    }
+    return [];
+  }
+
+  async getStartedInspections() {
+    var list = await this.getAll();
+    if (list != null) {
+      var completed = list
+        .filter((item) => {
+          return (
+            item.internalStatus == InspectionStatus.Completed ||
+            item.internalStatus == InspectionStatus.InProgress
+          );
         })
         .sort(
           (a, b) =>
@@ -108,10 +147,155 @@ export class InspectionsStorageService implements IStorage {
     return list;
   }
 
+  async initializeDamageMapping(
+    damageType: string,
+    task: InspectionTask
+  ): Promise<InspectionTask> {
+    for (
+      let index = 0;
+      index < bitrixMapping[damageType].areasMoldBitrixCode.length;
+      index++
+    ) {
+      var x = new DamageInspection(damageType);
+      x.damageInspectionBitrixMapping.areaNameCode =
+        bitrixMapping[damageType].areasMoldBitrixCode[index];
+      x.damageInspectionBitrixMapping.conditionCode =
+        bitrixMapping[damageType].areasMoldConditionBitrixCode[index];
+      x.damageInspectionBitrixMapping.areaRHCode =
+        bitrixMapping[damageType].areaRHCodeMold[index];
+      x.damageInspectionBitrixMapping.areaPicturesCode =
+        bitrixMapping[damageType].areaPicturesCodeMold[index];
+      x.damageInspectionBitrixMapping.areaNotesCode =
+        bitrixMapping[damageType].areaNotesCodeMold[index];
+      x.damageInspectionBitrixMapping.removeCeilingCode =
+        bitrixMapping[damageType].removeCeilingCodeMold[index];
+      x.damageInspectionBitrixMapping.ceilingNotesCode =
+        bitrixMapping[damageType].ceilingNotesCodeMold[index];
+      x.damageInspectionBitrixMapping.removeDrywallCode =
+        bitrixMapping[damageType].removeDrywallCodeMold[index];
+      x.damageInspectionBitrixMapping.drywallNotesCode =
+        bitrixMapping[damageType].drywallNotesCodeMold[index];
+      x.damageInspectionBitrixMapping.removeBaseboardsCode =
+        bitrixMapping[damageType].removeBaseboardsCodeMold[index];
+      x.damageInspectionBitrixMapping.baseboardsNotesCode =
+        bitrixMapping[damageType].baseboardsNotesCodeMold[index];
+      x.damageInspectionBitrixMapping.removeFlooringCode =
+        bitrixMapping[damageType].removeFlooringCodeMold[index];
+      x.damageInspectionBitrixMapping.flooringNotesCode =
+        bitrixMapping[damageType].flooringNotesCodeMold[index];
+      x.damageInspectionBitrixMapping.decontaminationCode =
+        bitrixMapping[damageType].decontaminationCodeMold[index];
+      x.damageInspectionBitrixMapping.furnitureOptionCode =
+        bitrixMapping[damageType].furnitureOptionCodeMold[index];
+      x.damageInspectionBitrixMapping.beddingsOptionCode =
+        bitrixMapping[damageType].beddingsOptionCodeMold[index];
+      x.damageInspectionBitrixMapping.observationsCode =
+        bitrixMapping[damageType].observationsCodeMold[index];
+      // x.damageInspectionBitrixMapping.samplesCode = samplesCodeMold[index];
+      x.damageInspectionBitrixMapping.recomendationsCode =
+        bitrixMapping[damageType].recomendationsCodeMold[index];
+
+      var s = new Sample(damageType);
+      s.sampleBitrixMapping.sampleTypeCode =
+        bitrixMapping[damageType].sampleTypeCodeSample1Mold[index];
+      s.sampleBitrixMapping.labResultCode =
+        bitrixMapping[damageType].labResultCodeSample1Mold[index];
+      if (damageType == DamageAreaType.Mold) {
+        s.sampleBitrixMapping.volumeCode =
+          bitrixMapping[damageType].volumeCodeSample1Mold[index];
+        s.sampleBitrixMapping.cassetteNumberCode =
+          bitrixMapping[damageType].cassetteNumberCodeSample1Mold[index];
+        s.sampleBitrixMapping.toxicMoldCode =
+          bitrixMapping[damageType].toxicMoldCodeSample1Mold[index];
+      }
+
+      var s2 = new Sample(damageType);
+      s2.sampleBitrixMapping.sampleTypeCode =
+        bitrixMapping[damageType].sampleTypeCodeSample2Mold[index];
+      s2.sampleBitrixMapping.labResultCode =
+        bitrixMapping[damageType].labResultCodeSample2Mold[index];
+      if (damageType == DamageAreaType.Mold) {
+        s2.sampleBitrixMapping.volumeCode =
+          bitrixMapping[damageType].volumeCodeSample2Mold[index];
+        s2.sampleBitrixMapping.cassetteNumberCode =
+          bitrixMapping[damageType].cassetteNumberCodeSample2Mold[index];
+        s2.sampleBitrixMapping.toxicMoldCode =
+          bitrixMapping[damageType].toxicMoldCodeSample2Mold[index];
+      }
+
+      var s3 = new Sample(damageType);
+      s3.sampleBitrixMapping.sampleTypeCode =
+        bitrixMapping[damageType].sampleTypeCodeSample3Mold[index];
+      s3.sampleBitrixMapping.labResultCode =
+        bitrixMapping[damageType].labResultCodeSample3Mold[index];
+      if (damageType == DamageAreaType.Mold) {
+        s3.sampleBitrixMapping.volumeCode =
+          bitrixMapping[damageType].volumeCodeSample3Mold[index];
+        s3.sampleBitrixMapping.cassetteNumberCode =
+          bitrixMapping[damageType].cassetteNumberCodeSample3Mold[index];
+        s3.sampleBitrixMapping.toxicMoldCode =
+          bitrixMapping[damageType].toxicMoldCodeSample3Mold[index];
+      }
+
+      x.samples.push(s);
+      x.samples.push(s2);
+      x.samples.push(s3);
+
+      switch (damageType) {
+        case DamageAreaType.Mold:
+          task.environmentalForm.moldAreas.areasInspection.push(x);
+          break;
+        case DamageAreaType.Bacteria:
+          task.environmentalForm.bacteriasAreas.areasInspection.push(x);
+          break;
+        case DamageAreaType.Soot:
+          task.environmentalForm.sootAreas.areasInspection.push(x);
+          break;
+      }
+    }
+    return task;
+  }
+
+  async initializeEnvironmentalTask(
+    task: InspectionTask
+  ): Promise<InspectionTask> {
+    if (!task.environmentalForm) {
+      task.environmentalForm = new EnvironmentalForm();
+    }
+
+    //initialize mold Areas
+    task = await this.initializeDamageMapping(DamageAreaType.Mold, task);
+    task = await this.initializeDamageMapping(DamageAreaType.Soot, task);
+    task = await this.initializeDamageMapping(DamageAreaType.Bacteria, task);
+    return task;
+  }
+
+  async getEnvironmentalInspectionFields(): Promise<any> {
+    var list = await this.environmentalInspectionFieldsListService.getAll();
+
+    if (list != null) {
+      return list;
+    }
+    var responseMold = await this.bitrix.getEnvironmentalInspectionFields(48);
+    var responseBacteria = await this.bitrix.getEnvironmentalInspectionFields(
+      50
+    );
+    var responseSoot = await this.bitrix.getEnvironmentalInspectionFields(52);
+    let obj = Object.assign(
+      responseMold.result,
+      responseBacteria.result,
+      responseSoot.result
+    );
+
+    await this.environmentalInspectionFieldsListService.add(obj);
+    list = await this.environmentalInspectionFieldsListService.getAll();
+    return list;
+  }
+
   async getExternal(idUser: number) {
     this.storage.set(SYNCSTAMPKEY, new Date());
 
-    var completed = await this.getCompletedInspections();
+    var completed = await this.getStartedInspections();
 
     var list = await this.getInspectionITestJson(idUser);
     for (let index = 0; index < list.length; index++) {
@@ -128,6 +312,8 @@ export class InspectionsStorageService implements IStorage {
       list[index] = itemCompleted ? itemCompleted : item;
     }
     await this.genericStorage.clear();
+
+    await this.getEnvironmentalInspectionFields();
     return this.genericStorage.addItems(list);
   }
 
@@ -135,18 +321,18 @@ export class InspectionsStorageService implements IStorage {
     return await this.storage.get(SYNCSTAMPKEY);
   }
 
-  async syncPendingTask() {
-    var list = await this.getAll();
-    if (list == null || list.length == 0) {
-      return false;
-    }
-    list.forEach((element) => {
-      if (element.internalStatus == InspectionStatus.Pending) {
-        element.internalStatus = InspectionStatus.Completed;
-      }
-    });
-    return await this.updateAll(list);
-  }
+  // async syncPendingTask() {
+  //   var list = await this.getAll();
+  //   if (list == null || list.length == 0) {
+  //     return false;
+  //   }
+  //   list.forEach((element) => {
+  //     if (element.internalStatus == InspectionStatus.Pending) {
+  //       element.internalStatus = InspectionStatus.Completed;
+  //     }
+  //   });
+  //   return await this.updateAll(list);
+  // }
 
   async getInspectionITestJson(idUser: number): Promise<InspectionTask[]> {
     try {
@@ -162,9 +348,14 @@ export class InspectionsStorageService implements IStorage {
               var task = new InspectionTask();
 
               task.id = x.ID;
+              task.contactId = x.CONTACT_ID;
               task.title = x.TITLE;
-              task.scheduleDateTime = x.UF_CRM_1612683055;
-              task.scheduleDay = new Date(x.UF_CRM_1612683055.split("T")[0]);
+              task.scheduleDateTime = new Date(x.UF_CRM_1612683055);
+              task.scheduleDay = new Date(
+                task.scheduleDateTime.getFullYear(),
+                task.scheduleDateTime.getMonth(),
+                task.scheduleDateTime.getDate()
+              );
               task.contactName = contact.NAME + " " + contact.LAST_NAME;
               task.serviceAddress = x.UF_CRM_1606466289;
 

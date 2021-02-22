@@ -12,6 +12,7 @@ export class InspectionTask implements IStorageModel {
   scheduleDateTime: Date;
   scheduleDay: Date;
   contactName: string;
+  contactId:number;
   serviceAddress: string;
   geoPointText: string;
   contactPhone: string;

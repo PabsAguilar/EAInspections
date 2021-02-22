@@ -1,8 +1,6 @@
 import { GeneralInfoInspection } from "./comprehensive-form/general-info-inspection";
 import { DamageAreas } from "./environmental-form/damage-areas";
-import { DamageInspection } from "./damage-inspection";
 import { DamageAreaType } from "./enums";
-import { MoistureMapping } from "./environmental-form/moisture-mapping";
 import { MoistureMappingAreas } from "./environmental-form/moisture-mapping-areas";
 import { AsbestoAreas } from "./environmental-form/asbesto-areas";
 import { LeadAreas } from "./environmental-form/lead-areas";

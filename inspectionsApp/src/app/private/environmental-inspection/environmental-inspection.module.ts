@@ -20,6 +20,7 @@ import { AsbestosComponent } from "src/app/components/environmental-form/asbesto
 import { AreasAsbestosComponent } from "src/app/components/environmental-form/areas-asbestos/areas-asbestos.component";
 import { LeadComponent } from "src/app/components/environmental-form/lead/lead.component";
 import { AreasLeadComponent } from "src/app/components/environmental-form/areas-lead/areas-lead.component";
+import { SharedModule } from "src/app/shared/shared.module";
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { AreasLeadComponent } from "src/app/components/environmental-form/areas-
     FormsModule,
     IonicModule,
     EnvironmentalInspectionPageRoutingModule,
+    SharedModule,
   ],
   declarations: [
     EnvironmentalInspectionPage,

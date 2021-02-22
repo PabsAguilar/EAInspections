@@ -33,11 +33,21 @@ export class EnvironmentalInspectionPage implements OnInit {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
       if (!this.task.environmentalForm) {
-        this.task.environmentalForm = new EnvironmentalForm();
+        inspectionStorageService
+          .initializeEnvironmentalTask(this.task)
+          .then((x) => {
+            this.task = x;
+          })
+          .catch(async (error) => {
+            var message = this.toast.create({
+              message: error,
+              color: "danger",
+              duration: 2000,
+            });
+            (await message).present();
+          });
       }
-      if (this.task.agreements.contacts.length > 0) {
-        this.UpdateEntity(null);
-      }
+     
     }
   }
 
@@ -128,17 +138,17 @@ export class EnvironmentalInspectionPage implements OnInit {
       console.log("Task Completed" + this.task.id);
       console.log(this.task);
       this.task.internalStatus = "Pending";
-      var random = Math.floor(Math.random() * 10) + 2;
+      var random = Math.floor(Math.random() * 100) + 2;
+      await this.inspectionStorageService.update(this.task);
+      await this.navController.navigateRoot(
+        "menu/tabs/tabs/pending-inspections/" + random
+      );
       var message = this.toast.create({
         message: "Inspection is completed.",
         color: "success",
         duration: 5000,
       });
       (await message).present();
-      await this.inspectionStorageService.update(this.task);
-      await this.navController.navigateRoot(
-        "menu/tabs/tabs/pending-inspections/" + random
-      );
     } catch (error) {
       var message = this.toast.create({
         message: error,

@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { FormControl } from "@angular/forms";
+
 import { NavigationEnd, NavigationExtras, Router } from "@angular/router";
 
 import { CallNumber } from "@ionic-native/call-number/ngx";
@@ -15,6 +17,7 @@ import {
   ToastController,
 } from "@ionic/angular";
 import { Subscription } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { ComprehensiveForm } from "src/app/models/comprehensive-form/comprehensive-form";
 import { InspectionStatus, InspectionType } from "src/app/models/enums";
@@ -36,6 +39,9 @@ export class PendingInspectionsPage implements OnInit {
   inspectionTasks = Array<InspectionTask>();
   selectedTask: InspectionTask;
   segmentOption: string = "All";
+  searching: any = false;
+  public searchControl: FormControl;
+
   constructor(
     private callNumber: CallNumber,
     private actionSheetController: ActionSheetController,
@@ -49,20 +55,11 @@ export class PendingInspectionsPage implements OnInit {
     private launchNavigator: LaunchNavigator,
     private inspectionNavigate: InspectionNavigateService,
     private autenticateService: AuthenticationService
-  ) {}
+  ) {
+    this.searchControl = new FormControl();
+  }
 
   public ngOnDestroy(): void {}
-
-  groupBy(key) {
-    return function group(array) {
-      return array.reduce((acc, obj) => {
-        const property = obj[key];
-        acc[property] = acc[property] || [];
-        acc[property].push(obj);
-        return acc;
-      }, {});
-    };
-  }
 
   async ionViewWillEnter() {
     try {
@@ -78,6 +75,28 @@ export class PendingInspectionsPage implements OnInit {
     }
   }
 
+  async onSearchTerm() {
+    this.searching = true;
+  }
+
+  async search(searchTerm: string) {
+    this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+    if (searchTerm && searchTerm.trim() !== "") {
+      this.inspectionTasks = this.inspectionTasks.filter((term) => {
+        return (
+          term.title.toLowerCase().indexOf(searchTerm.trim().toLowerCase()) >
+            -1 ||
+          term.serviceAddress
+            .toLowerCase()
+            .indexOf(searchTerm.trim().toLowerCase()) > -1 ||
+          term.contactName
+            .toLowerCase()
+            .indexOf(searchTerm.trim().toLowerCase()) > -1
+        );
+      });
+    }
+  }
+
   async segmentChanged($event) {
     this.inspectionTasks = (
       await this.inspectionStorageService.getPendingInspections()
@@ -86,6 +105,7 @@ export class PendingInspectionsPage implements OnInit {
         this.segmentOption == "All" || task.internalStatus == this.segmentOption
     );
   }
+
   async ionViewDidEnter() {
     try {
       var top = await this.loadingController.getTop();
@@ -116,6 +136,7 @@ export class PendingInspectionsPage implements OnInit {
   async doRefresh(event) {
     try {
       console.log("Pull Event Triggered!");
+
       this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
       event.target.complete();
     } catch (error) {
@@ -128,7 +149,14 @@ export class PendingInspectionsPage implements OnInit {
     }
   }
 
-  public async ngOnInit() {}
+  public async ngOnInit() {
+    this.searchControl.valueChanges
+      .pipe(debounceTime(700))
+      .subscribe((search) => {
+        this.search(search);
+        this.searching = false;
+      });
+  }
 
   call(item: InspectionTask) {
     console.log("call " + item.contactPhone);

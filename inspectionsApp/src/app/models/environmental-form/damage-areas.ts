@@ -1,14 +1,13 @@
 import { DamageInspection } from "../damage-inspection";
 
 export class DamageAreas {
-  areasMold: DamageInspection[];
+  sync: boolean;
+  areasInspection: DamageInspection[];
   moldInspectionType: string;
   type: string;
   constructor(type: string) {
-    this.areasMold = [];
+    this.areasInspection = [];
     this.type = type;
-    for (let index = 0; index < 8; index++) {
-      this.areasMold.push(new DamageInspection(type));
-    }
+    this.sync = false;
   }
 }

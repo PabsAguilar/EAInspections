@@ -5,10 +5,12 @@ import { BehaviorSubject } from "rxjs";
 import { User } from "../models/user";
 
 const TOKEN_KEY = "auth-token";
+const LAST_USER_KEY = "last-user-token";
 const THEME_KEY = "theme-style";
 const SYNCSTAMP_KEY = "inspection-stamp-key";
 const INSPECTIONS_KEY = "inspections-task";
 const SCHEDULINGS_KEY = "scheduling-form";
+const ENVIRONMENTAL_FIELDS_KEY = "environmental-inspection-fields";
 
 @Injectable({
   providedIn: "root",
@@ -38,8 +40,17 @@ export class AuthenticationService {
     });
   }
   login(user: User) {
+    this.storage.set(LAST_USER_KEY, user);
     return this.storage.set(TOKEN_KEY, user).then(() => {
       this.authenticationState.next(true);
+    });
+  }
+
+  public getLastLoggedUser(): Promise<User> {
+    return this.storage.get(LAST_USER_KEY).then((res) => {
+      if (res) {
+        return res;
+      }
     });
   }
 
@@ -48,6 +59,7 @@ export class AuthenticationService {
       await this.storage.remove(SYNCSTAMP_KEY);
       await this.storage.remove(INSPECTIONS_KEY);
       await this.storage.remove(SCHEDULINGS_KEY);
+      await this.storage.remove(ENVIRONMENTAL_FIELDS_KEY);
       this.authenticationState.next(false);
     });
   }

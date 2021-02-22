@@ -240,7 +240,8 @@
     <div *ngFor="let value of this.task.agreements.contacts; let i = index">
       <ion-item>
         <ion-label>{{value.name}}</ion-label>
-        <ion-icon name="check-outline" color="success"></ion-icon>
+ 
+        <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
       </ion-item>
       <ion-item>
         <img style="background-color: white" [src]="value.signature" />

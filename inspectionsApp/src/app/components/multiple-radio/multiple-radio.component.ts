@@ -15,7 +15,7 @@ export class MultipleRadioComponent implements OnInit {
   set data(value: string[]) {
     for (let index = 0; index < this.options.length; index++) {
       const element = this.options[index];
-      this.options[index].checked = value.includes(element.name);
+      this.options[index].checked = value.includes(element.value);
     }
     this._selected = value;
   }
@@ -29,10 +29,11 @@ export class MultipleRadioComponent implements OnInit {
   ngOnInit() {}
 
   onConditionChange($event, index: number) {
-    var x = this.options.reduce(
-      (result, { name, checked }) => [...result, ...(checked ? [name] : [])],
-      []
-    );
+    var x = this.options
+      .filter((item) => item.checked)
+      .map((item) => {
+        return item.value;
+      });
     this.data = x;
 
     this.dataChange.emit(this._selected, true);

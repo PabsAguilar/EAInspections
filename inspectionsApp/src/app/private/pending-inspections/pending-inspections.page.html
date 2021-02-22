@@ -37,6 +37,17 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <ion-searchbar
+    class="ion-no-padding"
+    style="margin-bottom: 1px"
+    (ionChange)="onSearchTerm($event)"
+    placeholder="Search a deal"
+    [formControl]="searchControl"
+  ></ion-searchbar>
+  <div *ngIf="searching" class="spinner-container">
+    <ion-spinner></ion-spinner>
+  </div>
+
   <ion-list class="ion-no-padding">
     <!-- <ion-searchbar></ion-searchbar> -->
     <ion-list-header class="ion-no-padding ion-text-end">
@@ -49,75 +60,81 @@
         </ion-label>
       </div>
     </ion-list-header>
+    <div *ngIf="inspectionTasks && inspectionTasks.length > 0; else noItems">
+      <ion-item-group
+        *ngFor="let group of this.inspectionTasks | groupBy: 'scheduleDay'"
+      >
+        <ion-item-divider color="light">
+          {{ group.key | date: 'MMMM dd, yyyy' }}
+        </ion-item-divider>
 
-    <ion-item-group
-      *ngFor="let group of this.inspectionTasks | groupBy: 'scheduleDay'"
-    >
-      <ion-item-divider color="light">
-        {{ group.key | date: 'MMMM dd, yyyy' }}
-      </ion-item-divider>
-
-      <ion-item-sliding *ngFor="let task of group.list ">
-        <ion-item-options side="end">
-          <ion-item-option (click)="startInspection(task)" color="white">
-            <ion-icon
-              color="primary"
-              style="font-size: xx-large"
-              name="create-outline"
-            ></ion-icon
-          ></ion-item-option>
-          <ion-item-option (click)="call(task)" color="white">
-            <ion-icon
-              color="success"
-              style="font-size: xx-large"
-              name="call-outline"
-            ></ion-icon
-          ></ion-item-option>
-          <ion-item-option (click)="gpsNavigate(task)" color="white">
-            <ion-icon
-              color="tertiary"
-              style="font-size: xx-large"
-              name="navigate-outline"
-            ></ion-icon
-          ></ion-item-option>
-          <ion-item-option (click)="seeDetails(task)" color="white">
-            <ion-icon
-              color="secondary"
-              style="font-size: xx-large"
-              name="book-outline"
-            ></ion-icon
-          ></ion-item-option>
-        </ion-item-options>
-        <ion-item (click)="presentActionSheet(task)">
-          <!-- <ion-icon
+        <ion-item-sliding *ngFor="let task of group.list ">
+          <ion-item-options side="end">
+            <ion-item-option (click)="startInspection(task)" color="white">
+              <ion-icon
+                color="primary"
+                style="font-size: xx-large"
+                name="create-outline"
+              ></ion-icon
+            ></ion-item-option>
+            <ion-item-option (click)="call(task)" color="white">
+              <ion-icon
+                color="success"
+                style="font-size: xx-large"
+                name="call-outline"
+              ></ion-icon
+            ></ion-item-option>
+            <ion-item-option (click)="gpsNavigate(task)" color="white">
+              <ion-icon
+                color="tertiary"
+                style="font-size: xx-large"
+                name="navigate-outline"
+              ></ion-icon
+            ></ion-item-option>
+            <ion-item-option (click)="seeDetails(task)" color="white">
+              <ion-icon
+                color="secondary"
+                style="font-size: xx-large"
+                name="book-outline"
+              ></ion-icon
+            ></ion-item-option>
+          </ion-item-options>
+          <ion-item class="ion-no-padding" (click)="presentActionSheet(task)">
+            <!-- <ion-icon
           *ngIf="task.internalStatus == 'In Progress'"
           color="warning"
           slot="end"
           name="timer-outline"
           >In Progress</ion-icon
         > -->
-          <div class="ion-text-center">
-            <ion-icon
-              style="font-size: large"
-              name="time-outline"
-              [color]="task.internalStatus =='In Progress' ? 'warning' : ''"
-            ></ion-icon>
-            <ion-label
-              style="font-size: x-small"
-              [color]="task.internalStatus =='In Progress' ? 'warning' : ''"
-              >{{task.scheduleDateTime | date: 'hh:mm a'}}</ion-label
-            >
-          </div>
-          <div style="padding-left: 10px">
-            <ion-label>
-              <h4 style="font-size: small"><strong>{{task.title}}</strong></h4>
-              <h2>{{task.contactName}}</h2>
-              <h3>{{task.inspectionType}}</h3>
-              <p>{{task.serviceAddress}}</p>
-            </ion-label>
-          </div>
-        </ion-item>
-      </ion-item-sliding>
-    </ion-item-group>
+            <div class="ion-text-center">
+              <ion-icon
+                style="font-size: large"
+                name="time-outline"
+                [color]="task.internalStatus =='In Progress' ? 'warning' : ''"
+              ></ion-icon>
+              <ion-label
+                style="font-size: x-small"
+                [color]="task.internalStatus =='In Progress' ? 'warning' : ''"
+                >{{task.scheduleDateTime | date: 'hh:mm a'}}
+              </ion-label>
+            </div>
+            <div style="padding-left: 5px">
+              <ion-label>
+                <h4 style="font-size: small">
+                  <strong>{{task.title}}</strong>
+                </h4>
+                <h2>{{task.contactName}}</h2>
+
+                <p>{{task.serviceAddress}}</p>
+              </ion-label>
+            </div>
+          </ion-item>
+        </ion-item-sliding>
+      </ion-item-group>
+    </div>
+    <ng-template #noItems>
+      <ion-item> No deals found. </ion-item>
+    </ng-template>
   </ion-list>
 </ion-content>

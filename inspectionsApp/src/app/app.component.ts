@@ -31,10 +31,14 @@ export class AppComponent {
 
       this.auth.authenticationState.subscribe(async (state) => {
         if (state) {
-          const loading = await this.loadingController.create({
-            message: "Please wait...",
-          });
-          await loading.present();
+          var top = await this.loadingController.getTop();
+          if (!top) {
+            const loading = await this.loadingController.create({
+              message: "Please wait...",
+            });
+            await loading.present();
+          }
+
           var random = Math.floor(Math.random() * 100) + 2;
           this.router.navigate([
             "menu/tabs/tabs/pending-inspections/" + random.toString(),
