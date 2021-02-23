@@ -72,14 +72,64 @@ export class SyncInspectionService {
           list + "-" + task.id + "-" + (Math.random() * 100).toString(),
         FIELDS: {
           NAME: name,
-          PROPERTY_1344: task.contactId,
-          PROPERTY_1342: task.environmentalForm.startDate,
-          PROPERTY_3530: task.id,
-          PROPERTY_1346: task.environmentalForm.moldAreas.moldInspectionType,
         },
       };
+      var damageInspectionList = [];
+      switch (type) {
+        case DamageAreaType.Mold:
+          damageInspectionList =
+            task.environmentalForm.moldAreas.areasInspection;
+          postData.FIELDS[
+            task.environmentalForm.moldAreas.damageAreasBitrixMapping.contactIdCode
+          ] = task.contactId;
+          postData.FIELDS[
+            task.environmentalForm.moldAreas.damageAreasBitrixMapping.startDateCode
+          ] = task.environmentalForm.startDate;
+          postData.FIELDS[
+            task.environmentalForm.moldAreas.damageAreasBitrixMapping.dealIdCode
+          ] = task.id;
+          postData.FIELDS[
+            task.environmentalForm.moldAreas.damageAreasBitrixMapping.inspectionType
+          ] = task.environmentalForm.moldAreas.moldInspectionType;
+          break;
+        case DamageAreaType.Bacteria:
+          damageInspectionList =
+            task.environmentalForm.bacteriasAreas.areasInspection;
+          postData.FIELDS[
+            task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.contactIdCode
+          ] = task.contactId;
+          postData.FIELDS[
+            task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.startDateCode
+          ] = task.environmentalForm.startDate;
+          postData.FIELDS[
+            task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.dealIdCode
+          ] = task.id;
+          postData.FIELDS[
+            task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.inspectionType
+          ] = task.environmentalForm.bacteriasAreas.moldInspectionType;
+          break;
+        case DamageAreaType.Soot:
+          damageInspectionList =
+            task.environmentalForm.sootAreas.areasInspection;
+          postData.FIELDS[
+            task.environmentalForm.sootAreas.damageAreasBitrixMapping.contactIdCode
+          ] = task.contactId;
+          postData.FIELDS[
+            task.environmentalForm.sootAreas.damageAreasBitrixMapping.startDateCode
+          ] = task.environmentalForm.startDate;
+          postData.FIELDS[
+            task.environmentalForm.sootAreas.damageAreasBitrixMapping.dealIdCode
+          ] = task.id;
+          postData.FIELDS[
+            task.environmentalForm.sootAreas.damageAreasBitrixMapping.inspectionType
+          ] = task.environmentalForm.sootAreas.moldInspectionType;
+          break;
+        default:
+          break;
+      }
+
       await Promise.all(
-        task.environmentalForm.moldAreas.areasInspection.map(async (area) => {
+        damageInspectionList.map(async (area) => {
           if (area.areaName) {
             postData.FIELDS[area.damageInspectionBitrixMapping.areaNameCode] =
               area.areaName;

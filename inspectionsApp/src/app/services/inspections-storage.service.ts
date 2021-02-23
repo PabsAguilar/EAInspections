@@ -151,6 +151,7 @@ export class InspectionsStorageService implements IStorage {
     damageType: string,
     task: InspectionTask
   ): Promise<InspectionTask> {
+    var listDamageInspection: DamageInspection[] = [];
     for (
       let index = 0;
       index < bitrixMapping[damageType].areasMoldBitrixCode.length;
@@ -241,17 +242,45 @@ export class InspectionsStorageService implements IStorage {
       x.samples.push(s2);
       x.samples.push(s3);
 
-      switch (damageType) {
-        case DamageAreaType.Mold:
-          task.environmentalForm.moldAreas.areasInspection.push(x);
-          break;
-        case DamageAreaType.Bacteria:
-          task.environmentalForm.bacteriasAreas.areasInspection.push(x);
-          break;
-        case DamageAreaType.Soot:
-          task.environmentalForm.sootAreas.areasInspection.push(x);
-          break;
-      }
+      listDamageInspection.push(x);
+    }
+
+    switch (damageType) {
+      case DamageAreaType.Mold:
+        task.environmentalForm.moldAreas.areasInspection = listDamageInspection;
+        task.environmentalForm.moldAreas.damageAreasBitrixMapping.contactIdCode =
+          bitrixMapping.Mold.inspectionHeader.contactIdCode;
+        task.environmentalForm.moldAreas.damageAreasBitrixMapping.dealIdCode =
+          bitrixMapping.Mold.inspectionHeader.dealIdCode;
+        task.environmentalForm.moldAreas.damageAreasBitrixMapping.inspectionType =
+          bitrixMapping.Mold.inspectionHeader.inspectionType;
+        task.environmentalForm.moldAreas.damageAreasBitrixMapping.startDateCode =
+          bitrixMapping.Mold.inspectionHeader.startDateCode;
+
+        break;
+      case DamageAreaType.Bacteria:
+        task.environmentalForm.bacteriasAreas.areasInspection = listDamageInspection;
+        task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.contactIdCode =
+          bitrixMapping.Bacteria.inspectionHeader.contactIdCode;
+        task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.dealIdCode =
+          bitrixMapping.Bacteria.inspectionHeader.dealIdCode;
+        task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.inspectionType =
+          bitrixMapping.Bacteria.inspectionHeader.inspectionType;
+        task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.startDateCode =
+          bitrixMapping.Bacteria.inspectionHeader.startDateCode;
+        break;
+      case DamageAreaType.Soot:
+        task.environmentalForm.sootAreas.areasInspection = listDamageInspection;
+        task.environmentalForm.sootAreas.damageAreasBitrixMapping.contactIdCode =
+          bitrixMapping.Soot.inspectionHeader.contactIdCode;
+        task.environmentalForm.sootAreas.damageAreasBitrixMapping.dealIdCode =
+          bitrixMapping.Soot.inspectionHeader.dealIdCode;
+        task.environmentalForm.sootAreas.damageAreasBitrixMapping.inspectionType =
+          bitrixMapping.Soot.inspectionHeader.inspectionType;
+        task.environmentalForm.sootAreas.damageAreasBitrixMapping.startDateCode =
+          bitrixMapping.Soot.inspectionHeader.startDateCode;
+
+        break;
     }
     return task;
   }

@@ -108,6 +108,12 @@ export var InspectionRecommendations = [
 
 export var bitrixMapping: any = {
   Mold: {
+    inspectionHeader: {
+      contactIdCode: "PROPERTY_1344",
+      startDateCode: "PROPERTY_1342",
+      dealIdCode: "PROPERTY_3530",
+      inspectionType: "PROPERTY_1346",
+    },
     areasMoldBitrixCode: [
       "PROPERTY_1348",
       "PROPERTY_1362",
@@ -510,6 +516,12 @@ export var bitrixMapping: any = {
     ],
   },
   Bacteria: {
+    inspectionHeader: {
+      contactIdCode: "PROPERTY_1344",
+      startDateCode: "PROPERTY_2152",
+      dealIdCode: "PROPERTY_3524",
+      inspectionType: "PROPERTY_2156",
+    },
     areasMoldBitrixCode: [
       "PROPERTY_2158",
       "PROPERTY_2224",
@@ -803,6 +815,13 @@ export var bitrixMapping: any = {
     ],
   },
   Soot: {
+    inspectionHeader: {
+      contactIdCode: "PROPERTY_2820",
+      startDateCode: "PROPERTY_2818",
+      dealIdCode: "PROPERTY_3532",
+      inspectionType: "PROPERTY_2822",
+    },
+
     areasMoldBitrixCode: [
       "PROPERTY_2824",
       "PROPERTY_2890",
