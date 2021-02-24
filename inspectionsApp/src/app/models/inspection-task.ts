@@ -1,9 +1,11 @@
+import { stringify } from "@angular/compiler/src/util";
 import { IStorageModel } from "../interfaces/Istorage-model";
 import { Agreements } from "./agreements";
 import { Area } from "./comprehensive-form/area";
 import { ComprehensiveForm } from "./comprehensive-form/comprehensive-form";
 import { GeneralInfoInspection } from "./comprehensive-form/general-info-inspection";
 import { EnvironmentalForm } from "./environmental-form";
+import { SyncInfo } from "./sync-info";
 import { TaskSubtype } from "./task-subtype";
 
 export class InspectionTask implements IStorageModel {
@@ -12,7 +14,7 @@ export class InspectionTask implements IStorageModel {
   scheduleDateTime: Date;
   scheduleDay: Date;
   contactName: string;
-  contactId:number;
+  contactId: number;
   serviceAddress: string;
   geoPointText: string;
   contactPhone: string;
@@ -29,8 +31,18 @@ export class InspectionTask implements IStorageModel {
   comprehesiveForm: ComprehensiveForm;
   environmentalForm: EnvironmentalForm;
   agreements: Agreements;
+  bitrixFolder: BitrixFolder;
   constructor() {
     this.agreements = new Agreements();
+    this.bitrixFolder = new BitrixFolder();
+  }
+}
+
+export class BitrixFolder {
+  name: string;
+  syncInfo: SyncInfo;
+  constructor() {
+    this.syncInfo = new SyncInfo();
   }
 }
 

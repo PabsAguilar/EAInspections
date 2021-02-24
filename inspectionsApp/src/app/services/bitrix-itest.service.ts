@@ -26,11 +26,18 @@ export class BitrixItestService {
       .toPromise();
   }
   //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/lists.field.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=48
-  public getEnvironmentalInspectionFields(list: number): Promise<any> {
+  public getEnvironmentalInspectionListsFields(list: number): Promise<any> {
     return this.http
       .get(
         `${this.url}/${this.key}/lists.field.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}`
       )
+      .toPromise();
+  }
+
+  //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.deal.fields.json
+  public getDealFields(): Promise<any> {
+    return this.http
+      .get(`${this.url}/${this.key}/crm.deal.fields.json`)
       .toPromise();
   }
 
@@ -70,5 +77,29 @@ export class BitrixItestService {
         headers: { "Content-Type": "application/json" },
       }
     );
+  }
+
+  public createSubfolder(postData: any): Observable<any> {
+    return this.http.post(
+      `${this.url}/${this.key}/disk.folder.addsubfolder`,
+      postData,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+
+  public updateDeal(postData: any): Observable<any> {
+    return this.http.post(`${this.url}/${this.key}/crm.deal.update`, postData, {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  public addFile(postData: any): Promise<any> {
+    return this.http
+      .post(`${this.url}/${this.key}/disk.folder.uploadfile`, postData, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .toPromise();
   }
 }

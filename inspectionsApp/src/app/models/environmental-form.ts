@@ -4,6 +4,7 @@ import { DamageAreaType } from "./enums";
 import { MoistureMappingAreas } from "./environmental-form/moisture-mapping-areas";
 import { AsbestoAreas } from "./environmental-form/asbesto-areas";
 import { LeadAreas } from "./environmental-form/lead-areas";
+import { SyncInfo } from "./sync-info";
 
 export class EnvironmentalForm {
   startDate: Date;
@@ -14,10 +15,11 @@ export class EnvironmentalForm {
   moistureMappingAreas: MoistureMappingAreas;
   asbestosAreas: AsbestoAreas;
   leadAreas: LeadAreas;
-
+ 
   constructor() {
     this.generalInfoInspection = new GeneralInfoInspection();
     this.generalInfoInspection.environmentalInspection = true;
+  
     this.startDate = new Date();
     this.moldAreas = new DamageAreas(DamageAreaType.Mold);
     this.sootAreas = new DamageAreas(DamageAreaType.Soot);

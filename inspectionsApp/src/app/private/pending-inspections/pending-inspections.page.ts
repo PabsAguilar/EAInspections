@@ -19,13 +19,11 @@ import {
 import { Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
-import { ComprehensiveForm } from "src/app/models/comprehensive-form/comprehensive-form";
-import { InspectionStatus, InspectionType } from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { AuthenticationService } from "src/app/services/authentication.service";
 import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 
-import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-pending-inspections",
@@ -46,7 +44,7 @@ export class PendingInspectionsPage implements OnInit {
     private callNumber: CallNumber,
     private actionSheetController: ActionSheetController,
     private router: Router,
-    private inspectionStorageService: InspectionsStorageService,
+    private inspectionService: ItestDealService,
     private alertController: AlertController,
     private loadingController: LoadingController,
     private navController: NavController,
@@ -80,7 +78,7 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   async search(searchTerm: string) {
-    this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+    this.inspectionTasks = await this.inspectionService.getPendingInspections();
     if (searchTerm && searchTerm.trim() !== "") {
       this.inspectionTasks = this.inspectionTasks.filter((term) => {
         return (
@@ -99,7 +97,7 @@ export class PendingInspectionsPage implements OnInit {
 
   async segmentChanged($event) {
     this.inspectionTasks = (
-      await this.inspectionStorageService.getPendingInspections()
+      await this.inspectionService.getPendingInspections()
     ).filter(
       (task) =>
         this.segmentOption == "All" || task.internalStatus == this.segmentOption
@@ -123,21 +121,21 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   async loadData() {
-    this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+    this.inspectionTasks = await this.inspectionService.getPendingInspections();
 
     if (this.inspectionTasks == null) {
-      await this.inspectionStorageService.getExternal(
+      await this.inspectionService.getExternal(
         (await this.autenticateService.getUser()).userId
       );
-      this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+      this.inspectionTasks = await this.inspectionService.getPendingInspections();
     }
-    this.lastSync = await this.inspectionStorageService.getSyncStamp();
+    this.lastSync = await this.inspectionService.getSyncStamp();
   }
   async doRefresh(event) {
     try {
       console.log("Pull Event Triggered!");
 
-      this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+      this.inspectionTasks = await this.inspectionService.getPendingInspections();
       event.target.complete();
     } catch (error) {
       var message = this.toast.create({
@@ -236,11 +234,11 @@ export class PendingInspectionsPage implements OnInit {
             await loading.present();
 
             try {
-              await this.inspectionStorageService.getExternal(
+              await this.inspectionService.getExternal(
                 (await this.autenticateService.getUser()).userId
               );
-              this.lastSync = await this.inspectionStorageService.getSyncStamp();
-              this.inspectionTasks = await this.inspectionStorageService.getPendingInspections();
+              this.lastSync = await this.inspectionService.getSyncStamp();
+              this.inspectionTasks = await this.inspectionService.getPendingInspections();
             } catch (error) {
               console.log(error);
             }

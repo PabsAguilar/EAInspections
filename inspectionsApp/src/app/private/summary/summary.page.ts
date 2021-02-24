@@ -6,6 +6,8 @@ import { GenericListPopOverComponent } from "src/app/components/generic-list-pop
 import { InspectionTask } from "src/app/models/inspection-task";
 import { Scheduling } from "src/app/models/scheduling";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
+import { ItestDealService } from "src/app/services/itest-deal.service";
+
 import { SchedulingStorageService } from "src/app/services/scheduling-storage.service";
 import { SyncInspectionService } from "src/app/services/sync-inspection.service";
 
@@ -18,7 +20,7 @@ export class SummaryPage implements OnInit {
   constructor(
     public callNumber: CallNumber,
     public schedulingStorageService: SchedulingStorageService,
-    public inspectionStorageService: InspectionsStorageService,
+    public inspectionStorageService: ItestDealService,
     private router: Router,
     private popoverController: PopoverController,
     private toast: ToastController,

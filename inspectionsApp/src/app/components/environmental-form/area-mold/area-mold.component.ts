@@ -4,6 +4,7 @@ import { DamageInspection } from "src/app/models/damage-inspection";
 import { DamageAreaType } from "src/app/models/enums";
 import { Sample } from "src/app/models/environmental-form/sample";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-area-mold",
@@ -116,7 +117,7 @@ export class AreaMoldComponent implements OnInit {
 
   @Output() modelChanged: any = new EventEmitter();
 
-  constructor(private inspectionStorage: InspectionsStorageService) {}
+  constructor(private inspectionStorage: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -126,7 +127,7 @@ export class AreaMoldComponent implements OnInit {
 
   changeModel($event) {
     this.filledProperties = 0;
-    if (this._model.areaPictures.length > 0) {
+    if (this._model.areaPictures.images.length > 0) {
       this.filledProperties++;
     }
     if (this._model.areaCondition.length > 0) {

@@ -2,10 +2,14 @@
   <ion-label>{{ title }}</ion-label>
   <ion-chip
     slot="start"
-    [color]="_photoArray.length > 0 ? 'success' : 'warning'"
-    >{{ _photoArray.length }}</ion-chip
+    [color]="_photoArray.images.length > 0 ? 'success' : 'warning'"
+    >{{ _photoArray.images.length }}</ion-chip
   >
-  <ion-fab-button (click)="takePicture()" class="ion-margin">
+  <ion-fab-button
+    (click)="takePicture()"
+    class="ion-margin"
+    *ngIf="_photoArray.images.length < _photoArray.maxPictures"
+  >
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-item>
@@ -17,8 +21,8 @@
     pager="true"
     (ionSlideDrag)="ionSlidedrag()"
   >
-    <ion-slide *ngFor="let x of _photoArray; let i = index">
-      <img [src]="x" tappable (click)="openPreview(x)" />
+    <ion-slide *ngFor="let x of _photoArray.images; let i = index">
+      <img [src]="x.base64Image" tappable (click)="openPreview(x)" />
       <ion-fab horizontal="end" vertical="bottom" slot="fixed">
         <ion-fab-button color="danger" (click)="deletePictureFrontHouse(i)">
           <ion-icon name="trash-outline"></ion-icon>

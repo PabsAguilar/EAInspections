@@ -12,6 +12,7 @@ import { EnvironmentalForm } from "src/app/models/environmental-form";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-environmental-inspection",
@@ -24,7 +25,7 @@ export class EnvironmentalInspectionPage implements OnInit {
     private router: Router,
     public alertController: AlertController,
     public loadingController: LoadingController,
-    public inspectionStorageService: InspectionsStorageService,
+    public inspectionService: ItestDealService,
     public navController: NavController,
     private toast: ToastController,
     private inspectionNavigate: InspectionNavigateService,
@@ -33,7 +34,7 @@ export class EnvironmentalInspectionPage implements OnInit {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
       if (!this.task.environmentalForm) {
-        inspectionStorageService
+        inspectionService
           .initializeEnvironmentalTask(this.task)
           .then((x) => {
             this.task = x;
@@ -47,7 +48,6 @@ export class EnvironmentalInspectionPage implements OnInit {
             (await message).present();
           });
       }
-     
     }
   }
 
@@ -139,7 +139,7 @@ export class EnvironmentalInspectionPage implements OnInit {
       console.log(this.task);
       this.task.internalStatus = "Pending";
       var random = Math.floor(Math.random() * 100) + 2;
-      await this.inspectionStorageService.update(this.task);
+      await this.inspectionService.update(this.task);
       await this.navController.navigateRoot(
         "menu/tabs/tabs/pending-inspections/" + random
       );
@@ -162,7 +162,7 @@ export class EnvironmentalInspectionPage implements OnInit {
   public async UpdateEntity($event): Promise<void> {
     try {
       this.task.internalStatus = "In Progress";
-      await this.inspectionStorageService.update(this.task);
+      await this.inspectionService.update(this.task);
     } catch (error) {
       var message = this.toast.create({
         message: error,

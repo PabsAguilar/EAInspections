@@ -7,6 +7,10 @@ import {
   ViewChild,
 } from "@angular/core";
 import { IonSlides, ModalController } from "@ionic/angular";
+import {
+  BitrixPicture,
+  BitrixPictureList,
+} from "src/app/models/bitrix-picture";
 import { PhotoService } from "src/app/services/photo.service";
 import { ImageModalPage } from "../image-modal/image-modal.page";
 
@@ -23,13 +27,13 @@ export class SlidesPhotosComponent implements OnInit {
   title: string;
 
   @Input("ngModel")
-  get photoArray(): string[] {
+  get photoArray(): BitrixPictureList {
     return this._photoArray;
   }
-  set photoArray(value: string[]) {
+  set photoArray(value: BitrixPictureList) {
     this._photoArray = value;
   }
-  _photoArray = [];
+  _photoArray = new BitrixPictureList();
 
   @Output() photoChanged: any = new EventEmitter();
 
@@ -50,10 +54,12 @@ export class SlidesPhotosComponent implements OnInit {
   }
   public async takePicture() {
     var photo = await this.photoService.takePhoto();
-
-    this._photoArray.push(photo);
+    var picture = new BitrixPicture();
+    picture.base64Image = photo;
+    picture.isSync = false;
+    this._photoArray.images.push(picture);
     await this.ionSlides.update();
-    this.ionSlides.slideTo(this._photoArray.length + 1);
+    this.ionSlides.slideTo(this._photoArray.images.length + 1);
     this.photoChanged.emit({ value: this._photoArray });
     this.first = false;
   }
@@ -73,7 +79,7 @@ export class SlidesPhotosComponent implements OnInit {
   }
   public async deletePictureFrontHouse(index) {
     console.log("delete " + index);
-    this._photoArray.splice(index, 1);
+    this._photoArray.images.splice(index, 1);
     await this.ionSlides.update();
     this.photoChanged.emit({ value: this._photoArray });
   }

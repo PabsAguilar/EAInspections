@@ -1,3 +1,4 @@
+import { BitrixPictureList } from "./bitrix-picture";
 import { DamageInspectionBitrixMapping } from "./damage-inspection-bitrix-mapping";
 import { Sample } from "./environmental-form/sample";
 
@@ -5,7 +6,7 @@ export class DamageInspection {
   areaName: string;
   areaCondition: string[];
   areaRH: number;
-  areaPictures: string[];
+  areaPictures: BitrixPictureList;
   areaNotes: string;
   removeCeiling: boolean;
   removeCeilingValue: string;
@@ -33,7 +34,7 @@ export class DamageInspection {
       type
     );
     this.decontamination = [];
-    this.areaPictures = [];
+    this.areaPictures = new BitrixPictureList();
     this.areaCondition = [];
     this.samples = [];
     this.type = type;

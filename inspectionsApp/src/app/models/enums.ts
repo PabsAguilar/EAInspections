@@ -106,6 +106,18 @@ export var InspectionRecommendations = [
   { name: "Other", checked: false },
 ];
 
+export var BitrixDealMapping: any = {
+  propertyYearCode: "UF_CRM_1606466447",
+  pictureHouseNumbersCode: "UF_CRM_1606466494",
+  picturesFrontHouseCode: "UF_CRM_1606466511",
+  propertyTypeCode: "UF_CRM_1606466564",
+  interiorTemperatureCode: "UF_CRM_1606466601",
+  exteriorRelativeHumidityCode: "UF_CRM_1606466624",
+  HVACSystemConditionCode: "UF_CRM_1606466669",
+  ductsConditionCode: "UF_CRM_1606466692",
+  atticConditionCode: "UF_CRM_1606466732",
+};
+
 export var bitrixMapping: any = {
   Mold: {
     inspectionHeader: {

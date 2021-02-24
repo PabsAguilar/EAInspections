@@ -1,8 +1,9 @@
 import { DamageInspection } from "../damage-inspection";
 import { DamageInspectionBitrixMapping } from "../damage-inspection-bitrix-mapping";
+import { SyncInfo } from "../sync-info";
 
 export class DamageAreas {
-  sync: boolean;
+  syncInfo: SyncInfo;
   areasInspection: DamageInspection[];
   moldInspectionType: string;
   type: string;
@@ -10,7 +11,7 @@ export class DamageAreas {
   constructor(type: string) {
     this.areasInspection = [];
     this.type = type;
-    this.sync = false;
+    this.syncInfo = new SyncInfo();
     this.damageAreasBitrixMapping = new DamageAreasBitrixMapping();
   }
 }

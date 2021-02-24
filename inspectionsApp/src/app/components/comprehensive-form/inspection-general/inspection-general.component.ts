@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { GeneralInfoInspection } from "src/app/models/comprehensive-form/general-info-inspection";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 import { PhotoService } from "src/app/services/photo.service";
 
 @Component({
@@ -24,6 +25,12 @@ export class InspectionGeneralComponent implements OnInit {
   public today: Date = new Date();
   maxDate: number = this.today.getFullYear();
   minDate: number = this.today.setFullYear(this.today.getFullYear() - 100);
+
+  propertyTypeList = [];
+  HHVACConditions = [];
+  DuctConditions = [];
+  AticConditions = [];
+  fields: any[];
 
   generalInfoInspection: GeneralInfoInspection = new GeneralInfoInspection();
   formatDate(date) {
@@ -45,12 +52,49 @@ export class InspectionGeneralComponent implements OnInit {
       this.totalProperties = 7;
     }
     this.generalInfoInspection = value;
+
+    this.inspectionService.getDealsFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        this.propertyTypeList = this.fields[
+          this.generalInfoInspection.generalInfoInspectionBitrixMapping
+            .propertyTypeCode
+        ].items.map((y) => {
+          return { name: y.VALUE, value: y.ID };
+        });
+
+        this.HHVACConditions = this.fields[
+          this.generalInfoInspection.generalInfoInspectionBitrixMapping
+            .HVACSystemConditionCode
+        ].items.map((y) => {
+          return { name: y.VALUE, value: y.ID };
+        });
+
+        this.DuctConditions = this.fields[
+          this.generalInfoInspection.generalInfoInspectionBitrixMapping
+            .ductsConditionCode
+        ].items.map((y) => {
+          return { name: y.VALUE, value: y.ID };
+        });
+
+        this.AticConditions = this.fields[
+          this.generalInfoInspection.generalInfoInspectionBitrixMapping
+            .atticConditionCode
+        ].items.map((y) => {
+          return { name: y.VALUE, value: y.ID };
+        });
+      }
+    });
+
     this.changeModel(null);
   }
 
   @Output() generalInfoChanged: any = new EventEmitter();
 
-  constructor(public photoService: PhotoService) {}
+  constructor(
+    public photoService: PhotoService,
+    private inspectionService: ItestDealService
+  ) {}
 
   ngOnInit() {}
   changeModel($event) {
@@ -65,12 +109,12 @@ export class InspectionGeneralComponent implements OnInit {
     if (this.generalInfoInspection.propertyType) {
       this.filledProperties++;
     }
-    if (this.generalInfoInspection.pictureHouseNumbers) {
+    if (this.generalInfoInspection.pictureHouseNumbers.images.length > 0) {
       this.filledProperties++;
     }
     if (
       this.generalInfoInspection.picturesFrontHouse &&
-      this.generalInfoInspection.picturesFrontHouse.length > 0
+      this.generalInfoInspection.picturesFrontHouse.images.length > 0
     ) {
       this.filledProperties++;
     }
@@ -81,13 +125,13 @@ export class InspectionGeneralComponent implements OnInit {
       if (this.generalInfoInspection.exteriorRelativeHumidity) {
         this.filledProperties++;
       }
-      if (this.generalInfoInspection.HVACSystemCondition.length > 0) {
+      if (this.generalInfoInspection.HVACSystemCondition) {
         this.filledProperties++;
       }
-      if (this.generalInfoInspection.atticCondition.length > 0) {
+      if (this.generalInfoInspection.atticCondition) {
         this.filledProperties++;
       }
-      if (this.generalInfoInspection.ductsCondition.length > 0) {
+      if (this.generalInfoInspection.ductsCondition) {
         this.filledProperties++;
       }
     }
@@ -120,31 +164,7 @@ export class InspectionGeneralComponent implements OnInit {
     this.changeModel(event);
   }
 
-  public async takePictureHouseNumbers() {
-    this.generalInfoInspection.pictureHouseNumbers = await this.photoService.takePhoto();
-    this.changeModel(null);
-  }
-  public photoEvent(): void {}
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
-
-  HHVACConditions: any[] = [
-    { name: "Ok ", checked: false },
-    { name: "Dirty", checked: false },
-    { name: "Visible Mold", checked: false },
-  ];
-
-  DuctConditions: any[] = [
-    { name: "Ok ", checked: false },
-    { name: "Dirty", checked: false },
-    { name: "Visible Mold", checked: false },
-  ];
-
-  AticConditions: any[] = [
-    { name: "Ok ", checked: false },
-    { name: "Wet plywood", checked: false },
-    { name: "Wet insulation", checked: false },
-    { name: "Visible Mold", checked: false },
-  ];
 }

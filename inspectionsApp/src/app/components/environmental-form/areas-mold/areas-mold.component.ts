@@ -3,6 +3,7 @@ import { DamageAreas } from "src/app/models/environmental-form/damage-areas";
 import { DamageInspection } from "src/app/models/damage-inspection";
 import { DamageAreaType } from "src/app/models/enums";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-areas-mold",
@@ -62,7 +63,7 @@ export class AreasMoldComponent implements OnInit {
   damageInspectionType: any[] = [];
   @Output() modelChanged: any = new EventEmitter();
 
-  constructor(private inspectionStorage: InspectionsStorageService) {}
+  constructor(private inspectionStorage: ItestDealService) {}
 
   ngOnInit() {}
 

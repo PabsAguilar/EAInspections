@@ -36,32 +36,23 @@
       (ionChange)="changeModel($event)"
       [(ngModel)]="generalInfoInspection.propertyType"
     >
-      <ion-select-option value="Single Family Home"
-        >Single-Family-Home</ion-select-option
+      <ion-select-option
+        *ngFor="let item of propertyTypeList; let i = index"
+        [value]="item.value"
       >
-      <ion-select-option value="Condo/Apartment"
-        >Condo/Apartment</ion-select-option
+        {{ item.name }}</ion-select-option
       >
-      <ion-select-option value="Townhouse">Townhouse</ion-select-option>
-      <ion-select-option value="Multi-family">Multi-family</ion-select-option>
-      <ion-select-option value="Commercial">Commercial</ion-select-option>
     </ion-select>
   </ion-item>
 
-  <ion-item lines="none">
-    <ion-label>Picture of House Number</ion-label>
-    <ion-fab-button (click)="takePictureHouseNumbers()" class="ion-margin">
-      <ion-icon name="camera"></ion-icon>
-    </ion-fab-button>
-  </ion-item>
+  <app-slides-photos
+    title="Picture of House Number"
+    ngDefaultControl
+    name="pictureHouseNumbers"
+    [(ngModel)]="generalInfoInspection.pictureHouseNumbers"
+    (photoChanged)="changeModel($event)"
+  ></app-slides-photos>
 
-  <ion-item>
-    <app-photo
-      ngDefaultControl
-      name="pictureHouseNumbers"
-      [(ngModel)]="generalInfoInspection.pictureHouseNumbers"
-    ></app-photo>
-  </ion-item>
   <app-slides-photos
     title="Pictures of front house"
     ngDefaultControl
@@ -93,13 +84,55 @@
       ></ion-input>
     </ion-item>
 
-    <app-multiple-radio
-      title="HVAC System Condition"
-      ngDefaultControl
-      name="HVACSystemCondition"
-      [options]="HHVACConditions"
-      [(data)]="generalInfoInspection.HVACSystemCondition"
-      (dataChange)="changeModel($event)"
-    ></app-multiple-radio>
+    <ion-item>
+      <ion-label position="floating">HVAC System Condition</ion-label>
+      <ion-select
+        interface="popover"
+        name="HVACSystemCondition"
+        (ionChange)="changeModel($event)"
+        [(ngModel)]="generalInfoInspection.HVACSystemCondition"
+      >
+        <ion-select-option
+          *ngFor="let item of HHVACConditions; let i = index"
+          [value]="item.value"
+        >
+          {{ item.name }}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Ducts Condition</ion-label>
+      <ion-select
+        interface="popover"
+        name="ductsCondition"
+        (ionChange)="changeModel($event)"
+        [(ngModel)]="generalInfoInspection.ductsCondition"
+      >
+        <ion-select-option
+          *ngFor="let item of DuctConditions; let i = index"
+          [value]="item.value"
+        >
+          {{ item.name }}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Attic Condition</ion-label>
+      <ion-select
+        interface="popover"
+        name="atticCondition"
+        (ionChange)="changeModel($event)"
+        [(ngModel)]="generalInfoInspection.atticCondition"
+      >
+        <ion-select-option
+          *ngFor="let item of AticConditions; let i = index"
+          [value]="item.value"
+        >
+          {{ item.name }}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
   </div>
 </div>
