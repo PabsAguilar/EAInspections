@@ -11,6 +11,7 @@ const SYNCSTAMP_KEY = "inspection-stamp-key";
 const INSPECTIONS_KEY = "inspections-task";
 const SCHEDULINGS_KEY = "scheduling-form";
 const ENVIRONMENTAL_FIELDS_KEY = "environmental-inspection-fields";
+const DEAL_FIELDS_KEY = "deals-fields";
 
 @Injectable({
   providedIn: "root",
@@ -60,6 +61,8 @@ export class AuthenticationService {
       await this.storage.remove(INSPECTIONS_KEY);
       await this.storage.remove(SCHEDULINGS_KEY);
       await this.storage.remove(ENVIRONMENTAL_FIELDS_KEY);
+      await this.storage.remove(DEAL_FIELDS_KEY);
+
       this.authenticationState.next(false);
     });
   }

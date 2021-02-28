@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Lead } from "src/app/models/environmental-form/lead";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-lead",
@@ -12,15 +13,49 @@ export class LeadComponent implements OnInit {
   public isMenuOpen: boolean = false;
   public progressPercentage: number = 0;
   public progressColor: string = "danger";
-  conditions: any[] = [];
-  decontaminationOptions: any[] = [];
+  sampleCodeList: any[] = [];
+  cardinalDirectionList: any[] = [];
+  materialCodeList: any[] = [];
+  typeOfSampleCode: any[] = [];
+  labResultsCode: any[] = [];
+  fields: any[] = [];
+
+  selectAreaName: string;
   @Input()
   get model(): Lead {
     return this._model;
   }
   set model(value: Lead) {
     this._model = value;
+    this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        this.sampleCodeList = Object.entries(
+          this.fields[this._model.bitrixMappingLead.sampleCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
 
+        this.cardinalDirectionList = Object.entries(
+          this.fields[this._model.bitrixMappingLead.cardinalDirectionCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.materialCodeList = Object.entries(
+          this.fields[this._model.bitrixMappingLead.materialCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.typeOfSampleCode = Object.entries(
+          this.fields[this._model.bitrixMappingLead.typeOfSampleCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.labResultsCode = Object.entries(
+          this.fields[this._model.bitrixMappingLead.labResultsCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+      }
+    });
     this.changeModel(null);
   }
   _model: Lead = new Lead();
@@ -28,7 +63,7 @@ export class LeadComponent implements OnInit {
 
   @Output() modelChanged: any = new EventEmitter();
 
-  constructor() {}
+  constructor(private inspectionStorage: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -56,6 +91,9 @@ export class LeadComponent implements OnInit {
     }
     if (this._model.sample) {
       this.filledProperties++;
+      this.selectAreaName = this.sampleCodeList.find(
+        (x) => x.value == this._model.sample
+      )?.name;
     }
     if (this._model.typeOfSample) {
       this.filledProperties++;

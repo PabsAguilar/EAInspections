@@ -7,7 +7,7 @@
     name="checkmark-circle-outline"
   ></ion-icon>
   <ion-chip *ngIf="_model.sample" color="secondary" slot="end">
-    {{ _model.sample }}
+    {{ selectAreaName }}
   </ion-chip>
   <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
   <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
@@ -18,34 +18,19 @@
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
   <ion-item>
-    <ion-label position="floating">Sample</ion-label>
+    <ion-label position="floating">Sample Area</ion-label>
     <ion-select
       interface="popover"
       name="name"
       [(ngModel)]="_model.sample"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="Bedroom 1"> Bedroom 1</ion-select-option>
-      <ion-select-option value="Bedroom 2"> Bedroom 2</ion-select-option>
-      <ion-select-option value="Bedroom 3"> Bedroom 3</ion-select-option>
-      <ion-select-option value="Bedroom 4"> Bedroom 4 </ion-select-option>
-      <ion-select-option value="Bedroom 5"> Bedroom 5</ion-select-option>
-      <ion-select-option value="Bedroom 6"> Bedroom 6</ion-select-option>
-      <ion-select-option value="Living"> Living</ion-select-option>
-      <ion-select-option value="Room"> Room</ion-select-option>
-      <ion-select-option value="Dining Room"> Dining Room</ion-select-option>
-      <ion-select-option value="Florida Room"> Florida Room</ion-select-option>
-      <ion-select-option value="Bathroom 1"> Bathroom 1 </ion-select-option>
-      <ion-select-option value="Bathroom 2"> Bathroom 2</ion-select-option>
-      <ion-select-option value="Bathroom 3"> Bathroom 3</ion-select-option>
-      <ion-select-option value="Bathroom 4"> Bathroom 4</ion-select-option>
-      <ion-select-option value="Bathroom 5"> Bathroom 5</ion-select-option>
-      <ion-select-option value="Laundry"> Laundry</ion-select-option>
-      <ion-select-option value="Garage"> Garage</ion-select-option>
-      <ion-select-option value="Utility Room"> Utility Room</ion-select-option>
-      <ion-select-option value="Kitchen"> Kitchen</ion-select-option>
-      <ion-select-option value="Attic"> Attic</ion-select-option>
-      <ion-select-option value="Other"> Other</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of sampleCodeList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -57,10 +42,13 @@
       [(ngModel)]="_model.cardinalDirection"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="North"> North</ion-select-option>
-      <ion-select-option value="South"> South</ion-select-option>
-      <ion-select-option value="East"> East</ion-select-option>
-      <ion-select-option value="West"> West</ion-select-option>
+      <ion-select-option value="">Not Set</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of cardinalDirectionList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -76,12 +64,21 @@
 
   <ion-item lines="inset">
     <ion-label position="floating">Material</ion-label>
-    <ion-input
+
+    <ion-select
+      interface="popover"
+      name="material"
       [(ngModel)]="_model.material"
       (ionChange)="changeModel($event)"
-      type="text"
-      required
-    ></ion-input>
+    >
+      <ion-select-option value="">Not Set</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of materialCodeList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
   </ion-item>
 
   <ion-item lines="inset">
@@ -92,8 +89,12 @@
       [(ngModel)]="_model.typeOfSample"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="Swab"> Swab</ion-select-option>
-      <ion-select-option value="Paint Chip"> Paint Chip</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of typeOfSampleCode; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -105,8 +106,12 @@
       [(ngModel)]="_model.labResults"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="Positive"> Positive</ion-select-option>
-      <ion-select-option value="Negative"> Negative</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of labResultsCode; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
   <ion-item>

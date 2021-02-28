@@ -13,8 +13,9 @@ import {
 } from "@ionic/angular";
 import SignaturePad from "signature_pad";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
-import { AgreementContact } from "src/app/models/agreement-contact";
+
 import { Agreements } from "src/app/models/agreements";
+import { BitrixPicture } from "src/app/models/bitrix-picture";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
@@ -85,18 +86,16 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
   }
 
   canAdd(): boolean {
-    return this.task.agreements.contacts.length <= 2;
+    return this.task.agreements.signature.images.length <= 2;
   }
 
   async save() {
     try {
-      var signature = new AgreementContact();
-      signature.name =
-        "Client Signature #" +
-        (this.task.agreements.contacts.length + 1).toString();
-      signature.signature = this.signaturePad.toDataURL();
-      this.task.agreements.contacts.push(signature);
-      if (this.task.agreements.contacts.length > 0) {
+      var signature = new BitrixPicture();
+      signature.base64Image = this.signaturePad.toDataURL();
+      signature.isSync = false;
+      this.task.agreements.signature.images.push(signature);
+      if (this.task.agreements.signature.images.length > 0) {
         this.UpdateEntity();
       }
       this.clear();
@@ -112,7 +111,7 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
   }
 
   dropSignature(index) {
-    this.task.agreements.contacts.splice(index, 1);
+    this.task.agreements.signature.images.splice(index, 1);
     this.UpdateEntity();
   }
 

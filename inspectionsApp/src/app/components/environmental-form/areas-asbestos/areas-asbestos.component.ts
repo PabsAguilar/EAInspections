@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { AsbestoAreas } from "src/app/models/environmental-form/asbesto-areas";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-areas-asbestos",
@@ -11,6 +12,7 @@ export class AreasAsbestosComponent implements OnInit {
   isMenuOpen: boolean = false;
   progressColor: string = "danger";
   progressPercentage: number = 0;
+  listInspectionType: any[] = [];
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
@@ -22,12 +24,22 @@ export class AreasAsbestosComponent implements OnInit {
   }
   set model(value: AsbestoAreas) {
     this._model = value;
+
+    if (value) {
+      this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
+        this.listInspectionType = data
+          .filter((x) => x.name.toLowerCase().indexOf("asbesto") >= 0)
+          .map((item) => {
+            return { name: item.name, value: item.id };
+          });
+      });
+    }
   }
   _model: AsbestoAreas = new AsbestoAreas();
 
   @Output() modelChanged: any = new EventEmitter();
 
-  constructor() {}
+  constructor(private inspectionStorage: ItestDealService) {}
 
   ngOnInit() {}
 

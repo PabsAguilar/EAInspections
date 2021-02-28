@@ -1,12 +1,10 @@
 import { IStorageModel } from "../interfaces/Istorage-model";
+import { Contact } from "./contact";
 
 export class Scheduling implements IStorageModel {
   id: number;
-  fistName: string;
-  lastName: string;
-  serviceAddress: string;
-  contactPhone: string;
-  contactEmail: string;
+  contact: Contact;
+  newContact: Contact;
   insuranceCompany: string;
   notes: string;
   openClaims: boolean;
@@ -15,4 +13,8 @@ export class Scheduling implements IStorageModel {
   serviceType: string;
   scheduleDateTime: Date;
   internalStatus: string;
+  constructor() {
+    this.contact = new Contact();
+    this.newContact = new Contact();
+  }
 }

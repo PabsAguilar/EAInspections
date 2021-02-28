@@ -19,6 +19,23 @@
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
+  <ion-item>
+    <ion-label position="floating">Inspection Type</ion-label>
+    <ion-select
+      interface="popover"
+      [interfaceOptions]="{ cssClass: 'wider-popover' }"
+      name="type"
+      [(ngModel)]="_model.inspectionType"
+      (ionChange)="AreaUpdated($event)"
+    >
+      <ion-select-option
+        *ngFor="let item of listInspectionType; let i = index"
+        [value]="item.value"
+        >{{ item.name }}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+
   <ion-item lines="inset">
     <ion-label position="floating">Date Tesed</ion-label>
     <ion-datetime
@@ -35,4 +52,20 @@
     (modelChanged)="AreaUpdated($event)"
     [(model)]="_model.areamoistureMapping[i]"
   ></app-moisture-mapping>
+
+  <ion-item
+    (click)="toggleAccordion()"
+    lines="none"
+    button
+    class="ion-no-margin"
+  >
+    <ion-label color="warning"> {{ "End " + title }}</ion-label>
+
+    <ion-icon
+      slot="end"
+      *ngIf="!isMenuOpen"
+      name="caret-down-outline"
+    ></ion-icon>
+    <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+  </ion-item>
 </div>

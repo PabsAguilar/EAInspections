@@ -29,6 +29,7 @@ export class AreaMoldComponent implements OnInit {
   listSampleType: any[] = [];
   listlabResults: any[] = [];
   listToxicMold: any[] = [];
+  listRecomendations: any[] = [];
   selectAreaName: string;
   fields: any[];
   @Input()
@@ -86,6 +87,13 @@ export class AreaMoldComponent implements OnInit {
             this._model.damageInspectionBitrixMapping.beddingsOptionCode
           ].DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.listRecomendations = Object.entries(
+          this.fields[
+            this._model.damageInspectionBitrixMapping.recomendationsCode
+          ].DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
         this.listSampleType = [];
         this._model.samples.forEach((item: Sample, index) => {
           if (this._model.type == DamageAreaType.Mold) {

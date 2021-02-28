@@ -63,6 +63,15 @@ export class InspectionGeneralComponent implements OnInit {
           return { name: y.VALUE, value: y.ID };
         });
 
+        this.fields[
+          this.generalInfoInspection.generalInfoInspectionBitrixMapping
+            .agreementSignedYesNoCode
+        ].items.map((y) => {
+          if (y.VALUE == "Yes") {
+            this.generalInfoInspection.agreementSignedYesNo = y.ID;
+          }
+        });
+
         this.HHVACConditions = this.fields[
           this.generalInfoInspection.generalInfoInspectionBitrixMapping
             .HVACSystemConditionCode

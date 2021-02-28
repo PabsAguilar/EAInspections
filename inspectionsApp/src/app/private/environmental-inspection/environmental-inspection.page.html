@@ -17,6 +17,11 @@
 </ion-header>
 
 <ion-content>
+  <ion-item>
+    <ion-label color="primary">
+      <center><h2>{{task.title}}</h2></center>
+    </ion-label>
+  </ion-item>
   <app-inspection-general
     ngDefaultControl
     (generalInfoChanged)="UpdateEntity($event)"
@@ -72,11 +77,17 @@
   >
   </app-areas-lead>
 
-  <ion-list>
-    <ion-item>
-      <ion-button (click)="completeTask()" expand="block" full color="success">
-        Complete Inspection
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <ion-item class="ion-margin" lines="none">
+    <ion-label>Save for later</ion-label>
+    <ion-fab-button color="primary" (click)="back()" class="ion-margin">
+      <ion-icon name="save-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-item>
+
+  <ion-item class="ion-margin" lines="none">
+    <ion-label>Complete Inspection</ion-label>
+    <ion-fab-button color="success" (click)="completeTask()" class="ion-margin">
+      <ion-icon name="walk-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-item>
 </ion-content>

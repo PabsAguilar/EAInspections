@@ -1,17 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { LeadAreas } from 'src/app/models/environmental-form/lead-areas';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { LeadAreas } from "src/app/models/environmental-form/lead-areas";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
-  selector: 'app-areas-lead',
-  templateUrl: './areas-lead.component.html',
-  styleUrls: ['./areas-lead.component.scss'],
+  selector: "app-areas-lead",
+  templateUrl: "./areas-lead.component.html",
+  styleUrls: ["./areas-lead.component.scss"],
 })
 export class AreasLeadComponent implements OnInit {
-
   filledAreas: number = 0;
   isMenuOpen: boolean = false;
   progressColor: string = "danger";
   progressPercentage: number = 0;
+  listInspectionType: any[] = [];
+
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
@@ -23,12 +25,21 @@ export class AreasLeadComponent implements OnInit {
   }
   set model(value: LeadAreas) {
     this._model = value;
+    if (value) {
+      this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
+        this.listInspectionType = data
+          .filter((x) => x.name.toLowerCase().indexOf("lead") >= 0)
+          .map((item) => {
+            return { name: item.name, value: item.id };
+          });
+      });
+    }
   }
   _model: LeadAreas = new LeadAreas();
 
   @Output() modelChanged: any = new EventEmitter();
 
-  constructor() {}
+  constructor(private inspectionStorage: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -44,5 +55,4 @@ export class AreasLeadComponent implements OnInit {
       this.modelChanged.emit(this.model);
     }
   }
-
 }

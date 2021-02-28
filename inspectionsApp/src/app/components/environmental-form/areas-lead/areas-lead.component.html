@@ -28,14 +28,23 @@
       [(ngModel)]="_model.inspectionType"
       (ionChange)="AreaUpdated($event)"
     >
-      <ion-select-option value="Pre Lead Inspection"
-        >Pre Lead Inspection</ion-select-option
-      >
-      <ion-select-option value="Post Lead Inspection"
-        >Post Lead Inspection</ion-select-option
+      <ion-select-option
+        *ngFor="let item of listInspectionType; let i = index"
+        [value]="item.value"
+        >{{ item.name }}</ion-select-option
       >
     </ion-select>
   </ion-item>
+
+  <ion-item lines="inset">
+    <ion-label position="floating">Inspection Date</ion-label>
+    <ion-datetime
+      [(ngModel)]="_model.inspectionDateString"
+      displayFormat="YYYY-MMMM-D h:mm A"
+      pickerFormat="DD MM YYYY h:mm A"
+    ></ion-datetime>
+  </ion-item>
+
   <app-lead
     *ngFor="let area of _model.leadAreas; let i = index"
     ngDefaultControl

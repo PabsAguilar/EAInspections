@@ -237,24 +237,31 @@
       </strong>
     </h3>
     <div class="text-box"></div>
-    <div *ngFor="let value of this.task.agreements.contacts; let i = index">
+    <div
+      *ngFor="let value of this.task.agreements.signature.images; let i = index"
+    >
       <ion-item>
-        <ion-label>{{value.name}}</ion-label>
- 
-        <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+        <ion-label>
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          {{"Client Signature #"+(i+1)}}</ion-label
+        >
+        <ion-chip
+          color="danger"
+          (click)="dropSignature(i)"
+          class="ion-text-center"
+        >
+          <ion-icon name="trash-outline"></ion-icon>
+          <ion-label>Delete</ion-label>
+        </ion-chip>
       </ion-item>
       <ion-item>
-        <img style="background-color: white" [src]="value.signature" />
+        <img style="background-color: white" [src]="value.base64Image" />
       </ion-item>
     </div>
 
     <div
-      [ngClass]=" this.task.agreements.contacts.length<=1 ? 'active' : 'inactive'"
+      [ngClass]=" this.task.agreements.signature.images.length<=1 ? 'active' : 'inactive'"
     >
-      <!-- <ion-item>
-        <ion-label position="floating"> Client Signature</ion-label>
-      </ion-item> -->
-
       <ion-item>
         <ion-label>Signature</ion-label>
         <ion-button
@@ -284,34 +291,6 @@
         ></canvas>
       </div>
     </div>
-    <!-- <div>
-      <ion-item>
-        <ion-label position="floating">Name</ion-label>
-        <ion-input
-          [(ngModel)]="this.task.agreements.contacts[1].name"
-          type="text"
-          required
-        ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Client Signature</ion-label>
-        <ion-icon
-          ngIf="this.task.agreements.contacts[1].signature"
-          name="check-outline"
-          color="success"
-        ></ion-icon>
-      </ion-item>
-      <div class="text-box" style="border: solid">
-        <canvas
-          class="signature-pad-canvas"
-          #canvas1
-          id="signature1"
-          width="100%"
-          height="200px"
-          style="touch-action: none"
-        ></canvas>
-      </div>
-    </div> -->
 
     <div class="text-box" style="margin-top: 15px">
       <center>V.02.21 SUBCONTRACTOR WORK AUTHORIZATION AND ASSIGNMENT</center>

@@ -37,8 +37,11 @@ export class LoginPage implements OnInit {
   async ionViewDidEnter() {
     try {
       var lastUser = await this.authService.getLastLoggedUser();
-      this.email = lastUser.email;
-      this.image = lastUser.image;
+      if (lastUser) {
+        this.email = lastUser.email;
+        this.image = lastUser.image;
+      }
+
       var top = await this.loadingController.getTop();
       if (top) {
         await this.loadingController.dismiss();
@@ -106,13 +109,23 @@ export class LoginPage implements OnInit {
         await this.presentAlert();
       }
     } catch (error) {
-      var message = this.toast.create({
-        message: error,
-        color: "danger",
-        duration: 3000,
-      });
-      (await message).present();
-      loading.dismiss();
+      if (error.status == 0) {
+        var message = this.toast.create({
+          message: "Unable to connect, review your connection.",
+          color: "danger",
+          duration: 3000,
+        });
+        (await message).present();
+        loading.dismiss();
+      } else {
+        var message = this.toast.create({
+          message: error.message,
+          color: "danger",
+          duration: 3000,
+        });
+        (await message).present();
+        loading.dismiss();
+      }
     }
   }
 

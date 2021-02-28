@@ -22,7 +22,11 @@
     (ionSlideDrag)="ionSlidedrag()"
   >
     <ion-slide *ngFor="let x of _photoArray.images; let i = index">
-      <img [src]="x.base64Image" tappable (click)="openPreview(x)" />
+      <img
+        [src]="x.base64Image"
+        tappable
+        (click)="openPreview(x.base64Image)"
+      />
       <ion-fab horizontal="end" vertical="bottom" slot="fixed">
         <ion-fab-button color="danger" (click)="deletePictureFrontHouse(i)">
           <ion-icon name="trash-outline"></ion-icon>

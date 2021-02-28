@@ -122,7 +122,24 @@ export class SummaryPage implements OnInit {
   }
 
   async trySync(task) {
-    this.syncInspection.syncTask(task);
+    (await this.syncInspection.syncTask(task)).subscribe(async (x) => {
+      if (x) {
+        this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+        var message = this.toast.create({
+          message: "Inspection is synched.",
+          color: "success",
+          duration: 5000,
+        });
+        (await message).present();
+      } else {
+        var message = this.toast.create({
+          message: "Sync failed, please try again later.",
+          color: "warning",
+          duration: 300,
+        });
+        (await message).present();
+      }
+    });
   }
 
   async seeSchedulingDetails(scheduling: Scheduling) {

@@ -1,13 +1,23 @@
+import { SyncInfo } from "../sync-info";
 import { Asbesto } from "./asbesto";
 
 export class AsbestoAreas {
-  asbestosAreas: Asbesto[];
+  inspectionDate: Date;
+  contact: string;
   inspectionType: string;
+  asbestosAreas: Asbesto[];
+  inspectionDateString: string;
+  asbestoAreasBitrixMapping: AsbestoAreasBitrixMapping;
+  syncInfo: SyncInfo;
   constructor() {
     this.asbestosAreas = [];
-
-    for (let index = 0; index < 20; index++) {
-      this.asbestosAreas.push(new Asbesto());
-    }
+    this.asbestoAreasBitrixMapping = new AsbestoAreasBitrixMapping();
+    this.syncInfo = new SyncInfo();
   }
+}
+
+export class AsbestoAreasBitrixMapping {
+  inspectionDateCode: string;
+  contactCode: string;
+  inspectionTypeCode: string;
 }

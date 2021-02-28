@@ -70,7 +70,12 @@ export class InspectionNavigateService {
       (await message).present();
     }
   }
-
+  async backToPending() {
+    var path =
+      "menu/tabs/tabs/pending-inspections/" +
+      Math.floor(Math.random() * 100 + 1);
+    await this.navController.navigateBack([path]);
+  }
   async backFromAgreementsPage(selectedTask: InspectionTask) {
     try {
       const loading = await this.loadingController.create({

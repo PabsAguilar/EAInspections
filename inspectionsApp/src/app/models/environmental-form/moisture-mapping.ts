@@ -1,5 +1,4 @@
 export class MoistureMapping {
-  inspectionType: string;
   area: string;
   roomTemp: number;
   relativeHumidity: number;
@@ -10,5 +9,21 @@ export class MoistureMapping {
   standardTemperatureEast: number;
   standardTemperatureCeiling: number;
   standardTemperatureFloor: number;
-  constructor() {}
+  moistureMappingBitrixMap: MoistureMappingBitrixMap;
+  constructor() {
+    this.moistureMappingBitrixMap = new MoistureMappingBitrixMap();
+  }
+}
+
+export class MoistureMappingBitrixMap {
+  areaCode: string;
+  roomTempCode: string;
+  relativeHumidityCode: string;
+  dewPointCode: string;
+  standardTemperatureNorthCode: string;
+  standardTemperatureWestCode: string;
+  standardTemperatureSouthCode: string;
+  standardTemperatureEastCode: string;
+  standardTemperatureCeilingCode: string;
+  standardTemperatureFloorCode: string;
 }

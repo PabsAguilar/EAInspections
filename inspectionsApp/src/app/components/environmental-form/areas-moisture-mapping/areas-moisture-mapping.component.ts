@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { MoistureMappingAreas } from "src/app/models/environmental-form/moisture-mapping-areas";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-areas-moisture-mapping",
@@ -11,6 +12,7 @@ export class AreasMoistureMappingComponent implements OnInit {
   isMenuOpen: boolean = false;
   progressColor: string = "danger";
   progressPercentage: number = 0;
+  listInspectionType: any[] = [];
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
@@ -22,12 +24,21 @@ export class AreasMoistureMappingComponent implements OnInit {
   }
   set model(value: MoistureMappingAreas) {
     this._model = value;
+    if (value) {
+      this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
+        this.listInspectionType = data
+          .filter((x) => x.name.toLowerCase().indexOf("moisture") >= 0)
+          .map((item) => {
+            return { name: item.name, value: item.id };
+          });
+      });
+    }
   }
   _model: MoistureMappingAreas = new MoistureMappingAreas();
 
   @Output() modelChanged: any = new EventEmitter();
 
-  constructor() {}
+  constructor(private inspectionStorage: ItestDealService) {}
 
   ngOnInit() {}
 

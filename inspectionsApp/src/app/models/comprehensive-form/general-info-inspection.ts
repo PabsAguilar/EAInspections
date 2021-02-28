@@ -14,6 +14,7 @@ export class GeneralInfoInspection {
   ductsCondition: string;
   atticCondition: string;
   syncInfo: SyncInfo;
+  agreementSignedYesNo: string;
   generalInfoInspectionBitrixMapping: GeneralInfoInspectionBitrixMapping;
 
   constructor() {
@@ -27,6 +28,7 @@ export class GeneralInfoInspection {
   }
 }
 export class GeneralInfoInspectionBitrixMapping {
+  agreementSignedYesNoCode: string;
   propertyYearCode: string;
   propertyTypeCode: string;
   environmentalInspectionCode: string;

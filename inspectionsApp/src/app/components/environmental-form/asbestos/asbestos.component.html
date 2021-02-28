@@ -7,7 +7,7 @@
     name="checkmark-circle-outline"
   ></ion-icon>
   <ion-chip *ngIf="_model.materialLocation" color="secondary" slot="end">
-    {{ _model.materialLocation }}
+    {{ selectAreaName }}
   </ion-chip>
   <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
   <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
@@ -21,31 +21,16 @@
     <ion-label position="floating">Material Location</ion-label>
     <ion-select
       interface="popover"
-      name="name"
+      name="materialLocation"
       [(ngModel)]="_model.materialLocation"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="Bedroom 1"> Bedroom 1</ion-select-option>
-      <ion-select-option value="Bedroom 2"> Bedroom 2</ion-select-option>
-      <ion-select-option value="Bedroom 3"> Bedroom 3</ion-select-option>
-      <ion-select-option value="Bedroom 4"> Bedroom 4 </ion-select-option>
-      <ion-select-option value="Bedroom 5"> Bedroom 5</ion-select-option>
-      <ion-select-option value="Bedroom 6"> Bedroom 6</ion-select-option>
-      <ion-select-option value="Living"> Living</ion-select-option>
-      <ion-select-option value="Room"> Room</ion-select-option>
-      <ion-select-option value="Dining Room"> Dining Room</ion-select-option>
-      <ion-select-option value="Florida Room"> Florida Room</ion-select-option>
-      <ion-select-option value="Bathroom 1"> Bathroom 1 </ion-select-option>
-      <ion-select-option value="Bathroom 2"> Bathroom 2</ion-select-option>
-      <ion-select-option value="Bathroom 3"> Bathroom 3</ion-select-option>
-      <ion-select-option value="Bathroom 4"> Bathroom 4</ion-select-option>
-      <ion-select-option value="Bathroom 5"> Bathroom 5</ion-select-option>
-      <ion-select-option value="Laundry"> Laundry</ion-select-option>
-      <ion-select-option value="Garage"> Garage</ion-select-option>
-      <ion-select-option value="Utility Room"> Utility Room</ion-select-option>
-      <ion-select-option value="Kitchen"> Kitchen</ion-select-option>
-      <ion-select-option value="Attic"> Attic</ion-select-option>
-      <ion-select-option value="Other"> Other</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of materialLocationList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -76,8 +61,12 @@
       [(ngModel)]="_model.F_NF"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="F"> F</ion-select-option>
-      <ion-select-option value="NF"> NF</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of F_NFList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -89,11 +78,12 @@
       [(ngModel)]="_model.condition"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="Poor"> Poor</ion-select-option>
-      <ion-select-option value="Fair"> Fair</ion-select-option>
-      <ion-select-option value="Average"> Average</ion-select-option>
-      <ion-select-option value="Good"> Good</ion-select-option>
-      <ion-select-option value="Excellent"> Excellent</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of conditionList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -105,8 +95,12 @@
       [(ngModel)]="_model.labResults"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="Positive"> Positive </ion-select-option>
-      <ion-select-option value="Negative"> Negative</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of labResultsList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
   <ion-item>
@@ -116,5 +110,21 @@
       (ionChange)="changeModel($event)"
       type="text"
     ></ion-textarea>
+  </ion-item>
+
+  <ion-item
+    (click)="toggleAccordion()"
+    lines="none"
+    button
+    class="ion-no-margin"
+  >
+    <ion-label color="warning"> {{ "End " + title }}</ion-label>
+
+    <ion-icon
+      slot="end"
+      *ngIf="!isMenuOpen"
+      name="caret-down-outline"
+    ></ion-icon>
+    <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
   </ion-item>
 </div>

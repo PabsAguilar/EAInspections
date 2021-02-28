@@ -6,8 +6,18 @@ export class Asbesto {
   condition: string;
   labResults: string;
   observations: string;
-  constructor(){
-
+  asbestoBitrixMaping: AsbestoBitrixMaping;
+  constructor() {
+    this.asbestoBitrixMaping = new AsbestoBitrixMaping();
   }
+}
 
+export class AsbestoBitrixMaping {
+  materialLocationCode: string;
+  materialDescriptionCode: string;
+  totalQuantityCode: string;
+  F_NFCode: string;
+  conditionCode: string;
+  labResultsCode: string;
+  observationsCode: string;
 }

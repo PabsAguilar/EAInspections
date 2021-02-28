@@ -1,3 +1,5 @@
+import { bitrixMapping } from "../enums";
+
 export class Lead {
   sample: string;
   cardinalDirection: string;
@@ -6,5 +8,18 @@ export class Lead {
   typeOfSample: string;
   labResults: string;
   observations: string;
-  constructor() {}
+  bitrixMappingLead: BitrixMappingLead;
+  constructor() {
+    this.bitrixMappingLead = new BitrixMappingLead();
+  }
+}
+
+export class BitrixMappingLead {
+  sampleCode: string;
+  cardinalDirectionCode: string;
+  dimensionCm2Code: string;
+  materialCode: string;
+  typeOfSampleCode: string;
+  labResultsCode: string;
+  observationsCode: string;
 }

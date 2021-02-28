@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Asbesto } from "src/app/models/environmental-form/asbesto";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-asbestos",
@@ -12,14 +13,43 @@ export class AsbestosComponent implements OnInit {
   public isMenuOpen: boolean = false;
   public progressPercentage: number = 0;
   public progressColor: string = "danger";
-  conditions: any[] = [];
-  decontaminationOptions: any[] = [];
+  fields: any[] = [];
+  materialLocationList: any[] = [];
+  F_NFList: any[] = [];
+  conditionList: any[] = [];
+  labResultsList: any[] = [];
+  selectAreaName: string;
   @Input()
   get model(): Asbesto {
     return this._model;
   }
   set model(value: Asbesto) {
     this._model = value;
+
+    this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        this.materialLocationList = Object.entries(
+          this.fields[this._model.asbestoBitrixMaping.materialLocationCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.F_NFList = Object.entries(
+          this.fields[this._model.asbestoBitrixMaping.F_NFCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.conditionList = Object.entries(
+          this.fields[this._model.asbestoBitrixMaping.conditionCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.labResultsList = Object.entries(
+          this.fields[this._model.asbestoBitrixMaping.labResultsCode]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+      }
+    });
 
     this.changeModel(null);
   }
@@ -28,7 +58,7 @@ export class AsbestosComponent implements OnInit {
 
   @Output() modelChanged: any = new EventEmitter();
 
-  constructor() {}
+  constructor(private inspectionStorage: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -53,6 +83,9 @@ export class AsbestosComponent implements OnInit {
     }
     if (this._model.materialLocation) {
       this.filledProperties++;
+      this.selectAreaName = this.materialLocationList.find(
+        (x) => x.value == this._model.materialLocation
+      )?.name;
     }
     if (this._model.observations) {
       this.filledProperties++;

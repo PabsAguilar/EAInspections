@@ -63,6 +63,10 @@ export class PendingInspectionsPage implements OnInit {
     try {
       //TODO: Validate connection to internet
       await this.loadData();
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await top.dismiss();
+      }
     } catch (error) {
       var message = this.toast.create({
         message: error,
@@ -106,10 +110,6 @@ export class PendingInspectionsPage implements OnInit {
 
   async ionViewDidEnter() {
     try {
-      var top = await this.loadingController.getTop();
-      if (top) {
-        await top.dismiss();
-      }
     } catch (error) {
       var message = this.toast.create({
         message: error,

@@ -1,11 +1,10 @@
-import { AgreementContact } from "./agreement-contact";
+import { BitrixPictureList } from "./bitrix-picture";
 
 export class Agreements {
-  contacts: AgreementContact[];
-  inspectorContact: AgreementContact;
+  signature: BitrixPictureList;
   hasOpen: boolean;
   constructor() {
     this.hasOpen = false;
-    this.contacts = [];
+    this.signature = new BitrixPictureList();
   }
 }
