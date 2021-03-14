@@ -29,6 +29,11 @@ const routes: Routes = [
         loadChildren: () =>
           import("../summary/summary.module").then((m) => m.SummaryPageModule),
       },
+      {
+        path: "summary/:reload",
+        loadChildren: () =>
+          import("../summary/summary.module").then((m) => m.SummaryPageModule),
+      },
     ],
   },
   {

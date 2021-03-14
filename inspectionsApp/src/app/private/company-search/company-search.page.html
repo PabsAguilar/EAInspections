@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Search Company {{enterprise}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item *ngIf="selectedCompany" lines="none">
+    <ion-chip
+      *ngIf="selectedCompany"
+      color="success"
+      (click)="confirmCompany()"
+      slot="start"
+    >
+      <ion-label>Confirm </ion-label>
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+    </ion-chip>
+    <ion-chip
+      *ngIf="selectedCompany"
+      color="danger"
+      (click)="clearselectedCompany()"
+      slot="end"
+    >
+      <ion-label>Clear </ion-label>
+      <ion-icon name="trash-bin-outline"></ion-icon>
+    </ion-chip>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Create new Company</ion-label>
+    <ion-toggle
+      [(ngModel)]="createCompany"
+      slot="start"
+      color="primary"
+    ></ion-toggle>
+  </ion-item>
+
+  <ion-item *ngIf="selectedCompany">
+    <ion-avatar slot="start">
+      <img src="../../../assets/images/avatar.svg" />
+    </ion-avatar>
+    <ion-label>
+      <h3>{{selectedCompany.title}}</h3>
+      <p>{{selectedCompany.type}}</p>
+    </ion-label>
+  </ion-item>
+
+  <div *ngIf="!createCompany">
+    <p class="ion-no-padding">
+      Search existent bitrix Company (only available online)
+    </p>
+    <ion-item>
+      <ion-label position="stacked">Search company by name</ion-label>
+      <ion-searchbar
+        [(ngModel)]="nameSearchText"
+        (keyup.enter)="searchName()"
+        placeholder="Press enter to search company"
+        name="nameSearchText"
+      ></ion-searchbar>
+    </ion-item>
+    <div *ngIf="searching" class="spinner-container">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <ion-item
+      button
+      *ngFor="let company of companiesListFound; let i = index"
+      (click)="selectCompany(company.id)"
+    >
+      <ion-icon
+        *ngIf="company.selected"
+        name="checkmark-circle-outline"
+        slot="start"
+        color="success"
+      ></ion-icon>
+      <ion-avatar slot="start">
+        <img src="../../../assets/images/avatar.svg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>{{company.title}}</h3>
+        <p>{{company.type}}</p>
+      </ion-label>
+    </ion-item>
+  </div>
+  <div *ngIf="createCompany">
+    <form novalidate>
+      <ion-item lines="full">
+        <ion-label color="primary">New Company</ion-label>
+      </ion-item>
+
+      <!-- FirstName -->
+      <ion-item lines="full">
+        <ion-label position="floating">Title</ion-label>
+        <ion-input
+          name="title"
+          #title="ngModel"
+          autocapitalize="words"
+          [(ngModel)]="newCompany.title"
+          [value]="newCompany.title"
+          type="text"
+          required
+        ></ion-input>
+      </ion-item>
+      <!-- pattern="[a-zA-Z]*"
+    required
+    #firstName="ngModel" -->
+      <div class="validation-errors">
+        <div *ngIf="title.errors && (title.dirty || title.touched) ">
+          <p *ngIf="title.errors.required">
+            <ion-icon
+              color="danger"
+              name="information-circle-outline"
+            ></ion-icon>
+            <ion-label color="danger"> Required </ion-label>
+          </p>
+        </div>
+      </div>
+
+      <ion-row class="ion-padding">
+        <ion-col>
+          <ion-button
+            full
+            (click)="saveNewCompany()"
+            expand="block"
+            [disabled]="! 
+            ( 
+              newCompany.title && ! title.errors 
+            
+            )
+            "
+            >Save</ion-button
+          >
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+</ion-content>

@@ -20,6 +20,8 @@ import { MoistureMappingAreas } from "../models/environmental-form/moisture-mapp
 import { MoistureMapping } from "../models/environmental-form/moisture-mapping";
 import { Asbesto } from "../models/environmental-form/asbesto";
 import { Lead } from "../models/environmental-form/lead";
+import { Contact } from "../models/contact";
+import { Company } from "../models/company";
 const SYNCSTAMPKEY = "inspection-stamp-key";
 @Injectable({
   providedIn: "root",
@@ -53,6 +55,76 @@ export class ItestDealService {
   async update(task: InspectionTask) {
     return this.inspectionStorage.update(task);
   }
+
+  async getContactPhone(phone: string): Promise<Contact> {
+    var result = await this.bitrix.getContactByPhone(phone);
+    if (result.length > 0) {
+      var contact = new Contact();
+      contact.firstName = result[0].NAME;
+      contact.idContact = result[0].ID;
+      contact.lastName = result[0].LAST_NAME;
+      contact.contactEmail = result[0].EMAIL;
+      contact.contactEmail = result[0].PHONE;
+      contact.syncInfo.isSync = true;
+      return contact;
+    } else {
+      return new Contact();
+    }
+  }
+
+  async getCompaniesByName(name: string): Promise<Company[]> {
+    var response = await this.bitrix.getCompaniesByName(name);
+
+    if (response && response.result && response.result.length > 0) {
+      return Promise.all(
+        response.result.map(
+          async (item): Promise<any> => {
+            var company = new Company();
+            company.title = item.TITLE;
+            company.type = item.COMPANY_TYPE;
+            company.id = item.ID;
+
+            company.syncInfo.isSync = true;
+
+            return company;
+          }
+        )
+      );
+    } else {
+      return [];
+    }
+  }
+
+  async getContactsByEmail(email: string): Promise<Contact[]> {
+    var response = await this.bitrix.getContactByEmail(email);
+
+    if (response && response.result && response.result.length > 0) {
+      return Promise.all(
+        response.result.map(
+          async (item): Promise<any> => {
+            var contact = new Contact();
+            contact.firstName = item.NAME;
+            contact.idContact = item.ID;
+            contact.lastName = item.LAST_NAME;
+            if (item.EMAIL && item.EMAIL.length > 0) {
+              contact.contactEmail = item.EMAIL[0].VALUE;
+            }
+
+            if (item.PHONE && item.PHONE.length > 0) {
+              contact.contactPhone = item.PHONE[0].VALUE;
+            }
+
+            contact.syncInfo.isSync = true;
+
+            return contact;
+          }
+        )
+      );
+    } else {
+      return [];
+    }
+  }
+
   async getPendingInspections() {
     var list = await this.inspectionStorage.getAll();
     var pending;
@@ -121,8 +193,13 @@ export class ItestDealService {
     if (list != null && list.length > 0) {
       return list;
     }
+    await this.getInspectionTasksTypesListFromServer();
+    return await this.inspectionTypesListService.getAll();
+  }
+
+  async getInspectionTasksTypesListFromServer(): Promise<TaskSubtype[]> {
     var result = await this.bitrix.getInspectionTypes();
-    list = result.result.map((x) => {
+    var list = result.result.map((x) => {
       var subType = new TaskSubtype();
       subType.id = x.ID;
       subType.blockId = x.IBLOCK_ID;
@@ -428,6 +505,11 @@ export class ItestDealService {
     if (list != null) {
       return list;
     }
+    await this.getEnvironmentalFromServerInspectionFields();
+    return await this.environmentalInspectionFieldsListService.getAll();
+  }
+
+  async getEnvironmentalFromServerInspectionFields(): Promise<any> {
     var responseMold = await this.bitrix.getEnvironmentalInspectionListsFields(
       48
     );
@@ -456,10 +538,9 @@ export class ItestDealService {
       responseAsbestos.result,
       responseLeads.result
     );
-
+    await this.environmentalInspectionFieldsListService.clear();
     await this.environmentalInspectionFieldsListService.add(obj);
-    list = await this.environmentalInspectionFieldsListService.getAll();
-    return list;
+    return await this.environmentalInspectionFieldsListService.getAll();
   }
 
   async getDealsFields(): Promise<any> {
@@ -468,11 +549,15 @@ export class ItestDealService {
     if (list != null) {
       return list;
     }
-    var reponseFields = await this.bitrix.getDealFields();
 
+    await this.getDealsFieldsFromServer();
+    return await this.dealsFieldsListService.getAll();
+  }
+  async getDealsFieldsFromServer(): Promise<any> {
+    var reponseFields = await this.bitrix.getDealFields();
+    await this.dealsFieldsListService.clear();
     await this.dealsFieldsListService.add(reponseFields.result);
-    list = await this.dealsFieldsListService.getAll();
-    return list;
+    return await this.dealsFieldsListService.getAll();
   }
 
   async getExternal(idUser: number) {
@@ -496,8 +581,8 @@ export class ItestDealService {
     }
     await this.inspectionStorage.clear();
 
-    await this.getEnvironmentalInspectionFields();
-    await this.getDealsFields();
+    await this.getEnvironmentalFromServerInspectionFields();
+    await this.getDealsFieldsFromServer();
     return this.inspectionStorage.addItems(list);
   }
 

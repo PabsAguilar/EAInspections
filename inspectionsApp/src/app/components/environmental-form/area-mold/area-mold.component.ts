@@ -94,6 +94,10 @@ export class AreaMoldComponent implements OnInit {
           ].DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
+        this.listRecomendations.forEach(
+          (x) => (x.name = x.name.slice(0, 100) + "...")
+        );
+
         this.listSampleType = [];
         this._model.samples.forEach((item: Sample, index) => {
           if (this._model.type == DamageAreaType.Mold) {

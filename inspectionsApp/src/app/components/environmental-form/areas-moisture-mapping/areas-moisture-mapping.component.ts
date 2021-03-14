@@ -32,6 +32,7 @@ export class AreasMoistureMappingComponent implements OnInit {
             return { name: item.name, value: item.id };
           });
       });
+      this.AreaUpdated(null);
     }
   }
   _model: MoistureMappingAreas = new MoistureMappingAreas();

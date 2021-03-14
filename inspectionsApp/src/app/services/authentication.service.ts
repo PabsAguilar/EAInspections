@@ -57,11 +57,11 @@ export class AuthenticationService {
 
   logout() {
     return this.storage.remove(TOKEN_KEY).then(async () => {
-      await this.storage.remove(SYNCSTAMP_KEY);
-      await this.storage.remove(INSPECTIONS_KEY);
-      await this.storage.remove(SCHEDULINGS_KEY);
-      await this.storage.remove(ENVIRONMENTAL_FIELDS_KEY);
-      await this.storage.remove(DEAL_FIELDS_KEY);
+      // await this.storage.remove(SYNCSTAMP_KEY);
+      // await this.storage.remove(INSPECTIONS_KEY);
+      // await this.storage.remove(SCHEDULINGS_KEY);
+      // await this.storage.remove(ENVIRONMENTAL_FIELDS_KEY);
+      // await this.storage.remove(DEAL_FIELDS_KEY);
 
       this.authenticationState.next(false);
     });

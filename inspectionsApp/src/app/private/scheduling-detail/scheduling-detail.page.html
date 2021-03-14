@@ -35,7 +35,7 @@
         <ion-row>
           <ion-col>
             <h1 style="text-align: center">
-              {{scheduling.firstName + ' ' + scheduling.lastName}}
+              {{scheduling.contact.firstName + ' ' + scheduling.contact.lastName}}
             </h1>
             <h3 style="text-align: center">{{scheduling.serviceType}}</h3>
           </ion-col>
@@ -45,7 +45,7 @@
             <ion-row class="row-center">
               <ion-chip color="success" (click)="call()">
                 <ion-icon name="call" color="success"></ion-icon>
-                <ion-label>{{scheduling.contactPhone}}</ion-label>
+                <ion-label>{{scheduling.contact.contactPhone}}</ion-label>
               </ion-chip>
             </ion-row>
 
@@ -56,7 +56,7 @@
                 class="ion-text-center"
               >
                 <ion-icon name="mail-outline" color="primary"></ion-icon>
-                <ion-label>{{scheduling.contactEmail}}</ion-label>
+                <ion-label>{{scheduling.contact.contactEmail}}</ion-label>
               </ion-chip>
             </ion-row>
             <ion-row>

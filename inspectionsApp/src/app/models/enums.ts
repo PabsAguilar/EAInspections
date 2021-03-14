@@ -3,6 +3,11 @@ export enum InspectionType {
   Environmental = "Environmental Inspection",
 }
 
+export enum EnumEnterprise {
+  itest = "ITEST",
+  expertNetworks = "Expert Networks",
+}
+
 export enum InspectionStatus {
   InProgress = "In Progress",
   New = "New",

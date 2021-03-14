@@ -8,6 +8,8 @@ import { SchedulingPageRoutingModule } from "./scheduling-routing.module";
 
 import { SchedulingPage } from "./scheduling.page";
 import { ExploreContainerComponentModule } from "src/app/explore-container/explore-container.module";
+import { ContactSearchPageModule } from "../contact-search/contact-search.module";
+import { CompanySearchPageModule } from "../company-search/company-search.module";
 
 @NgModule({
   imports: [
@@ -17,6 +19,8 @@ import { ExploreContainerComponentModule } from "src/app/explore-container/explo
     ExploreContainerComponentModule,
     SchedulingPageRoutingModule,
     ReactiveFormsModule,
+    ContactSearchPageModule,
+    CompanySearchPageModule,
   ],
   declarations: [SchedulingPage],
 })

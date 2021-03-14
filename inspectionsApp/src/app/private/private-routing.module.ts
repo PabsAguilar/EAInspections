@@ -47,6 +47,14 @@ const routes: Routes = [
         (m) => m.EnvironmentalAgreementsPageModule
       ),
   },
+  {
+    path: 'contact-search',
+    loadChildren: () => import('./contact-search/contact-search.module').then( m => m.ContactSearchPageModule)
+  },
+  {
+    path: 'company-search',
+    loadChildren: () => import('./company-search/company-search.module').then( m => m.CompanySearchPageModule)
+  },
 ];
 
 @NgModule({

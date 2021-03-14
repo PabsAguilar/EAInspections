@@ -33,6 +33,7 @@ export class AreasAsbestosComponent implements OnInit {
             return { name: item.name, value: item.id };
           });
       });
+      this.AreaUpdated(null);
     }
   }
   _model: AsbestoAreas = new AsbestoAreas();

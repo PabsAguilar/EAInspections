@@ -54,7 +54,7 @@ export class BitrixItestService {
       .get(`${this.url}/${this.key}/crm.company.get.json?ID=${id}`)
       .toPromise();
   }
-  //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[EMAIL]=pabs.aguilar2806@gmail.com
+  //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.list.json?SELECT[]=EMAIL&SELECT[]=NAME&SELECT[]=LAST_NAME&SELECT[]=PHONE&FILTER[EMAIL]=pabs.aguilar2806
   public getContactByPhone(phone: string): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
     return this.http
@@ -64,11 +64,20 @@ export class BitrixItestService {
       .toPromise();
   }
 
-  public getContactByEmail(phone: string): Promise<any> {
+  public getContactByEmail(email: string): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
     return this.http
       .get(
-        `${this.url}/${this.key}/crm.contact.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[EMAIL]=${phone}`
+        `${this.url}/${this.key}/crm.contact.list.json?SELECT[]=EMAIL&SELECT[]=NAME&SELECT[]=LAST_NAME&SELECT[]=PHONE&FILTER[EMAIL]=${email}`
+      )
+      .toPromise();
+  }
+
+  public getCompaniesByName(name: string): Promise<any> {
+    //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.company.list.json?SELECT[]=*&FILTER[%TITLE]=Test
+    https: return this.http
+      .get(
+        `${this.url}/${this.key}/crm.company.list.json?SELECT[]=TITLE&SELECT[]=COMPANY_TYPE&FILTER[%TITLE]=${name}`
       )
       .toPromise();
   }
@@ -109,6 +118,24 @@ export class BitrixItestService {
 
   public updateDeal(postData: any): Observable<any> {
     return this.http.post(`${this.url}/${this.key}/crm.deal.update`, postData, {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  public createDeal(postData: any): Observable<any> {
+    return this.http.post(`${this.url}/${this.key}/crm.deal.add`, postData, {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  public createContact(postData: any): Observable<any> {
+    return this.http.post(`${this.url}/${this.key}/crm.contact.add`, postData, {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  public createCompany(postData: any): Observable<any> {
+    return this.http.post(`${this.url}/${this.key}/crm.company.add`, postData, {
       headers: { "Content-Type": "application/json" },
     });
   }

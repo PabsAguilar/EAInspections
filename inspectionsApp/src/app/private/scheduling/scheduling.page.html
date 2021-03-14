@@ -8,167 +8,139 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form
-    class="form"
-    [formGroup]="validations_form"
-    (ngSubmit)="onSubmit(validations_form.value)"
-  >
-    <!-- FirstName -->
-    <ion-item lines="full">
-      <ion-label position="floating">First Name</ion-label>
-      <ion-input
-        formControlName="firstName"
-        class="form-controll"
-        type="text"
-        required
-      ></ion-input>
-    </ion-item>
-    <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.firstName">
-        <div
-          *ngIf="validations_form.get('firstName').hasError(validation.type) && (validations_form.get('firstName').dirty || validations_form.get('firstName').touched)"
+  <form novalidate>
+    <ion-item>
+      <ion-label position="floating">Select Service</ion-label>
+      <ion-select
+        interface="popover"
+        name="serviceType"
+        #serviceType="ngModel"
+        [(ngModel)]="scheduling.serviceType"
+      >
+        <ion-select-option value="ITEST"
+          >Environmental (ITest)</ion-select-option
         >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon>
-          <ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
-    </div>
+        <ion-select-option disabled value="Expert Networks"
+          >Comprehensive (ExpertNetwork)</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
 
-    <!-- Last Name -->
-    <ion-item lines="full">
-      <ion-label position="floating">Last Name</ion-label>
-      <ion-input
-        formControlName="lastName"
-        class="form-controll"
-        type="text"
-        required
-      ></ion-input>
+    <!-- <ion-item lines="none">
+    
+    </ion-item> -->
+    <ion-item lines="none">
+      <ion-label>Contact</ion-label>
+      <ion-chip
+        [disabled]="!scheduling.serviceType"
+        color="primary"
+        (click)="searchContact()"
+        slot="end"
+      >
+        <ion-label>Search or Create New Contact </ion-label>
+        <ion-icon name="search-circle-outline"></ion-icon>
+      </ion-chip>
     </ion-item>
-    <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.lastName">
-        <div
-          *ngIf="validations_form.get('lastName').hasError(validation.type) && (validations_form.get('lastName').dirty || validations_form.get('lastName').touched)"
-        >
-          <ion-icon name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
-    </div>
-    <!-- Phone -->
-    <ion-item lines="full">
-      <ion-label position="floating">Phone</ion-label>
-      <ion-input
-        formControlName="contactPhone"
-        class="form-controll"
-        type="tel"
-        required
-      ></ion-input>
-    </ion-item>
-    <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.contactPhone">
-        <div
-          *ngIf="validations_form.get('contactPhone').hasError(validation.type) && (validations_form.get('contactPhone').dirty || validations_form.get('contactPhone').touched)"
-        >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
-    </div>
 
-    <!-- Email -->
-    <ion-item lines="full">
-      <ion-label position="floating">Email</ion-label>
-      <ion-input
-        formControlName="contactEmail"
-        class="form-controll"
-        type="email"
-        required
-      ></ion-input>
+    <ion-item *ngIf="scheduling.contact.firstName">
+      <ion-avatar slot="start">
+        <img src="../../../assets/images/avatar.svg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>
+          {{scheduling.contact.firstName + " " + scheduling.contact.lastName}}
+        </h3>
+        <p>{{scheduling.contact.contactPhone}}</p>
+        <p>{{scheduling.contact.contactEmail}}</p>
+      </ion-label>
     </ion-item>
-    <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.contactEmail">
-        <div
-          *ngIf="validations_form.get('contactEmail').hasError(validation.type) && (validations_form.get('contactEmail').dirty || validations_form.get('contactEmail').touched)"
-        >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
-    </div>
 
-    <!-- Address -->
     <ion-item lines="full">
       <ion-label position="floating">Address</ion-label>
       <ion-input
-        formControlName="serviceAddress"
-        class="form-controll"
+        name="serviceAddress"
+        #serviceAddress="ngModel"
+        [(ngModel)]="scheduling.serviceAddress"
         type="text"
         required
       ></ion-input>
     </ion-item>
     <div class="validation-errors">
-      <ng-container
-        *ngFor="let validation of validation_messages.serviceAddress"
+      <div
+        *ngIf="serviceAddress.errors && (serviceAddress.dirty || serviceAddress.touched) "
       >
-        <div
-          *ngIf="validations_form.get('serviceAddress').hasError(validation.type) && (validations_form.get('serviceAddress').dirty || validations_form.get('serviceAddress').touched)"
-        >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
+        <p *ngIf="serviceAddress.errors.required">
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+          <ion-label color="danger"> Required </ion-label>
+        </p>
+      </div>
     </div>
 
-    <!-- Insurance Company -->
-    <ion-item lines="full">
-      <ion-label position="floating">Insurance Company</ion-label>
-      <ion-input
-        formControlName="insuranceCompany"
-        class="form-controll"
-        type="text"
-        required
-      ></ion-input>
+    <ion-item lines="none">
+      <ion-label>Insurance Company</ion-label>
     </ion-item>
-    <div class="validation-errors">
-      <ng-container
-        *ngFor="let validation of validation_messages.insuranceCompany"
+    <ion-item lines="none" class="no-padding">
+      <ion-chip
+        color="primary"
+        (click)="searchInsuranceContact()"
+        slot="end"
+        [disabled]="!scheduling.serviceType"
       >
-        <div
-          *ngIf="validations_form.get('insuranceCompany').hasError(validation.type) && (validations_form.get('insuranceCompany').dirty || validations_form.get('insuranceCompany').touched)"
-        >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
-    </div>
+        <ion-label>Contact</ion-label>
+        <ion-icon name="search-circle-outline"></ion-icon>
+      </ion-chip>
+      <ion-chip
+        color="secondary"
+        (click)="searchInsuranceCompany()"
+        slot="end"
+        [disabled]="!scheduling.serviceType"
+      >
+        <ion-label>Company</ion-label>
+        <ion-icon name="search-circle-outline"></ion-icon>
+      </ion-chip>
+    </ion-item>
 
-    <!-- Notes -->
+    <ion-item *ngIf="scheduling.insuranceCompanyContact">
+      <ion-avatar slot="start">
+        <img src="../../../assets/images/avatar.svg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>
+          {{scheduling.insuranceCompanyContact.firstName + " " +
+          scheduling.insuranceCompanyContact.lastName}}
+        </h3>
+        <p>{{scheduling.insuranceCompanyContact.contactPhone}}</p>
+        <p>{{scheduling.insuranceCompanyContact.contactEmail}}</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item *ngIf="scheduling.insuranceCompany">
+      <ion-avatar slot="start">
+        <img src="../../../assets/images/avatar.svg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>{{scheduling.insuranceCompany.title}}</h3>
+        <p>{{scheduling.insuranceCompany.type}}</p>
+      </ion-label>
+    </ion-item>
+
     <ion-item lines="full">
       <ion-label position="floating">Notes</ion-label>
       <ion-textarea
-        formControlName="notes"
-        class="form-controll"
+        name="notes"
+        #notes="ngModel"
+        [(ngModel)]="scheduling.notes"
         type="text"
       ></ion-textarea>
     </ion-item>
-    <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.notes">
-        <div
-          *ngIf="validations_form.get('notes').hasError(validation.type) && (validations_form.get('notes').dirty || validations_form.get('notes').touched)"
-        >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
-    </div>
 
-    <!-- Open Claims -->
     <ion-item lines="full">
       <ion-item>
         <ion-label>Open Claims</ion-label>
         <ion-toggle
-          formControlName="openClaims"
-          class="form-controll"
+          name="openClaims"
+          #openClaims="ngModel"
+          [(ngModel)]="scheduling.openClaims"
           slot="start"
           name="cherry"
           color="danger"
@@ -176,86 +148,101 @@
       </ion-item>
     </ion-item>
 
-    <!-- Employee -->
     <ion-item>
-      <ion-label>Select Employee</ion-label>
+      <ion-label position="floating">Select Employee</ion-label>
       <ion-select
-        interface="action-sheet"
-        formControlName="inspectorName"
-        class="form-controll"
+        name="inspectorUserId"
+        #inspectorUserId="ngModel"
+        [(ngModel)]="scheduling.inspectorUserId"
+        interface="popover"
+        required
       >
-        <ion-select-option value="Inspector A">Inspector A</ion-select-option>
-        <ion-select-option value="Inspector B">Inspector B</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <div class="validation-errors">
-      <ng-container
-        *ngFor="let validation of validation_messages.inspectorName"
-      >
-        <div
-          *ngIf="validations_form.get('inspectorName').hasError(validation.type) && (validations_form.get('inspectorName').dirty || validations_form.get('inspectorName').touched)"
-        >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
-    </div>
-
-    <!-- service -->
-    <ion-item>
-      <ion-label>Select Service</ion-label>
-      <ion-select
-        interface="action-sheet"
-        formControlName="serviceType"
-        class="form-controll"
-      >
-        <ion-select-option value="Free Home Inspection - 2 hr"
-          >Free Home Inspection - 2 hr</ion-select-option
+        <ion-select-option [value]="user.userId"
+          >{{user.completeName}}</ion-select-option
         >
       </ion-select>
     </ion-item>
     <div class="validation-errors">
-      <ng-container *ngFor="let validation of validation_messages.serviceType">
-        <div
-          *ngIf="validations_form.get('serviceType').hasError(validation.type) && (validations_form.get('serviceType').dirty || validations_form.get('serviceType').touched)"
-        >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
+      <div
+        *ngIf="inspectorUserId.errors && (inspectorUserId.dirty || inspectorUserId.touched) "
+      >
+        <p *ngIf="inspectorUserId.errors.required">
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+          <ion-label color="danger"> Required </ion-label>
+        </p>
+      </div>
     </div>
 
-    <!-- date -->
+    <div class="validation-errors">
+      <div
+        *ngIf="serviceType.errors && (serviceType.dirty || serviceType.touched) "
+      >
+        <p *ngIf="serviceType.errors.required">
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+          <ion-label color="danger"> Required </ion-label>
+        </p>
+      </div>
+    </div>
+
     <ion-item>
-      <ion-label>Select date</ion-label>
-      <ion-datetime
+      <ion-label position="floating">Select date</ion-label>
+      <!-- <ion-datetime
         [min]="minDate"
         [max]="maxDate"
         formControlName="scheduleDateTime"
         class="form-controll"
         placeholder="Select Date"
+      ></ion-datetime> -->
+
+      <ion-datetime
+        [min]="minDate"
+        [max]="maxDate"
+        name="scheduleDateTime"
+        #scheduleDateTime="ngModel"
+        [(ngModel)]="scheduling.scheduleDateTime"
+        displayFormat="MMMM DD, YYYY"
+        pickerFormat="MMMM DD YYYY "
       ></ion-datetime>
     </ion-item>
-    <div class="validation-errors">
-      <ng-container
-        *ngFor="let validation of validation_messages.scheduleDateTime"
-      >
-        <div
-          *ngIf="validations_form.get('scheduleDateTime').hasError(validation.scheduleDateTime) && (validations_form.get('scheduleDateTime').dirty || validations_form.get('scheduleDateTime').touched)"
-        >
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon
-          ><ion-label color="danger"> {{ validation.message }}</ion-label>
-        </div>
-      </ng-container>
-    </div>
+
+    <ion-item>
+      <ion-label position="floating">Select Hour</ion-label>
+      <!-- <ion-datetime
+        [min]="minDate"
+        [max]="maxDate"
+        formControlName="scheduleDateTime"
+        class="form-controll"
+        placeholder="Select Date"
+      ></ion-datetime> -->
+
+      <ion-datetime
+        [min]="minDate"
+        [max]="maxDate"
+        name="scheduleDateTime"
+        minuteValues="0,15,30,45"
+        #scheduleDateTime="ngModel"
+        [(ngModel)]="scheduling.scheduleDateTime"
+        displayFormat="h:mm A"
+        pickerFormat="h:mm A"
+      ></ion-datetime>
+    </ion-item>
 
     <ion-row class="ion-padding">
       <ion-col>
         <ion-button
           full
-          [disabled]="!validations_form.valid"
-          type="submit"
+          (click)="onSubmit()"
           expand="block"
+          [disabled]="! 
+          ( scheduling.serviceAddress && !serviceAddress.errors          
+          && scheduling.insuranceCompany 
+          && scheduling.insuranceCompanyContact
+          && scheduling.notes && !notes.errors          
+          && scheduling.inspectorUserId && !inspectorUserId.errors
+          && scheduling.serviceType && !serviceType.errors          
+          && scheduling.scheduleDateTime && !scheduleDateTime.errors
+          && scheduling.contact && scheduling.contact.firstName 
+          )"
           >Send</ion-button
         >
       </ion-col>

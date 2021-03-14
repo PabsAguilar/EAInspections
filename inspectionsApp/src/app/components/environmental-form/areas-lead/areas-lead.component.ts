@@ -33,6 +33,8 @@ export class AreasLeadComponent implements OnInit {
             return { name: item.name, value: item.id };
           });
       });
+
+      this.AreaUpdated(null);
     }
   }
   _model: LeadAreas = new LeadAreas();

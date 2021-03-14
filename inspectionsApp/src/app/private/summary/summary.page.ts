@@ -1,7 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { NavigationExtras, Router } from "@angular/router";
+import { ActivatedRoute, NavigationExtras, Router } from "@angular/router";
 import { CallNumber } from "@ionic-native/call-number/ngx";
-import { PopoverController, ToastController } from "@ionic/angular";
+import {
+  LoadingController,
+  PopoverController,
+  ToastController,
+} from "@ionic/angular";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { Scheduling } from "src/app/models/scheduling";
@@ -22,9 +26,11 @@ export class SummaryPage implements OnInit {
     public schedulingStorageService: SchedulingStorageService,
     public inspectionStorageService: ItestDealService,
     private router: Router,
+    private route: ActivatedRoute,
     private popoverController: PopoverController,
     private toast: ToastController,
-    private syncInspection: SyncInspectionService
+    private syncInspection: SyncInspectionService,
+    private loadingController: LoadingController
   ) {}
   segmentOption: string = "inspections";
   inspectionTasks = Array<InspectionTask>();
@@ -33,10 +39,27 @@ export class SummaryPage implements OnInit {
 
   async ionViewWillEnter() {
     try {
+      //TODO: Validate connection to internet
       this.schedulingList = await this.schedulingStorageService.getAll();
       this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+
+      this.route.queryParams.subscribe((params) => {
+        if (params && params.segment) {
+          this.segmentOption = params.segment;
+        }
+      });
+
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await top.dismiss();
+      }
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 

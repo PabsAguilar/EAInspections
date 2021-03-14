@@ -76,6 +76,18 @@ export class InspectionNavigateService {
       Math.floor(Math.random() * 100 + 1);
     await this.navController.navigateBack([path]);
   }
+
+  async moveToSummary(segment) {
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        segment: segment,
+      },
+    };
+
+    var path = "menu/tabs/tabs/summary/" + Math.floor(Math.random() * 100 + 1);
+    await this.navController.navigateForward([path], navigationExtras);
+  }
+
   async backFromAgreementsPage(selectedTask: InspectionTask) {
     try {
       const loading = await this.loadingController.create({

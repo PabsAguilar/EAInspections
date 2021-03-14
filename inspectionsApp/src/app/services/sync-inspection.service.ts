@@ -7,15 +7,19 @@ import { element } from "protractor";
 import { Observable, of } from "rxjs";
 import { observeOn } from "rxjs/operators";
 import { BitrixPicture, BitrixPictureList } from "../models/bitrix-picture";
+import { Company } from "../models/company";
+import { Contact } from "../models/contact";
 import { DamageInspection } from "../models/damage-inspection";
 import { DamageAreaType, InspectionStatus } from "../models/enums";
 import { Asbesto } from "../models/environmental-form/asbesto";
 import { Lead } from "../models/environmental-form/lead";
 import { MoistureMapping } from "../models/environmental-form/moisture-mapping";
 import { BitrixFolder, InspectionTask } from "../models/inspection-task";
+import { Scheduling } from "../models/scheduling";
 import { SyncInfo } from "../models/sync-info";
 import { BitrixItestService } from "./bitrix-itest.service";
 import { InspectionsStorageService } from "./inspections-storage.service";
+import { SchedulingStorageService } from "./scheduling-storage.service";
 
 @Injectable({
   providedIn: "root",
@@ -24,6 +28,7 @@ export class SyncInspectionService {
   constructor(
     private bitrix: BitrixItestService,
     private inspectionStorage: InspectionsStorageService,
+    private schedulingStorageService: SchedulingStorageService,
     private toast: ToastController
   ) {}
 
@@ -269,6 +274,134 @@ export class SyncInspectionService {
       return -1;
     }
   }
+
+  async syncContact(contact: Contact): Promise<Contact> {
+    try {
+      var postData = {
+        fields: {
+          NAME: contact.firstName,
+          SECOND_NAME: "",
+          LAST_NAME: contact.lastName,
+          PHONE: [{ VALUE: contact.contactPhone }],
+          EMAIL: [{ VALUE: contact.contactEmail }],
+        },
+      };
+      var response = await this.bitrix.createContact(postData).toPromise();
+      if (response?.result > 0) {
+        contact.syncInfo.isSync = true;
+        contact.syncInfo.syncCode = response.result;
+        contact.idContact = response.result;
+        return contact;
+      } else {
+        contact.syncInfo.isSync = false;
+        return contact;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    contact.syncInfo.isSync = false;
+    return contact;
+  }
+
+  async syncCompany(company: Company): Promise<Company> {
+    try {
+      var postData = {
+        fields: {
+          TITLE: company.title,
+          COMPANY_TYPE: "CUSTOMER",
+          COMMENTS: "Created by Inspection MobileApp",
+          CURRENCY_ID: "USD",
+          IS_MY_COMPANY: "N",
+        },
+      };
+      var response = await this.bitrix.createCompany(postData).toPromise();
+      if (response?.result > 0) {
+        company.syncInfo.isSync = true;
+        company.syncInfo.syncCode = response.result;
+        company.id = response.result;
+        return company;
+      } else {
+        company.syncInfo.isSync = false;
+        return company;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    company.syncInfo.isSync = false;
+    return company;
+  }
+
+  async syncSchedulingInspection(
+    scheduling: Scheduling
+  ): Promise<Observable<boolean>> {
+    try {
+      if (!scheduling.contact.syncInfo.isSync) {
+        scheduling.contact = await this.syncContact(scheduling.contact);
+        if (!scheduling.contact.syncInfo.isSync) {
+          return of(false);
+        }
+      }
+
+      if (!scheduling.insuranceCompanyContact.syncInfo.isSync) {
+        scheduling.insuranceCompanyContact = await this.syncContact(
+          scheduling.insuranceCompanyContact
+        );
+        if (!scheduling.insuranceCompanyContact.syncInfo.isSync) {
+          return of(false);
+        }
+      }
+
+      if (!scheduling.insuranceCompany.syncInfo.isSync) {
+        scheduling.insuranceCompany = await this.syncCompany(
+          scheduling.insuranceCompany
+        );
+        if (!scheduling.insuranceCompany.syncInfo.isSync) {
+          return of(false);
+        }
+      }
+
+      let postData = {
+        fields: {
+          TITLE: "Scheduling Form - " + scheduling.contact.lastName + " - IApp",
+          TYPE_ID: "",
+          STAGE_ID: "New Order",
+          COMPANY_ID: "",
+          CONTACT_ID: scheduling.contact.idContact,
+          OPENED: "N",
+          CLOSED: "N",
+          ASSIGNED_BY_ID: scheduling.inspectorUserId,
+          CREATED_BY_ID: scheduling.inspectorUserId,
+          COMMENTS: scheduling.notes,
+          PROBABILITY: null,
+          CURRENCY_ID: "USD",
+          OPPORTUNITY: 0,
+          BEGINDATE: "",
+          CLOSEDATE: "",
+          UF_CRM_1612683055: scheduling.scheduleDateTime.toISOString(), //this.date2str(scheduling.scheduleDateTime),
+          UF_CRM_1606466289: scheduling.serviceAddress,
+          UF_CRM_1612682994: scheduling.inspectorUserId,
+          UF_CRM_1612691342: [
+            "C_" + scheduling.insuranceCompanyContact.idContact,
+            "CO_" + scheduling.insuranceCompany.id,
+          ],
+        },
+      };
+
+      var response = await this.bitrix.createDeal(postData).toPromise();
+
+      if (response && response.result > 0) {
+        scheduling.syncInfo.isSync = true;
+        scheduling.syncInfo.syncCode = response.result;
+        scheduling.internalStatus = InspectionStatus.Completed;
+        this.schedulingStorageService.update(scheduling);
+        return of(true);
+      } else return of(false);
+    } catch (error) {
+      console.log(error);
+      return of(false);
+    }
+  }
+
   async syncTask(task: InspectionTask): Promise<Observable<boolean>> {
     try {
       if (!task.bitrixFolder.syncInfo.isSync) {
@@ -444,7 +577,7 @@ export class SyncInspectionService {
       if (task.environmentalForm.leadAreas.inspectionDate) {
         postData.FIELDS[
           task.environmentalForm.leadAreas.leadAreasBitrixMapping.inspectionDateCode
-        ] = task.environmentalForm.leadAreas.inspectionDate;
+        ] = task.environmentalForm.leadAreas.inspectionDate.toISOString();
       }
       if (task.environmentalForm.leadAreas.inspectionType) {
         postData.FIELDS[
@@ -518,7 +651,7 @@ export class SyncInspectionService {
       if (task.environmentalForm.asbestosAreas.inspectionDate) {
         postData.FIELDS[
           task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.inspectionDateCode
-        ] = task.environmentalForm.asbestosAreas.inspectionDate;
+        ] = task.environmentalForm.asbestosAreas.inspectionDate.toISOString();
       }
       if (task.environmentalForm.asbestosAreas.inspectionType) {
         postData.FIELDS[
@@ -595,7 +728,7 @@ export class SyncInspectionService {
       if (task.environmentalForm.moistureMappingAreas.dateTesed) {
         postData.FIELDS[
           task.environmentalForm.moistureMappingAreas.moistureMappingAreasBitrixMapping.dateTesedCode
-        ] = task.environmentalForm.moistureMappingAreas.dateTesed;
+        ] = task.environmentalForm.moistureMappingAreas.dateTesed.toISOString();
       }
       if (task.environmentalForm.moistureMappingAreas.inspectionType) {
         postData.FIELDS[
@@ -707,7 +840,7 @@ export class SyncInspectionService {
           ] = task.contactId;
           postData.FIELDS[
             task.environmentalForm.moldAreas.damageAreasBitrixMapping.startDateCode
-          ] = task.environmentalForm.startDate;
+          ] = task.environmentalForm.startDate.toISOString();
           postData.FIELDS[
             task.environmentalForm.moldAreas.damageAreasBitrixMapping.dealIdCode
           ] = task.id;
@@ -732,7 +865,7 @@ export class SyncInspectionService {
           ] = task.contactId;
           postData.FIELDS[
             task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.startDateCode
-          ] = task.environmentalForm.startDate;
+          ] = task.environmentalForm.startDate.toISOString();
           postData.FIELDS[
             task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.dealIdCode
           ] = task.id;
@@ -757,7 +890,7 @@ export class SyncInspectionService {
           ] = task.contactId;
           postData.FIELDS[
             task.environmentalForm.sootAreas.damageAreasBitrixMapping.startDateCode
-          ] = task.environmentalForm.startDate;
+          ] = task.environmentalForm.startDate.toISOString();
           postData.FIELDS[
             task.environmentalForm.sootAreas.damageAreasBitrixMapping.dealIdCode
           ] = task.id;

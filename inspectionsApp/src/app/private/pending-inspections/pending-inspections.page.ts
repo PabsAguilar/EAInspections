@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
-import { NavigationEnd, NavigationExtras, Router } from "@angular/router";
+import { NavigationExtras, Router } from "@angular/router";
 
 import { CallNumber } from "@ionic-native/call-number/ngx";
 import {
@@ -45,9 +45,7 @@ export class PendingInspectionsPage implements OnInit {
     private actionSheetController: ActionSheetController,
     private router: Router,
     private inspectionService: ItestDealService,
-    private alertController: AlertController,
     private loadingController: LoadingController,
-    private navController: NavController,
     private popoverController: PopoverController,
     private toast: ToastController,
     private launchNavigator: LaunchNavigator,
@@ -92,6 +90,10 @@ export class PendingInspectionsPage implements OnInit {
             .toLowerCase()
             .indexOf(searchTerm.trim().toLowerCase()) > -1 ||
           term.contactName
+            .toLowerCase()
+            .indexOf(searchTerm.trim().toLowerCase()) > -1 ||
+          term.id
+            .toString()
             .toLowerCase()
             .indexOf(searchTerm.trim().toLowerCase()) > -1
         );
@@ -206,7 +208,7 @@ export class PendingInspectionsPage implements OnInit {
     try {
       var settings = [
         {
-          name: "Get task from Bitrix24",
+          name: "Get Deals from Bitrix24",
           color: "primary",
           event: "getFromServer",
           iconName: "cloud-download-outline",
