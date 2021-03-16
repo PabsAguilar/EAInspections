@@ -19,6 +19,7 @@ export class AsbestosComponent implements OnInit {
   conditionList: any[] = [];
   labResultsList: any[] = [];
   selectAreaName: string;
+  @Input() readonly: boolean = false;
   @Input()
   get model(): Asbesto {
     return this._model;

@@ -6,6 +6,7 @@ import {
   PopoverController,
   ToastController,
 } from "@ionic/angular";
+import { Subscription } from "rxjs";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { Scheduling } from "src/app/models/scheduling";
@@ -25,6 +26,7 @@ export class SummaryPage implements OnInit {
     public callNumber: CallNumber,
     public schedulingStorageService: SchedulingStorageService,
     public inspectionStorageService: ItestDealService,
+
     private router: Router,
     private route: ActivatedRoute,
     private popoverController: PopoverController,
@@ -32,13 +34,25 @@ export class SummaryPage implements OnInit {
     private syncInspection: SyncInspectionService,
     private loadingController: LoadingController
   ) {}
+
+  subscription: Subscription;
   segmentOption: string = "inspections";
   inspectionTasks = Array<InspectionTask>();
   schedulingList: Scheduling[];
   ngOnInit() {}
 
+  async ionViewWillLeave() {
+    this.subscription.unsubscribe();
+  }
   async ionViewWillEnter() {
     try {
+      this.subscription = this.syncInspection
+        .getObservable()
+        .subscribe(async (data) => {
+          this.schedulingList = await this.schedulingStorageService.getAll();
+          this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+        });
+
       //TODO: Validate connection to internet
       this.schedulingList = await this.schedulingStorageService.getAll();
       this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
@@ -105,7 +119,8 @@ export class SummaryPage implements OnInit {
           case "syncToServer":
             console.log("dummySync");
             // await this.inspectionStorageService.syncPendingTask();
-            await this.schedulingStorageService.syncPending();
+            //await this.schedulingStorageService.syncPending();
+            await (await this.syncInspection.syncAllPending()).toPromise();
             this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
             this.schedulingList = await this.schedulingStorageService.getAll();
 
@@ -128,6 +143,20 @@ export class SummaryPage implements OnInit {
       .callNumber(item.contactPhone, true)
       .then((res) => console.log("Launched dialer!", res))
       .catch((err) => console.log("Error launching dialer", err));
+  }
+
+  async seeInspection(task) {
+    try {
+      console.log("Details clicked");
+      let navigationExtras: NavigationExtras = {
+        state: {
+          task: task,
+        },
+      };
+      this.router.navigate(["menu/environmental-inspection"], navigationExtras);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async seeInspectionDetails(task) {
@@ -174,7 +203,7 @@ export class SummaryPage implements OnInit {
           scheduling: scheduling,
         },
       };
-      this.router.navigate(["menu/scheduling-details"], navigationExtras);
+      this.router.navigate(["menu/scheduling"], navigationExtras);
     } catch (error) {
       console.log(error);
     }

@@ -2,18 +2,24 @@
   <ion-toolbar color="scheduling">
     <ion-title>Scheduling</ion-title>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button *ngIf="!scheduling.syncInfo.isSync"></ion-menu-button>
+      <ion-back-button defaulthref="" *ngIf="scheduling.syncInfo.isSync">
+      </ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <form novalidate>
+    <!-- <ion-item *ngIf="scheduling.syncInfo.isSync">
+ TODO: insert url to open in bitrix
+   </ion-item> -->
     <ion-item>
       <ion-label position="floating">Select Service</ion-label>
       <ion-select
         interface="popover"
         name="serviceType"
+        [disabled]="scheduling.syncInfo.isSync"
         #serviceType="ngModel"
         [(ngModel)]="scheduling.serviceType"
       >
@@ -31,6 +37,8 @@
     </ion-item> -->
     <ion-item lines="none">
       <ion-label>Contact</ion-label>
+    </ion-item>
+    <ion-item lines="none" *ngIf="!scheduling.syncInfo.isSync">
       <ion-chip
         [disabled]="!scheduling.serviceType"
         color="primary"
@@ -62,6 +70,7 @@
         #serviceAddress="ngModel"
         [(ngModel)]="scheduling.serviceAddress"
         type="text"
+        [disabled]="scheduling.syncInfo.isSync"
         required
       ></ion-input>
     </ion-item>
@@ -79,12 +88,17 @@
     <ion-item lines="none">
       <ion-label>Insurance Company</ion-label>
     </ion-item>
-    <ion-item lines="none" class="no-padding">
+    <ion-item
+      lines="none"
+      class="no-padding"
+      *ngIf="!scheduling.syncInfo.isSync"
+    >
       <ion-chip
+        *ngIf="!scheduling.syncInfo.isSync"
         color="primary"
         (click)="searchInsuranceContact()"
         slot="end"
-        [disabled]="!scheduling.serviceType"
+        [disabled]=" !scheduling.serviceType"
       >
         <ion-label>Contact</ion-label>
         <ion-icon name="search-circle-outline"></ion-icon>
@@ -93,7 +107,7 @@
         color="secondary"
         (click)="searchInsuranceCompany()"
         slot="end"
-        [disabled]="!scheduling.serviceType"
+        [disabled]=" !scheduling.serviceType"
       >
         <ion-label>Company</ion-label>
         <ion-icon name="search-circle-outline"></ion-icon>
@@ -129,6 +143,7 @@
       <ion-textarea
         name="notes"
         #notes="ngModel"
+        [disabled]="scheduling.syncInfo.isSync"
         [(ngModel)]="scheduling.notes"
         type="text"
       ></ion-textarea>
@@ -143,6 +158,7 @@
           [(ngModel)]="scheduling.openClaims"
           slot="start"
           name="cherry"
+          [disabled]="scheduling.syncInfo.isSync"
           color="danger"
         ></ion-toggle>
       </ion-item>
@@ -153,6 +169,7 @@
       <ion-select
         name="inspectorUserId"
         #inspectorUserId="ngModel"
+        [disabled]="scheduling.syncInfo.isSync"
         [(ngModel)]="scheduling.inspectorUserId"
         interface="popover"
         required
@@ -197,6 +214,7 @@
       <ion-datetime
         [min]="minDate"
         [max]="maxDate"
+        [disabled]="scheduling.syncInfo.isSync"
         name="scheduleDateTime"
         #scheduleDateTime="ngModel"
         [(ngModel)]="scheduling.scheduleDateTime"
@@ -219,6 +237,7 @@
         [min]="minDate"
         [max]="maxDate"
         name="scheduleDateTime"
+        [disabled]="scheduling.syncInfo.isSync"
         minuteValues="0,15,30,45"
         #scheduleDateTime="ngModel"
         [(ngModel)]="scheduling.scheduleDateTime"
@@ -227,7 +246,7 @@
       ></ion-datetime>
     </ion-item>
 
-    <ion-row class="ion-padding">
+    <ion-row class="ion-padding" *ngIf="!scheduling.syncInfo.isSync">
       <ion-col>
         <ion-button
           full

@@ -24,6 +24,7 @@
   </ion-item>
   <app-inspection-general
     ngDefaultControl
+    [readonly]="readonly"
     (generalInfoChanged)="UpdateEntity($event)"
     [(generalInfo)]="task.environmentalForm.generalInfoInspection"
   >
@@ -32,6 +33,7 @@
   <app-areas-mold
     title="Mold Inspection"
     ngDefaultControl
+    [readonly]="readonly"
     (modelChanged)="UpdateEntity($event)"
     [(model)]="task.environmentalForm.moldAreas"
   >
@@ -40,6 +42,7 @@
   <app-areas-mold
     title="Bacteria (CAT3) Inspection"
     ngDefaultControl
+    [readonly]="readonly"
     (modelChanged)="UpdateEntity($event)"
     [(model)]="task.environmentalForm.bacteriasAreas"
   >
@@ -48,6 +51,7 @@
   <app-areas-mold
     title="Soot Inspection"
     ngDefaultControl
+    [readonly]="readonly"
     (modelChanged)="UpdateEntity($event)"
     [(model)]="task.environmentalForm.sootAreas"
   >
@@ -56,6 +60,7 @@
   <app-areas-moisture-mapping
     title="Moisture Mapping (MP)"
     ngDefaultControl
+    [readonly]="readonly"
     (modelChanged)="UpdateEntity($event)"
     [(model)]="task.environmentalForm.moistureMappingAreas"
   >
@@ -64,6 +69,7 @@
   <app-areas-asbestos
     title="Asbestos"
     ngDefaultControl
+    [readonly]="readonly"
     (modelChanged)="UpdateEntity($event)"
     [(model)]="task.environmentalForm.asbestosAreas"
   >
@@ -72,19 +78,20 @@
   <app-areas-lead
     title="Lead"
     ngDefaultControl
+    [readonly]="readonly"
     (modelChanged)="UpdateEntity($event)"
     [(model)]="task.environmentalForm.leadAreas"
   >
   </app-areas-lead>
 
-  <ion-item class="ion-margin" lines="none">
+  <ion-item class="ion-margin" lines="none" *ngIf="!readonly">
     <ion-label>Save for later</ion-label>
     <ion-fab-button color="primary" (click)="back()" class="ion-margin">
       <ion-icon name="save-outline"></ion-icon>
     </ion-fab-button>
   </ion-item>
 
-  <ion-item class="ion-margin" lines="none">
+  <ion-item class="ion-margin" lines="none" *ngIf="!readonly">
     <ion-label>Complete Inspection</ion-label>
     <ion-fab-button color="success" (click)="completeTask()" class="ion-margin">
       <ion-icon name="walk-outline"></ion-icon>

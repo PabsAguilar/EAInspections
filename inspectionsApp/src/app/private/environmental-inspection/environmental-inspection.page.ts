@@ -8,6 +8,7 @@ import {
   ToastController,
 } from "@ionic/angular";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
+import { InspectionStatus } from "src/app/models/enums";
 import { EnvironmentalForm } from "src/app/models/environmental-form";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
@@ -36,6 +37,7 @@ export class EnvironmentalInspectionPage implements OnInit {
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
+      this.readonly = this.task.internalStatus == InspectionStatus.Completed;
       if (!this.task.environmentalForm) {
         inspectionService
           .initializeEnvironmentalTask(this.task)
@@ -43,6 +45,8 @@ export class EnvironmentalInspectionPage implements OnInit {
             this.task = x;
           })
           .catch(async (error) => {
+            console.log(error);
+
             var message = this.toast.create({
               message: error,
               color: "danger",
@@ -53,7 +57,7 @@ export class EnvironmentalInspectionPage implements OnInit {
       }
     }
   }
-
+  readonly: boolean = false;
   async ionViewDidEnter() {
     try {
       var top = await this.loadingController.getTop();
@@ -62,6 +66,7 @@ export class EnvironmentalInspectionPage implements OnInit {
       }
       await this.validateAgreements();
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -74,11 +79,20 @@ export class EnvironmentalInspectionPage implements OnInit {
 
   async validateAgreements() {
     if (
-      !this.task.agreements ||
-      (this.task.agreements.signature.images.length <= 0 &&
-        !this.task.agreements.hasOpen)
+      !this.task.iTestAgreements ||
+      (this.task.iTestAgreements.signature.images.length <= 0 &&
+        !this.task.iTestAgreements.hasOpen)
     ) {
-      await this.inspectionNavigate.openAgreementsPage(this.task);
+      await this.inspectionNavigate.openItestAgreementsPage(this.task);
+      return;
+    }
+
+    if (
+      !this.task.expertNetworkAgreements ||
+      (this.task.expertNetworkAgreements.signature.images.length <= 0 &&
+        !this.task.expertNetworkAgreements.hasOpen)
+    ) {
+      await this.inspectionNavigate.openExpertNetworkAgreementsPage(this.task);
     }
   }
 
@@ -90,9 +104,15 @@ export class EnvironmentalInspectionPage implements OnInit {
     try {
       var settings = [
         {
-          name: "See Agreements",
-          color: "primary",
+          name: "ITest Agreements",
+          color: "success",
           event: "seeAgreement",
+          iconName: "reader-outline",
+        },
+        {
+          name: "Expert Network Agreements",
+          color: "secondary",
+          event: "seeAgreementEN",
           iconName: "reader-outline",
         },
       ];
@@ -112,7 +132,23 @@ export class EnvironmentalInspectionPage implements OnInit {
         switch (result.data.event) {
           case "seeAgreement":
             try {
-              await this.inspectionNavigate.openAgreementsPage(this.task);
+              await this.inspectionNavigate.openItestAgreementsPage(this.task);
+            } catch (error) {
+              var message = this.toast.create({
+                message: error,
+                color: "danger",
+                duration: 2000,
+              });
+              (await message).present();
+            }
+
+            break;
+
+          case "seeAgreementEN":
+            try {
+              await this.inspectionNavigate.openExpertNetworkAgreementsPage(
+                this.task
+              );
             } catch (error) {
               var message = this.toast.create({
                 message: error,
@@ -173,8 +209,6 @@ export class EnvironmentalInspectionPage implements OnInit {
 
               (await message).present();
 
-          
-
               (await this.syncInspectionService.syncTask(this.task)).subscribe(
                 async (x) => {
                   if (x) {
@@ -211,8 +245,10 @@ export class EnvironmentalInspectionPage implements OnInit {
 
   public async UpdateEntity($event): Promise<void> {
     try {
-      this.task.internalStatus = "In Progress";
-      await this.inspectionService.update(this.task);
+      if (this.task.internalStatus != InspectionStatus.Completed) {
+        this.task.internalStatus = "In Progress";
+        await this.inspectionService.update(this.task);
+      }
     } catch (error) {
       var message = this.toast.create({
         message: error,

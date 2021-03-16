@@ -39,6 +39,7 @@ export class MoistureMappingComponent implements OnInit {
   }
   _model: MoistureMapping = new MoistureMapping();
   @Input() title: string = "";
+  @Input() readonly: boolean = false;
 
   @Output() modelChanged: any = new EventEmitter();
 

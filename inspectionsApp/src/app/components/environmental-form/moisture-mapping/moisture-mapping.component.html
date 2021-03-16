@@ -22,6 +22,7 @@
     <ion-select
       interface="popover"
       name="area"
+      [disabled]="readonly"
       [(ngModel)]="_model.area"
       (ionChange)="changeModel($event)"
     >
@@ -40,6 +41,7 @@
       [(ngModel)]="_model.roomTemp"
       (ionChange)="changeModel($event)"
       type="number"
+      [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
@@ -50,6 +52,7 @@
       [(ngModel)]="_model.relativeHumidity"
       (ionChange)="changeModel($event)"
       type="number"
+      [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
@@ -58,6 +61,7 @@
     <ion-input
       [(ngModel)]="_model.dewPoint"
       (ionChange)="changeModel($event)"
+      [readonly]="readonly"
       type="number"
       required
     ></ion-input>
@@ -67,6 +71,7 @@
     <ion-input
       [(ngModel)]="_model.standardTemperatureNorth"
       (ionChange)="changeModel($event)"
+      [readonly]="readonly"
       type="number"
       required
     ></ion-input>
@@ -76,6 +81,7 @@
     <ion-input
       [(ngModel)]="_model.standardTemperatureWest"
       (ionChange)="changeModel($event)"
+      [readonly]="readonly"
       type="number"
       required
     ></ion-input>
@@ -86,6 +92,7 @@
       [(ngModel)]="_model.standardTemperatureSouth"
       (ionChange)="changeModel($event)"
       type="number"
+      [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
@@ -95,6 +102,7 @@
       [(ngModel)]="_model.standardTemperatureEast"
       (ionChange)="changeModel($event)"
       type="number"
+      [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
@@ -103,6 +111,7 @@
     <ion-input
       [(ngModel)]="_model.standardTemperatureCeiling"
       (ionChange)="changeModel($event)"
+      [readonly]="readonly"
       type="number"
       required
     ></ion-input>
@@ -112,6 +121,7 @@
     <ion-input
       [(ngModel)]="_model.standardTemperatureFloor"
       (ionChange)="changeModel($event)"
+      [readonly]="readonly"
       type="number"
       required
     ></ion-input>

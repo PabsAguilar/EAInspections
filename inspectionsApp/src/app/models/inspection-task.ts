@@ -30,10 +30,12 @@ export class InspectionTask implements IStorageModel {
   internalStatus: string;
   comprehesiveForm: ComprehensiveForm;
   environmentalForm: EnvironmentalForm;
-  agreements: Agreements;
+  iTestAgreements: Agreements;
+  expertNetworkAgreements: Agreements;
   bitrixFolder: BitrixFolder;
   constructor() {
-    this.agreements = new Agreements();
+    this.iTestAgreements = new Agreements();
+    this.expertNetworkAgreements = new Agreements();
     this.bitrixFolder = new BitrixFolder();
   }
 }

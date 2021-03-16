@@ -40,16 +40,12 @@ export class SchedulingStorageService implements IStorage {
     return this.genericStorage.delete(item);
   }
 
-  async syncPending() {
+  async getPendingToSync() {
     var list = await this.getAll();
     if (list == null || list.length == 0) {
-      return false;
+      return [];
     }
-    list.forEach((element) => {
-      if (element.internalStatus === "Pending") {
-        element.internalStatus = "Completed";
-      }
-    });
-    return await this.updateAll(list);
+
+    return list.filter((x) => x.internalStatus === "Pending");
   }
 }

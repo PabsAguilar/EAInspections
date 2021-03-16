@@ -32,6 +32,7 @@ export class AreaMoldComponent implements OnInit {
   listRecomendations: any[] = [];
   selectAreaName: string;
   fields: any[];
+  @Input() readonly: boolean = false;
   @Input()
   get model(): DamageInspection {
     return this._model;

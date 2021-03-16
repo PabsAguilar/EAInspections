@@ -23,6 +23,7 @@
     <ion-label position="floating">Inspection Type</ion-label>
     <ion-select
       interface="popover"
+      [disabled]="readonly"
       [interfaceOptions]="{ cssClass: 'wider-popover' }"
       name="type"
       [(ngModel)]="_model.inspectionType"
@@ -39,6 +40,7 @@
   <ion-item lines="inset">
     <ion-label position="floating">Date Tesed</ion-label>
     <ion-datetime
+      [disabled]="readonly"
       [(ngModel)]="_model.dateTesedString"
       displayFormat="MMMM DD YY"
       pickerFormat="MMMM DD YY"
@@ -48,6 +50,7 @@
   <app-moisture-mapping
     *ngFor="let area of _model.areamoistureMapping; let i = index"
     ngDefaultControl
+    [readonly]="readonly"
     [title]="'Area ' + (i + 1)"
     (modelChanged)="AreaUpdated($event)"
     [(model)]="_model.areamoistureMapping[i]"

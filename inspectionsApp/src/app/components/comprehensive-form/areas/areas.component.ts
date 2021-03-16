@@ -15,7 +15,7 @@ export class AreasComponent implements OnInit {
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
-
+  @Input() readonly: boolean = false;
   @Input()
   get InspectionAreas(): Area[] {
     return this.areas;

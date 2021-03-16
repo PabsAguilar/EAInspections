@@ -1,19 +1,7 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import {
-  LoadingController,
-  PopoverController,
-  ToastController,
-} from "@ionic/angular";
+import { LoadingController, ToastController } from "@ionic/angular";
 import SignaturePad from "signature_pad";
-import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
-
 import { Agreements } from "src/app/models/agreements";
 import { BitrixPicture } from "src/app/models/bitrix-picture";
 import { InspectionStatus } from "src/app/models/enums";
@@ -22,11 +10,11 @@ import { InspectionNavigateService } from "src/app/services/inspection-navigate.
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 
 @Component({
-  selector: "app-environmental-agreements",
-  templateUrl: "./environmental-agreements.page.html",
-  styleUrls: ["./environmental-agreements.page.scss"],
+  selector: "app-expert-network-agreement",
+  templateUrl: "./expert-network-agreement.page.html",
+  styleUrls: ["./expert-network-agreement.page.scss"],
 })
-export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
+export class ExpertNetworkAgreementPage implements OnInit {
   @ViewChild("canvas", { static: true }) signaturePadElement;
   signaturePad: any;
   canvasWidth: number;
@@ -44,11 +32,12 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
-      if (!this.task.iTestAgreements) {
-        this.task.iTestAgreements = new Agreements();
+      if (!this.task.expertNetworkAgreements) {
+        this.task.expertNetworkAgreements = new Agreements();
       }
     }
   }
+
   ngAfterViewInit(): void {
     this.signaturePad = new SignaturePad(
       this.signaturePadElement.nativeElement
@@ -71,10 +60,6 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
     this.signaturePad.clear();
   }
 
-  canUpdate() {
-    return this.task.internalStatus != InspectionStatus.Completed;
-  }
-
   undo() {
     const data = this.signaturePad.toData();
     if (data) {
@@ -94,7 +79,18 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
   }
 
   canAdd(): boolean {
-    return this.task.iTestAgreements.signature.images.length <= 2;
+    return this.task.expertNetworkAgreements.signature.images.length <= 2;
+  }
+
+  canUpdate(): boolean {
+    return this.task.internalStatus != InspectionStatus.Completed;
+  }
+
+  showSignatureField() {
+    return this.task.expertNetworkAgreements.signature.images.length <= 1 &&
+      this.task.internalStatus != InspectionStatus.Completed
+      ? "active"
+      : "inactive";
   }
 
   async save() {
@@ -103,8 +99,8 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
       signature.base64Image = this.signaturePad.toDataURL();
       signature.name = this.nameSignature;
       signature.isSync = false;
-      this.task.iTestAgreements.signature.images.push(signature);
-      if (this.task.iTestAgreements.signature.images.length > 0) {
+      this.task.expertNetworkAgreements.signature.images.push(signature);
+      if (this.task.expertNetworkAgreements.signature.images.length > 0) {
         this.UpdateEntity();
       }
       var message = this.toast.create({
@@ -126,7 +122,7 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
   }
 
   dropSignature(index) {
-    this.task.iTestAgreements.signature.images.splice(index, 1);
+    this.task.expertNetworkAgreements.signature.images.splice(index, 1);
     this.UpdateEntity();
   }
 
@@ -157,7 +153,7 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
       this.signaturePad = new SignaturePad(
         this.signaturePadElement.nativeElement
       );
-      this.task.iTestAgreements.hasOpen = true;
+      this.task.expertNetworkAgreements.hasOpen = true;
     } catch (error) {
       console.log(error);
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
   AlertController,
   LoadingController,
@@ -41,11 +42,20 @@ export class SchedulingPage implements OnInit {
     private authenticationService: AuthenticationService,
     private navigateService: InspectionNavigateService,
     private loading: LoadingController,
+
     private alertController: AlertController,
     private syncInspectionService: SyncInspectionService,
-    private toast: ToastController
+    private toast: ToastController,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.scheduling = new Scheduling();
+    this.route.queryParams.subscribe((params) => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.scheduling = this.router.getCurrentNavigation().extras.state.scheduling;
+        this.scheduling.scheduleDateTime = (new Date(this.scheduling.scheduleDateTime)).toISOString();
+      }
+    });
     authenticationService.getUser().then((x) => {
       this.user = x;
       this.scheduling.inspectorUserId = x.userId;
@@ -179,6 +189,10 @@ export class SchedulingPage implements OnInit {
                     duration: 5000,
                   });
                   (await message).present();
+
+                  this.syncInspectionService.publishSomeData({
+                    syncItem: "deal",
+                  });
                 } else {
                   var message = this.toast.create({
                     message: "Sync failed, please start a manual sync.",

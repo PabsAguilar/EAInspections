@@ -55,6 +55,10 @@ const routes: Routes = [
     path: 'company-search',
     loadChildren: () => import('./company-search/company-search.module').then( m => m.CompanySearchPageModule)
   },
+  {
+    path: 'expert-network-agreement',
+    loadChildren: () => import('./expert-network-agreement/expert-network-agreement.module').then( m => m.ExpertNetworkAgreementPageModule)
+  },
 ];
 
 @NgModule({

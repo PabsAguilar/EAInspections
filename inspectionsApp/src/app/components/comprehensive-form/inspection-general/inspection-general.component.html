@@ -23,6 +23,7 @@
       [(ngModel)]="generalInfoInspection.propertyYear"
       (ionChange)="changeModel($event)"
       name="propertyYear"
+      [disabled]="readonly"
       type="number"
       required
     ></ion-input>
@@ -33,6 +34,7 @@
     <ion-select
       interface="popover"
       name="propertyType"
+      [disabled]="readonly"
       (ionChange)="changeModel($event)"
       [(ngModel)]="generalInfoInspection.propertyType"
     >
@@ -48,6 +50,7 @@
   <app-slides-photos
     title="Picture of House Number"
     ngDefaultControl
+    [readonly]="readonly"
     name="pictureHouseNumbers"
     [(ngModel)]="generalInfoInspection.pictureHouseNumbers"
     (photoChanged)="changeModel($event)"
@@ -56,6 +59,7 @@
   <app-slides-photos
     title="Pictures of front house"
     ngDefaultControl
+    [readonly]="readonly"
     name="picturesFrontHouse"
     [(ngModel)]="generalInfoInspection.picturesFrontHouse"
     (photoChanged)="changeModel($event)"
@@ -67,6 +71,7 @@
       <ion-input
         [(ngModel)]="generalInfoInspection.interiorTemperature"
         (ionChange)="changeModel($event)"
+        [readonly]="readonly"
         name="interiorTemperature"
         type="number"
         required
@@ -80,6 +85,7 @@
         (ionChange)="changeModel($event)"
         name="exteriorRelativeHumidity"
         type="number"
+        [readonly]="readonly"
         required
       ></ion-input>
     </ion-item>
@@ -89,6 +95,7 @@
       <ion-select
         interface="popover"
         name="HVACSystemCondition"
+        [disabled]="readonly"
         (ionChange)="changeModel($event)"
         [(ngModel)]="generalInfoInspection.HVACSystemCondition"
       >
@@ -106,6 +113,7 @@
       <ion-select
         interface="popover"
         name="ductsCondition"
+        [disabled]="readonly"
         (ionChange)="changeModel($event)"
         [(ngModel)]="generalInfoInspection.ductsCondition"
       >
@@ -122,6 +130,7 @@
       <ion-label position="floating">Attic Condition</ion-label>
       <ion-select
         interface="popover"
+        [disabled]="readonly"
         name="atticCondition"
         (ionChange)="changeModel($event)"
         [(ngModel)]="generalInfoInspection.atticCondition"

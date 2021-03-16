@@ -60,6 +60,7 @@ export class LeadComponent implements OnInit {
   }
   _model: Lead = new Lead();
   @Input() title: string = "";
+  @Input() readonly: boolean = false;
 
   @Output() modelChanged: any = new EventEmitter();
 

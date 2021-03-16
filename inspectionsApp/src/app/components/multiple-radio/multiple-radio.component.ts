@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 })
 export class MultipleRadioComponent implements OnInit {
   @Input() options: any[];
-
+  @Input() readonly: boolean = false;
   @Input()
   get data(): string[] {
     return this._selected;

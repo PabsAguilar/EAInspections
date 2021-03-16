@@ -30,6 +30,7 @@ export class AreaComponent implements OnInit {
     this.changeModel(null);
   }
   area: Area = new Area();
+  @Input() readonly: boolean = false;
   @Input() title: string = "";
   @Output() InspectionAreaChanged: any = new EventEmitter();
 

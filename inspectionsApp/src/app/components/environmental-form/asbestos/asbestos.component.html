@@ -22,6 +22,7 @@
     <ion-select
       interface="popover"
       name="materialLocation"
+      [disabled]="readonly"
       [(ngModel)]="_model.materialLocation"
       (ionChange)="changeModel($event)"
     >
@@ -40,6 +41,7 @@
       [(ngModel)]="_model.materialDescription"
       (ionChange)="changeModel($event)"
       type="text"
+      [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
@@ -49,6 +51,7 @@
     <ion-input
       [(ngModel)]="_model.totalQuantity"
       (ionChange)="changeModel($event)"
+      [readonly]="readonly"
       type="number"
       required
     ></ion-input>
@@ -58,6 +61,7 @@
     <ion-select
       interface="popover"
       name="F_NF"
+      [disabled]="readonly"
       [(ngModel)]="_model.F_NF"
       (ionChange)="changeModel($event)"
     >
@@ -75,6 +79,7 @@
     <ion-select
       interface="popover"
       name="condition"
+      [disabled]="readonly"
       [(ngModel)]="_model.condition"
       (ionChange)="changeModel($event)"
     >
@@ -92,6 +97,7 @@
     <ion-select
       interface="popover"
       name="labResults"
+      [disabled]="readonly"
       [(ngModel)]="_model.labResults"
       (ionChange)="changeModel($event)"
     >
@@ -106,6 +112,7 @@
   <ion-item>
     <ion-label position="floating">Observations and Recommendations</ion-label>
     <ion-textarea
+      [readonly]="readonly"
       [(ngModel)]="_model.observations"
       (ionChange)="changeModel($event)"
       type="text"

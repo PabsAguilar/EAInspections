@@ -116,17 +116,41 @@ export class InspectionNavigateService {
     }
   }
 
-  async openAgreementsPage(selectedTask: InspectionTask) {
+  async openExpertNetworkAgreementsPage(selectedTask: InspectionTask) {
     const loading = await this.loadingController.create({
       message: "Loading Agreements...",
     });
     await loading.present();
 
     try {
-      var path = "";
-      if (selectedTask.inspectionType == InspectionType.Environmental) {
-        path = "menu/environmental-agreements";
-      }
+      var path = "menu/expert-network-agreement";
+
+      let navigationExtras: NavigationExtras = {
+        state: {
+          task: selectedTask,
+        },
+      };
+
+      await this.navController.navigateForward([path], navigationExtras);
+    } catch (error) {
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+    }
+  }
+
+  async openItestAgreementsPage(selectedTask: InspectionTask) {
+    const loading = await this.loadingController.create({
+      message: "Loading Agreements...",
+    });
+    await loading.present();
+
+    try {
+      var path = "menu/environmental-agreements";
+
       let navigationExtras: NavigationExtras = {
         state: {
           task: selectedTask,

@@ -42,6 +42,14 @@
 
         <ion-item-sliding *ngFor="let task of group.list ">
           <ion-item-options side="end">
+            <ion-item-option (click)="seeInspection(task)" color="white">
+              <ion-icon
+                color="primary"
+                style="font-size: xx-large"
+                name="create-outline"
+              ></ion-icon
+            ></ion-item-option>
+
             <ion-item-option (click)="call(task)" color="white">
               <ion-icon
                 color="success"
@@ -69,7 +77,7 @@
               ></ion-icon
             ></ion-item-option>
           </ion-item-options>
-          <ion-item class="ion-no-padding" (click)="seeInspectionDetails(task)">
+          <ion-item class="ion-no-padding" (click)="seeInspection(task)">
             <div class="ion-text-center ion-padding">
               <ion-icon
                 *ngIf="task.internalStatus =='Pending'"
@@ -93,17 +101,20 @@
                 <h2>{{task.contactName}}</h2>
 
                 <p>{{task.serviceAddress}}</p>
+                <p>
+                  <ion-badge
+                    class="ion-no-margin"
+                    *ngIf="task.internalStatus === 'Completed'"
+                    color="success"
+                    slot="end"
+                    >Submitted</ion-badge
+                  >
+                </p>
               </ion-label>
             </div>
           </ion-item>
 
-          <!-- <ion-badge
-          class="ion-no-margin"
-          *ngIf="task.internalStatus === 'Completed'"
-          color="success"
-          slot="end"
-          >Completed</ion-badge
-        >
+          <!--
         <ion-badge
           class="ion-no-margin"
           color="warning"
@@ -116,7 +127,7 @@
       </ion-item-group>
     </div>
     <ng-template #noItems>
-      <ion-item> No deals found. </ion-item>
+      <ion-item> No inspection found. </ion-item>
     </ng-template>
   </ion-list>
 
@@ -132,21 +143,23 @@
           <h2>{{item.contact.firstName +" "+ item.contact.lastName}}</h2>
           <h3>{{item.serviceType}}</h3>
           <p>{{item.scheduleDateTime | date: 'MMMM dd, yyyy hh:mm a'}}</p>
+          <p>
+            <ion-badge
+              class="ion-no-margin"
+              *ngIf="item.internalStatus === 'Completed'"
+              color="success"
+              slot="end"
+              >Scheduled</ion-badge
+            >
+            <ion-badge
+              color="warning"
+              class="ion-no-margin"
+              *ngIf="item.internalStatus === 'Pending'"
+              slot="end"
+              >Pending Sync</ion-badge
+            >
+          </p>
         </ion-label>
-        <ion-badge
-          class="ion-no-margin"
-          *ngIf="item.internalStatus === 'Completed'"
-          color="success"
-          slot="end"
-          >Completed</ion-badge
-        >
-        <ion-badge
-          color="warning"
-          class="ion-no-margin"
-          *ngIf="item.internalStatus === 'Pending'"
-          slot="end"
-          >Pending Sync</ion-badge
-        >
       </ion-item>
     </ion-item-sliding>
   </ion-list>

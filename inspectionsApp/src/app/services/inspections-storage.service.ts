@@ -57,4 +57,13 @@ export class InspectionsStorageService implements IStorage {
   clear(): Promise<boolean> {
     return this.inspectionStore.clear();
   }
+
+  async getPendingToSync() {
+    var list = await this.getAll();
+    if (list == null || list.length == 0) {
+      return [];
+    }
+
+    return list.filter((x) => x.internalStatus === "Pending");
+  }
 }

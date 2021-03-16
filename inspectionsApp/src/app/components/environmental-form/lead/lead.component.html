@@ -22,6 +22,7 @@
     <ion-select
       interface="popover"
       name="name"
+      [disabled]="readonly"
       [(ngModel)]="_model.sample"
       (ionChange)="changeModel($event)"
     >
@@ -39,6 +40,7 @@
     <ion-select
       interface="popover"
       name="cardinalDirection"
+      [disabled]="readonly"
       [(ngModel)]="_model.cardinalDirection"
       (ionChange)="changeModel($event)"
     >
@@ -58,6 +60,7 @@
       [(ngModel)]="_model.dimensionCm2"
       (ionChange)="changeModel($event)"
       type="number"
+      [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
@@ -68,6 +71,7 @@
     <ion-select
       interface="popover"
       name="material"
+      [disabled]="readonly"
       [(ngModel)]="_model.material"
       (ionChange)="changeModel($event)"
     >
@@ -86,6 +90,7 @@
     <ion-select
       interface="popover"
       name="condition"
+      [disabled]="readonly"
       [(ngModel)]="_model.typeOfSample"
       (ionChange)="changeModel($event)"
     >
@@ -103,6 +108,7 @@
     <ion-select
       interface="popover"
       name="labResults"
+      [disabled]="readonly"
       [(ngModel)]="_model.labResults"
       (ionChange)="changeModel($event)"
     >
@@ -119,6 +125,7 @@
     <ion-textarea
       [(ngModel)]="_model.observations"
       (ionChange)="changeModel($event)"
+      [readonly]="readonly"
       type="text"
     ></ion-textarea>
   </ion-item>

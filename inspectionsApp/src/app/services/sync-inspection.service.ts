@@ -4,7 +4,7 @@ import { ToastController } from "@ionic/angular";
 import { resolve } from "dns";
 import { symlinkSync } from "fs";
 import { element } from "protractor";
-import { Observable, of } from "rxjs";
+import { Observable, of, Subject } from "rxjs";
 import { observeOn } from "rxjs/operators";
 import { BitrixPicture, BitrixPictureList } from "../models/bitrix-picture";
 import { Company } from "../models/company";
@@ -31,6 +31,16 @@ export class SyncInspectionService {
     private schedulingStorageService: SchedulingStorageService,
     private toast: ToastController
   ) {}
+
+  private syncEvent = new Subject<any>();
+
+  publishSomeData(data: any) {
+    this.syncEvent.next(data);
+  }
+
+  getObservable(): Subject<any> {
+    return this.syncEvent;
+  }
 
   async syncSubfolder(task: InspectionTask): Promise<number> {
     try {
@@ -175,10 +185,17 @@ export class SyncInspectionService {
     );
     await this.inspectionStorage.update(task);
 
-    task.agreements.signature = await this.syncListImages(
-      task.agreements.signature,
+    task.iTestAgreements.signature = await this.syncListImages(
+      task.iTestAgreements.signature,
       task.bitrixFolder,
-      "AgreementSignature"
+      "ItestAgreementSignature"
+    );
+
+    await this.inspectionStorage.update(task);
+    task.expertNetworkAgreements.signature = await this.syncListImages(
+      task.expertNetworkAgreements.signature,
+      task.bitrixFolder,
+      "ENAgreementSignature"
     );
     await this.inspectionStorage.update(task);
 
@@ -193,25 +210,25 @@ export class SyncInspectionService {
       };
 
       if (task.environmentalForm.generalInfoInspection.propertyYear)
-        postData["UF_CRM_1606466447"] =
+        postData.fields["UF_CRM_1606466447"] =
           task.environmentalForm.generalInfoInspection.propertyYear;
       if (task.environmentalForm.generalInfoInspection.propertyType)
-        postData["UF_CRM_1606466564"] =
+        postData.fields["UF_CRM_1606466564"] =
           task.environmentalForm.generalInfoInspection.propertyType;
       if (task.environmentalForm.generalInfoInspection.interiorTemperature)
-        postData["UF_CRM_1606466601"] =
+        postData.fields["UF_CRM_1606466601"] =
           task.environmentalForm.generalInfoInspection.interiorTemperature;
       if (task.environmentalForm.generalInfoInspection.exteriorRelativeHumidity)
-        postData["UF_CRM_1606466624"] =
+        postData.fields["UF_CRM_1606466624"] =
           task.environmentalForm.generalInfoInspection.exteriorRelativeHumidity;
       if (task.environmentalForm.generalInfoInspection.HVACSystemCondition)
-        postData["UF_CRM_1606466669"] =
+        postData.fields["UF_CRM_1606466669"] =
           task.environmentalForm.generalInfoInspection.HVACSystemCondition;
       if (task.environmentalForm.generalInfoInspection.ductsCondition)
-        postData["UF_CRM_1606466692"] =
+        postData.fields["UF_CRM_1606466692"] =
           task.environmentalForm.generalInfoInspection.ductsCondition;
       if (task.environmentalForm.generalInfoInspection.atticCondition)
-        postData["UF_CRM_1606466732"] =
+        postData.fields["UF_CRM_1606466732"] =
           task.environmentalForm.generalInfoInspection.atticCondition;
 
       if (
@@ -247,21 +264,38 @@ export class SyncInspectionService {
           ],
         };
       }
-      if (task.agreements.signature.images.length > 0) {
+      if (task.iTestAgreements.signature.images.length > 0) {
         postData.fields["UF_CRM_1612683169"] =
           task.environmentalForm.generalInfoInspection.agreementSignedYesNo;
 
-        var x = task.agreements.signature.images.map((x, index) => {
-          return {
-            fileData: [
-              `AgreementSignature-${index}-${task.id}-${Math.floor(
-                Math.random() * 1000
-              )}.png`,
-              x.base64Image.replace("data:image/png;base64,", ""),
-            ],
-          };
-        });
-        postData.fields["UF_CRM_1612780368"] = x;
+        var itestSignature = task.iTestAgreements.signature.images.map(
+          (x, index) => {
+            return {
+              fileData: [
+                `ITestSig-${x.name}-${task.id}-${Math.floor(
+                  Math.random() * 1000
+                )}.png`,
+                x.base64Image.replace("data:image/png;base64,", ""),
+              ],
+            };
+          }
+        );
+
+        var expertNSignature = task.expertNetworkAgreements.signature.images.map(
+          (x, index) => {
+            return {
+              fileData: [
+                `ENSignature-${x.name}-${task.id}-${Math.floor(
+                  Math.random() * 1000
+                )}.png`,
+                x.base64Image.replace("data:image/png;base64,", ""),
+              ],
+            };
+          }
+        );
+
+        var signatures = itestSignature.concat(expertNSignature);
+        postData.fields["UF_CRM_1612780368"] = signatures;
       }
 
       var response = await this.bitrix.updateDeal(postData).toPromise();
@@ -331,6 +365,52 @@ export class SyncInspectionService {
     return company;
   }
 
+  async syncAllPending(): Promise<Observable<boolean>> {
+    var schedulingList = await this.schedulingStorageService.getPendingToSync();
+    Promise.all(
+      (await schedulingList).map(async (x) => {
+        (await this.syncSchedulingInspection(x)).subscribe(async (y) => {
+          if (!y) {
+          } else {
+            var message = this.toast.create({
+              message: "Sync failed, please try again later.",
+              color: "warning",
+              duration: 2000,
+            });
+            (await message).present();
+          }
+        });
+      })
+    );
+
+    var inspectionList = await this.inspectionStorage.getPendingToSync();
+    Promise.all(
+      (await inspectionList).map(async (x) => {
+        (await this.syncTask(x)).subscribe(async (y) => {
+          if (!y) {
+          } else {
+            var message = this.toast.create({
+              message:
+                "Sync failed for " + x.title + ", please try again later.",
+              color: "warning",
+              duration: 2000,
+            });
+            (await message).present();
+          }
+        });
+      })
+    );
+    if (schedulingList.length == 0 && inspectionList.length == 0) {
+      var message = this.toast.create({
+        message: "There is no pending items to sync.",
+        color: "primary",
+        duration: 2000,
+      });
+      (await message).present();
+    }
+    return of(true);
+  }
+
   async syncSchedulingInspection(
     scheduling: Scheduling
   ): Promise<Observable<boolean>> {
@@ -393,7 +473,7 @@ export class SyncInspectionService {
         scheduling.syncInfo.isSync = true;
         scheduling.syncInfo.syncCode = response.result;
         scheduling.internalStatus = InspectionStatus.Completed;
-        this.schedulingStorageService.update(scheduling);
+        await this.schedulingStorageService.update(scheduling);
         return of(true);
       } else return of(false);
     } catch (error) {
@@ -543,6 +623,7 @@ export class SyncInspectionService {
         return of(true);
       } else {
         await this.inspectionStorage.update(task);
+        return of(false);
       }
     } catch (error) {
       var message = this.toast.create({

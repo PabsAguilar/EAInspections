@@ -8,7 +8,10 @@
   <ion-fab-button
     (click)="takePicture()"
     class="ion-margin"
-    *ngIf="_photoArray.images.length < _photoArray.maxPictures"
+    *ngIf="
+      !readonly &&
+      _photoArray.images.length < _photoArray.maxPictures
+    "
   >
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
@@ -27,7 +30,12 @@
         tappable
         (click)="openPreview(x.base64Image)"
       />
-      <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+      <ion-fab
+        horizontal="end"
+        vertical="bottom"
+        slot="fixed"
+        *ngIf="!readonly"
+      >
         <ion-fab-button color="danger" (click)="deletePictureFrontHouse(i)">
           <ion-icon name="trash-outline"></ion-icon>
         </ion-fab-button>

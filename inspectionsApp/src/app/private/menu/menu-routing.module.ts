@@ -51,6 +51,21 @@ const routes: Routes = [
             "../environmental-agreements/environmental-agreements.module"
           ).then((m) => m.EnvironmentalAgreementsPageModule),
       },
+
+      {
+        path: "expert-network-agreement",
+        loadChildren: () =>
+          import(
+            "../expert-network-agreement/expert-network-agreement.module"
+          ).then((m) => m.ExpertNetworkAgreementPageModule),
+      },
+      {
+        path: "scheduling",
+        loadChildren: () =>
+          import("../scheduling/scheduling.module").then(
+            (m) => m.SchedulingPageModule
+          ),
+      },
     ],
   },
   { path: "", redirectTo: "tabs", pathMatch: "full" },

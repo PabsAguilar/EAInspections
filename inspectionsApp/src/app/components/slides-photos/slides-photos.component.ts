@@ -25,6 +25,8 @@ export class SlidesPhotosComponent implements OnInit {
 
   @Input()
   title: string;
+  @Input()
+  readonly: boolean;
 
   @Input("ngModel")
   get photoArray(): BitrixPictureList {

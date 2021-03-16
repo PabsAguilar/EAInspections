@@ -32,6 +32,7 @@ export class AreaGeneralConditionComponent implements OnInit {
   }
   generalCondition: GeneralCondition = new GeneralCondition();
   @Input() title: string = "";
+  @Input() readonly: boolean = false;
   @Input() get type() {
     return this._type;
   }

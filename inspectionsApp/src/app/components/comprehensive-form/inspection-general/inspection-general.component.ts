@@ -25,7 +25,7 @@ export class InspectionGeneralComponent implements OnInit {
   public today: Date = new Date();
   maxDate: number = this.today.getFullYear();
   minDate: number = this.today.setFullYear(this.today.getFullYear() - 100);
-
+  @Input() readonly: boolean = false;
   propertyTypeList = [];
   HHVACConditions = [];
   DuctConditions = [];

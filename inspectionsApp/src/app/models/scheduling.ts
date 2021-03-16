@@ -14,8 +14,15 @@ export class Scheduling implements IStorageModel {
   inspectorName: string;
   inspectorUserId: number;
   serviceType: string;
-  scheduleDateTime: Date;
+  scheduleDateTime: any;
   scheduleDateString: string;
+  typeOfLoss: string;
+  dateOfLoss: Date;
+  referalPartner: Contact;
+  referalPartnerCompany: Company;
+  inspectionTypes: string[];
+  inspectionInstructions: string;
+
   internalStatus: string;
   syncInfo: SyncInfo;
   constructor() {

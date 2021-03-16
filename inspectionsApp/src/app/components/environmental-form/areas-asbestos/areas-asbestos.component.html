@@ -25,6 +25,7 @@
       interface="popover"
       [interfaceOptions]="{ cssClass: 'wider-popover' }"
       name="type"
+      [disabled]="readonly"
       [(ngModel)]="_model.inspectionType"
       (ionChange)="AreaUpdated($event)"
     >
@@ -39,6 +40,7 @@
   <ion-item lines="inset">
     <ion-label position="floating">Inspection Date</ion-label>
     <ion-datetime
+    [disabled]="readonly"
       [(ngModel)]="_model.inspectionDateString"
       displayFormat="MMMM DD YY"
       pickerFormat="MMMM DD YY"
@@ -48,6 +50,7 @@
   <app-asbestos
     *ngFor="let area of _model.asbestosAreas; let i = index"
     ngDefaultControl
+    [readonly]="readonly"
     [title]="'Area ' + (i + 1)"
     (modelChanged)="AreaUpdated($event)"
     [(model)]="_model.asbestosAreas[i]"

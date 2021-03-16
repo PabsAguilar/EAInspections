@@ -23,6 +23,7 @@
     <ion-label position="floating">Inspection Type</ion-label>
     <ion-select
       interface="popover"
+      [disabled]="_model.syncInfo.isSync"
       [interfaceOptions]="{ cssClass: 'wider-popover' }"
       name="type"
       [(ngModel)]="_model.moldInspectionType"
@@ -39,6 +40,7 @@
   <app-area-mold
     *ngFor="let area of _model.areasInspection; let i = index"
     ngDefaultControl
+    [readonly]="readonly"
     [title]="'Area ' + (i + 1)"
     (modelChanged)="AreaUpdated($event)"
     [(model)]="_model.areasInspection[i]"

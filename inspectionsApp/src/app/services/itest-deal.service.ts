@@ -22,6 +22,7 @@ import { Asbesto } from "../models/environmental-form/asbesto";
 import { Lead } from "../models/environmental-form/lead";
 import { Contact } from "../models/contact";
 import { Company } from "../models/company";
+import { SyncInfo } from "../models/sync-info";
 const SYNCSTAMPKEY = "inspection-stamp-key";
 @Injectable({
   providedIn: "root",
@@ -477,6 +478,7 @@ export class ItestDealService {
     task = await this.initializeMoistureMapping(task);
     task = await this.initializeAsbestosMapping(task);
     task = await this.initializeLead(task);
+
     var general = new GeneralInfoInspectionBitrixMapping();
     general.propertyYearCode = BitrixDealMapping.propertyYearCode;
     general.propertyTypeCode = BitrixDealMapping.propertyTypeCode;

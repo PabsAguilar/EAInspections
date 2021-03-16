@@ -17,7 +17,7 @@ export class AreasLeadComponent implements OnInit {
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
-
+  @Input() readonly: boolean = false;
   @Input() title: string = "";
   @Input()
   get model(): LeadAreas {
