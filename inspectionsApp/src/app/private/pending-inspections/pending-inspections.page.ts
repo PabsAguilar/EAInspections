@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
 import { NavigationExtras, Router } from "@angular/router";
+import { NetworkStatus } from "@capacitor/core";
 
 import { CallNumber } from "@ionic-native/call-number/ngx";
 import {
@@ -20,10 +21,12 @@ import { Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { InspectionTask } from "src/app/models/inspection-task";
+import { User } from "src/app/models/user";
 import { AuthenticationService } from "src/app/services/authentication.service";
 import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 
 import { ItestDealService } from "src/app/services/itest-deal.service";
+import { SyncInspectionService } from "src/app/services/sync-inspection.service";
 
 @Component({
   selector: "app-pending-inspections",
@@ -38,8 +41,9 @@ export class PendingInspectionsPage implements OnInit {
   selectedTask: InspectionTask;
   segmentOption: string = "All";
   searching: any = false;
+  user: User = new User();
   public searchControl: FormControl;
-
+  networkStatus: NetworkStatus;
   constructor(
     private callNumber: CallNumber,
     private actionSheetController: ActionSheetController,
@@ -50,22 +54,37 @@ export class PendingInspectionsPage implements OnInit {
     private toast: ToastController,
     private launchNavigator: LaunchNavigator,
     private inspectionNavigate: InspectionNavigateService,
-    private autenticateService: AuthenticationService
+    private autenticateService: AuthenticationService,
+    private syncInspection: SyncInspectionService
   ) {
     this.searchControl = new FormControl();
   }
 
   public ngOnDestroy(): void {}
 
+  async ionViewWillLeave() {
+    this.subscription.unsubscribe();
+  }
+
   async ionViewWillEnter() {
     try {
+      this.subscription = this.syncInspection
+        .getObservable()
+        .subscribe(async (data) => {
+          await this.loadData(true);
+        });
+
       //TODO: Validate connection to internet
-      await this.loadData();
+      await this.autenticateService.getUser().then((x) => {
+        this.user = x;
+      });
+      await this.loadData(false);
       var top = await this.loadingController.getTop();
       if (top) {
         await top.dismiss();
       }
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -80,7 +99,9 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   async search(searchTerm: string) {
-    this.inspectionTasks = await this.inspectionService.getPendingInspections();
+    this.inspectionTasks = await this.inspectionService.getPendingInspections(
+      this.user.userId
+    );
     if (searchTerm && searchTerm.trim() !== "") {
       this.inspectionTasks = this.inspectionTasks.filter((term) => {
         return (
@@ -103,7 +124,7 @@ export class PendingInspectionsPage implements OnInit {
 
   async segmentChanged($event) {
     this.inspectionTasks = (
-      await this.inspectionService.getPendingInspections()
+      await this.inspectionService.getPendingInspections(this.user.userId)
     ).filter(
       (task) =>
         this.segmentOption == "All" || task.internalStatus == this.segmentOption
@@ -113,6 +134,7 @@ export class PendingInspectionsPage implements OnInit {
   async ionViewDidEnter() {
     try {
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -122,14 +144,16 @@ export class PendingInspectionsPage implements OnInit {
     }
   }
 
-  async loadData() {
-    this.inspectionTasks = await this.inspectionService.getPendingInspections();
+  async loadData(forceFromServer: boolean) {
+    this.inspectionTasks = await this.inspectionService.getPendingInspections(
+      this.user.userId
+    );
 
-    if (this.inspectionTasks == null) {
-      await this.inspectionService.getExternal(
-        (await this.autenticateService.getUser()).userId
+    if (forceFromServer || this.inspectionTasks == null) {
+      await this.inspectionService.getExternal(this.user.userId);
+      this.inspectionTasks = await this.inspectionService.getPendingInspections(
+        this.user.userId
       );
-      this.inspectionTasks = await this.inspectionService.getPendingInspections();
     }
     this.lastSync = await this.inspectionService.getSyncStamp();
   }
@@ -137,9 +161,12 @@ export class PendingInspectionsPage implements OnInit {
     try {
       console.log("Pull Event Triggered!");
 
-      this.inspectionTasks = await this.inspectionService.getPendingInspections();
+      this.inspectionTasks = await this.inspectionService.getPendingInspections(
+        this.user.userId
+      );
       event.target.complete();
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -176,6 +203,7 @@ export class PendingInspectionsPage implements OnInit {
       };
       this.router.navigate(["menu/details"], navigationExtras);
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -186,9 +214,7 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   async gpsNavigate(task: InspectionTask) {
-    let options: LaunchNavigatorOptions = {
-      start: "Current Location",
-    };
+    let options: LaunchNavigatorOptions = {};
 
     this.launchNavigator.navigate(task.serviceAddress, options).then(
       (success) => console.log("Launched navigator"),
@@ -240,7 +266,9 @@ export class PendingInspectionsPage implements OnInit {
                 (await this.autenticateService.getUser()).userId
               );
               this.lastSync = await this.inspectionService.getSyncStamp();
-              this.inspectionTasks = await this.inspectionService.getPendingInspections();
+              this.inspectionTasks = await this.inspectionService.getPendingInspections(
+                this.user.userId
+              );
             } catch (error) {
               console.log(error);
             }

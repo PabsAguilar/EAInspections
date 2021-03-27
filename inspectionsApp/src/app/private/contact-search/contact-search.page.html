@@ -159,7 +159,6 @@
           #contactPhone="ngModel"
           [(ngModel)]="newContact.contactPhone"
           type="tel"
-          required
           pattern="[- +()0-9]+"
         ></ion-input>
       </ion-item>
@@ -192,7 +191,6 @@
           [(ngModel)]="newContact.contactEmail"
           type="email"
           email
-          required
         ></ion-input>
       </ion-item>
       <div class="validation-errors">
@@ -226,8 +224,8 @@
             ( 
               newContact.firstName && ! firstName.errors 
             && newContact.lastName && ! lastName.errors 
-            && newContact.contactPhone && ! contactPhone.errors 
-            && newContact.contactEmail && ! contactEmail.errors 
+            && ! contactPhone.errors 
+            && ! contactEmail.errors 
             
             )
             "

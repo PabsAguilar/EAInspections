@@ -48,7 +48,7 @@ export class EnvironmentalInspectionPage implements OnInit {
             console.log(error);
 
             var message = this.toast.create({
-              message: error,
+              message: "environmental-constructor " + error,
               color: "danger",
               duration: 2000,
             });
@@ -65,10 +65,10 @@ export class EnvironmentalInspectionPage implements OnInit {
         await this.loadingController.dismiss();
       }
       await this.validateAgreements();
-    } catch (error) {
+    } catch (error) {      
       console.log(error);
       var message = this.toast.create({
-        message: error,
+        message: "environmental-ionViewDidEnter" + error,
         color: "danger",
         duration: 2000,
       });
@@ -134,8 +134,9 @@ export class EnvironmentalInspectionPage implements OnInit {
             try {
               await this.inspectionNavigate.openItestAgreementsPage(this.task);
             } catch (error) {
+              console.log(error);
               var message = this.toast.create({
-                message: error,
+                message: "environmental-popover.onDidDismiss" + error,
                 color: "danger",
                 duration: 2000,
               });
@@ -150,8 +151,9 @@ export class EnvironmentalInspectionPage implements OnInit {
                 this.task
               );
             } catch (error) {
+              console.log(error);
               var message = this.toast.create({
-                message: error,
+                message: "popover.onDidDismiss.seeAgreementEN" + error,
                 color: "danger",
                 duration: 2000,
               });
@@ -167,6 +169,7 @@ export class EnvironmentalInspectionPage implements OnInit {
       });
       return await popover.present();
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -234,6 +237,7 @@ export class EnvironmentalInspectionPage implements OnInit {
       });
       await alert.present();
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -250,6 +254,7 @@ export class EnvironmentalInspectionPage implements OnInit {
         await this.inspectionService.update(this.task);
       }
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",

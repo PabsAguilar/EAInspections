@@ -107,64 +107,68 @@ export class InspectionGeneralComponent implements OnInit {
 
   ngOnInit() {}
   changeModel($event) {
-    console.log(this.generalInfoInspection);
-    this.filledProperties = 0;
-    if (
-      this.generalInfoInspection.propertyYear &&
-      this.generalInfoInspection.propertyYear > 0
-    ) {
-      this.filledProperties++;
-    }
-    if (this.generalInfoInspection.propertyType) {
-      this.filledProperties++;
-    }
-    if (this.generalInfoInspection.pictureHouseNumbers.images.length > 0) {
-      this.filledProperties++;
-    }
-    if (
-      this.generalInfoInspection.picturesFrontHouse &&
-      this.generalInfoInspection.picturesFrontHouse.images.length > 0
-    ) {
-      this.filledProperties++;
-    }
-    if (this.generalInfoInspection.environmentalInspection) {
-      if (this.generalInfoInspection.interiorTemperature) {
+    try {
+      console.log(this.generalInfoInspection);
+      this.filledProperties = 0;
+      if (
+        this.generalInfoInspection.propertyYear &&
+        this.generalInfoInspection.propertyYear > 0
+      ) {
         this.filledProperties++;
       }
-      if (this.generalInfoInspection.exteriorRelativeHumidity) {
+      if (this.generalInfoInspection.propertyType) {
         this.filledProperties++;
       }
-      if (this.generalInfoInspection.HVACSystemCondition) {
+      if (this.generalInfoInspection.pictureHouseNumbers.images.length > 0) {
         this.filledProperties++;
       }
-      if (this.generalInfoInspection.atticCondition) {
+      if (
+        this.generalInfoInspection.picturesFrontHouse &&
+        this.generalInfoInspection.picturesFrontHouse.images.length > 0
+      ) {
         this.filledProperties++;
       }
-      if (this.generalInfoInspection.ductsCondition) {
-        this.filledProperties++;
+      if (this.generalInfoInspection.environmentalInspection) {
+        if (this.generalInfoInspection.interiorTemperature) {
+          this.filledProperties++;
+        }
+        if (this.generalInfoInspection.exteriorRelativeHumidity) {
+          this.filledProperties++;
+        }
+        if (this.generalInfoInspection.HVACSystemCondition) {
+          this.filledProperties++;
+        }
+        if (this.generalInfoInspection.atticCondition) {
+          this.filledProperties++;
+        }
+        if (this.generalInfoInspection.ductsCondition) {
+          this.filledProperties++;
+        }
       }
-    }
 
-    this.progressPercentage =
-      this.filledProperties == 0
-        ? 0
-        : this.filledProperties / this.totalProperties;
+      this.progressPercentage =
+        this.filledProperties == 0
+          ? 0
+          : this.filledProperties / this.totalProperties;
 
-    this.generalInfoChanged.emit(this.generalInfoInspection);
+      this.generalInfoChanged.emit(this.generalInfoInspection);
 
-    switch (true) {
-      case this.progressPercentage < 0.5:
-        this.progressColor = "danger";
-        break;
-      case this.progressPercentage < 1:
-        this.progressColor = "warning";
-        break;
-      case this.progressPercentage >= 1:
-        this.progressColor = "success";
-        break;
-      default:
-        this.progressColor = "danger";
-        break;
+      switch (true) {
+        case this.progressPercentage < 0.5:
+          this.progressColor = "danger";
+          break;
+        case this.progressPercentage < 1:
+          this.progressColor = "warning";
+          break;
+        case this.progressPercentage >= 1:
+          this.progressColor = "success";
+          break;
+        default:
+          this.progressColor = "danger";
+          break;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 

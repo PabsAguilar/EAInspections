@@ -28,6 +28,7 @@ export class InspectionNavigateService {
         await this.presentAlertConfirmStartInspection(task);
       }
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -62,6 +63,7 @@ export class InspectionNavigateService {
 
       await alert.present();
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -88,6 +90,19 @@ export class InspectionNavigateService {
     await this.navController.navigateForward([path], navigationExtras);
   }
 
+  async moveToPendingInspection(segment) {
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        segment: segment,
+      },
+    };
+
+    var path =
+      "menu/tabs/tabs/pending-inspections/" +
+      Math.floor(Math.random() * 100 + 1);
+    await this.navController.navigateBack([path], navigationExtras);
+  }
+
   async backFromAgreementsPage(selectedTask: InspectionTask) {
     try {
       const loading = await this.loadingController.create({
@@ -107,6 +122,7 @@ export class InspectionNavigateService {
       }
       await this.navController.navigateBack([path], navigationExtras);
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -133,6 +149,7 @@ export class InspectionNavigateService {
 
       await this.navController.navigateForward([path], navigationExtras);
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -159,6 +176,7 @@ export class InspectionNavigateService {
 
       await this.navController.navigateForward([path], navigationExtras);
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -186,6 +204,7 @@ export class InspectionNavigateService {
       }
       await this.navController.navigateForward([path], navigationExtras);
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",

@@ -1,6 +1,7 @@
 import { IStorageModel } from "../interfaces/Istorage-model";
 import { Company } from "./company";
 import { Contact } from "./contact";
+import { InspectionStatus } from "./enums";
 import { SyncInfo } from "./sync-info";
 
 export class Scheduling implements IStorageModel {
@@ -28,5 +29,6 @@ export class Scheduling implements IStorageModel {
   constructor() {
     this.syncInfo = new SyncInfo();
     this.contact = new Contact();
+    this.internalStatus = InspectionStatus.New;
   }
 }

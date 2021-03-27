@@ -2,8 +2,13 @@
   <ion-toolbar color="scheduling">
     <ion-title>Scheduling</ion-title>
     <ion-buttons slot="start">
-      <ion-menu-button *ngIf="!scheduling.syncInfo.isSync"></ion-menu-button>
-      <ion-back-button defaulthref="" *ngIf="scheduling.syncInfo.isSync">
+      <ion-menu-button
+        *ngIf="scheduling.internalStatus == 'New'"
+      ></ion-menu-button>
+      <ion-back-button
+        defaulthref=""
+        *ngIf="scheduling.internalStatus != 'New'"
+      >
       </ion-back-button>
     </ion-buttons>
   </ion-toolbar>
@@ -36,7 +41,13 @@
     
     </ion-item> -->
     <ion-item lines="none">
-      <ion-label>Contact</ion-label>
+      <ion-label>Contact </ion-label>
+
+      <ion-icon
+        *ngIf="!scheduling.contact.firstName"
+        color="danger"
+        name="information-circle-outline"
+      ></ion-icon>
     </ion-item>
     <ion-item lines="none" *ngIf="!scheduling.syncInfo.isSync">
       <ion-chip
@@ -85,8 +96,24 @@
       </div>
     </div>
 
+    <ion-item lines="full">
+      <ion-label position="floating">Inspector Instructions</ion-label>
+      <ion-textarea
+        name="notes"
+        #notes="ngModel"
+        [disabled]="scheduling.syncInfo.isSync"
+        [(ngModel)]="scheduling.notes"
+        type="text"
+      ></ion-textarea>
+    </ion-item>
+
     <ion-item lines="none">
       <ion-label>Insurance Company</ion-label>
+      <ion-icon
+        *ngIf="!scheduling.insuranceCompany"
+        color="danger"
+        name="information-circle-outline"
+      ></ion-icon>
     </ion-item>
     <ion-item
       lines="none"
@@ -136,17 +163,6 @@
         <h3>{{scheduling.insuranceCompany.title}}</h3>
         <p>{{scheduling.insuranceCompany.type}}</p>
       </ion-label>
-    </ion-item>
-
-    <ion-item lines="full">
-      <ion-label position="floating">Notes</ion-label>
-      <ion-textarea
-        name="notes"
-        #notes="ngModel"
-        [disabled]="scheduling.syncInfo.isSync"
-        [(ngModel)]="scheduling.notes"
-        type="text"
-      ></ion-textarea>
     </ion-item>
 
     <ion-item lines="full">
@@ -246,7 +262,7 @@
       ></ion-datetime>
     </ion-item>
 
-    <ion-row class="ion-padding" *ngIf="!scheduling.syncInfo.isSync">
+    <ion-row class="ion-padding" *ngIf="scheduling.internalStatus == 'New'">
       <ion-col>
         <ion-button
           full
@@ -254,15 +270,15 @@
           expand="block"
           [disabled]="! 
           ( scheduling.serviceAddress && !serviceAddress.errors          
-          && scheduling.insuranceCompany 
-          && scheduling.insuranceCompanyContact
+        
+          && scheduling.insuranceCompany
           && scheduling.notes && !notes.errors          
           && scheduling.inspectorUserId && !inspectorUserId.errors
           && scheduling.serviceType && !serviceType.errors          
           && scheduling.scheduleDateTime && !scheduleDateTime.errors
           && scheduling.contact && scheduling.contact.firstName 
           )"
-          >Send</ion-button
+          >Submit</ion-button
         >
       </ion-col>
     </ion-row>

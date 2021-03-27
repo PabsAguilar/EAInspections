@@ -41,14 +41,14 @@ export class BitrixItestService {
       .toPromise();
   }
 
-  public getContact(id: number): Promise<any> {
+  public getContact(id: string): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
     return this.http
       .get(`${this.url}/${this.key}/crm.contact.get.json?ID=${id}`)
       .toPromise();
   }
 
-  public getCompanyContact(id: number): Promise<any> {
+  public getCompanyContact(id: string): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
     return this.http
       .get(`${this.url}/${this.key}/crm.company.get.json?ID=${id}`)

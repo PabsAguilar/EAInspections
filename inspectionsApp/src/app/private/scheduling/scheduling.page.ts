@@ -33,7 +33,7 @@ export class SchedulingPage implements OnInit {
     this.today.setFullYear(this.today.getFullYear() + 1)
   );
 
-  scheduling: Scheduling;
+  scheduling: Scheduling = new Scheduling();
   selectedDate = new Date();
 
   constructor(
@@ -53,7 +53,9 @@ export class SchedulingPage implements OnInit {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.scheduling = this.router.getCurrentNavigation().extras.state.scheduling;
-        this.scheduling.scheduleDateTime = (new Date(this.scheduling.scheduleDateTime)).toISOString();
+        this.scheduling.scheduleDateTime = new Date(
+          this.scheduling.scheduleDateTime
+        ).toISOString();
       }
     });
     authenticationService.getUser().then((x) => {
@@ -167,17 +169,24 @@ export class SchedulingPage implements OnInit {
               var list = await this.schedulingStorageService.getAll();
               this.scheduling.id = ((list ? list.length : 0) + 1) * -1;
               this.schedulingStorageService.add(this.scheduling);
-              var message = this.toast.create({
-                message: "Deal is saved.",
-                color: "success",
-                duration: 3000,
+
+              const alert2 = await this.alertController.create({
+                header: "Scheduling form",
+                message: "Form is succesfully saved on the device.",
+                buttons: [
+                  {
+                    text: "Ok",
+                    cssClass: "primary",
+                    handler: () => {
+                      this.navigateService.moveToPendingInspection("New");
+                    },
+                  },
+                ],
               });
+              alert2.present();
 
               var deal = this.scheduling;
               this.scheduling = new Scheduling();
-              (await message).present();
-
-              this.navigateService.moveToSummary("scheduling");
 
               (
                 await this.syncInspectionService.syncSchedulingInspection(deal)
@@ -202,7 +211,6 @@ export class SchedulingPage implements OnInit {
                   (await message).present();
                 }
               });
-              this.scheduling = new Scheduling();
             },
           },
         ],

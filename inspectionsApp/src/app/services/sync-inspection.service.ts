@@ -19,6 +19,7 @@ import { Scheduling } from "../models/scheduling";
 import { SyncInfo } from "../models/sync-info";
 import { BitrixItestService } from "./bitrix-itest.service";
 import { InspectionsStorageService } from "./inspections-storage.service";
+import { ItestDealService } from "./itest-deal.service";
 import { SchedulingStorageService } from "./scheduling-storage.service";
 
 @Injectable({
@@ -29,7 +30,8 @@ export class SyncInspectionService {
     private bitrix: BitrixItestService,
     private inspectionStorage: InspectionsStorageService,
     private schedulingStorageService: SchedulingStorageService,
-    private toast: ToastController
+    private toast: ToastController,
+    private itestDealService: ItestDealService
   ) {}
 
   private syncEvent = new Subject<any>();
@@ -422,7 +424,10 @@ export class SyncInspectionService {
         }
       }
 
-      if (!scheduling.insuranceCompanyContact.syncInfo.isSync) {
+      if (
+        scheduling.insuranceCompanyContact &&
+        !scheduling.insuranceCompanyContact.syncInfo.isSync
+      ) {
         scheduling.insuranceCompanyContact = await this.syncContact(
           scheduling.insuranceCompanyContact
         );
@@ -440,18 +445,32 @@ export class SyncInspectionService {
         }
       }
 
+      var insuranceCompany: string[] = [];
+      if (scheduling.insuranceCompanyContact) {
+        insuranceCompany.push(
+          "C_" + scheduling.insuranceCompanyContact.idContact
+        );
+      }
+      insuranceCompany.push("CO_" + scheduling.insuranceCompany.id);
       let postData = {
         fields: {
-          TITLE: "Scheduling Form - " + scheduling.contact.lastName + " - IApp",
+          TITLE:
+            "ITest Form " +
+            scheduling.contact.firstName +
+            " " +
+            scheduling.contact.lastName +
+            " - " +
+            "EnApp",
           TYPE_ID: "",
-          STAGE_ID: "New Order",
+          STAGE_ID: "PREPAYMENT_INVOICE",
           COMPANY_ID: "",
           CONTACT_ID: scheduling.contact.idContact,
           OPENED: "N",
           CLOSED: "N",
           ASSIGNED_BY_ID: scheduling.inspectorUserId,
           CREATED_BY_ID: scheduling.inspectorUserId,
-          COMMENTS: scheduling.notes,
+          COMMENTS: "Created with Scheduling form within EN Mobile APP.",
+          UF_CRM_1612683023: scheduling.notes,
           PROBABILITY: null,
           CURRENCY_ID: "USD",
           OPPORTUNITY: 0,
@@ -460,10 +479,8 @@ export class SyncInspectionService {
           UF_CRM_1612683055: scheduling.scheduleDateTime.toISOString(), //this.date2str(scheduling.scheduleDateTime),
           UF_CRM_1606466289: scheduling.serviceAddress,
           UF_CRM_1612682994: scheduling.inspectorUserId,
-          UF_CRM_1612691342: [
-            "C_" + scheduling.insuranceCompanyContact.idContact,
-            "CO_" + scheduling.insuranceCompany.id,
-          ],
+          UF_CRM_1612686317: scheduling.inspectorUserId,
+          UF_CRM_1612691342: insuranceCompany,
         },
       };
 
@@ -474,6 +491,7 @@ export class SyncInspectionService {
         scheduling.syncInfo.syncCode = response.result;
         scheduling.internalStatus = InspectionStatus.Completed;
         await this.schedulingStorageService.update(scheduling);
+        await this.itestDealService.getExternal( scheduling.inspectorUserId);
         return of(true);
       } else return of(false);
     } catch (error) {
@@ -626,6 +644,7 @@ export class SyncInspectionService {
         return of(false);
       }
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",

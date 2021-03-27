@@ -116,6 +116,7 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
       this.clear();
       this.nameSignature = null;
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -135,6 +136,7 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
       this.task.internalStatus = "In Progress";
       await this.inspectionStorageService.update(this.task);
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",

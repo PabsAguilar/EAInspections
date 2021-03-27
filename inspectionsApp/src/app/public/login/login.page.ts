@@ -47,6 +47,7 @@ export class LoginPage implements OnInit {
         await this.loadingController.dismiss();
       }
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
@@ -109,6 +110,7 @@ export class LoginPage implements OnInit {
         await this.presentAlert();
       }
     } catch (error) {
+      console.log(error);
       if (error.status == 0) {
         var message = this.toast.create({
           message: "Unable to connect, review your connection.",
@@ -140,6 +142,7 @@ export class LoginPage implements OnInit {
 
       await alert.present();
     } catch (error) {
+      console.log(error);
       var message = this.toast.create({
         message: error,
         color: "danger",
