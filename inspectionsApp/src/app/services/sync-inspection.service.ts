@@ -10,7 +10,11 @@ import { BitrixPicture, BitrixPictureList } from "../models/bitrix-picture";
 import { Company } from "../models/company";
 import { Contact } from "../models/contact";
 import { DamageInspection } from "../models/damage-inspection";
-import { DamageAreaType, InspectionStatus } from "../models/enums";
+import {
+  DamageAreaType,
+  InspectionStatus,
+  ReportStatusDeal,
+} from "../models/enums";
 import { Asbesto } from "../models/environmental-form/asbesto";
 import { Lead } from "../models/environmental-form/lead";
 import { MoistureMapping } from "../models/environmental-form/moisture-mapping";
@@ -208,8 +212,25 @@ export class SyncInspectionService {
     try {
       let postData = {
         id: task.id,
-        fields: {},
+        fields: { STAGE_ID: "EXECUTING" },
       };
+      switch (task.internalStatus) {
+        case InspectionStatus.PendingSaved:
+          postData.fields["UF_CRM_1613380179"] = ReportStatusDeal.Saved;
+          break;
+
+        case InspectionStatus.PendingSentLab:
+          postData.fields["UF_CRM_1613380179"] = ReportStatusDeal.Labs;
+          break;
+
+        case InspectionStatus.PendingToComplete:
+          postData.fields["UF_CRM_1613380179"] = ReportStatusDeal.Submitted;
+          break;
+
+        default:
+          postData.fields["UF_CRM_1613380179"] = ReportStatusDeal.Saved;
+          break;
+      }
 
       if (task.environmentalForm.generalInfoInspection.propertyYear)
         postData.fields["UF_CRM_1606466447"] =
@@ -318,8 +339,8 @@ export class SyncInspectionService {
           NAME: contact.firstName,
           SECOND_NAME: "",
           LAST_NAME: contact.lastName,
-          PHONE: [{ VALUE: contact.contactPhone }],
-          EMAIL: [{ VALUE: contact.contactEmail }],
+          PHONE: [{ VALUE: contact.phone }],
+          EMAIL: [{ VALUE: contact.email }],
         },
       };
       var response = await this.bitrix.createContact(postData).toPromise();
@@ -369,10 +390,10 @@ export class SyncInspectionService {
 
   async syncAllPending(): Promise<Observable<boolean>> {
     var schedulingList = await this.schedulingStorageService.getPendingToSync();
-    Promise.all(
+    await Promise.all(
       (await schedulingList).map(async (x) => {
         (await this.syncSchedulingInspection(x)).subscribe(async (y) => {
-          if (!y) {
+          if (y) {
           } else {
             var message = this.toast.create({
               message: "Sync failed, please try again later.",
@@ -386,10 +407,10 @@ export class SyncInspectionService {
     );
 
     var inspectionList = await this.inspectionStorage.getPendingToSync();
-    Promise.all(
+    await Promise.all(
       (await inspectionList).map(async (x) => {
         (await this.syncTask(x)).subscribe(async (y) => {
-          if (!y) {
+          if (y) {
           } else {
             var message = this.toast.create({
               message:
@@ -491,7 +512,7 @@ export class SyncInspectionService {
         scheduling.syncInfo.syncCode = response.result;
         scheduling.internalStatus = InspectionStatus.Completed;
         await this.schedulingStorageService.update(scheduling);
-        await this.itestDealService.getExternal( scheduling.inspectorUserId);
+        await this.itestDealService.getExternal(scheduling.inspectorUserId);
         return of(true);
       } else return of(false);
     } catch (error) {
@@ -510,7 +531,8 @@ export class SyncInspectionService {
       }
 
       task = await this.syncTaskImages(task);
-      if (!task.environmentalForm.generalInfoInspection.syncInfo.isSync) {
+      if (true) {
+        //!task.environmentalForm.generalInfoInspection.syncInfo.isSync) {
         var result = await this.syncGeneralInformation(task);
         if (result > 0) {
           task.environmentalForm.generalInfoInspection.syncInfo.isSync = true;
@@ -518,7 +540,10 @@ export class SyncInspectionService {
         }
       }
 
-      if (!task.environmentalForm.moldAreas.syncInfo.isSync) {
+      if (
+        !task.environmentalForm.moldAreas.syncInfo.isSync ||
+        task.environmentalForm.moldAreas.syncInfo.updated
+      ) {
         if (
           task.environmentalForm.moldAreas.moldInspectionType &&
           task.environmentalForm.moldAreas.areasInspection.find(
@@ -531,14 +556,26 @@ export class SyncInspectionService {
             48,
             "Mold Inspection - " + task.title
           );
-          task.environmentalForm.moldAreas.syncInfo.isSync = result > 0;
-          task.environmentalForm.moldAreas.syncInfo.syncCode = result.toString();
+          if (result > 0) {
+            task.environmentalForm.moldAreas.syncInfo.isSync = result > 0;
+            task.environmentalForm.moldAreas.syncInfo.updated = false;
+            task.environmentalForm.moldAreas.syncInfo.syncCode = task
+              .environmentalForm.moldAreas.syncInfo.syncCode
+              ? task.environmentalForm.moldAreas.syncInfo.syncCode
+              : result.toString();
+          } else {
+            task.environmentalForm.moldAreas.syncInfo.isSync = false;
+            task.environmentalForm.moldAreas.syncInfo.updated = false;
+          }
         } else {
           task.environmentalForm.moldAreas.syncInfo.isSync = true;
         }
         await this.inspectionStorage.update(task);
       }
-      if (!task.environmentalForm.bacteriasAreas.syncInfo.isSync) {
+      if (
+        !task.environmentalForm.bacteriasAreas.syncInfo.isSync ||
+        task.environmentalForm.bacteriasAreas.syncInfo.updated
+      ) {
         if (
           task.environmentalForm.bacteriasAreas.moldInspectionType &&
           task.environmentalForm.bacteriasAreas.areasInspection.find(
@@ -553,13 +590,21 @@ export class SyncInspectionService {
           );
 
           task.environmentalForm.bacteriasAreas.syncInfo.isSync = result > 0;
-          task.environmentalForm.bacteriasAreas.syncInfo.syncCode = result.toString();
+          task.environmentalForm.bacteriasAreas.syncInfo.updated = false;
+          task.environmentalForm.bacteriasAreas.syncInfo.syncCode = task
+            .environmentalForm.bacteriasAreas.syncInfo.syncCode
+            ? task.environmentalForm.bacteriasAreas.syncInfo.syncCode
+            : result.toString();
         } else {
           task.environmentalForm.bacteriasAreas.syncInfo.isSync = true;
+          task.environmentalForm.bacteriasAreas.syncInfo.updated = false;
         }
         await this.inspectionStorage.update(task);
       }
-      if (!task.environmentalForm.sootAreas.syncInfo.isSync) {
+      if (
+        !task.environmentalForm.sootAreas.syncInfo.isSync ||
+        task.environmentalForm.sootAreas.syncInfo.updated
+      ) {
         if (
           task.environmentalForm.sootAreas.moldInspectionType &&
           task.environmentalForm.sootAreas.areasInspection.find(
@@ -573,14 +618,22 @@ export class SyncInspectionService {
             "Soot Inspection - " + task.title
           );
           task.environmentalForm.sootAreas.syncInfo.isSync = result > 0;
-          task.environmentalForm.sootAreas.syncInfo.syncCode = result.toString();
+          task.environmentalForm.sootAreas.syncInfo.updated = false;
+          task.environmentalForm.sootAreas.syncInfo.syncCode = task
+            .environmentalForm.sootAreas.syncInfo.syncCode
+            ? task.environmentalForm.sootAreas.syncInfo.syncCode
+            : result.toString();
         } else {
           task.environmentalForm.sootAreas.syncInfo.isSync = true;
+          task.environmentalForm.sootAreas.syncInfo.updated = false;
         }
         await this.inspectionStorage.update(task);
       }
 
-      if (!task.environmentalForm.moistureMappingAreas.syncInfo.isSync) {
+      if (
+        !task.environmentalForm.moistureMappingAreas.syncInfo.isSync ||
+        task.environmentalForm.moistureMappingAreas.syncInfo.updated
+      ) {
         if (
           task.environmentalForm.moistureMappingAreas.inspectionType &&
           task.environmentalForm.moistureMappingAreas.areamoistureMapping.find(
@@ -590,14 +643,22 @@ export class SyncInspectionService {
           var result = await this.sendMoistureMapping(task);
           task.environmentalForm.moistureMappingAreas.syncInfo.isSync =
             result > 0;
-          task.environmentalForm.moistureMappingAreas.syncInfo.syncCode = result.toString();
+          task.environmentalForm.moistureMappingAreas.syncInfo.updated = false;
+          task.environmentalForm.moistureMappingAreas.syncInfo.syncCode = task
+            .environmentalForm.moistureMappingAreas.syncInfo.syncCode
+            ? task.environmentalForm.moistureMappingAreas.syncInfo.syncCode
+            : result.toString();
         } else {
           task.environmentalForm.moistureMappingAreas.syncInfo.isSync = true;
+          task.environmentalForm.moistureMappingAreas.syncInfo.updated = false;
         }
         await this.inspectionStorage.update(task);
       }
 
-      if (!task.environmentalForm.asbestosAreas.syncInfo.isSync) {
+      if (
+        !task.environmentalForm.asbestosAreas.syncInfo.isSync ||
+        task.environmentalForm.asbestosAreas.syncInfo.updated
+      ) {
         if (
           task.environmentalForm.asbestosAreas.inspectionType &&
           task.environmentalForm.asbestosAreas.asbestosAreas.find(
@@ -613,7 +674,10 @@ export class SyncInspectionService {
         await this.inspectionStorage.update(task);
       }
 
-      if (!task.environmentalForm.leadAreas.syncInfo.isSync) {
+      if (
+        !task.environmentalForm.leadAreas.syncInfo.isSync ||
+        task.environmentalForm.leadAreas.syncInfo.updated
+      ) {
         if (
           task.environmentalForm.leadAreas.inspectionType &&
           task.environmentalForm.leadAreas.leadAreas.find((x) => x.sample)
@@ -636,7 +700,16 @@ export class SyncInspectionService {
         task.environmentalForm.leadAreas.syncInfo.isSync &&
         task.environmentalForm.asbestosAreas.syncInfo.isSync
       ) {
-        task.internalStatus = InspectionStatus.Completed;
+        if (task.internalStatus == InspectionStatus.PendingSaved) {
+          task.internalStatus = InspectionStatus.Saved;
+        }
+        if (task.internalStatus == InspectionStatus.PendingSentLab) {
+          task.internalStatus = InspectionStatus.LabsSent;
+        }
+        if (task.internalStatus == InspectionStatus.PendingToComplete) {
+          task.internalStatus = InspectionStatus.Completed;
+        }
+
         await this.inspectionStorage.update(task);
         return of(true);
       } else {
@@ -669,6 +742,10 @@ export class SyncInspectionService {
           PROPERTY_3526: task.id,
         },
       };
+
+      if (task.environmentalForm.leadAreas.syncInfo.isSync) {
+        postData["ID"] = task.environmentalForm.leadAreas.syncInfo.syncCode;
+      }
       if (task.environmentalForm.leadAreas.contact) {
         postData.FIELDS[
           task.environmentalForm.leadAreas.leadAreasBitrixMapping.contactCode
@@ -743,6 +820,11 @@ export class SyncInspectionService {
           PROPERTY_3522: task.id,
         },
       };
+
+      if (task.environmentalForm.asbestosAreas.syncInfo.isSync) {
+        postData["ID"] = task.environmentalForm.asbestosAreas.syncInfo.syncCode;
+      }
+
       if (task.environmentalForm.asbestosAreas.contact) {
         postData.FIELDS[
           task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.contactCode
@@ -820,6 +902,11 @@ export class SyncInspectionService {
           PROPERTY_3528: task.id,
         },
       };
+
+      if (task.environmentalForm.moistureMappingAreas.syncInfo.isSync) {
+        postData["ID"] =
+          task.environmentalForm.moistureMappingAreas.syncInfo.syncCode;
+      }
       if (task.environmentalForm.moistureMappingAreas.contact) {
         postData.FIELDS[
           task.environmentalForm.moistureMappingAreas.moistureMappingAreasBitrixMapping.contactCode
@@ -914,8 +1001,6 @@ export class SyncInspectionService {
         //ID: "126",
         IBLOCK_ID: list,
         IBLOCK_TYPE_ID: "lists",
-        ELEMENT_CODE:
-          list + "-" + task.id + "-" + (Math.random() * 100).toString(),
         FIELDS: {
           NAME: name,
         },
@@ -932,6 +1017,16 @@ export class SyncInspectionService {
             )
           ) {
             return -1;
+          }
+          if (
+            task.environmentalForm.moldAreas.syncInfo.syncCode &&
+            task.environmentalForm.moldAreas.syncInfo.syncCode != ""
+          ) {
+            postData["ELEMENT_ID"] =
+              task.environmentalForm.moldAreas.syncInfo.syncCode;
+          } else {
+            postData["ELEMENT_CODE"] =
+              list + "-" + task.id + "-" + (Math.random() * 100).toString();
           }
           damageInspectionList =
             task.environmentalForm.moldAreas.areasInspection;
@@ -958,6 +1053,16 @@ export class SyncInspectionService {
           ) {
             return -1;
           }
+          if (
+            task.environmentalForm.bacteriasAreas.syncInfo.syncCode &&
+            task.environmentalForm.bacteriasAreas.syncInfo.syncCode != ""
+          ) {
+            postData["ELEMENT_ID"] =
+              task.environmentalForm.bacteriasAreas.syncInfo.syncCode;
+          } else {
+            postData["ELEMENT_CODE"] =
+              list + "-" + task.id + "-" + (Math.random() * 100).toString();
+          }
           damageInspectionList =
             task.environmentalForm.bacteriasAreas.areasInspection;
           postData.FIELDS[
@@ -982,6 +1087,17 @@ export class SyncInspectionService {
             )
           ) {
             return -1;
+          }
+
+          if (
+            task.environmentalForm.sootAreas.syncInfo.syncCode &&
+            task.environmentalForm.sootAreas.syncInfo.syncCode != ""
+          ) {
+            postData["ELEMENT_ID"] =
+              task.environmentalForm.sootAreas.syncInfo.syncCode;
+          } else {
+            postData["ELEMENT_CODE"] =
+              list + "-" + task.id + "-" + (Math.random() * 100).toString();
           }
           damageInspectionList =
             task.environmentalForm.sootAreas.areasInspection;

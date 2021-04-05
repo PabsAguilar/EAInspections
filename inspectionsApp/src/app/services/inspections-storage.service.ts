@@ -64,6 +64,11 @@ export class InspectionsStorageService implements IStorage {
       return [];
     }
 
-    return list.filter((x) => x.internalStatus === "Pending");
+    return list.filter(
+      (x) =>
+        x.internalStatus === InspectionStatus.PendingSaved ||
+        x.internalStatus === InspectionStatus.PendingSentLab ||
+        x.internalStatus === InspectionStatus.PendingToComplete
+    );
   }
 }

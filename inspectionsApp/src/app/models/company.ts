@@ -4,6 +4,8 @@ export class Company {
   id: string;
   title: string;
   type: string;
+  phone: string;
+  email: string;
   selected: boolean;
   syncInfo: SyncInfo;
 

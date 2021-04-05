@@ -1,4 +1,5 @@
 import { bitrixMapping } from "../enums";
+import { SyncInfo } from "../sync-info";
 
 export class Lead {
   sample: string;
@@ -9,7 +10,9 @@ export class Lead {
   labResults: string;
   observations: string;
   bitrixMappingLead: BitrixMappingLead;
+  syncInfo: SyncInfo;
   constructor() {
+    this.syncInfo = new SyncInfo();
     this.bitrixMappingLead = new BitrixMappingLead();
   }
 }

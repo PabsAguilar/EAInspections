@@ -56,7 +56,7 @@ export class LeadComponent implements OnInit {
         ).map(([k, v]) => ({ name: v, value: k }));
       }
     });
-    this.changeModel(null);
+    this.changeModel("init");
   }
   _model: Lead = new Lead();
   @Input() title: string = "";
@@ -105,7 +105,9 @@ export class LeadComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
-    this.modelChanged.emit(this._model);
+    if ($event != "init") {
+      this.modelChanged.emit(this._model);
+    }
 
     switch (true) {
       case this.progressPercentage < 0.5:

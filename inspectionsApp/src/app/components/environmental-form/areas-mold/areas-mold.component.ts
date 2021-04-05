@@ -4,6 +4,7 @@ import { DamageInspection } from "src/app/models/damage-inspection";
 import { DamageAreaType } from "src/app/models/enums";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 import { ItestDealService } from "src/app/services/itest-deal.service";
+import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 
 @Component({
   selector: "app-areas-mold",
@@ -71,7 +72,7 @@ export class AreasMoldComponent implements OnInit {
     this.filledAreas = !this.model.areasInspection
       ? 0
       : this.model.areasInspection.filter((y) => y.areaName).length;
-
+    this._model.syncInfo.updated = true;
     if (this.filledAreas >= 1 && this.model.moldInspectionType) {
       this.progressColor = "success";
       this.progressPercentage = 1;

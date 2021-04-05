@@ -39,7 +39,7 @@ export class AreaMoldComponent implements OnInit {
   }
   set model(value: DamageInspection) {
     this._model = value;
-    this.changeModel(null);
+    this.changeModel("init");
     this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
       this.fields = x[0];
       if (value) {
@@ -221,7 +221,10 @@ export class AreaMoldComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
-    this.modelChanged.emit(this._model);
+    if ($event != "init") {
+      this._model.syncInfo.updated = true;
+      this.modelChanged.emit(this._model);
+    }
 
     switch (true) {
       case this.progressPercentage < 0.5:

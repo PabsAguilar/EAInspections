@@ -23,7 +23,7 @@
     <ion-label position="floating">Inspection Type</ion-label>
     <ion-select
       interface="popover"
-      [disabled]="_model.syncInfo.isSync"
+      [disabled]="readonly"
       [interfaceOptions]="{ cssClass: 'wider-popover' }"
       name="type"
       [(ngModel)]="_model.moldInspectionType"

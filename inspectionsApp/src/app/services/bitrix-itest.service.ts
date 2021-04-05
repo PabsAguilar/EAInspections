@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 import { Injectable } from "@angular/core";
+import { BooleanValueAccessor } from "@ionic/angular";
 import { Observable } from "rxjs";
 import { InspectionTask } from "../models/inspection-task";
 
@@ -48,12 +49,27 @@ export class BitrixItestService {
       .toPromise();
   }
 
+  public getAllContacts(): Promise<any> {
+    //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
+    return this.http
+      .get(`${this.url}/${this.key}/crm.contact.list.json`)
+      .toPromise();
+  }
+
   public getCompanyContact(id: string): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
     return this.http
       .get(`${this.url}/${this.key}/crm.company.get.json?ID=${id}`)
       .toPromise();
   }
+
+  public getAllCompanyContact(): Promise<any> {
+    //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
+    return this.http
+      .get(`${this.url}/${this.key}/crm.company.list.json`)
+      .toPromise();
+  }
+
   //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.list.json?SELECT[]=EMAIL&SELECT[]=NAME&SELECT[]=LAST_NAME&SELECT[]=PHONE&FILTER[EMAIL]=pabs.aguilar2806
   public getContactByPhone(phone: string): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
@@ -96,14 +112,25 @@ export class BitrixItestService {
     postData: any,
     list: number
   ): Observable<any> {
-    return this.http.post(
-      //`${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=48`,
-      `${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}`,
-      postData,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    if (postData.ELEMENT_ID) {
+      return this.http.post(
+        //`${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=48`,
+        `${this.url}/${this.key}/lists.element.update`,
+        postData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    } else {
+      return this.http.post(
+        //`${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=48`,
+        `${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}`,
+        postData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
   }
 
   public createSubfolder(postData: any): Observable<any> {

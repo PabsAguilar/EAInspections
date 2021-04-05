@@ -121,6 +121,64 @@
         </div>
       </div>
 
+      <ion-item lines="full">
+        <ion-label position="floating">Phone</ion-label>
+        <ion-input
+          name="phone"
+          #phone="ngModel"
+          [(ngModel)]="newCompany.phone"
+          type="tel"
+          pattern="[- +()0-9]+"
+        ></ion-input>
+      </ion-item>
+      <div class="validation-errors">
+        <div *ngIf=" phone.errors && (phone.dirty || phone.touched) ">
+          <p *ngIf="phone.errors.required">
+            <ion-icon
+              color="danger"
+              name="information-circle-outline"
+            ></ion-icon>
+            <ion-label color="danger"> Required </ion-label>
+          </p>
+          <p *ngIf="phone.errors.pattern">
+            <ion-icon
+              color="danger"
+              name="information-circle-outline"
+            ></ion-icon>
+            <ion-label color="danger"> Phone not valid </ion-label>
+          </p>
+        </div>
+      </div>
+
+      <ion-item lines="full">
+        <ion-label position="floating">Email</ion-label>
+        <ion-input
+          name="email"
+          #email="ngModel"
+          [(ngModel)]="newCompany.email"
+          type="email"
+          email
+        ></ion-input>
+      </ion-item>
+      <div class="validation-errors">
+        <div *ngIf="email.errors && (email.dirty || email.touched) ">
+          <p *ngIf="email.errors.required">
+            <ion-icon
+              color="danger"
+              name="information-circle-outline"
+            ></ion-icon>
+            <ion-label color="danger"> Required </ion-label>
+          </p>
+          <p *ngIf="email.errors.email">
+            <ion-icon
+              color="danger"
+              name="information-circle-outline"
+            ></ion-icon>
+            <ion-label color="danger"> Email not valid </ion-label>
+          </p>
+        </div>
+      </div>
+
       <ion-row class="ion-padding">
         <ion-col>
           <ion-button
@@ -130,7 +188,8 @@
             [disabled]="! 
             ( 
               newCompany.title && ! title.errors 
-            
+              && ! phone.errors 
+              && ! email.errors 
             )
             "
             >Save</ion-button

@@ -9,7 +9,7 @@ import {
 } from "@ionic/angular";
 import { fromEventPattern } from "rxjs";
 import { Contact } from "src/app/models/contact";
-import { InspectionStatus } from "src/app/models/enums";
+import { InspectionStatus, SchedulingStatus } from "src/app/models/enums";
 import { Scheduling } from "src/app/models/scheduling";
 import { User } from "src/app/models/user";
 import { AuthenticationService } from "src/app/services/authentication.service";
@@ -161,7 +161,7 @@ export class SchedulingPage implements OnInit {
               console.log("Task Completed" + this.scheduling.id);
               console.log(this.scheduling);
 
-              this.scheduling.internalStatus = InspectionStatus.Pending;
+              this.scheduling.internalStatus = SchedulingStatus.Pending;
               console.log(this.scheduling);
               this.scheduling.scheduleDateTime = new Date(
                 this.scheduling.scheduleDateTime

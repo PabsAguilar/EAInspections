@@ -20,6 +20,7 @@ import {
 import { Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
+import { InspectionStatus } from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { User } from "src/app/models/user";
 import { AuthenticationService } from "src/app/services/authentication.service";
@@ -127,7 +128,11 @@ export class PendingInspectionsPage implements OnInit {
       await this.inspectionService.getPendingInspections(this.user.userId)
     ).filter(
       (task) =>
-        this.segmentOption == "All" || task.internalStatus == this.segmentOption
+        this.segmentOption == "All" ||
+        (this.segmentOption == "Pending" &&
+          (task.internalStatus == InspectionStatus.New ||
+            task.internalStatus == InspectionStatus.InProgress)) ||
+        task.internalStatus == this.segmentOption
     );
   }
 
@@ -186,9 +191,9 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   call(item: InspectionTask) {
-    console.log("call " + item.contactPhone);
+    console.log("call " + item.phone);
     this.callNumber
-      .callNumber(item.contactPhone, true)
+      .callNumber(item.phone, true)
       .then((res) => console.log("Launched dialer!", res))
       .catch((err) => console.log("Error launching dialer", err));
   }
@@ -262,6 +267,10 @@ export class PendingInspectionsPage implements OnInit {
             await loading.present();
 
             try {
+              var response = await (
+                await this.syncInspection.syncAllPending()
+              ).toPromise();
+
               await this.inspectionService.getExternal(
                 (await this.autenticateService.getUser()).userId
               );

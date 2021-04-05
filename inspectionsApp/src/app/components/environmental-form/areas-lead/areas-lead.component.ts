@@ -34,7 +34,7 @@ export class AreasLeadComponent implements OnInit {
           });
       });
 
-      this.AreaUpdated(null);
+      this.AreaUpdated("init");
     }
   }
   _model: LeadAreas = new LeadAreas();
@@ -49,6 +49,9 @@ export class AreasLeadComponent implements OnInit {
     this.filledAreas = !this.model.leadAreas
       ? 0
       : this.model.leadAreas.filter((y) => y.sample).length;
+    if ($event != "init") {
+      this.model.syncInfo.updated = true;
+    }
 
     if (this.filledAreas >= 1 && this.model.inspectionType) {
       this.progressColor = "success";

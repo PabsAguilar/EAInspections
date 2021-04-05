@@ -22,11 +22,11 @@
       <ion-segment-button value="All">
         <ion-label>All</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="In Progress">
-        <ion-label>Saved</ion-label>
+      <ion-segment-button value="Pending">
+        <ion-label>Pending</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="New">
-        <ion-label>New</ion-label>
+      <ion-segment-button value="Saved">
+        <ion-label>Saved</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -80,7 +80,7 @@
             <ion-item-option
               (click)="call(task)"
               color="white"
-              *ngIf="task.contactPhone"
+              *ngIf="task.phone"
             >
               <ion-icon
                 color="success"
@@ -117,13 +117,23 @@
         > -->
             <div class="ion-text-center">
               <ion-icon
+                *ngIf="task.internalStatus !='In Progress' && task.internalStatus !='New'"
+                style="font-size: large"
+                name="save-outline"
+                [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
+                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' :'medium'  "
+              ></ion-icon>
+              <ion-icon
+                *ngIf="task.internalStatus =='In Progress' || task.internalStatus =='New'"
                 style="font-size: large"
                 name="time-outline"
-                [color]="task.internalStatus =='In Progress' ? 'warning' : ''"
+                [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
+                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' :'medium'  "
               ></ion-icon>
               <ion-label
                 style="font-size: x-small"
-                [color]="task.internalStatus =='In Progress' ? 'warning' : ''"
+                [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
+                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' :'medium'  "
                 >{{task.scheduleDateTime | date: 'hh:mm a'}}
               </ion-label>
             </div>

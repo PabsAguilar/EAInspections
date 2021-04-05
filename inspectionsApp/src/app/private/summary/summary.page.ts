@@ -117,9 +117,6 @@ export class SummaryPage implements OnInit {
         }
         switch (result.data.event) {
           case "syncToServer":
-            console.log("dummySync");
-            // await this.inspectionStorageService.syncPendingTask();
-            //await this.schedulingStorageService.syncPending();
             await (await this.syncInspection.syncAllPending()).toPromise();
             this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
             this.schedulingList = await this.schedulingStorageService.getAll();
@@ -138,9 +135,9 @@ export class SummaryPage implements OnInit {
   }
 
   call(item: InspectionTask) {
-    console.log("call " + item.contactPhone);
+    console.log("call " + item.phone);
     this.callNumber
-      .callNumber(item.contactPhone, true)
+      .callNumber(item.phone, true)
       .then((res) => console.log("Launched dialer!", res))
       .catch((err) => console.log("Error launching dialer", err));
   }

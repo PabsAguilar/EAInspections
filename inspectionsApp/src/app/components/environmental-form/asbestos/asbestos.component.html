@@ -39,7 +39,7 @@
     <ion-label position="floating">Material Description</ion-label>
     <ion-input
       [(ngModel)]="_model.materialDescription"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       type="text"
       [readonly]="readonly"
       required
@@ -50,7 +50,7 @@
     <ion-label position="floating">Total Quantity (sq ft)</ion-label>
     <ion-input
       [(ngModel)]="_model.totalQuantity"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       [readonly]="readonly"
       type="number"
       required
@@ -114,7 +114,7 @@
     <ion-textarea
       [readonly]="readonly"
       [(ngModel)]="_model.observations"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       type="text"
     ></ion-textarea>
   </ion-item>

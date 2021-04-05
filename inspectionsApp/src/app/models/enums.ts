@@ -11,8 +11,24 @@ export enum EnumEnterprise {
 export enum InspectionStatus {
   InProgress = "In Progress",
   New = "New",
+  PendingSaved = "Pending to be Saved",
+  Saved = "Saved",
+  PendingSentLab = "Pending to Sent Labs",
+  LabsSent = "Labs Sent",
+  PendingToComplete = "Pending to Complete",
   Completed = "Completed",
+}
+export enum ReportStatusDeal {
+  Saved = 6928,
+  Labs = 6930,
+  Submitted = 6932,
+  Rejected = 6936,
+  Archived = 6934,
+}
+
+export enum SchedulingStatus {
   Pending = "Pending",
+  Completed = "Completed",
 }
 
 export enum AreaConditionType {

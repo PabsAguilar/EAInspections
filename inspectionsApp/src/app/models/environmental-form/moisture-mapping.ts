@@ -1,3 +1,5 @@
+import { SyncInfo } from "../sync-info";
+
 export class MoistureMapping {
   area: string;
   roomTemp: number;
@@ -10,7 +12,9 @@ export class MoistureMapping {
   standardTemperatureCeiling: number;
   standardTemperatureFloor: number;
   moistureMappingBitrixMap: MoistureMappingBitrixMap;
+  syncInfo: SyncInfo;
   constructor() {
+    this.syncInfo = new SyncInfo();
     this.moistureMappingBitrixMap = new MoistureMappingBitrixMap();
   }
 }

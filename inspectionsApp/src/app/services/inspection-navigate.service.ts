@@ -22,10 +22,10 @@ export class InspectionNavigateService {
 
   async startInspection(task: InspectionTask) {
     try {
-      if (task.internalStatus == InspectionStatus.InProgress) {
-        await this.openInspectionPage(task);
-      } else {
+      if (task.internalStatus == InspectionStatus.New) {
         await this.presentAlertConfirmStartInspection(task);
+      } else {
+        await this.openInspectionPage(task);
       }
     } catch (error) {
       console.log(error);

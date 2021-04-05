@@ -47,7 +47,7 @@ export class AreasMoistureMappingComponent implements OnInit {
     this.filledAreas = !this.model.areamoistureMapping
       ? 0
       : this.model.areamoistureMapping.filter((y) => y.area).length;
-
+this.model.syncInfo.updated = true;
     if (this.filledAreas >= 1 && this.model.dateTesed) {
       this.progressColor = "success";
       this.progressPercentage = 1;

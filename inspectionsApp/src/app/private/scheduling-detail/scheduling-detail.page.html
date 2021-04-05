@@ -46,7 +46,7 @@
             <ion-row class="row-center">
               <ion-chip color="success" (click)="call()">
                 <ion-icon name="call" color="success"></ion-icon>
-                <ion-label>{{scheduling.contact.contactPhone}}</ion-label>
+                <ion-label>{{scheduling.contact.phone}}</ion-label>
               </ion-chip>
             </ion-row>
 
@@ -57,7 +57,7 @@
                 class="ion-text-center"
               >
                 <ion-icon name="mail-outline" color="primary"></ion-icon>
-                <ion-label>{{scheduling.contact.contactEmail}}</ion-label>
+                <ion-label>{{scheduling.contact.email}}</ion-label>
               </ion-chip>
             </ion-row>
             <ion-row>
@@ -104,8 +104,8 @@
             {{scheduling.insuranceCompanyContact.firstName + " " +
             scheduling.insuranceCompanyContact.lastName}}
           </h3>
-          <p>{{scheduling.insuranceCompanyContact.contactPhone}}</p>
-          <p>{{scheduling.insuranceCompanyContact.contactEmail}}</p>
+          <p>{{scheduling.insuranceCompanyContact.phone}}</p>
+          <p>{{scheduling.insuranceCompanyContact.email}}</p>
         </ion-label>
       </ion-item>
 
@@ -119,27 +119,5 @@
         </ion-label>
       </ion-item>
     </ion-card-content>
-
-    <!-- <ion-footer>
-      <ion-grid
-        ><ion-row>
-          <ion-col class="row-center">
-            <ion-chip color="secondary" (click)="manualSync()">
-              <ion-icon
-                name="cloud-upload-outline"
-                color="secondary"
-              ></ion-icon>
-              <ion-label>Manually Sync</ion-label>
-            </ion-chip></ion-col
-          >
-          <ion-col class="row-center">
-            <ion-chip color="success" (click)="call()">
-              <ion-icon name="call" color="success"></ion-icon>
-              <ion-label>{{scheduling.contactPhone}}</ion-label>
-            </ion-chip>
-          </ion-col>
-        </ion-row></ion-grid
-      >
-    </ion-footer> -->
   </ion-card>
 </ion-content>

@@ -33,9 +33,9 @@ export class InspectionsDetailsPage implements OnInit {
   }
 
   call() {
-    console.log("call " + this.task.contactPhone);
+    console.log("call " + this.task.phone);
     this.callNumber
-      .callNumber(this.task.contactPhone, true)
+      .callNumber(this.task.phone, true)
       .then((res) => console.log("Launched dialer!", res))
       .catch((err) => console.log("Error launching dialer", err));
   }
@@ -51,10 +51,10 @@ export class InspectionsDetailsPage implements OnInit {
     );
   }
   email() {
-    console.log("Mailto" + this.task.contactEmail);
+    console.log("Mailto" + this.task.email);
     window.location.href =
       "mailto:" +
-      this.task.contactEmail +
+      this.task.email +
       "?subject=Inspection " +
       " " +
       this.task.inspectionType +

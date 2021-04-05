@@ -23,18 +23,18 @@ export class SchedulingDetailPage implements OnInit {
   }
 
   call() {
-    console.log("call " + this.scheduling.contact.contactPhone);
+    console.log("call " + this.scheduling.contact.phone);
     this.callNumber
-      .callNumber(this.scheduling.contact.contactPhone, true)
+      .callNumber(this.scheduling.contact.phone, true)
       .then((res) => console.log("Launched dialer!", res))
       .catch((err) => console.log("Error launching dialer", err));
   }
 
   email() {
-    console.log("Mailto" + this.scheduling.contact.contactEmail);
+    console.log("Mailto" + this.scheduling.contact.email);
     window.location.href =
       "mailto:" +
-      this.scheduling.contact.contactEmail +
+      this.scheduling.contact.email +
       "?subject=Scheduling inspection " +
       " " +
       this.scheduling.serviceType +

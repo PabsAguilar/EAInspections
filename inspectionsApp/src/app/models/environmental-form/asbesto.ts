@@ -1,3 +1,5 @@
+import { SyncInfo } from "../sync-info";
+
 export class Asbesto {
   materialLocation: string;
   materialDescription: string;
@@ -7,7 +9,9 @@ export class Asbesto {
   labResults: string;
   observations: string;
   asbestoBitrixMaping: AsbestoBitrixMaping;
+  syncInfo: SyncInfo;
   constructor() {
+    this.syncInfo = new SyncInfo();
     this.asbestoBitrixMaping = new AsbestoBitrixMaping();
   }
 }

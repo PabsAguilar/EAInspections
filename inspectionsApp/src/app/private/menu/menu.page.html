@@ -3,9 +3,13 @@
     <ion-header class="card-background-page">
       <ion-card>
         <img src="../../../assets/images/b1.png" />
-        <ion-avatar class="card-avatar ion-margin">
+        <ion-avatar class="card-avatar ion-margin" *ngIf="user.image">
           <img src="{{user.image}}" />
         </ion-avatar>
+        <ion-avatar class="card-avatar ion-margin" *ngIf="!user.image">
+          <img src="../../../assets/images/avatar.svg" />
+        </ion-avatar>
+
         <div class="card-title">Inspections App</div>
         <div class="card-subtitle">{{user.completeName}}</div>
         <div class="card-subtitle2">v5.2.0</div>

@@ -84,14 +84,42 @@
   >
   </app-areas-lead>
 
-  <ion-item class="ion-margin" lines="none" *ngIf="!readonly">
+  <ion-item>
+    <ion-badge
+      [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
+      task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' :'medium'  "
+      slot="end"
+      >{{task.internalStatus}}</ion-badge
+    >
+  </ion-item>
+
+  <ion-item
+    class="ion-margin"
+    lines="none"
+    *ngIf="!readonly &&  task.internalStatus === 'New'|| task.internalStatus === 'In Progress' || task.internalStatus === 'Saved'"
+  >
     <ion-label>Save for later</ion-label>
-    <ion-fab-button color="primary" (click)="back()" class="ion-margin">
+    <ion-fab-button color="primary" (click)="saveTask()" class="ion-margin">
       <ion-icon name="save-outline"></ion-icon>
     </ion-fab-button>
   </ion-item>
 
-  <ion-item class="ion-margin" lines="none" *ngIf="!readonly">
+  <ion-item
+    class="ion-margin"
+    lines="none"
+    *ngIf="!readonly &&  task.internalStatus === 'Saved'"
+  >
+    <ion-label>Send Labs</ion-label>
+    <ion-fab-button color="primary" (click)="sendLabs()" class="ion-margin">
+      <ion-icon name="flask-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-item>
+
+  <ion-item
+    class="ion-margin"
+    lines="none"
+    *ngIf="!readonly && (task.internalStatus === 'Saved' || task.internalStatus === 'Labs Sent')"
+  >
     <ion-label>Complete Inspection</ion-label>
     <ion-fab-button color="success" (click)="completeTask()" class="ion-margin">
       <ion-icon name="walk-outline"></ion-icon>

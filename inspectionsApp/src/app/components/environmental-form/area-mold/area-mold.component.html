@@ -70,7 +70,7 @@
     <ion-label position="floating">Area Notes</ion-label>
     <ion-textarea
       [(ngModel)]="model.areaNotes"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       type="text"
       [readonly]="readonly"
     ></ion-textarea>
@@ -100,7 +100,7 @@
     <ion-textarea
       [readonly]="readonly"
       [(ngModel)]="_model.ceilingNotes"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       type="text"
     ></ion-textarea>
   </ion-item>
@@ -128,7 +128,7 @@
     <ion-textarea
       [readonly]="readonly"
       [(ngModel)]="_model.drywallNotes"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       type="text"
     ></ion-textarea>
   </ion-item>
@@ -156,7 +156,7 @@
     <ion-label position="floating">Baseboards Notes</ion-label>
     <ion-textarea
       [(ngModel)]="_model.baseboardsNotes"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       type="text"
       [readonly]="readonly"
     ></ion-textarea>
@@ -185,7 +185,7 @@
     <ion-textarea
       [readonly]="readonly"
       [(ngModel)]="_model.flooringNotes"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       type="text"
     ></ion-textarea>
   </ion-item>
@@ -241,7 +241,7 @@ listbeddingsOption -->
     <ion-label position="floating">Observations and Recommendations</ion-label>
     <ion-textarea
       [(ngModel)]="_model.observations"
-      (ionChange)="changeModel($event)"
+      (ionInput)="changeModel($event)"
       type="text"
     ></ion-textarea>
   </ion-item>

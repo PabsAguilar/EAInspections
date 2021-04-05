@@ -19,8 +19,8 @@ export class InspectionTask implements IStorageModel {
   contactId: number;
   serviceAddress: string;
   geoPointText: string;
-  contactPhone: string;
-  contactEmail: string;
+  phone: string;
+  email: string;
   referalPartnerContact: Contact;
   referalPartnerCompany: Company;
   inspectorName: string;
@@ -51,41 +51,3 @@ export class BitrixFolder {
     this.syncInfo = new SyncInfo();
   }
 }
-
-/*
-[
-  {
-    'repeat(5, 30)': {
-      id: '{{index()}}',
-      scheduleDateTime:
-      '{{moment(this.date( new Date(), new Date(2021, 1, 6))).format("LLLL")}}',
-      name: {
-        first: '{{firstName()}}',
-        last: '{{surname()}}'
-      },     
-      contactName(tags) {
-        return `${this.name.first} ${this.name.last}`;
-      },
-      
-      serviceAddress:
-      '{{integer(100, 999)}} {{street()}}, {{random("Orlando", "Miami","Daytona Beach","Melbourne")}}, FL, {{integer(100, 10000)}}',
-      contactPhone: '+1 {{phone()}}',
-      company: '{{company().toUpperCase()}}',
-      contactEmail(tags) {
-        return `${this.name.first}.${this.name.last}@${
-          this.company
-        }${tags.domainZone()}`.toLowerCase();
-      },
-      
-      referalPartnerContact: '{{firstName()}} {{surname()}}',
-      referalPartnerCompany: '{{company().toUpperCase()}}',
-      inspectorName: 'Inspector A',
-      inspectorUserId: 25,      
-      inspectionsInstructions: '{{lorem(1, "paragraphs")}}',
-      inspectionType: '{{random("Environmental Inspection", "Comprehensive Inspection")}}'
-       
-    },
-  },
-]
-
-*/

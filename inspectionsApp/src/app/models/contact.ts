@@ -4,8 +4,8 @@ export class Contact {
   idContact: string;
   firstName: string;
   lastName: string;
-  contactPhone: string;
-  contactEmail: string;
+  phone: string;
+  email: string;
   selected: boolean;
   syncInfo: SyncInfo;
 

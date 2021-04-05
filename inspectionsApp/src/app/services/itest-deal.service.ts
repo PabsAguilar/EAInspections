@@ -68,8 +68,8 @@ export class ItestDealService {
       contact.firstName = result[0].NAME;
       contact.idContact = result[0].ID;
       contact.lastName = result[0].LAST_NAME;
-      contact.contactEmail = result[0].EMAIL;
-      contact.contactEmail = result[0].PHONE;
+      contact.email = result[0].EMAIL;
+      contact.email = result[0].PHONE;
       contact.syncInfo.isSync = true;
       return contact;
     } else {
@@ -112,11 +112,11 @@ export class ItestDealService {
             contact.idContact = item.ID;
             contact.lastName = item.LAST_NAME;
             if (item.EMAIL && item.EMAIL.length > 0) {
-              contact.contactEmail = item.EMAIL[0].VALUE;
+              contact.email = item.EMAIL[0].VALUE;
             }
 
             if (item.PHONE && item.PHONE.length > 0) {
-              contact.contactPhone = item.PHONE[0].VALUE;
+              contact.phone = item.PHONE[0].VALUE;
             }
 
             contact.syncInfo.isSync = true;
@@ -138,8 +138,7 @@ export class ItestDealService {
         .filter((item) => {
           return (
             item.inspectorUserId == userId &&
-            (item.internalStatus === InspectionStatus.New ||
-              item.internalStatus === InspectionStatus.InProgress)
+            item.internalStatus !== InspectionStatus.Completed
           );
         })
         .sort(
@@ -156,10 +155,7 @@ export class ItestDealService {
     if (list != null) {
       var completed = list
         .filter((item) => {
-          return (
-            item.internalStatus !== InspectionStatus.New &&
-            item.internalStatus !== InspectionStatus.InProgress
-          );
+          return item.internalStatus == InspectionStatus.Completed;
         })
         .sort(
           (a, b) =>
@@ -175,10 +171,7 @@ export class ItestDealService {
     if (list != null) {
       var completed = list
         .filter((item) => {
-          return (
-            item.internalStatus == InspectionStatus.Completed ||
-            item.internalStatus == InspectionStatus.InProgress
-          );
+          return item.internalStatus !== InspectionStatus.New;
         })
         .sort(
           (a, b) =>
@@ -569,77 +562,79 @@ export class ItestDealService {
   async getExternal(idUser: number) {
     this.storage.set(SYNCSTAMPKEY, new Date());
 
-    var completed = await this.getStartedInspections();
+    var startedList = await this.getStartedInspections();
 
     var list = await this.getInspectionITestJson(idUser);
     for (let index = 0; index < list.length; index++) {
       var item = list[index] as InspectionTask;
       item.internalStatus = InspectionStatus.New;
 
-      var itemCompleted: InspectionTask = null;
-      if (completed != null && completed.length > 0) {
-        itemCompleted = completed.find((x) => {
+      var itemStarted: InspectionTask = null;
+      if (startedList != null && startedList.length > 0) {
+        itemStarted = startedList.find((x) => {
           return x.id === item.id;
         });
       }
 
-      if (itemCompleted) {
-        item.comprehesiveForm = itemCompleted.comprehesiveForm;
+      if (itemStarted) {
+        item.comprehesiveForm = itemStarted.comprehesiveForm;
 
-        item.iTestAgreements = itemCompleted.iTestAgreements;
-        item.expertNetworkAgreements = itemCompleted.expertNetworkAgreements;
-        item.internalStatus = itemCompleted.internalStatus;
-        item.bitrixFolder = itemCompleted.bitrixFolder;
+        item.iTestAgreements = itemStarted.iTestAgreements;
+        item.expertNetworkAgreements = itemStarted.expertNetworkAgreements;
+        item.internalStatus = itemStarted.internalStatus;
+        item.bitrixFolder = itemStarted.bitrixFolder;
 
-        itemCompleted.environmentalForm.generalInfoInspection.propertyYear = itemCompleted
+        itemStarted.environmentalForm.generalInfoInspection.propertyYear = itemStarted
           .environmentalForm.generalInfoInspection.propertyYear
-          ? itemCompleted.environmentalForm.generalInfoInspection.propertyYear
+          ? itemStarted.environmentalForm.generalInfoInspection.propertyYear
           : item.environmentalForm.generalInfoInspection.propertyYear;
-        itemCompleted.environmentalForm.generalInfoInspection.propertyType = itemCompleted
+        itemStarted.environmentalForm.generalInfoInspection.propertyType = itemStarted
           .environmentalForm.generalInfoInspection.propertyType
-          ? itemCompleted.environmentalForm.generalInfoInspection.propertyType
+          ? itemStarted.environmentalForm.generalInfoInspection.propertyType
           : item.environmentalForm.generalInfoInspection.propertyType;
-        itemCompleted.environmentalForm.generalInfoInspection.environmentalInspection = itemCompleted
+        itemStarted.environmentalForm.generalInfoInspection.environmentalInspection = itemStarted
           .environmentalForm.generalInfoInspection.environmentalInspection
-          ? itemCompleted.environmentalForm.generalInfoInspection
+          ? itemStarted.environmentalForm.generalInfoInspection
               .environmentalInspection
           : item.environmentalForm.generalInfoInspection
               .environmentalInspection;
-        itemCompleted.environmentalForm.generalInfoInspection.interiorTemperature = itemCompleted
+        itemStarted.environmentalForm.generalInfoInspection.interiorTemperature = itemStarted
           .environmentalForm.generalInfoInspection.interiorTemperature
-          ? itemCompleted.environmentalForm.generalInfoInspection
+          ? itemStarted.environmentalForm.generalInfoInspection
               .interiorTemperature
           : item.environmentalForm.generalInfoInspection.interiorTemperature;
-        itemCompleted.environmentalForm.generalInfoInspection.exteriorRelativeHumidity = itemCompleted
+        itemStarted.environmentalForm.generalInfoInspection.exteriorRelativeHumidity = itemStarted
           .environmentalForm.generalInfoInspection.exteriorRelativeHumidity
-          ? itemCompleted.environmentalForm.generalInfoInspection
+          ? itemStarted.environmentalForm.generalInfoInspection
               .exteriorRelativeHumidity
           : item.environmentalForm.generalInfoInspection
               .exteriorRelativeHumidity;
-        itemCompleted.environmentalForm.generalInfoInspection.HVACSystemCondition = itemCompleted
+        itemStarted.environmentalForm.generalInfoInspection.HVACSystemCondition = itemStarted
           .environmentalForm.generalInfoInspection.HVACSystemCondition
-          ? itemCompleted.environmentalForm.generalInfoInspection
+          ? itemStarted.environmentalForm.generalInfoInspection
               .HVACSystemCondition
           : item.environmentalForm.generalInfoInspection.HVACSystemCondition;
-        itemCompleted.environmentalForm.generalInfoInspection.ductsCondition = itemCompleted
+        itemStarted.environmentalForm.generalInfoInspection.ductsCondition = itemStarted
           .environmentalForm.generalInfoInspection.ductsCondition
-          ? itemCompleted.environmentalForm.generalInfoInspection.ductsCondition
+          ? itemStarted.environmentalForm.generalInfoInspection.ductsCondition
           : item.environmentalForm.generalInfoInspection.ductsCondition;
-        itemCompleted.environmentalForm.generalInfoInspection.atticCondition = itemCompleted
+        itemStarted.environmentalForm.generalInfoInspection.atticCondition = itemStarted
           .environmentalForm.generalInfoInspection.atticCondition
-          ? itemCompleted.environmentalForm.generalInfoInspection.atticCondition
+          ? itemStarted.environmentalForm.generalInfoInspection.atticCondition
           : item.environmentalForm.generalInfoInspection.atticCondition;
 
-        item.environmentalForm = itemCompleted.environmentalForm;
+        item.environmentalForm = itemStarted.environmentalForm;
       }
       list[index] = item;
     }
 
-    completed.forEach((element) => {
-      if (!list.find((x) => x.id == element.id)) {
-        list.push(element);
-      }
-    });
+    await Promise.all(
+      startedList.map(async (element) => {
+        if (!list.find((x) => x.id == element.id)) {
+          list.push(element);
+        }
+      })
+    );
 
     await this.inspectionStorage.clear();
 
@@ -660,11 +655,11 @@ export class ItestDealService {
       bitrixContact.firstName = contact.NAME;
       bitrixContact.lastName = contact.LAST_NAME;
       bitrixContact.idContact = contactId;
-      bitrixContact.contactPhone =
+      bitrixContact.phone =
         Array.isArray(contact.PHONE) && contact.PHONE.length
           ? contact.PHONE[0].VALUE
           : null;
-      bitrixContact.contactEmail =
+      bitrixContact.email =
         Array.isArray(contact.EMAIL) && contact.EMAIL.length
           ? contact.EMAIL[0].VALUE
           : null;
@@ -687,6 +682,15 @@ export class ItestDealService {
       bitrixCompany.title = company.TITLE;
       bitrixCompany.type = company.COMPANY_TYPE;
       bitrixCompany.id = companyId;
+      bitrixCompany.phone =
+        Array.isArray(company.PHONE) && company.PHONE.length
+          ? company.PHONE[0].VALUE
+          : null;
+      bitrixCompany.email =
+        Array.isArray(company.EMAIL) && company.EMAIL.length
+          ? company.EMAIL[0].VALUE
+          : null;
+
       bitrixCompany.syncInfo = new SyncInfo();
       bitrixCompany.syncInfo.isSync = true;
       bitrixCompany.syncInfo.syncCode = companyId;
@@ -747,8 +751,8 @@ export class ItestDealService {
                 task.geoPointText = address[1].replace(";", ",");
               }
 
-              task.contactPhone = taskContact.contactPhone;
-              task.contactEmail = taskContact.contactEmail;
+              task.phone = taskContact.phone;
+              task.email = taskContact.email;
 
               if (
                 Array.isArray(x.UF_CRM_1612691326) &&
@@ -763,12 +767,11 @@ export class ItestDealService {
                       task.referalPartnerContact = contactReference;
                     }
                     if (element.includes("CO_")) {
-                      var companyReference = await this.bitrix.getCompanyContact(
+                      var companyReference = await this.getBitrixCompany(
                         element.split("CO_")[1]
                       );
-                      if (companyReference && companyReference.result) {
-                        task.referalPartnerCompany =
-                          companyReference.result.TITLE;
+                      if (companyReference) {
+                        task.referalPartnerCompany = companyReference;
                       }
                     }
                   })

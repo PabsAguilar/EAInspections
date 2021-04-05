@@ -33,7 +33,7 @@ export class AreasAsbestosComponent implements OnInit {
             return { name: item.name, value: item.id };
           });
       });
-      this.AreaUpdated(null);
+      this.AreaUpdated("init");
     }
   }
   _model: AsbestoAreas = new AsbestoAreas();
@@ -48,6 +48,9 @@ export class AreasAsbestosComponent implements OnInit {
     this.filledAreas = !this.model.asbestosAreas
       ? 0
       : this.model.asbestosAreas.filter((y) => y.materialLocation).length;
+    if ($event != "init") {
+      this.model.syncInfo.updated = true;
+    }
 
     if (this.filledAreas >= 1 && this.model.inspectionType) {
       this.progressColor = "success";

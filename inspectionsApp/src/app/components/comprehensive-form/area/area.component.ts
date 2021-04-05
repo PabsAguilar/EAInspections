@@ -64,6 +64,8 @@ export class AreaComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
+    
+
     this.InspectionAreaChanged.emit(this.area);
 
     switch (true) {

@@ -65,7 +65,7 @@ export class EnvironmentalInspectionPage implements OnInit {
         await this.loadingController.dismiss();
       }
       await this.validateAgreements();
-    } catch (error) {      
+    } catch (error) {
       console.log(error);
       var message = this.toast.create({
         message: "environmental-ionViewDidEnter" + error,
@@ -99,6 +99,8 @@ export class EnvironmentalInspectionPage implements OnInit {
   back() {
     this.inspectionNavigateService.backToPending();
   }
+
+  save() {}
 
   async presentPopover(ev: any) {
     try {
@@ -179,6 +181,139 @@ export class EnvironmentalInspectionPage implements OnInit {
     }
   }
 
+  async saveTask() {
+    try {
+      const alert = await this.alertController.create({
+        header: "Confirm Inspection",
+        message:
+          "Are you sure you want to save the inspection? Inspection will be sent to Bitrix.",
+        buttons: [
+          {
+            text: "Cancel",
+            role: "cancel",
+            cssClass: "secondary",
+            handler: () => {
+              console.log("Cancel action");
+            },
+          },
+          {
+            text: "Ok",
+            handler: async () => {
+              this.task.internalStatus = InspectionStatus.PendingSaved;
+              var random = Math.floor(Math.random() * 100) + 2;
+              await this.inspectionService.update(this.task);
+              await this.navController.navigateRoot(
+                "menu/tabs/tabs/pending-inspections/" + random
+              );
+              var message = this.toast.create({
+                message: "Inspection is saved.",
+                color: "success",
+                duration: 3000,
+              });
+
+              (await message).present();
+
+              (await this.syncInspectionService.syncTask(this.task)).subscribe(
+                async (x) => {
+                  if (x) {
+                    this.syncInspectionService.publishSomeData({
+                      syncItem: "deal",
+                    });
+                    var message = this.toast.create({
+                      message: "Inspection is synched.",
+                      color: "success",
+                      duration: 5000,
+                    });
+                    (await message).present();
+                  } else {
+                    var message = this.toast.create({
+                      message: "Sync failed, please start a manual sync.",
+                      color: "warning",
+                      duration: 5000,
+                    });
+                    (await message).present();
+                  }
+                }
+              );
+            },
+          },
+        ],
+      });
+      await alert.present();
+    } catch (error) {
+      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+    }
+  }
+
+  async sendLabs() {
+    try {
+      this.task.internalStatus = InspectionStatus.PendingSentLab;
+      var random = Math.floor(Math.random() * 100) + 2;
+      await this.inspectionService.update(this.task);
+
+      var message = this.toast.create({
+        message: "Inspection changed status.",
+        color: "success",
+        duration: 3000,
+      });
+
+      (await this.syncInspectionService.syncTask(this.task)).subscribe(
+        async (x) => {
+          if (x) {
+            this.syncInspectionService.publishSomeData({
+              syncItem: "deal",
+            });
+            var message = this.toast.create({
+              message: "Inspection is synched.",
+              color: "success",
+              duration: 5000,
+            });
+            (await message).present();
+          } else {
+            var message = this.toast.create({
+              message: "Sync failed, please start a manual sync.",
+              color: "warning",
+              duration: 5000,
+            });
+            (await message).present();
+          }
+        }
+      );
+
+      (await message).present();
+
+      const alert = await this.alertController.create({
+        header: "Reminder",
+        message: `Fill in lab form with name: ${this.task.contactName} and deal number: ${this.task.id}, and mail or drop off to lab.`,
+        buttons: [
+          {
+            text: "Ok",
+            handler: async () => {
+              await this.navController.navigateRoot(
+                "menu/tabs/tabs/pending-inspections/" + random
+              );
+            },
+          },
+        ],
+      });
+      await alert.present();
+    } catch (error) {
+      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+    }
+  }
+
   async completeTask() {
     try {
       const alert = await this.alertController.create({
@@ -198,7 +333,7 @@ export class EnvironmentalInspectionPage implements OnInit {
             handler: async () => {
               console.log("Task Completed" + this.task.id);
               console.log(this.task);
-              this.task.internalStatus = "Pending";
+              this.task.internalStatus = InspectionStatus.PendingToComplete;
               var random = Math.floor(Math.random() * 100) + 2;
               await this.inspectionService.update(this.task);
               await this.navController.navigateRoot(
@@ -214,6 +349,9 @@ export class EnvironmentalInspectionPage implements OnInit {
 
               (await this.syncInspectionService.syncTask(this.task)).subscribe(
                 async (x) => {
+                  this.syncInspectionService.publishSomeData({
+                    syncItem: "deal",
+                  });
                   if (x) {
                     var message = this.toast.create({
                       message: "Inspection is synched.",
@@ -249,10 +387,10 @@ export class EnvironmentalInspectionPage implements OnInit {
 
   public async UpdateEntity($event): Promise<void> {
     try {
-      if (this.task.internalStatus != InspectionStatus.Completed) {
+      if (this.task.internalStatus == InspectionStatus.New) {
         this.task.internalStatus = "In Progress";
-        await this.inspectionService.update(this.task);
       }
+      await this.inspectionService.update(this.task);
     } catch (error) {
       console.log(error);
       var message = this.toast.create({

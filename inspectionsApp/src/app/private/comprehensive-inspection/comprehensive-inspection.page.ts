@@ -64,7 +64,7 @@ export class ComprehensiveInspectionPage implements OnInit {
               });
               await loading.present();
 
-              this.task.internalStatus = InspectionStatus.Pending;
+              this.task.internalStatus = InspectionStatus.PendingSaved;
               var random = Math.floor(Math.random() * 10) + 2;
               await this.inspectionStorageService.update(this.task);
               await this.navController.navigateRoot(

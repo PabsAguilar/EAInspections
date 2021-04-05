@@ -52,7 +52,7 @@ export class AsbestosComponent implements OnInit {
       }
     });
 
-    this.changeModel(null);
+    this.changeModel("init");
   }
   _model: Asbesto = new Asbesto();
   @Input() title: string = "";
@@ -100,7 +100,9 @@ export class AsbestosComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
-    this.modelChanged.emit(this._model);
+    if ($event != "init") {
+      this.modelChanged.emit(this._model);
+    }
 
     switch (true) {
       case this.progressPercentage < 0.5:
