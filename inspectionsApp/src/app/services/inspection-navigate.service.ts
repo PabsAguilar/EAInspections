@@ -42,7 +42,7 @@ export class InspectionNavigateService {
     try {
       const alert = await this.alertController.create({
         header: "Confirm action",
-        message: "Are you sure you want to start the inspection?",
+        message: "Are you sure you want to process the inspection?",
         buttons: [
           {
             text: "Cancel",

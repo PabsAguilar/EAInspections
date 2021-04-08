@@ -19,7 +19,7 @@
 <ion-content>
   <ion-item>
     <ion-label color="primary">
-      <center><h2>{{task.title}}</h2></center>
+      <center><h2>{{task.Id}} {{task.title}}</h2></center>
     </ion-label>
   </ion-item>
   <app-inspection-general
@@ -87,7 +87,7 @@
   <ion-item>
     <ion-badge
       [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
-      task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' :'medium'  "
+    task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
       slot="end"
       >{{task.internalStatus}}</ion-badge
     >

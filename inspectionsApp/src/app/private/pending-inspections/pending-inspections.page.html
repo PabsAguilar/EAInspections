@@ -121,19 +121,19 @@
                 style="font-size: large"
                 name="save-outline"
                 [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
-                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' :'medium'  "
+                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
               ></ion-icon>
               <ion-icon
                 *ngIf="task.internalStatus =='In Progress' || task.internalStatus =='New'"
                 style="font-size: large"
                 name="time-outline"
                 [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
-                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' :'medium'  "
+                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
               ></ion-icon>
               <ion-label
                 style="font-size: x-small"
                 [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
-                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' :'medium'  "
+                task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
                 >{{task.scheduleDateTime | date: 'hh:mm a'}}
               </ion-label>
             </div>

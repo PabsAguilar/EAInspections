@@ -132,6 +132,11 @@ export class PendingInspectionsPage implements OnInit {
         (this.segmentOption == "Pending" &&
           (task.internalStatus == InspectionStatus.New ||
             task.internalStatus == InspectionStatus.InProgress)) ||
+        (this.segmentOption == "Saved" &&
+          (task.internalStatus == InspectionStatus.Saved ||
+            task.internalStatus == InspectionStatus.LabsSent ||
+            task.internalStatus == InspectionStatus.PendingSaved ||
+            task.internalStatus == InspectionStatus.PendingSentLab)) ||
         task.internalStatus == this.segmentOption
     );
   }
@@ -310,7 +315,7 @@ export class PendingInspectionsPage implements OnInit {
         cssClass: "my-custom-class",
         buttons: [
           {
-            text: "Start",
+            text: "Process",
             icon: "arrow-forward-circle-outline",
             handler: () => {
               this.startInspection(task);

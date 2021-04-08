@@ -34,7 +34,7 @@ export class SchedulingPage implements OnInit {
   );
 
   scheduling: Scheduling = new Scheduling();
-  selectedDate = new Date();
+  selectedDate: Date;
 
   constructor(
     private schedulingStorageService: SchedulingStorageService,
@@ -139,6 +139,29 @@ export class SchedulingPage implements OnInit {
     return await modal.present();
   }
 
+  async hourChanged() {
+    try {
+      if (!this.selectedDate) {
+        return;
+      }
+      console.log(this.scheduling.scheduleDateTime);
+      var hours = new Date(this.selectedDate);
+      var dateSel = new Date(this.scheduling.scheduleDateTime);
+      this.scheduling.scheduleDateTime = new Date(
+        dateSel.getFullYear(),
+        dateSel.getMonth(),
+        dateSel.getDate(),
+        hours.getHours(),
+        hours.getMinutes(),
+        0
+      ).toISOString();
+
+      console.log(this.scheduling.scheduleDateTime);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async onSubmit() {
     // this.scheduling = values;
 
@@ -183,9 +206,10 @@ export class SchedulingPage implements OnInit {
                   },
                 ],
               });
-              alert2.present();
+              await alert2.present();
 
               var deal = this.scheduling;
+              this.selectedDate = null;
               this.scheduling = new Scheduling();
 
               (

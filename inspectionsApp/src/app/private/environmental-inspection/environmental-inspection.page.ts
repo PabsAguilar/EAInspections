@@ -262,6 +262,21 @@ export class EnvironmentalInspectionPage implements OnInit {
         color: "success",
         duration: 3000,
       });
+      const alert = await this.alertController.create({
+        header: "Reminder",
+        message: `Fill in lab form with name: ${this.task.contactName} and deal number: ${this.task.id}, and mail or drop off to lab.`,
+        buttons: [
+          {
+            text: "Ok",
+            handler: async () => {
+              await this.navController.navigateRoot(
+                "menu/tabs/tabs/pending-inspections/" + random
+              );
+            },
+          },
+        ],
+      });
+      await alert.present();
 
       (await this.syncInspectionService.syncTask(this.task)).subscribe(
         async (x) => {
@@ -287,22 +302,6 @@ export class EnvironmentalInspectionPage implements OnInit {
       );
 
       (await message).present();
-
-      const alert = await this.alertController.create({
-        header: "Reminder",
-        message: `Fill in lab form with name: ${this.task.contactName} and deal number: ${this.task.id}, and mail or drop off to lab.`,
-        buttons: [
-          {
-            text: "Ok",
-            handler: async () => {
-              await this.navController.navigateRoot(
-                "menu/tabs/tabs/pending-inspections/" + random
-              );
-            },
-          },
-        ],
-      });
-      await alert.present();
     } catch (error) {
       console.log(error);
       var message = this.toast.create({

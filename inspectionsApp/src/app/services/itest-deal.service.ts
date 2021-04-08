@@ -88,6 +88,12 @@ export class ItestDealService {
             company.title = item.TITLE;
             company.type = item.COMPANY_TYPE;
             company.id = item.ID;
+            if (item.EMAIL && item.EMAIL.length > 0) {
+              company.email = item.EMAIL[0].VALUE;
+            }
+            if (item.PHONE && item.PHONE.length > 0) {
+              company.phone = item.PHONE[0].VALUE;
+            }
 
             company.syncInfo.isSync = true;
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { ModalController } from "@ionic/angular";
+import { ModalController, ToastController } from "@ionic/angular";
 import { Company } from "src/app/models/company";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
@@ -11,7 +11,8 @@ import { ItestDealService } from "src/app/services/itest-deal.service";
 export class CompanySearchPage implements OnInit {
   constructor(
     private itestService: ItestDealService,
-    private modalController: ModalController // public formBuilder: FormBuilder
+    private modalController: ModalController,
+    private toast: ToastController
   ) {}
 
   ngOnInit() {}
@@ -22,7 +23,8 @@ export class CompanySearchPage implements OnInit {
   selectedCompany: Company;
   newCompany: Company = new Company();
   companiesListFound: Company[] = [];
-  createCompany: boolean = false;
+
+  segmentOption: string = "search";
 
   async searchName() {
     if (this.nameSearchText.length > 1) {
@@ -52,6 +54,14 @@ export class CompanySearchPage implements OnInit {
   }
   async confirmCompany() {
     this.modalController.dismiss(this.selectedCompany);
+    if (this.selectedCompany) {
+      var message = this.toast.create({
+        message: "Company Selected.",
+        color: "success",
+        duration: 1000,
+      });
+      (await message).present();
+    }
   }
 
   async clearSelectedCompany() {
@@ -61,5 +71,6 @@ export class CompanySearchPage implements OnInit {
 
   async saveNewCompany() {
     this.selectedCompany = this.newCompany;
+    this.confirmCompany();
   }
 }

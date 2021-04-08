@@ -93,7 +93,7 @@ export class BitrixItestService {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.company.list.json?SELECT[]=*&FILTER[%TITLE]=Test
     https: return this.http
       .get(
-        `${this.url}/${this.key}/crm.company.list.json?SELECT[]=TITLE&SELECT[]=COMPANY_TYPE&FILTER[%TITLE]=${name}`
+        `${this.url}/${this.key}/crm.company.list.json?SELECT[]=TITLE&SELECT[]=EMAIL&SELECT[]=PHONE&SELECT[]=COMPANY_TYPE&FILTER[%TITLE]=${name}`
       )
       .toPromise();
   }

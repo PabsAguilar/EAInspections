@@ -7,6 +7,17 @@
     </ion-buttons>
     <ion-title>Search Contact {{enterprise}}</ion-title>
   </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment value="create" [(ngModel)]="segmentOption">
+      <ion-segment-button value="create">
+        <ion-label>Create</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="search">
+        <ion-label>Search</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -31,15 +42,6 @@
     </ion-chip>
   </ion-item>
 
-  <ion-item>
-    <ion-label>Create new Contact</ion-label>
-    <ion-toggle
-      [(ngModel)]="createContact"
-      slot="start"
-      color="primary"
-    ></ion-toggle>
-  </ion-item>
-
   <ion-item *ngIf="selectedContact">
     <ion-avatar slot="start">
       <img src="../../../assets/images/avatar.svg" />
@@ -51,7 +53,7 @@
     </ion-label>
   </ion-item>
 
-  <div *ngIf="!createContact">
+  <div *ngIf="segmentOption=='search'">
     <p class="ion-padding">
       Search existent bitrix contact (only available online)
     </p>
@@ -89,12 +91,8 @@
       </ion-label>
     </ion-item>
   </div>
-  <div *ngIf="createContact">
+  <div *ngIf="segmentOption=='create'">
     <form novalidate>
-      <ion-item lines="full">
-        <ion-label color="primary">New Contact</ion-label>
-      </ion-item>
-
       <!-- FirstName -->
       <ion-item lines="full">
         <ion-label position="floating">First Name</ion-label>
