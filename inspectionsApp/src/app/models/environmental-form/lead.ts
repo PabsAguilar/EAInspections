@@ -3,6 +3,7 @@ import { SyncInfo } from "../sync-info";
 
 export class Lead {
   sample: string;
+  sampleOther: string;
   cardinalDirection: string;
   dimensionCm2: string;
   material: string;
@@ -19,6 +20,7 @@ export class Lead {
 
 export class BitrixMappingLead {
   sampleCode: string;
+  sampleOtherCode: string;
   cardinalDirectionCode: string;
   dimensionCm2Code: string;
   materialCode: string;

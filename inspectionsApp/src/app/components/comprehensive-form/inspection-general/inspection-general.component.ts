@@ -8,6 +8,8 @@ import {
   ViewChild,
 } from "@angular/core";
 import { GeneralInfoInspection } from "src/app/models/comprehensive-form/general-info-inspection";
+import { BitrixDealMapping } from "src/app/models/enums";
+import { InspectionTask } from "src/app/models/inspection-task";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 import { PhotoService } from "src/app/services/photo.service";
 
@@ -30,6 +32,8 @@ export class InspectionGeneralComponent implements OnInit {
   HHVACConditions = [];
   DuctConditions = [];
   AticConditions = [];
+  waterDamageClassName: string = "";
+  waterDamageCategoryName: string = "";
   fields: any[];
 
   generalInfoInspection: GeneralInfoInspection = new GeneralInfoInspection();
@@ -42,6 +46,7 @@ export class InspectionGeneralComponent implements OnInit {
     if (day.length < 2) day = "0" + day;
     return [year, month, day].join("-");
   }
+  @Input() task = new InspectionTask();
 
   @Input()
   get generalInfo(): GeneralInfoInspection {
@@ -62,7 +67,12 @@ export class InspectionGeneralComponent implements OnInit {
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
-
+        this.waterDamageClassName = this.fields[
+          BitrixDealMapping.waterDamageClass
+        ].items.find((x) => x.ID == this.task.waterDamageClass)?.VALUE;
+        this.waterDamageCategoryName = this.fields[
+          BitrixDealMapping.waterDamageCategory
+        ].items.find((x) => x.ID == this.task.waterDamageCategory)?.VALUE;
         this.fields[
           this.generalInfoInspection.generalInfoInspectionBitrixMapping
             .agreementSignedYesNoCode

@@ -100,7 +100,45 @@ export class EnvironmentalInspectionPage implements OnInit {
     this.inspectionNavigateService.backToPending();
   }
 
-  save() {}
+  async openAgreements(type) {
+    switch (type) {
+      case "ITestAgreements":
+        try {
+          await this.inspectionNavigate.openItestAgreementsPage(this.task);
+        } catch (error) {
+          console.log(error);
+          var message = this.toast.create({
+            message: "environmental-popover.onDidDismiss" + error,
+            color: "danger",
+            duration: 2000,
+          });
+          (await message).present();
+        }
+
+        break;
+
+      case "ENAgreements":
+        try {
+          await this.inspectionNavigate.openExpertNetworkAgreementsPage(
+            this.task
+          );
+        } catch (error) {
+          console.log(error);
+          var message = this.toast.create({
+            message: "popover.onDidDismiss.ENAgreements" + error,
+            color: "danger",
+            duration: 2000,
+          });
+          (await message).present();
+        }
+
+        break;
+
+      default:
+        console.log("Unknow event for generic list");
+        break;
+    }
+  }
 
   async presentPopover(ev: any) {
     try {
@@ -108,13 +146,13 @@ export class EnvironmentalInspectionPage implements OnInit {
         {
           name: "ITest Agreements",
           color: "success",
-          event: "seeAgreement",
+          event: "ITestAgreements",
           iconName: "reader-outline",
         },
         {
           name: "Expert Network Agreements",
           color: "secondary",
-          event: "seeAgreementEN",
+          event: "ENAgreements",
           iconName: "reader-outline",
         },
       ];
@@ -131,43 +169,7 @@ export class EnvironmentalInspectionPage implements OnInit {
         if (!result.data) {
           return;
         }
-        switch (result.data.event) {
-          case "seeAgreement":
-            try {
-              await this.inspectionNavigate.openItestAgreementsPage(this.task);
-            } catch (error) {
-              console.log(error);
-              var message = this.toast.create({
-                message: "environmental-popover.onDidDismiss" + error,
-                color: "danger",
-                duration: 2000,
-              });
-              (await message).present();
-            }
-
-            break;
-
-          case "seeAgreementEN":
-            try {
-              await this.inspectionNavigate.openExpertNetworkAgreementsPage(
-                this.task
-              );
-            } catch (error) {
-              console.log(error);
-              var message = this.toast.create({
-                message: "popover.onDidDismiss.seeAgreementEN" + error,
-                color: "danger",
-                duration: 2000,
-              });
-              (await message).present();
-            }
-
-            break;
-
-          default:
-            console.log("Unknow event for generic list");
-            break;
-        }
+        this.openAgreements(result.data.event);
       });
       return await popover.present();
     } catch (error) {

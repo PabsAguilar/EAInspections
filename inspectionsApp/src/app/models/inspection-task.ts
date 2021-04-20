@@ -23,12 +23,21 @@ export class InspectionTask implements IStorageModel {
   email: string;
   referalPartnerContact: Contact;
   referalPartnerCompany: Company;
+  insuranceContact: Contact;
+  insuranceCompany: Company;
   inspectorName: string;
   inspectorUserId: number;
   inspectionType: string;
   inspectionSubTypes: TaskSubtype[];
   inspectionSubTypesString: string;
   inspectionsInstructions: string;
+  //new
+  typeOfLossDesc: string;
+  affectedArea: string;
+  waterDamageCategory: string;
+  waterDamageClass: string;
+  //..new
+
   internalStatus: string;
   comprehesiveForm: ComprehensiveForm;
   environmentalForm: EnvironmentalForm;
@@ -41,6 +50,8 @@ export class InspectionTask implements IStorageModel {
     this.bitrixFolder = new BitrixFolder();
     this.referalPartnerContact = new Contact();
     this.referalPartnerCompany = new Company();
+    this.insuranceContact = new Contact();
+    this.insuranceCompany = new Company();
   }
 }
 

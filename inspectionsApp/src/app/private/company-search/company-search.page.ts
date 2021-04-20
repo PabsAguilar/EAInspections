@@ -32,6 +32,15 @@ export class CompanySearchPage implements OnInit {
       this.companiesListFound = await this.itestService.getCompaniesByName(
         this.nameSearchText
       );
+
+      if (!this.companiesListFound || this.companiesListFound.length <= 0) {
+        var message = this.toast.create({
+          message: `No contacts found containing "${this.nameSearchText}".`,
+          color: "warning",
+          duration: 2000,
+        });
+        (await message).present();
+      }
       this.searching = false;
     }
   }

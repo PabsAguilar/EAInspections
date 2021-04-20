@@ -27,6 +27,7 @@ import { Contact } from "../models/contact";
 import { Company } from "../models/company";
 import { SyncInfo } from "../models/sync-info";
 import { takeLast } from "rxjs/operators";
+import { User } from "../models/user";
 const SYNCSTAMPKEY = "inspection-stamp-key";
 @Injectable({
   providedIn: "root",
@@ -35,6 +36,7 @@ export class ItestDealService {
   environmentalInspectionFieldsName: string = "environmental-inspection-fields";
   dealFieldName: string = "deals-fields";
   collectionTaskSubTypesName: string = "task-itest-subtypes-list";
+  collectionInspectors: string = "inspectors";
 
   inspectionTypesListService = new GenericStorageService(
     this.collectionTaskSubTypesName,
@@ -43,6 +45,11 @@ export class ItestDealService {
 
   environmentalInspectionFieldsListService = new GenericStorageService(
     this.environmentalInspectionFieldsName,
+    this.storage
+  );
+
+  inspectorsService = new GenericStorageService(
+    this.collectionInspectors,
     this.storage
   );
 
@@ -233,6 +240,8 @@ export class ItestDealService {
 
         x.asbestoBitrixMaping.materialLocationCode =
           bitrixMapping.Asbestos.materialLocationCode[index];
+          x.asbestoBitrixMaping.materialLocationOtherCode =
+          bitrixMapping.Asbestos.materialLocationOtherCode[index];
         x.asbestoBitrixMaping.materialDescriptionCode =
           bitrixMapping.Asbestos.materialDescriptionCode[index];
         x.asbestoBitrixMaping.totalQuantityCode =
@@ -264,6 +273,7 @@ export class ItestDealService {
       bitrixMapping.Lead.sampleCode.map((t, index) => {
         var x = new Lead();
         x.bitrixMappingLead.sampleCode = bitrixMapping.Lead.sampleCode[index];
+        x.bitrixMappingLead.sampleOtherCode = bitrixMapping.Lead.sampleOtherCode[index];
         x.bitrixMappingLead.cardinalDirectionCode =
           bitrixMapping.Lead.cardinalDirectionCode[index];
         x.bitrixMappingLead.dimensionCm2Code =
@@ -300,6 +310,8 @@ export class ItestDealService {
         var x = new MoistureMapping();
         x.moistureMappingBitrixMap.areaCode =
           bitrixMapping.Moisture.areaCode[index];
+        x.moistureMappingBitrixMap.areaOtherCode =
+          bitrixMapping.Moisture.areaOtherCode[index];
         x.moistureMappingBitrixMap.areaCode =
           bitrixMapping.Moisture.areaCode[index];
         x.moistureMappingBitrixMap.roomTempCode =
@@ -340,6 +352,8 @@ export class ItestDealService {
       var x = new DamageInspection(damageType);
       x.damageInspectionBitrixMapping.areaNameCode =
         bitrixMapping[damageType].areasMoldBitrixCode[index];
+      x.damageInspectionBitrixMapping.areaNameOtherCode =
+        bitrixMapping[damageType].areaNameOtherCode[index];
       x.damageInspectionBitrixMapping.conditionCode =
         bitrixMapping[damageType].areasMoldConditionBitrixCode[index];
       x.damageInspectionBitrixMapping.areaRHCode =
@@ -391,6 +405,11 @@ export class ItestDealService {
           bitrixMapping[damageType].cassetteNumberCodeSample1Mold[index];
         s.sampleBitrixMapping.toxicMoldCode =
           bitrixMapping[damageType].toxicMoldCodeSample1Mold[index];
+
+        s.sampleBitrixMapping.areaSwabCode =
+          bitrixMapping[damageType].areaSwabCodeSample1Mold[index];
+        s.sampleBitrixMapping.moldSporesFoundCode =
+          bitrixMapping[damageType].moldSporesFoundCodeSample1Mold[index];
       }
 
       var s2 = new Sample(damageType);
@@ -405,6 +424,10 @@ export class ItestDealService {
           bitrixMapping[damageType].cassetteNumberCodeSample2Mold[index];
         s2.sampleBitrixMapping.toxicMoldCode =
           bitrixMapping[damageType].toxicMoldCodeSample2Mold[index];
+        s.sampleBitrixMapping.areaSwabCode =
+          bitrixMapping[damageType].areaSwabCodeSample2Mold[index];
+        s.sampleBitrixMapping.moldSporesFoundCode =
+          bitrixMapping[damageType].moldSporesFoundCodeSample2Mold[index];
       }
 
       var s3 = new Sample(damageType);
@@ -419,6 +442,10 @@ export class ItestDealService {
           bitrixMapping[damageType].cassetteNumberCodeSample3Mold[index];
         s3.sampleBitrixMapping.toxicMoldCode =
           bitrixMapping[damageType].toxicMoldCodeSample3Mold[index];
+        s.sampleBitrixMapping.areaSwabCode =
+          bitrixMapping[damageType].areaSwabCodeSample3Mold[index];
+        s.sampleBitrixMapping.moldSporesFoundCode =
+          bitrixMapping[damageType].moldSporesFoundCodeSample3Mold[index];
       }
 
       x.samples.push(s);
@@ -485,8 +512,8 @@ export class ItestDealService {
     var general = new GeneralInfoInspectionBitrixMapping();
     general.propertyYearCode = BitrixDealMapping.propertyYearCode;
     general.propertyTypeCode = BitrixDealMapping.propertyTypeCode;
-    general.environmentalInspectionCode =
-      BitrixDealMapping.environmentalInspectionCode;
+    // general.environmentalInspectionCode =
+    //   BitrixDealMapping.environmentalInspectionCode;
     general.interiorTemperatureCode = BitrixDealMapping.interiorTemperatureCode;
     general.exteriorRelativeHumidityCode =
       BitrixDealMapping.exteriorRelativeHumidityCode;
@@ -512,6 +539,27 @@ export class ItestDealService {
     }
     await this.getEnvironmentalFromServerInspectionFields();
     return await this.environmentalInspectionFieldsListService.getAll();
+  }
+
+  async getInspectors(server: boolean): Promise<any> {
+    var list = await this.inspectorsService.getAll();
+    var usersList: User[] = [];
+    if (!server && list != null) {
+      return list;
+    }
+    await this.inspectorsService.clear();
+    var result = await this.bitrix.getInspectors();
+    if (result.result) {
+      usersList = result.result.map((x) => {
+        return new User(x);
+      });
+
+      await this.inspectorsService.addItems(usersList);
+    } else {
+      console.log(result);
+    }
+
+    return usersList;
   }
 
   async getEnvironmentalFromServerInspectionFields(): Promise<any> {
@@ -643,12 +691,15 @@ export class ItestDealService {
     );
 
     await this.inspectionStorage.clear();
-
-    await this.getEnvironmentalFromServerInspectionFields();
-    await this.getDealsFieldsFromServer();
     return this.inspectionStorage.addItems(list);
   }
 
+  async refreshFieldsFromServer(idUser: number) {
+    //await this.getExternal(idUser);
+    await this.getEnvironmentalFromServerInspectionFields();
+    await this.getDealsFieldsFromServer();
+    await this.getInspectors(true);
+  }
   async getSyncStamp() {
     return await this.storage.get(SYNCSTAMPKEY);
   }
@@ -749,6 +800,13 @@ export class ItestDealService {
                 x[BitrixDealMapping.ductsConditionCode];
               task.environmentalForm.generalInfoInspection.atticCondition =
                 x[BitrixDealMapping.atticConditionCode];
+              task.environmentalForm.generalInfoInspection.atticCondition =
+                x[BitrixDealMapping.atticConditionCode];
+              task.typeOfLossDesc = x[BitrixDealMapping.typesOfLoss];
+              task.affectedArea = x[BitrixDealMapping.affectedArea];
+              task.waterDamageCategory =
+                x[BitrixDealMapping.waterDamageCategory];
+              task.waterDamageClass = x[BitrixDealMapping.waterDamageClass];
 
               var address = task.serviceAddress.split("|");
 
@@ -761,8 +819,32 @@ export class ItestDealService {
               task.email = taskContact.email;
 
               if (
+                Array.isArray(x.UF_CRM_1612691342) &&
+                x.UF_CRM_1612691342.length > 0
+              ) {
+                await Promise.all(
+                  x.UF_CRM_1612691342.map(async (element: string) => {
+                    if (element.includes("C_")) {
+                      var insuranceContact = await this.getBitrixContact(
+                        element.split("C_")[1]
+                      );
+                      task.insuranceContact = insuranceContact;
+                    }
+                    if (element.includes("CO_")) {
+                      var insuranceCompany = await this.getBitrixCompany(
+                        element.split("CO_")[1]
+                      );
+                      if (insuranceCompany) {
+                        task.insuranceCompany = insuranceCompany;
+                      }
+                    }
+                  })
+                );
+              }
+
+              if (
                 Array.isArray(x.UF_CRM_1612691326) &&
-                x.UF_CRM_1612691326.length
+                x.UF_CRM_1612691326.length > 0
               ) {
                 await Promise.all(
                   x.UF_CRM_1612691326.map(async (element: string) => {

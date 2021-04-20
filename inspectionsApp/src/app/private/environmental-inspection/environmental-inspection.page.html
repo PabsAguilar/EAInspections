@@ -27,6 +27,7 @@
     [readonly]="readonly"
     (generalInfoChanged)="UpdateEntity($event)"
     [(generalInfo)]="task.environmentalForm.generalInfoInspection"
+    [task]="task"
   >
   </app-inspection-general>
 
@@ -90,6 +91,40 @@
     task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
       slot="end"
       >{{task.internalStatus}}</ion-badge
+    >
+  </ion-item>
+
+  <ion-item
+    class="ion-margin"
+    lines="none"
+    (click)="openAgreements('ITestAgreements')"
+  >
+    <ion-label>ITest Agreements</ion-label>
+    <ion-icon slot="start" color="success" name="reader-outline"></ion-icon>
+    <ion-badge
+      [color]=" this.task.iTestAgreements &&
+    this.task.iTestAgreements.signature.images.length > 0? 'success' : 'medium' "
+      slot="end"
+      >{{this.task.iTestAgreements &&
+      this.task.iTestAgreements.signature.images.length > 0? 'Signed' :
+      'Pending'}}</ion-badge
+    >
+  </ion-item>
+
+  <ion-item
+    class="ion-margin"
+    lines="none"
+    (click)="openAgreements('ENAgreements')"
+  >
+    <ion-label>Expert Network Agreements</ion-label>
+    <ion-icon slot="start" color="primary" name="reader-outline"></ion-icon>
+    <ion-badge
+      [color]=" this.task.expertNetworkAgreements &&
+  this.task.expertNetworkAgreements.signature.images.length > 0? 'success' : 'medium' "
+      slot="end"
+      >{{this.task.expertNetworkAgreements &&
+      this.task.expertNetworkAgreements.signature.images.length > 0? 'Signed' :
+      'Pending'}}</ion-badge
     >
   </ion-item>
 

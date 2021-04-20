@@ -3,6 +3,9 @@ import { Router, RouterEvent } from "@angular/router";
 import { AuthenticationService } from "src/app/services/authentication.service";
 import { Storage } from "@ionic/storage";
 import { User } from "src/app/models/user";
+import { ItestDealService } from "src/app/services/itest-deal.service";
+import { SyncInspectionService } from "src/app/services/sync-inspection.service";
+import { LoadingController, ToastController } from "@ionic/angular";
 const THEME_KEY = "theme-style";
 @Component({
   selector: "app-menu",
@@ -13,7 +16,11 @@ export class MenuPage implements OnInit {
   constructor(
     private storage: Storage,
     private auth: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private inspectionService: ItestDealService,
+    private syncInspectionService: SyncInspectionService,
+    private loadingController: LoadingController,
+    private toast: ToastController
   ) {
     auth.getTheme().then((result) => {
       if (result == "dark") {
@@ -39,7 +46,12 @@ export class MenuPage implements OnInit {
     try {
       this.user = await this.authservice.getUser();
     } catch (error) {
-      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
     }
   }
 
@@ -69,5 +81,60 @@ export class MenuPage implements OnInit {
   }
   userWantsToLogout() {
     this.authservice.logout();
+  }
+  async userWantsToGetFromServer() {
+    var loading = await this.loadingController.create({
+      message: "Getting Inspection Deals",
+    });
+    await loading.present();
+    try {
+      await this.inspectionService.getExternal(this.user.userId);
+      await this.inspectionService.refreshFieldsFromServer(this.user.userId);
+      this.syncInspectionService.publishSomeData({
+        syncItem: "deal",
+        refreshFromServer: false,
+      });
+    } catch (error) {
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+    }
+
+    if (loading) {
+      await this.loadingController.dismiss();
+    }
+  }
+  async userWantsToSync() {
+    var loading = await this.loadingController.create({
+      message: "Sync Pending Inspection",
+    });
+    await loading.present();
+
+    try {
+      var response = await (
+        await this.syncInspectionService.syncAllPending()
+      ).toPromise();
+
+      await this.inspectionService.getExternal(this.user.userId);
+      await this.inspectionService.refreshFieldsFromServer(this.user.userId);
+      this.syncInspectionService.publishSomeData({
+        syncItem: "deal",
+        refreshFromServer: false,
+      });
+    } catch (error) {
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+    }
+
+    if (loading) {
+      await this.loadingController.dismiss();
+    }
   }
 }

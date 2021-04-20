@@ -35,6 +35,16 @@
     </ion-select>
   </ion-item>
 
+  <ion-item lines="inset" *ngIf="other == _model.materialLocation">
+    <ion-label position="floating">Material Location (Other)</ion-label>
+    <ion-input
+      [(ngModel)]="_model.materialLocationOther"
+      (ionChange)="changeModel($event)"
+      type="text"
+      [readonly]="readonly"
+    ></ion-input>
+  </ion-item>
+
   <ion-item lines="inset">
     <ion-label position="floating">Material Description</ion-label>
     <ion-input

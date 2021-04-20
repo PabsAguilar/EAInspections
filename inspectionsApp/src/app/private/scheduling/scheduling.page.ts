@@ -9,8 +9,13 @@ import {
 } from "@ionic/angular";
 import { fromEventPattern } from "rxjs";
 import { Contact } from "src/app/models/contact";
-import { InspectionStatus, SchedulingStatus } from "src/app/models/enums";
+import {
+  BitrixDealMapping,
+  InspectionStatus,
+  SchedulingStatus,
+} from "src/app/models/enums";
 import { Scheduling } from "src/app/models/scheduling";
+import { TaskSubtype } from "src/app/models/task-subtype";
 import { User } from "src/app/models/user";
 import { AuthenticationService } from "src/app/services/authentication.service";
 import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
@@ -35,14 +40,15 @@ export class SchedulingPage implements OnInit {
 
   scheduling: Scheduling = new Scheduling();
   selectedDate: Date;
+  fields: any[];
 
   constructor(
     private schedulingStorageService: SchedulingStorageService,
     public modalController: ModalController,
     private authenticationService: AuthenticationService,
     private navigateService: InspectionNavigateService,
-    private loading: LoadingController,
 
+    private inspectionService: ItestDealService,
     private alertController: AlertController,
     private syncInspectionService: SyncInspectionService,
     private toast: ToastController,
@@ -50,6 +56,7 @@ export class SchedulingPage implements OnInit {
     private router: Router
   ) {
     this.scheduling = new Scheduling();
+
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.scheduling = this.router.getCurrentNavigation().extras.state.scheduling;
@@ -60,15 +67,43 @@ export class SchedulingPage implements OnInit {
     });
     authenticationService.getUser().then((x) => {
       this.user = x;
-      this.scheduling.inspectorUserId = x.userId;
     });
   }
+
+  inspectionTypes = [];
+  waterDamageCategories = [];
+  waterDamageClasses = [];
+  inspectorsList: User[] = [];
 
   user: User = new User();
 
   ngOnInit() {
     console.log(this.minDate);
     console.log(this.maxDate);
+  }
+
+  async ionViewDidEnter() {
+    var types = await this.inspectionService.getInspectionTasksTypesList();
+    this.inspectorsList = await this.inspectionService.getInspectors(false);
+    this.scheduling.inspectorUserId = this.user.userId;
+    this.inspectionTypes = types.map((x) => {
+      return { name: x.name, value: x.id, selected: false };
+    });
+    this.inspectionService.getDealsFields().then((x) => {
+      this.fields = x[0];
+
+      this.waterDamageCategories = this.fields[
+        BitrixDealMapping.waterDamageCategory
+      ].items.map((y) => {
+        return { name: y.VALUE, value: y.ID };
+      });
+
+      this.waterDamageClasses = this.fields[
+        BitrixDealMapping.waterDamageClass
+      ].items.map((y) => {
+        return { name: y.VALUE, value: y.ID };
+      });
+    });
   }
 
   contactIsSync() {
@@ -85,7 +120,7 @@ export class SchedulingPage implements OnInit {
     return [year, month, day].join("-");
   }
 
-  async searchContact() {
+  async searchContact(type: string) {
     const modal = await this.modalController.create({
       component: ContactSearchPage,
       cssClass: "my-custom-class",
@@ -97,31 +132,25 @@ export class SchedulingPage implements OnInit {
     modal.onDidDismiss().then((data) => {
       const contact = data["data"]; // Here's your selected user!
       if (contact != null && contact.firstName) {
-        this.scheduling.contact = contact;
+        switch (type) {
+          case "inspectionContact":
+            this.scheduling.contact = contact;
+            break;
+          case "insurance":
+            this.scheduling.insuranceCompanyContact = contact;
+            break;
+          case "referal":
+            this.scheduling.referalPartner = contact;
+            break;
+          default:
+            break;
+        }
       }
     });
     return await modal.present();
   }
 
-  async searchInsuranceContact() {
-    const modal = await this.modalController.create({
-      component: ContactSearchPage,
-      cssClass: "my-custom-class",
-      componentProps: {
-        enterprise: this.scheduling.serviceType,
-      },
-    });
-
-    modal.onDidDismiss().then((data) => {
-      const contact = data["data"]; // Here's your selected user!
-      if (contact != null && contact.firstName) {
-        this.scheduling.insuranceCompanyContact = contact;
-      }
-    });
-    return await modal.present();
-  }
-
-  async searchInsuranceCompany() {
+  async searchCompany(type: string) {
     const modal = await this.modalController.create({
       component: CompanySearchPage,
       cssClass: "my-custom-class",
@@ -133,7 +162,16 @@ export class SchedulingPage implements OnInit {
     modal.onDidDismiss().then((data) => {
       const company = data["data"]; // Here's your selected user!
       if (company != null && company.title) {
-        this.scheduling.insuranceCompany = company;
+        switch (type) {
+          case "insurance":
+            this.scheduling.insuranceCompany = company;
+            break;
+          case "referal":
+            this.scheduling.referalPartnerCompany = company;
+            break;
+          default:
+            break;
+        }
       }
     });
     return await modal.present();
@@ -213,7 +251,10 @@ export class SchedulingPage implements OnInit {
               this.scheduling = new Scheduling();
 
               (
-                await this.syncInspectionService.syncSchedulingInspection(deal)
+                await this.syncInspectionService.syncSchedulingInspection(
+                  deal,
+                  this.user.userId
+                )
               ).subscribe(async (x) => {
                 if (x) {
                   var message = this.toast.create({

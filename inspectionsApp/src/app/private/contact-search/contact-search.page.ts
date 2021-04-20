@@ -36,6 +36,14 @@ export class ContactSearchPage implements OnInit {
       this.contactsListFound = await this.itestService.getContactsByEmail(
         this.emailSearchText
       );
+      if (!this.contactsListFound || this.contactsListFound.length <= 0) {
+        var message = this.toast.create({
+          message: `No contacts found containing "${this.emailSearchText}".`,
+          color: "warning",
+          duration: 2000,
+        });
+        (await message).present();
+      }
       this.searching = false;
     }
   }

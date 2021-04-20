@@ -5,6 +5,7 @@ import { SyncInfo } from "./sync-info";
 
 export class DamageInspection {
   areaName: string;
+  areaNameOther: string;
   areaCondition: string[];
   areaRH: number;
   areaPictures: BitrixPictureList;

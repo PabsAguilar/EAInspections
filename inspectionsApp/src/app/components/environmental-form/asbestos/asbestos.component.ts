@@ -19,6 +19,7 @@ export class AsbestosComponent implements OnInit {
   conditionList: any[] = [];
   labResultsList: any[] = [];
   selectAreaName: string;
+  other: string = "";
   @Input() readonly: boolean = false;
   @Input()
   get model(): Asbesto {
@@ -33,7 +34,12 @@ export class AsbestosComponent implements OnInit {
         this.materialLocationList = Object.entries(
           this.fields[this._model.asbestoBitrixMaping.materialLocationCode]
             .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
+        ).map(([k, v]) => {
+          if ((v as string)?.toLowerCase().includes("other")) {
+            this.other = k;
+          }
+          return { name: v, value: k };
+        });
 
         this.F_NFList = Object.entries(
           this.fields[this._model.asbestoBitrixMaping.F_NFCode]

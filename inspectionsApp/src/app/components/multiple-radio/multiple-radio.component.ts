@@ -13,11 +13,17 @@ export class MultipleRadioComponent implements OnInit {
     return this._selected;
   }
   set data(value: string[]) {
-    for (let index = 0; index < this.options.length; index++) {
-      const element = this.options[index];
-      this.options[index].checked = value.includes(element.value);
+    if (this.options) {
+      for (let index = 0; index < this.options.length; index++) {
+        const element = this.options[index];
+        this.options[index].checked = value.includes(element.value);
+      }
     }
-    this._selected = value;
+    if (value) {
+      this._selected = value;
+    } else {
+      this._selected = [];
+    }
   }
   @Output() dataChange: any = new EventEmitter();
 

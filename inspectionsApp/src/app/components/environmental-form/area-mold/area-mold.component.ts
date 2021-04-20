@@ -17,6 +17,7 @@ export class AreaMoldComponent implements OnInit {
   public isMenuOpen: boolean = false;
   public progressPercentage: number = 0;
   public progressColor: string = "danger";
+  other: string = "";
   listCondition: any[] = [];
   listArea: any[] = [];
   listRemoveCeiling: any[] = [];
@@ -28,6 +29,7 @@ export class AreaMoldComponent implements OnInit {
   listbeddingsOption: any[] = [];
   listSampleType: any[] = [];
   listlabResults: any[] = [];
+  listmoldSporesFound: any[] = [];
   listToxicMold: any[] = [];
   listRecomendations: any[] = [];
   selectAreaName: string;
@@ -46,7 +48,13 @@ export class AreaMoldComponent implements OnInit {
         this.listArea = Object.entries(
           this.fields[this._model.damageInspectionBitrixMapping.areaNameCode]
             .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
+        ).map(([k, v]) => {
+          if ((v as string)?.toLowerCase().includes("other")) {
+            this.other = k;
+          }
+          return { name: v, value: k };
+        });
+
         this.listCondition = Object.entries(
           this.fields[this._model.damageInspectionBitrixMapping.conditionCode]
             .DISPLAY_VALUES_FORM
@@ -107,6 +115,19 @@ export class AreaMoldComponent implements OnInit {
                 .DISPLAY_VALUES_FORM
             ).map(([k, v]) => ({ name: v, value: k, sample: index }));
             this.listToxicMold = this.listToxicMold.concat(t);
+
+            //   if (item.sampleBitrixMapping.moldSporesFoundCode) {
+            //     var u = Object.entries(
+            //       this.fields[item.sampleBitrixMapping.moldSporesFoundCode]
+            //         .DISPLAY_VALUES_FORM
+            //     ).map(([k, v]) => ({
+            //       name: v,
+            //       value: k,
+            //       checked: false,
+            //       sample: index,
+            //     }));
+            //     this.listmoldSporesFound = this.listmoldSporesFound.concat(u);
+            //   }
           }
           //lab results
           var l = Object.entries(

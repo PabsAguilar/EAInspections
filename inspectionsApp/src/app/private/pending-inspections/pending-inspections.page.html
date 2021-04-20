@@ -117,12 +117,21 @@
         > -->
             <div class="ion-text-center">
               <ion-icon
-                *ngIf="task.internalStatus !='In Progress' && task.internalStatus !='New'"
+                *ngIf="task.internalStatus !='In Progress' && task.internalStatus !='New' && !task.internalStatus.includes('Pending')"
                 style="font-size: large"
                 name="save-outline"
                 [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
                 task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
               ></ion-icon>
+
+              <ion-icon
+                *ngIf="task.internalStatus.includes('Pending')"
+                style="font-size: large"
+                name="cloud-upload-outline"
+                [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
+              task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
+              ></ion-icon>
+
               <ion-icon
                 *ngIf="task.internalStatus =='In Progress' || task.internalStatus =='New'"
                 style="font-size: large"

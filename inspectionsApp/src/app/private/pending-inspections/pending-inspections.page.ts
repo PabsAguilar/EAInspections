@@ -72,7 +72,11 @@ export class PendingInspectionsPage implements OnInit {
       this.subscription = this.syncInspection
         .getObservable()
         .subscribe(async (data) => {
-          await this.loadData(true);
+          var fromServer = true;
+          if (data && data.refreshFromServer != null) {
+            fromServer = data.refreshFromServer;
+          }
+          await this.loadData(fromServer);
         });
 
       //TODO: Validate connection to internet
@@ -161,6 +165,7 @@ export class PendingInspectionsPage implements OnInit {
 
     if (forceFromServer || this.inspectionTasks == null) {
       await this.inspectionService.getExternal(this.user.userId);
+      await this.inspectionService.refreshFieldsFromServer(this.user.userId);
       this.inspectionTasks = await this.inspectionService.getPendingInspections(
         this.user.userId
       );
@@ -276,8 +281,9 @@ export class PendingInspectionsPage implements OnInit {
                 await this.syncInspection.syncAllPending()
               ).toPromise();
 
-              await this.inspectionService.getExternal(
-                (await this.autenticateService.getUser()).userId
+              await this.inspectionService.getExternal(this.user.userId);
+              await this.inspectionService.refreshFieldsFromServer(
+                this.user.userId
               );
               this.lastSync = await this.inspectionService.getSyncStamp();
               this.inspectionTasks = await this.inspectionService.getPendingInspections(

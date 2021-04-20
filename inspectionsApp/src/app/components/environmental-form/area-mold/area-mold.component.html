@@ -35,6 +35,16 @@
     </ion-select>
   </ion-item>
 
+  <ion-item lines="inset" *ngIf="other == _model.areaName">
+    <ion-label position="floating">Area name (Other)</ion-label>
+    <ion-input
+      [(ngModel)]="_model.areaNameOther"
+      (ionChange)="changeModel($event)"
+      type="text"
+      [readonly]="readonly"
+    ></ion-input>
+  </ion-item>
+
   <app-multiple-radio
     title="Area Conditions"
     ngDefaultControl
@@ -286,6 +296,15 @@ listbeddingsOption -->
       ></ion-input>
     </ion-item>
     <ion-item lines="inset" *ngIf="item.sampleType == 'Mold'">
+      <ion-label position="floating">Area (Swab)</ion-label>
+      <ion-input
+        [(ngModel)]="item.areaSwab"
+        (ionChange)="changeModel($event)"
+        type="text"
+        required
+      ></ion-input>
+    </ion-item>
+    <ion-item lines="inset" *ngIf="item.sampleType == 'Mold'">
       <ion-label position="floating">Cassette Number</ion-label>
       <ion-input
         [(ngModel)]="item.cassetteNumber"
@@ -313,6 +332,18 @@ listbeddingsOption -->
         >
       </ion-select>
     </ion-item>
+
+    <!-- <app-multiple-radio
+      *ngIf="item.sampleType == 'Mold'"
+      title="Mold Spores Found"
+      ngDefaultControl
+      name="areaCondition"
+      [readonly]="readonly"
+      [options]="listmoldSporesFound | filterByField: 'sample':i:'number'"
+      [(data)]="item.moldSporesFound"
+      (dataChange)="changeModel($event)"
+    ></app-multiple-radio> -->
+
     <ion-item lines="inset" *ngIf="item.sampleType == 'Mold'">
       <ion-label position="floating">Toxic Mold</ion-label>
       <ion-select

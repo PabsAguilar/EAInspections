@@ -14,6 +14,7 @@ import {
 } from "@ionic/angular";
 import { User } from "src/app/models/user";
 import { BitrixItestService } from "src/app/services/bitrix-itest.service";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-login",

@@ -35,6 +35,13 @@ export class BitrixItestService {
       .toPromise();
   }
 
+  //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/user.search.json?USER_TYPE=employee
+  public getInspectors(): Promise<any> {
+    return this.http
+      .get(`${this.url}/${this.key}/user.search.json?USER_TYPE=employee`)
+      .toPromise();
+  }
+
   //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.deal.fields.json
   public getDealFields(): Promise<any> {
     return this.http

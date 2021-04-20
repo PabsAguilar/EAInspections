@@ -2,6 +2,7 @@ import { SyncInfo } from "../sync-info";
 
 export class MoistureMapping {
   area: string;
+  areaOther: string;
   roomTemp: number;
   relativeHumidity: number;
   dewPoint: number;
@@ -21,6 +22,7 @@ export class MoistureMapping {
 
 export class MoistureMappingBitrixMap {
   areaCode: string;
+  areaOtherCode: string;
   roomTempCode: string;
   relativeHumidityCode: string;
   dewPointCode: string;

@@ -1,5 +1,6 @@
 export class DamageInspectionBitrixMapping {
-   areaNameCode: string;
+  areaNameCode: string;
+  areaNameOtherCode: string;
   conditionCode: string;
   areaRHCode: string;
   areaPicturesCode: string;

@@ -34,6 +34,15 @@
       >
     </ion-select>
   </ion-item>
+  <ion-item lines="inset" *ngIf="other == _model.sample">
+    <ion-label position="floating">Sample Area (Other)</ion-label>
+    <ion-input
+      [(ngModel)]="_model.sampleOther"
+      (ionChange)="changeModel($event)"
+      type="text"
+      [readonly]="readonly"
+    ></ion-input>
+  </ion-item>
 
   <ion-item lines="inset">
     <ion-label position="floating">Cardinal Direction </ion-label>

@@ -23,6 +23,10 @@ export class Scheduling implements IStorageModel {
   referalPartnerCompany: Company;
   inspectionTypes: string[];
   inspectionInstructions: string;
+  typeOfLossDesc: string;
+  affectedArea: string;
+  waterDamageCategory: string;
+  waterDamageClass: string;
 
   internalStatus: string;
   syncInfo: SyncInfo;
@@ -30,5 +34,6 @@ export class Scheduling implements IStorageModel {
     this.syncInfo = new SyncInfo();
     this.contact = new Contact();
     this.internalStatus = InspectionStatus.New;
+    this.inspectionTypes = [];
   }
 }

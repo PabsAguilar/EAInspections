@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Storage } from "@ionic/storage";
 import { BehaviorSubject } from "rxjs";
 import { User } from "../models/user";
+import { ItestDealService } from "./itest-deal.service";
 
 const TOKEN_KEY = "auth-token";
 const LAST_USER_KEY = "last-user-token";
@@ -19,7 +20,11 @@ const DEAL_FIELDS_KEY = "deals-fields";
 export class AuthenticationService {
   authenticationState = new BehaviorSubject(false);
 
-  constructor(private storage: Storage, private plt: Platform) {
+  constructor(
+    private storage: Storage,
+    private plt: Platform,
+    private inspectionService: ItestDealService
+  ) {
     this.plt.ready().then(() => {
       this.checkToken();
     });
@@ -42,6 +47,8 @@ export class AuthenticationService {
   }
   login(user: User) {
     this.storage.set(LAST_USER_KEY, user);
+    this.inspectionService.refreshFieldsFromServer(user.userId);
+    this.inspectionService.getExternal(user.userId);
     return this.storage.set(TOKEN_KEY, user).then(() => {
       this.authenticationState.next(true);
     });

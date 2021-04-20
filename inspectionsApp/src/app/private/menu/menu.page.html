@@ -12,7 +12,7 @@
 
         <div class="card-title">Inspections App</div>
         <div class="card-subtitle">{{user.completeName}}</div>
-        <div class="card-subtitle2">v5.2.0</div>
+        <div class="card-subtitle2">v5.4.0</div>
       </ion-card>
     </ion-header>
     <ion-content>
@@ -29,6 +29,23 @@
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle auto-hide="false">
+          <ion-item lines="none" (click)="userWantsToGetFromServer()">
+            <ion-icon
+              color="primary"
+              slot="start"
+              name="cloud-download-outline"
+            ></ion-icon>
+            <ion-label>Get Deals from Bitrix</ion-label>
+          </ion-item>
+          <ion-item lines="none" (click)="userWantsToSync()">
+            <ion-icon
+              slot="start"
+              color="secondary"
+              name="cloud-upload-outline"
+            ></ion-icon>
+            <ion-label>Sync Pending to Bitrix</ion-label>
+          </ion-item>
+
           <ion-item lines="none">
             <ion-icon slot="start" name="moon"></ion-icon>
             <ion-label> Toggle Dark Theme </ion-label>

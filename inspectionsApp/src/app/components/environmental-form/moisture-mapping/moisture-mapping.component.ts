@@ -15,6 +15,7 @@ export class MoistureMappingComponent implements OnInit {
   public progressPercentage: number = 0;
   public progressColor: string = "danger";
   listArea: any[] = [];
+  other: string = "";
   conditions: any[] = [];
   decontaminationOptions: any[] = [];
   fields: any[] = [];
@@ -32,7 +33,12 @@ export class MoistureMappingComponent implements OnInit {
         this.listArea = Object.entries(
           this.fields[this._model.moistureMappingBitrixMap.areaCode]
             .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
+        ).map(([k, v]) => {
+          if ((v as string).toLowerCase().includes("other")) {
+            this.other = k;
+          }
+          return { name: v, value: k };
+        });
       }
     });
     this.changeModel("init");

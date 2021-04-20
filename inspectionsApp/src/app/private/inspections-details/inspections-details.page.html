@@ -52,8 +52,8 @@
         </ion-row>
         <ion-row *ngIf="task.phone">
           <ion-col class="row-center">
-            <ion-chip color="primary" (click)="call()" class="ion-text-center">
-              <ion-icon name="call" color="primary"></ion-icon>
+            <ion-chip color="success" (click)="call()" class="ion-text-center">
+              <ion-icon name="call" color="success"></ion-icon>
               <ion-label>{{task.phone}}</ion-label>
             </ion-chip>
           </ion-col>
@@ -123,14 +123,14 @@
         </ion-row>
       </ion-grid>
 
-      <ion-item-divider></ion-item-divider>
-      <ion-label>
+      <!-- <ion-item-divider></ion-item-divider> -->
+      <ion-label
+        *ngIf="task.referalPartnerContact?.firstName || task.referalPartnerCompany?.title "
+      >
         <h2>Referal Partner:</h2>
       </ion-label>
 
-      <ion-item
-        *ngIf="task.referalPartnerContact && task.referalPartnerContact.firstName "
-      >
+      <ion-item *ngIf="task.referalPartnerContact?.firstName">
         <ion-avatar slot="start">
           <img src="../../../assets/images/avatar.svg" />
         </ion-avatar>
@@ -139,60 +139,52 @@
             {{task.referalPartnerContact.firstName + " " +
             task.referalPartnerContact.lastName}}
           </h3>
-
-          <h3>
-            <ion-chip
-              *ngIf="task.referalPartnerContact.phone"
-              color="primary"
-              (click)="call()"
-              class="ion-text-center"
-            >
-              <ion-icon name="call" color="primary"></ion-icon>
-              <ion-label>{{task.referalPartnerContact.phone}}</ion-label>
-            </ion-chip>
-
-            <ion-chip
-              color="medium"
-              class="ion-text-center"
-              *ngIf="!task.referalPartnerContact.phone"
-            >
-              <ion-icon name="call" color="medium"></ion-icon>
-              <ion-label>No phone number available</ion-label>
-            </ion-chip>
-          </h3>
-
-          <h3>
-            <ion-chip
-              *ngIf="task.referalPartnerContact.email"
-              color="primary"
-              (click)="email()"
-              class="ion-text-center"
-            >
-              <ion-icon name="mail-outline" color="primary"></ion-icon>
-              <ion-label>{{task.referalPartnerContact.email}}</ion-label>
-            </ion-chip>
-
-            <ion-chip
-              color="medium"
-              class="ion-text-center"
-              *ngIf="!task.referalPartnerContact.email"
-            >
-              <ion-icon name="mail-outline" color="medium"></ion-icon>
-              <ion-label>No email available</ion-label>
-            </ion-chip>
-          </h3>
+          <p>{{task.referalPartnerContact.phone}}</p>
+          <p>{{task.referalPartnerContact.email}}</p>
         </ion-label>
       </ion-item>
 
-      <ion-item
-        *ngIf="task.referalPartnerCompany && task.referalPartnerCompany.title"
-      >
+      <ion-item *ngIf="task.referalPartnerCompany?.title">
         <ion-avatar slot="start">
           <img src="../../../assets/images/avatar.svg" />
         </ion-avatar>
         <ion-label>
           <h3>{{task.referalPartnerCompany.title}}</h3>
           <p>{{task.referalPartnerCompany.type}}</p>
+          <p>{{task.referalPartnerCompany.phone}}</p>
+          <p>{{task.referalPartnerCompany.email}}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-label
+        *ngIf="task.insuranceContact?.firstName || task.insuranceCompany?.title"
+      >
+        <h2>Insurance Company:</h2>
+      </ion-label>
+
+      <ion-item *ngIf="task.insuranceContact?.firstName">
+        <ion-avatar slot="start">
+          <img src="../../../assets/images/avatar.svg" />
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            {{task.insuranceContact.firstName + " " +
+            task.insuranceContact.lastName}}
+          </h3>
+          <p>{{task.insuranceContact.phone}}</p>
+          <p>{{task.insuranceContact.email}}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="task.insuranceCompany?.title">
+        <ion-avatar slot="start">
+          <img src="../../../assets/images/avatar.svg" />
+        </ion-avatar>
+        <ion-label>
+          <h3>{{task.insuranceCompany.title}}</h3>
+          <p>{{task.insuranceCompany.type}}</p>
+          <p>{{task.insuranceCompany.phone}}</p>
+          <p>{{task.insuranceCompany.email}}</p>
         </ion-label>
       </ion-item>
     </ion-card-content>

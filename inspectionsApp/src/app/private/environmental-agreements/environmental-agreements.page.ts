@@ -65,6 +65,12 @@ export class EnvironmentalAgreementsPage implements OnInit, AfterViewInit {
     if (this.signaturePad) {
       this.signaturePad.clear(); // Clear the pad on init
     }
+    if (
+      !this.task.iTestAgreements.signature ||
+      this.task.iTestAgreements.signature.images.length <= 0
+    ) {
+      this.nameSignature = this.task.contactName;
+    }
   }
 
   clear() {

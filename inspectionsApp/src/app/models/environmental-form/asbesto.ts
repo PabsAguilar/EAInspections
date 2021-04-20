@@ -2,6 +2,7 @@ import { SyncInfo } from "../sync-info";
 
 export class Asbesto {
   materialLocation: string;
+  materialLocationOther: string;
   materialDescription: string;
   totalQuantity: number;
   F_NF: string;
@@ -18,6 +19,7 @@ export class Asbesto {
 
 export class AsbestoBitrixMaping {
   materialLocationCode: string;
+  materialLocationOtherCode: string;
   materialDescriptionCode: string;
   totalQuantityCode: string;
   F_NFCode: string;

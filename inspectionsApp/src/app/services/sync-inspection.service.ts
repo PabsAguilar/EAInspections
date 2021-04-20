@@ -19,6 +19,7 @@ import { MoistureMapping } from "../models/environmental-form/moisture-mapping";
 import { BitrixFolder, InspectionTask } from "../models/inspection-task";
 import { Scheduling } from "../models/scheduling";
 import { SyncInfo } from "../models/sync-info";
+import { AuthenticationService } from "./authentication.service";
 import { BitrixItestService } from "./bitrix-itest.service";
 import { InspectionsStorageService } from "./inspections-storage.service";
 import { ItestDealService } from "./itest-deal.service";
@@ -33,7 +34,8 @@ export class SyncInspectionService {
     private inspectionStorage: InspectionsStorageService,
     private schedulingStorageService: SchedulingStorageService,
     private toast: ToastController,
-    private itestDealService: ItestDealService
+    private itestDealService: ItestDealService,
+    private autenticateService: AuthenticationService
   ) {}
 
   private syncEvent = new Subject<any>();
@@ -396,20 +398,23 @@ export class SyncInspectionService {
   }
 
   async syncAllPending(): Promise<Observable<boolean>> {
+    var user = await this.autenticateService.getUser();
     var schedulingList = await this.schedulingStorageService.getPendingToSync();
     await Promise.all(
       (await schedulingList).map(async (x) => {
-        (await this.syncSchedulingInspection(x)).subscribe(async (y) => {
-          if (y) {
-          } else {
-            var message = this.toast.create({
-              message: "Sync failed, please try again later.",
-              color: "warning",
-              duration: 2000,
-            });
-            (await message).present();
+        (await this.syncSchedulingInspection(x, user.userId)).subscribe(
+          async (y) => {
+            if (y) {
+            } else {
+              var message = this.toast.create({
+                message: "Sync failed, please try again later.",
+                color: "warning",
+                duration: 2000,
+              });
+              (await message).present();
+            }
           }
-        });
+        );
       })
     );
 
@@ -441,17 +446,58 @@ export class SyncInspectionService {
     return of(true);
   }
 
+  pad(number, length) {
+    var str = "" + number;
+    while (str.length < length) {
+      str = "0" + str;
+    }
+    return str;
+  }
+
+  async getBitrixDateTime(date) {
+    date = new Date(date);
+    var offset: any = date.getTimezoneOffset();
+    offset =
+      (offset < 0 ? "+" : "-") + // Note the reversed sign!
+      this.pad(parseInt(Math.abs(offset / 60).toString()), 2) +
+      ":" +
+      this.pad(Math.abs(offset % 60), 2);
+
+    var paddatepart = function (part) {
+      return part >= 10 ? part.toString() : "0" + part.toString();
+    };
+
+    var dateStr =
+      date.getFullYear() +
+      "-" +
+      paddatepart(1 + date.getMonth()) +
+      "-" +
+      paddatepart(date.getDate()) +
+      "T" +
+      paddatepart(date.getHours()) +
+      ":" +
+      paddatepart(date.getMinutes()) +
+      ":" +
+      paddatepart(date.getSeconds()) +
+      offset;
+    return dateStr;
+  }
   async syncSchedulingInspection(
-    scheduling: Scheduling
+    scheduling: Scheduling,
+    userId: number
   ): Promise<Observable<boolean>> {
     try {
       if (!scheduling.contact.syncInfo.isSync) {
         scheduling.contact = await this.syncContact(scheduling.contact);
+
         if (!scheduling.contact.syncInfo.isSync) {
           return of(false);
         }
+        await this.schedulingStorageService.update(scheduling);
       }
-
+      scheduling.scheduleDateString = await this.getBitrixDateTime(
+        scheduling.scheduleDateTime
+      );
       if (
         scheduling.insuranceCompanyContact &&
         !scheduling.insuranceCompanyContact.syncInfo.isSync
@@ -459,9 +505,36 @@ export class SyncInspectionService {
         scheduling.insuranceCompanyContact = await this.syncContact(
           scheduling.insuranceCompanyContact
         );
+
         if (!scheduling.insuranceCompanyContact.syncInfo.isSync) {
           return of(false);
         }
+        await this.schedulingStorageService.update(scheduling);
+      }
+
+      if (
+        scheduling.referalPartner &&
+        !scheduling.referalPartner.syncInfo.isSync
+      ) {
+        scheduling.referalPartner = await this.syncContact(
+          scheduling.referalPartner
+        );
+        if (!scheduling.referalPartner.syncInfo.isSync) {
+          return of(false);
+        }
+        await this.schedulingStorageService.update(scheduling);
+      }
+      if (
+        scheduling.referalPartnerCompany &&
+        !scheduling.referalPartnerCompany.syncInfo.isSync
+      ) {
+        scheduling.referalPartnerCompany = await this.syncCompany(
+          scheduling.referalPartnerCompany
+        );
+        if (!scheduling.referalPartnerCompany.syncInfo.isSync) {
+          return of(false);
+        }
+        await this.schedulingStorageService.update(scheduling);
       }
 
       if (
@@ -474,6 +547,7 @@ export class SyncInspectionService {
         if (!scheduling.insuranceCompany.syncInfo.isSync) {
           return of(false);
         }
+        await this.schedulingStorageService.update(scheduling);
       }
 
       var insuranceCompany: string[] = [];
@@ -485,6 +559,15 @@ export class SyncInspectionService {
       if (scheduling.insuranceCompany) {
         insuranceCompany.push("CO_" + scheduling.insuranceCompany.id);
       }
+
+      var referalContact: string[] = [];
+      if (scheduling.referalPartner) {
+        referalContact.push("C_" + scheduling.referalPartner.idContact);
+      }
+      if (scheduling.referalPartnerCompany) {
+        referalContact.push("CO_" + scheduling.referalPartnerCompany.id);
+      }
+
       let postData = {
         fields: {
           TITLE:
@@ -509,11 +592,17 @@ export class SyncInspectionService {
           OPPORTUNITY: 0,
           BEGINDATE: "",
           CLOSEDATE: "",
-          UF_CRM_1612683055: scheduling.scheduleDateTime, //this.date2str(scheduling.scheduleDateTime),
+          UF_CRM_1612683055: scheduling.scheduleDateString, //this.date2str(scheduling.scheduleDateTime),
           UF_CRM_1606466289: scheduling.serviceAddress,
           UF_CRM_1612682994: scheduling.inspectorUserId,
           UF_CRM_1612686317: scheduling.inspectorUserId,
           UF_CRM_1612691342: insuranceCompany,
+          UF_CRM_1612433280: scheduling.inspectionTypes,
+          UF_CRM_1618512396: scheduling.typeOfLossDesc,
+          UF_CRM_1618512421: scheduling.affectedArea,
+          UF_CRM_1618512488: scheduling.waterDamageCategory,
+          UF_CRM_1618512548: scheduling.waterDamageClass,
+          UF_CRM_1612691326: referalContact,
         },
       };
 
@@ -524,7 +613,8 @@ export class SyncInspectionService {
         scheduling.syncInfo.syncCode = response.result;
         scheduling.internalStatus = InspectionStatus.Completed;
         await this.schedulingStorageService.update(scheduling);
-        await this.itestDealService.getExternal(scheduling.inspectorUserId);
+        await this.itestDealService.getExternal(userId);
+        await this.itestDealService.refreshFieldsFromServer(userId);
         return of(true);
       } else return of(false);
     } catch (error) {
@@ -659,9 +749,14 @@ export class SyncInspectionService {
         ) {
           var result = await this.sendAsbestos(task);
           task.environmentalForm.asbestosAreas.syncInfo.isSync = result > 0;
-          task.environmentalForm.asbestosAreas.syncInfo.syncCode = result.toString();
+          task.environmentalForm.asbestosAreas.syncInfo.syncCode = task
+            .environmentalForm.asbestosAreas.syncInfo.syncCode
+            ? task.environmentalForm.asbestosAreas.syncInfo.syncCode
+            : result.toString();
+          task.environmentalForm.asbestosAreas.syncInfo.updated = false;
         } else {
           task.environmentalForm.asbestosAreas.syncInfo.isSync = true;
+          task.environmentalForm.asbestosAreas.syncInfo.updated = false;
         }
         await this.inspectionStorage.update(task);
       }
@@ -676,9 +771,14 @@ export class SyncInspectionService {
         ) {
           var result = await this.sendLead(task);
           task.environmentalForm.leadAreas.syncInfo.isSync = result > 0;
-          task.environmentalForm.leadAreas.syncInfo.syncCode = result.toString();
+          task.environmentalForm.leadAreas.syncInfo.syncCode = task
+            .environmentalForm.leadAreas.syncInfo.syncCode
+            ? task.environmentalForm.leadAreas.syncInfo.syncCode
+            : result.toString();
+          task.environmentalForm.leadAreas.syncInfo.updated = false;
         } else {
           task.environmentalForm.leadAreas.syncInfo.isSync = true;
+          task.environmentalForm.leadAreas.syncInfo.updated = false;
         }
         await this.inspectionStorage.update(task);
       }
@@ -727,16 +827,22 @@ export class SyncInspectionService {
         //ID: "126",
         IBLOCK_ID: 30,
         IBLOCK_TYPE_ID: "lists",
-        ELEMENT_CODE:
-          30 + "-" + task.id + "-" + (Math.random() * 100).toString(),
+
         FIELDS: {
           NAME: `Lead - ${task.id} - ${task.title}`,
           PROPERTY_3526: task.id,
         },
       };
 
-      if (task.environmentalForm.leadAreas.syncInfo.isSync) {
-        postData["ID"] = task.environmentalForm.leadAreas.syncInfo.syncCode;
+      if (
+        task.environmentalForm.leadAreas.syncInfo.syncCode &&
+        parseInt(task.environmentalForm.leadAreas.syncInfo.syncCode) > 0
+      ) {
+        postData["ELEMENT_ID"] =
+          task.environmentalForm.leadAreas.syncInfo.syncCode;
+      } else {
+        postData["ELEMENT_CODE"] =
+          30 + "-" + task.id + "-" + (Math.random() * 100).toString();
       }
       if (task.environmentalForm.leadAreas.contact) {
         postData.FIELDS[
@@ -746,7 +852,9 @@ export class SyncInspectionService {
       if (task.environmentalForm.leadAreas.inspectionDate) {
         postData.FIELDS[
           task.environmentalForm.leadAreas.leadAreasBitrixMapping.inspectionDateCode
-        ] = task.environmentalForm.leadAreas.inspectionDate.toISOString();
+        ] = this.getBitrixDateTime(
+          task.environmentalForm.leadAreas.inspectionDate
+        );
       }
       if (task.environmentalForm.leadAreas.inspectionType) {
         postData.FIELDS[
@@ -759,6 +867,11 @@ export class SyncInspectionService {
           if (area.sample) {
             postData.FIELDS[area.bitrixMappingLead.sampleCode] = area.sample;
           }
+          if (area.sampleOther) {
+            postData.FIELDS[area.bitrixMappingLead.sampleOtherCode] =
+              area.sampleOther;
+          }
+
           if (area.cardinalDirection) {
             postData.FIELDS[area.bitrixMappingLead.cardinalDirectionCode] =
               area.cardinalDirection;
@@ -805,16 +918,22 @@ export class SyncInspectionService {
         //ID: "126",
         IBLOCK_ID: 32,
         IBLOCK_TYPE_ID: "lists",
-        ELEMENT_CODE:
-          32 + "-" + task.id + "-" + (Math.random() * 100).toString(),
+
         FIELDS: {
           NAME: `Asbestos - ${task.id} - ${task.title}`,
           PROPERTY_3522: task.id,
         },
       };
 
-      if (task.environmentalForm.asbestosAreas.syncInfo.isSync) {
-        postData["ID"] = task.environmentalForm.asbestosAreas.syncInfo.syncCode;
+      if (
+        task.environmentalForm.asbestosAreas.syncInfo.syncCode &&
+        parseInt(task.environmentalForm.asbestosAreas.syncInfo.syncCode) > 0
+      ) {
+        postData["ELEMENT_ID"] =
+          task.environmentalForm.asbestosAreas.syncInfo.syncCode;
+      } else {
+        postData["ELEMENT_CODE"] =
+          32 + "-" + task.id + "-" + (Math.random() * 100).toString();
       }
 
       if (task.environmentalForm.asbestosAreas.contact) {
@@ -825,7 +944,9 @@ export class SyncInspectionService {
       if (task.environmentalForm.asbestosAreas.inspectionDate) {
         postData.FIELDS[
           task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.inspectionDateCode
-        ] = task.environmentalForm.asbestosAreas.inspectionDate.toISOString();
+        ] = this.getBitrixDateTime(
+          task.environmentalForm.asbestosAreas.inspectionDate
+        );
       }
       if (task.environmentalForm.asbestosAreas.inspectionType) {
         postData.FIELDS[
@@ -839,6 +960,11 @@ export class SyncInspectionService {
             if (area.materialLocation) {
               postData.FIELDS[area.asbestoBitrixMaping.materialLocationCode] =
                 area.materialLocation;
+            }
+            if (area.materialLocationOther) {
+              postData.FIELDS[
+                area.asbestoBitrixMaping.materialLocationOtherCode
+              ] = area.materialLocationOther;
             }
             if (area.materialDescription) {
               postData.FIELDS[
@@ -887,17 +1013,23 @@ export class SyncInspectionService {
         //ID: "126",
         IBLOCK_ID: 34,
         IBLOCK_TYPE_ID: "lists",
-        ELEMENT_CODE:
-          34 + "-" + task.id + "-" + (Math.random() * 100).toString(),
         FIELDS: {
           NAME: `Moisture Mapping - ${task.id} - ${task.title}`,
           PROPERTY_3528: task.id,
         },
       };
 
-      if (task.environmentalForm.moistureMappingAreas.syncInfo.isSync) {
-        postData["ID"] =
+      if (
+        task.environmentalForm.moistureMappingAreas.syncInfo.syncCode &&
+        parseInt(
+          task.environmentalForm.moistureMappingAreas.syncInfo.syncCode
+        ) > 0
+      ) {
+        postData["ELEMENT_ID"] =
           task.environmentalForm.moistureMappingAreas.syncInfo.syncCode;
+      } else {
+        postData["ELEMENT_CODE"] =
+          34 + "-" + task.id + "-" + (Math.random() * 100).toString();
       }
       if (task.environmentalForm.moistureMappingAreas.contact) {
         postData.FIELDS[
@@ -907,7 +1039,9 @@ export class SyncInspectionService {
       if (task.environmentalForm.moistureMappingAreas.dateTesed) {
         postData.FIELDS[
           task.environmentalForm.moistureMappingAreas.moistureMappingAreasBitrixMapping.dateTesedCode
-        ] = task.environmentalForm.moistureMappingAreas.dateTesed.toISOString();
+        ] = this.getBitrixDateTime(
+          task.environmentalForm.moistureMappingAreas.dateTesed
+        );
       }
       if (task.environmentalForm.moistureMappingAreas.inspectionType) {
         postData.FIELDS[
@@ -921,6 +1055,10 @@ export class SyncInspectionService {
             if (area.area) {
               postData.FIELDS[area.moistureMappingBitrixMap.areaCode] =
                 area.area;
+            }
+            if (area.areaOther) {
+              postData.FIELDS[area.moistureMappingBitrixMap.areaOtherCode] =
+                area.areaOther;
             }
 
             if (area.roomTemp) {
@@ -982,23 +1120,8 @@ export class SyncInspectionService {
       return -1;
     }
   }
-
-  async sendImagesListDamageAreas(
-    areas: DamageAreas,
-    list: number,
-    name: string
-  ): Promise<DamageAreas> {
+  async syncDamageAreaImages(areas: DamageAreas, postData: any, list: number) {
     try {
-      var id = areas.syncInfo.syncCode;
-      let postData = {
-        IBLOCK_ID: list,
-        IBLOCK_TYPE_ID: "lists",
-        FIELDS: {
-          NAME: name,
-        },
-      };
-      postData["ELEMENT_ID"] = id;
-      const clonePostData = Object.assign({}, postData);
       await Promise.all(
         areas.areasInspection.map(async (area: DamageInspection, index) => {
           if (
@@ -1008,7 +1131,6 @@ export class SyncInspectionService {
               area.areaPictures.imagesCodesSync
                 .filter((x) => x.listSync == false)
                 .map(async (element, y) => {
-                  postData = Object.assign({}, clonePostData);
                   postData.FIELDS[
                     area.damageInspectionBitrixMapping.areaPicturesCode
                   ] = [element.file];
@@ -1036,6 +1158,7 @@ export class SyncInspectionService {
       return areas;
     }
   }
+
   async sendDamageInspection(
     areas: DamageAreas,
     task: InspectionTask,
@@ -1073,21 +1196,26 @@ export class SyncInspectionService {
         task.contactId;
       postData.FIELDS[
         areas.damageAreasBitrixMapping.startDateCode
-      ] = task.environmentalForm.startDate.toISOString();
+      ] = this.getBitrixDateTime(task.environmentalForm.startDate);
       postData.FIELDS[areas.damageAreasBitrixMapping.dealIdCode] = task.id;
       postData.FIELDS[areas.damageAreasBitrixMapping.inspectionType] =
         areas.moldInspectionType;
 
       await Promise.all(
         areas.areasInspection.map(async (area: DamageInspection) => {
-          if (area.areaPictures.imagesCodesSync.length > 0) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.areaPicturesCode
-            ] = area.areaPictures.imagesCodesSync.map((y) => y.file);
-          }
+          // if (area.areaPictures.imagesCodesSync.length > 0) {
+          //   postData.FIELDS[
+          //     area.damageInspectionBitrixMapping.areaPicturesCode
+          //   ] = area.areaPictures.imagesCodesSync.map((y) => y.file);
+          // }
           if (area.areaName) {
             postData.FIELDS[area.damageInspectionBitrixMapping.areaNameCode] =
               area.areaName;
+          }
+          if (area.areaNameOther) {
+            postData.FIELDS[
+              area.damageInspectionBitrixMapping.areaNameOtherCode
+            ] = area.areaNameOther;
           }
           if (area.areaRH) {
             postData.FIELDS[area.damageInspectionBitrixMapping.areaRHCode] =
@@ -1198,10 +1326,18 @@ export class SyncInspectionService {
           areas.syncInfo.syncCode = areas.syncInfo.syncCode
             ? areas.syncInfo.syncCode
             : result.toString();
-
-  
+          postData["ELEMENT_ID"] = areas.syncInfo.syncCode;
           areas.syncInfo.isSync = result > 0;
           areas.syncInfo.updated = false;
+          areas = await this.syncDamageAreaImages(areas, postData, list);
+          if (
+            areas.areasInspection.find((area) =>
+              area.areaPictures.imagesCodesSync.find((x) => x.listSync == false)
+            )
+          ) {
+            areas.syncInfo.isSync = false;
+            areas.syncInfo.updated = false;
+          }
         } else {
           areas.syncInfo.isSync = false;
           areas.syncInfo.updated = false;

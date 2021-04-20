@@ -54,6 +54,12 @@ export class ExpertNetworkAgreementPage implements OnInit {
     if (this.signaturePad) {
       this.signaturePad.clear(); // Clear the pad on init
     }
+    if (
+      !this.task.expertNetworkAgreements.signature ||
+      this.task.expertNetworkAgreements.signature.images.length <= 0
+    ) {
+      this.nameSignature = this.task.contactName;
+    }
   }
 
   clear() {
