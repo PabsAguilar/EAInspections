@@ -23,7 +23,6 @@
     *ngFor="let bathroom of bathrooms; let i = index"
     ngDefaultControl
     [title]="'Bathroom ' + (i + 1)"
-    [conditions]="conditions"
     type="Bathroom"
     (InspectionAreaGeneralChanged)="AreaUpdated($event)"
     [(InspectionArea)]="bathrooms[i]"

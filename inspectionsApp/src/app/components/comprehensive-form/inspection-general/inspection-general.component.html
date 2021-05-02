@@ -17,26 +17,6 @@
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
-  <ion-item *ngIf="task.typeOfLossDesc && task.typeOfLossDesc != ''">
-    <ion-label position="floating">Type of Loss & Description</ion-label>
-    <ion-textarea
-      [(ngModel)]="task.typeOfLossDesc"
-      name="typeOfLossDesc"
-      readonly="true"
-      type="text"
-    ></ion-textarea>
-  </ion-item>
-
-  <ion-item *ngIf="task.affectedArea && task.affectedArea != ''">
-    <ion-label position="floating">Affected Area</ion-label>
-    <ion-textarea
-      [(ngModel)]="task.affectedArea"
-      name="affectedArea"
-      readonly="true"
-      type="text"
-    ></ion-textarea>
-  </ion-item>
-
   <ion-item>
     <ion-label position="floating">Property Year</ion-label>
     <ion-input
@@ -164,23 +144,58 @@
       </ion-select>
     </ion-item>
 
-    <ion-item *ngIf="waterDamageCategoryName && waterDamageCategoryName != ''">
+    <ion-item>
       <ion-label position="floating">Water Damage Category</ion-label>
-      <ion-input
-        [(ngModel)]="waterDamageCategoryName"
-        name="waterDamageCategoryName"
-        readonly="true"
-        type="text"
-      ></ion-input>
+      <ion-select
+        interface="popover"
+        name="waterDamageCategory"
+        [disabled]="readonly"
+        (ionChange)="changeModel($event)"
+        [(ngModel)]="generalInfoInspection.waterDamageCategory"
+      >
+        <ion-select-option
+          *ngFor="let item of waterDamageCategories; let i = index"
+          [value]="item.value"
+        >
+          {{ item.name }}</ion-select-option
+        >
+      </ion-select>
     </ion-item>
-    <ion-item *ngIf="waterDamageClassName && waterDamageClassName != ''">
+
+    <ion-item>
       <ion-label position="floating">Water Damage Class</ion-label>
-      <ion-input
-        [(ngModel)]="waterDamageClassName"
-        name="waterDamageClassName"
-        readonly="true"
+      <ion-select
+        interface="popover"
+        name="waterDamageCategory"
+        [disabled]="readonly"
+        (ionChange)="changeModel($event)"
+        [(ngModel)]="generalInfoInspection.waterDamageClass"
+      >
+        <ion-select-option
+          *ngFor="let item of waterDamageClasses; let i = index"
+          [value]="item.value"
+        >
+          {{ item.name }}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Type of Loss & Description</ion-label>
+      <ion-textarea
+        [(ngModel)]="task.typeOfLossDesc"
+        name="typeOfLossDesc"
         type="text"
-      ></ion-input>
+      ></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Affected Area</ion-label>
+      <ion-textarea
+        [(ngModel)]="task.affectedArea"
+        name="affectedArea"
+        type="text"
+      ></ion-textarea>
     </ion-item>
   </div>
   <ion-item

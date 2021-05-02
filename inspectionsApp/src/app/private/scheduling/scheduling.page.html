@@ -28,10 +28,10 @@
         #serviceType="ngModel"
         [(ngModel)]="scheduling.serviceType"
       >
-        <ion-select-option value="ITEST"
+        <ion-select-option value="ITest"
           >Environmental (ITest)</ion-select-option
         >
-        <ion-select-option disabled value="Expert Networks"
+        <ion-select-option value="Expert Networks"
           >Comprehensive (ExpertNetwork)</ion-select-option
         >
       </ion-select>
@@ -95,7 +95,10 @@
         </p>
       </div>
     </div>
-    <div id="types" *ngIf="scheduling.serviceType">
+    <div
+      id="types"
+      *ngIf="scheduling.serviceType && scheduling.serviceType =='ITest'"
+    >
       <app-multiple-radio
         title="Inspection Types"
         ngDefaultControl
@@ -117,7 +120,7 @@
       ></ion-textarea>
     </ion-item>
 
-    <ion-item lines="full">
+    <!-- <ion-item lines="full">
       <ion-label position="floating">Type of Loss & Description</ion-label>
       <ion-textarea
         name="typeOfLossDesc"
@@ -172,7 +175,7 @@
           {{ item.name }}</ion-select-option
         >
       </ion-select>
-    </ion-item>
+    </ion-item> -->
 
     <div id="insurance">
       <ion-item lines="none">
@@ -251,6 +254,7 @@
           <ion-icon name="person-circle-outline"></ion-icon>
         </ion-chip>
         <ion-chip
+          *ngIf="scheduling.serviceType =='ITest'"
           color="secondary"
           (click)="searchCompany('referal')"
           slot="end"
@@ -401,6 +405,7 @@
           && scheduling.serviceType && !serviceType.errors          
           && scheduling.scheduleDateTime && !scheduleDateTime.errors
           && scheduling.contact && scheduling.contact.firstName 
+          
           )"
           >Submit</ion-button
         >

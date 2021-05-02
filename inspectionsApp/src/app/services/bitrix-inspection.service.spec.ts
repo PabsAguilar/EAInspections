@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { BitrixInspectionService } from './bitrix-inspection.service';
+import { BitrixENService } from "./bitrix-inspection.service";
 
-describe('BitrixInspectionService', () => {
-  let service: BitrixInspectionService;
+describe("BitrixInspectionService", () => {
+  let service: BitrixENService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(BitrixInspectionService);
+    service = TestBed.inject(BitrixENService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

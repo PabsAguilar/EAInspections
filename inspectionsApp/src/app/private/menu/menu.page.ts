@@ -88,8 +88,8 @@ export class MenuPage implements OnInit {
     });
     await loading.present();
     try {
-      await this.inspectionService.getExternal(this.user.userId);
-      await this.inspectionService.refreshFieldsFromServer(this.user.userId);
+      await this.inspectionService.getExternal(this.user);
+      await this.inspectionService.refreshFieldsFromServer(this.user);
       this.syncInspectionService.publishSomeData({
         syncItem: "deal",
         refreshFromServer: false,
@@ -118,8 +118,8 @@ export class MenuPage implements OnInit {
         await this.syncInspectionService.syncAllPending()
       ).toPromise();
 
-      await this.inspectionService.getExternal(this.user.userId);
-      await this.inspectionService.refreshFieldsFromServer(this.user.userId);
+      await this.inspectionService.getExternal(this.user);
+      await this.inspectionService.refreshFieldsFromServer(this.user);
       this.syncInspectionService.publishSomeData({
         syncItem: "deal",
         refreshFromServer: false,

@@ -2,16 +2,52 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 import { Injectable } from "@angular/core";
 import { BooleanValueAccessor } from "@ionic/angular";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
+import {
+  ENDealMapping,
+  EnumEnterprise,
+  ITestDealMapping,
+  ReportStatusDeal,
+} from "../models/enums";
 import { InspectionTask } from "../models/inspection-task";
+import { User } from "../models/user";
+import { AuthenticationService } from "./authentication.service";
+const iTestUrl = "https://itest.bitrix24.com/rest/6";
+const iTestKey = "rf1a6ygkrbdsho5t";
+
+const eNUrl = "https://expertnetwork.bitrix24.com/rest/159/";
+const eNKey = "av26roukw3tcyfyf";
 
 @Injectable({
   providedIn: "root",
 })
 export class BitrixItestService {
-  constructor(private http: HttpClient) {}
-  url = "https://itest.bitrix24.com/rest/6";
-  key = "rf1a6ygkrbdsho5t";
+  constructor(private http: HttpClient, authService: AuthenticationService) {
+    authService.getUser().then((x) => {
+      if (!x) {
+        return;
+      }
+      if (x.enterprise === EnumEnterprise.itest) {
+        this.url = iTestUrl;
+        this.key = iTestKey;
+      } else {
+        this.url = eNUrl;
+        this.key = eNKey;
+      }
+    });
+  }
+
+  setUrlandKey(enterprise) {
+    if (enterprise === EnumEnterprise.itest) {
+      this.url = iTestUrl;
+      this.key = iTestKey;
+    } else {
+      this.url = eNUrl;
+      this.key = eNKey;
+    }
+  }
+  url = ""; //url = "https://itest.bitrix24.com/rest/6";
+  key = ""; //key = "rf1a6ygkrbdsho5t";
 
   public getUserByEmail(email: string): Promise<any> {
     return this.http
@@ -19,10 +55,10 @@ export class BitrixItestService {
       .toPromise();
   }
 
-  public getInspectionTypes(): Promise<any> {
+  public getInspectionTypesITest(list: string): Promise<any> {
     return this.http
       .get(
-        `${this.url}/${this.key}/lists.element.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=44`
+        `${iTestUrl}/${iTestKey}/lists.element.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}`
       )
       .toPromise();
   }
@@ -96,6 +132,27 @@ export class BitrixItestService {
       .toPromise();
   }
 
+  public getContactByEmailByEnterprise(
+    email: string,
+    enterprise: string
+  ): Promise<any> {
+    //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
+    var tempUrl = iTestUrl;
+    var tempKey = iTestKey;
+    if (enterprise === EnumEnterprise.itest) {
+      tempUrl = iTestUrl;
+      tempKey = iTestKey;
+    } else {
+      tempUrl = eNUrl;
+      tempKey = eNKey;
+    }
+    return this.http
+      .get(
+        `${tempUrl}/${tempKey}/crm.contact.list.json?SELECT[]=EMAIL&SELECT[]=NAME&SELECT[]=LAST_NAME&SELECT[]=PHONE&FILTER[EMAIL]=${email}`
+      )
+      .toPromise();
+  }
+
   public getCompaniesByName(name: string): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.company.list.json?SELECT[]=*&FILTER[%TITLE]=Test
     https: return this.http
@@ -105,14 +162,65 @@ export class BitrixItestService {
       .toPromise();
   }
 
-  //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[UF_CRM_1612682994]=6
-  public getInspectionsDeals(idUser: number): Promise<any> {
-    //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
-    return this.http
+  public getCompaniesByNameAndEnterprise(
+    name: string,
+    enterprise: string
+  ): Promise<any> {
+    //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.company.list.json?SELECT[]=*&FILTER[%TITLE]=Test
+    var tempUrl = iTestUrl;
+    var tempKey = iTestKey;
+    if (enterprise === EnumEnterprise.itest) {
+      tempUrl = iTestUrl;
+      tempKey = iTestKey;
+    } else {
+      tempUrl = eNUrl;
+      tempKey = eNKey;
+    }
+
+    https: return this.http
       .get(
-        `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[UF_CRM_1612682994]=${idUser}`
+        `${tempUrl}/${tempKey}/crm.company.list.json?SELECT[]=TITLE&SELECT[]=EMAIL&SELECT[]=PHONE&SELECT[]=COMPANY_TYPE&FILTER[%TITLE]=${name}`
       )
       .toPromise();
+  }
+
+  //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[UF_CRM_1612682994]=6
+  public getInspectionsDeals(user: User): Promise<any> {
+    //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
+    var inspectorField =
+      user.enterprise == EnumEnterprise.itest
+        ? ITestDealMapping.inspector
+        : ENDealMapping.inspector;
+    if (user.enterprise == EnumEnterprise.itest) {
+      return this.http
+        .get(
+          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[${inspectorField}]=${user.userId}`
+        )
+        .toPromise();
+    } else {
+      return this.http
+        .get(
+          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=NEW&FILTER[${inspectorField}]=${user.userId}`
+        )
+        .toPromise();
+    }
+  }
+
+  public getRejectedDeals(user: User): Promise<any> {
+    //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
+    var inspectorField =
+      user.enterprise == EnumEnterprise.itest
+        ? ITestDealMapping.inspector
+        : ENDealMapping.inspector;
+    if (user.enterprise == EnumEnterprise.itest) {
+      return this.http
+        .get(
+          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[UF_CRM_1613380179]=${ReportStatusDeal.Rejected}&FILTER[${inspectorField}]=${user.userId}`
+        )
+        .toPromise();
+    } else {
+      return Promise.resolve([]);
+    }
   }
 
   public syncDamageAreaInspection(
@@ -156,20 +264,49 @@ export class BitrixItestService {
     });
   }
 
-  public createDeal(postData: any): Observable<any> {
-    return this.http.post(`${this.url}/${this.key}/crm.deal.add`, postData, {
+  public createDeal(postData: any, enterprise: string): Observable<any> {
+    var tempUrl = iTestUrl;
+    var tempKey = iTestKey;
+    if (enterprise === EnumEnterprise.itest) {
+      tempUrl = iTestUrl;
+      tempKey = iTestKey;
+    } else {
+      tempUrl = eNUrl;
+      tempKey = eNKey;
+    }
+    return this.http.post(`${tempUrl}/${tempKey}/crm.deal.add`, postData, {
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  public createContact(postData: any): Observable<any> {
-    return this.http.post(`${this.url}/${this.key}/crm.contact.add`, postData, {
+  public createContact(postData: any, enterprise: string): Observable<any> {
+    var tempUrl = iTestUrl;
+    var tempKey = iTestKey;
+    if (enterprise === EnumEnterprise.itest) {
+      tempUrl = iTestUrl;
+      tempKey = iTestKey;
+    } else {
+      tempUrl = eNUrl;
+      tempKey = eNKey;
+    }
+
+    return this.http.post(`${tempUrl}/${tempKey}/crm.contact.add`, postData, {
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  public createCompany(postData: any): Observable<any> {
-    return this.http.post(`${this.url}/${this.key}/crm.company.add`, postData, {
+  public createCompany(postData: any, enterprise: string): Observable<any> {
+    var tempUrl = iTestUrl;
+    var tempKey = iTestKey;
+    if (enterprise === EnumEnterprise.itest) {
+      tempUrl = iTestUrl;
+      tempKey = iTestKey;
+    } else {
+      tempUrl = eNUrl;
+      tempKey = eNKey;
+    }
+
+    return this.http.post(`${tempUrl}/${tempKey}/crm.company.add`, postData, {
       headers: { "Content-Type": "application/json" },
     });
   }

@@ -122,6 +122,10 @@ export class InspectionNavigateService {
       }
       await this.navController.navigateBack([path], navigationExtras);
     } catch (error) {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
       console.log(error);
       var message = this.toast.create({
         message: error,
@@ -149,6 +153,10 @@ export class InspectionNavigateService {
 
       await this.navController.navigateForward([path], navigationExtras);
     } catch (error) {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
       console.log(error);
       var message = this.toast.create({
         message: error,
@@ -176,6 +184,10 @@ export class InspectionNavigateService {
 
       await this.navController.navigateForward([path], navigationExtras);
     } catch (error) {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
       console.log(error);
       var message = this.toast.create({
         message: error,
@@ -204,6 +216,10 @@ export class InspectionNavigateService {
       }
       await this.navController.navigateForward([path], navigationExtras);
     } catch (error) {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
       console.log(error);
       var message = this.toast.create({
         message: error,

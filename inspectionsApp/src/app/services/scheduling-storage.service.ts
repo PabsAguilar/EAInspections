@@ -30,11 +30,11 @@ export class SchedulingStorageService implements IStorage {
   update(item: Scheduling): Promise<any> {
     return this.genericStorage.update(item);
   }
-  getAll(): Promise<Scheduling[]> {
-    return this.genericStorage.getAll();
+  getAll(enterprise: string = null): Promise<Scheduling[]> {
+    return this.genericStorage.getAll(enterprise);
   }
-  get(id: number): Promise<Scheduling> {
-    return this.genericStorage.get(id);
+  get(id: number, enterprise: string = null): Promise<Scheduling> {
+    return this.genericStorage.get(id, enterprise);
   }
   delete(item: any): Promise<Scheduling> {
     return this.genericStorage.delete(item);

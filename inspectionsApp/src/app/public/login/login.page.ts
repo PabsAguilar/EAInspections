@@ -15,6 +15,8 @@ import {
 import { User } from "src/app/models/user";
 import { BitrixItestService } from "src/app/services/bitrix-itest.service";
 import { ItestDealService } from "src/app/services/itest-deal.service";
+import { BitrixENService } from "src/app/services/bitrix-inspection.service";
+import { EnumEnterprise } from "src/app/models/enums";
 
 @Component({
   selector: "app-login",
@@ -26,7 +28,10 @@ export class LoginPage implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
-    private bitrix: BitrixItestService,
+    // private itestBitrix: BitrixItestService,
+    // private eNBitrixService: BitrixENService,
+
+    private inspectionService: ItestDealService,
     public formBuilder: FormBuilder,
     public alertController: AlertController,
     private loadingController: LoadingController,
@@ -41,6 +46,7 @@ export class LoginPage implements OnInit {
       if (lastUser) {
         this.email = lastUser.email;
         this.image = lastUser.image;
+        this.segmentOption = lastUser.enterprise;
       }
 
       var top = await this.loadingController.getTop();
@@ -58,6 +64,7 @@ export class LoginPage implements OnInit {
     }
   }
 
+  segmentOption: string = "ITest";
   email: string = "";
   image: string;
   password: string = "";
@@ -99,12 +106,21 @@ export class LoginPage implements OnInit {
     });
     try {
       await loading.present();
-      var data = await this.bitrix.getUserByEmail(values.username);
-      if (data.result.length > 0) {
+      var data;
+      if (this.segmentOption == EnumEnterprise.itest) {
+        data = await this.authService.getUserByEmailITest(values.username);
+      } else {
+        data = await this.authService.getUserByEmailEN(values.username);
+      }
+      if (data && data.result.length > 0) {
+        data.result[0].ENTERPRISE = this.segmentOption;
         var user = new User(data.result[0]);
         console.log(user);
 
         this.validations_form.reset();
+        await this.inspectionService.setEnterprise(this.segmentOption);
+        await this.inspectionService.refreshFieldsFromServer(user);
+        await this.inspectionService.getExternal(user);
         this.authService.login(user);
       } else {
         loading.dismiss();

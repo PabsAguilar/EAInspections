@@ -14,15 +14,22 @@
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
-  <ion-item lines="inset">
-    <ion-label>Mold Sample Taken</ion-label>
-    <ion-toggle
-      slot="start"
+  <ion-item>
+    <ion-label position="floating">Mold Sample Taken</ion-label>
+    <ion-select
+      interface="popover"
       name="MoldSampleTaken"
-      (ionChange)="changeModel($event)"
-      color="primary"
+      [disabled]="readonly"
       [(ngModel)]="_data.MoldSampleTaken"
-    ></ion-toggle>
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option
+        *ngFor="let item of moldSampleTakenList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
   </ion-item>
 
   <ion-item lines="inset">
@@ -31,6 +38,7 @@
       [(ngModel)]="_data.MoldSampleLocation"
       (ionChange)="changeModel($event)"
       type="text"
+      [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
@@ -43,30 +51,55 @@
     [(ngModel)]="_data.MoldLocationPicture"
   ></app-slides-photos>
 
-  <ion-item lines="inset">
-    <ion-label>Water Sample Taken</ion-label>
-    <ion-toggle
-      slot="start"
-      (ionChange)="changeModel($event)"
-      name="WaterSampleTaken"
-      color="primary"
+  <ion-item>
+    <ion-label position="floating">Water Sample Taken</ion-label>
+    <ion-select
+      interface="popover"
+      name="MoldSampleTaken"
+      [disabled]="readonly"
       [(ngModel)]="_data.WaterSampleTaken"
-    ></ion-toggle>
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option
+        *ngFor="let item of waterSampleTakenList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
   </ion-item>
 
   <ion-item>
     <ion-label position="floating">Water Sample location</ion-label>
     <ion-select
       interface="popover"
-      name="propertyType"
-      (ionChange)="changeModel($event)"
+      name="MoldSampleTaken"
+      [disabled]="readonly"
       [(ngModel)]="_data.WaterSamplelocation"
+      (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="Kitchen">Kitchen</ion-select-option>
-      <ion-select-option value="Bathroom">Bathroom</ion-select-option>
-      <ion-select-option value="Refrigerator">Refrigerator</ion-select-option>
-      <ion-select-option value="Water filter">Water filter</ion-select-option>
-      <ion-select-option value="Other">Other</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of waterSampleLocationList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
+  </ion-item>
+
+  <ion-item
+    (click)="toggleAccordion()"
+    lines="none"
+    button
+    class="ion-no-margin"
+  >
+    <ion-label color="warning"> {{ "End Environmental " }}</ion-label>
+
+    <ion-icon
+      slot="end"
+      *ngIf="!isMenuOpen"
+      name="caret-down-outline"
+    ></ion-icon>
+    <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
   </ion-item>
 </div>

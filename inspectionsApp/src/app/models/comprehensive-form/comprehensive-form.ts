@@ -38,11 +38,11 @@ export class ComprehensiveForm {
     this.recomendations = new Recomendations();
     this.insurance = new Insurance();
     this.reminders = new Reminders();
-    for (let index = 0; index < 8; index++) {
-      this.areas.push(new Area());
-    }
-    for (let index = 0; index < 3; index++) {
-      this.bathrooms.push(new GeneralCondition());
-    }
+    // for (let index = 0; index < 8; index++) {
+    //   this.areas.push(new Area());
+    // }
+    // for (let index = 0; index < 3; index++) {
+    //   this.bathrooms.push(new GeneralCondition());
+    // }
   }
 }

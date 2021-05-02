@@ -16,7 +16,7 @@
 <div *ngIf="isMenuOpen">
   <ion-item lines="inset">
     <ion-label>Put sticker on HVAC and Water Heater</ion-label>
-    <ion-toggle
+    <ion-checkbox
       slot="start"
       name="sticker"
       (ionChange)="changeModel($event)"
@@ -24,42 +24,42 @@
       (ionChange)="changeModel($event)"
       [(ngModel)]="_data.sticker"
     >
-    </ion-toggle>
+    </ion-checkbox>
   </ion-item>
   <ion-item lines="inset">
     <ion-label
       >Remind Homeowner they can call once a year for free inspection</ion-label
     >
-    <ion-toggle
+    <ion-checkbox
       slot="start"
       name="freeInspection"
       color="primary"
       (ionChange)="changeModel($event)"
       [(ngModel)]="_data.freeInspection"
     >
-    </ion-toggle>
+    </ion-checkbox>
   </ion-item>
   <ion-item lines="inset">
     <ion-label>Give them company brochure</ion-label>
-    <ion-toggle
+    <ion-checkbox
       slot="start"
       name="brochure"
       color="primary"
       (ionChange)="changeModel($event)"
       [(ngModel)]="_data.brochure"
     >
-    </ion-toggle>
+    </ion-checkbox>
   </ion-item>
 
   <ion-item lines="inset">
     <ion-label>Offer financing (If applicable)</ion-label>
-    <ion-toggle
+    <ion-checkbox
       slot="start"
       name="offerFinancing"
       color="primary"
       (ionChange)="changeModel($event)"
       [(ngModel)]="_data.offerFinancing"
     >
-    </ion-toggle>
+    </ion-checkbox>
   </ion-item>
 </div>

@@ -14,21 +14,15 @@
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
-  <ion-item>
-    <ion-label>Select conditions:</ion-label>
-    <ion-chip slot="end" color="warning">{{
-      kitchen.condition.length
-    }}</ion-chip>
-  </ion-item>
-  <ion-item *ngFor="let item of _conditions; let i = index" lines="none">
-    <ion-checkbox
-      slot="start"
-      color="warning"
-      (ionChange)="onConditionChange($event, i)"
-      [(ngModel)]="item.checked"
-    ></ion-checkbox>
-    <ion-label>{{ item.name }}</ion-label>
-  </ion-item>
+  <app-multiple-radio
+    title="Select conditions:"
+    ngDefaultControl
+    name="areaCondition"
+    [readonly]="readonly"
+    [options]="_conditions"
+    [(data)]="kitchen.condition"
+    (dataChange)="changeModel($event)"
+  ></app-multiple-radio>
 
   <ion-item lines="inset">
     <ion-label position="floating">Moisture Level</ion-label>
@@ -40,7 +34,25 @@
     ></ion-input>
   </ion-item>
 
-  <ion-item lines="inset">
+  <ion-item>
+    <ion-label position="floating">Water Quality Test</ion-label>
+    <ion-select
+      interface="popover"
+      name="name"
+      [disabled]="readonly"
+      [(ngModel)]="kitchen.waterQualityTest"
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option
+        *ngFor="let item of waterQualityList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+
+  <!-- <ion-item lines="inset">
     <ion-label>Water Quality Test</ion-label>
     <ion-toggle
       slot="start"
@@ -49,14 +61,16 @@
       color="primary"
       [(ngModel)]="kitchen.waterQualityTest"
     ></ion-toggle>
-  </ion-item>
+  </ion-item> -->
 
   <app-slides-photos
-    ngDefaultControl
     title="Pictures"
+    *ngIf="isMenuOpen"
+    ngDefaultControl
     name="pictures"
-    (photoChanged)="changeModel($event)"
     [(ngModel)]="kitchen.pictures"
+    (photoChanged)="changeModel($event)"
+    [readonly]="readonly"
   ></app-slides-photos>
 
   <ion-item>
@@ -66,5 +80,20 @@
       (ionChange)="changeModel($event)"
       type="text"
     ></ion-textarea>
+  </ion-item>
+  <ion-item
+    (click)="toggleAccordion()"
+    lines="none"
+    button
+    class="ion-no-margin"
+  >
+    <ion-label color="warning"> {{ "End " + title }}</ion-label>
+
+    <ion-icon
+      slot="end"
+      *ngIf="!isMenuOpen"
+      name="caret-down-outline"
+    ></ion-icon>
+    <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
   </ion-item>
 </div>

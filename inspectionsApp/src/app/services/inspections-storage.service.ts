@@ -8,7 +8,7 @@ import { DamageInspection } from "../models/damage-inspection";
 
 import {
   AreaConditionType,
-  bitrixMapping,
+  bitrixMappingEnvironmental,
   DamageAreaType,
   InspectionStatus,
   InspectionType,
@@ -47,8 +47,8 @@ export class InspectionsStorageService implements IStorage {
   getAll(): Promise<InspectionTask[]> {
     return this.inspectionStore.getAll();
   }
-  get(id: number): Promise<InspectionTask> {
-    return this.inspectionStore.get(id);
+  get(id: number, enterprise: string = null): Promise<InspectionTask> {
+    return this.inspectionStore.get(id, enterprise);
   }
   delete(item: any): Promise<InspectionTask> {
     return this.inspectionStore.delete(item);

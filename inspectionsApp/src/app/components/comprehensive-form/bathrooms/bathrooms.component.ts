@@ -17,22 +17,13 @@ export class BathroomsComponent implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  conditions = [
-    { name: "Shower pan", checked: false },
-    { name: "Loose tiles", checked: false },
-    { name: "Leak behind walls", checked: false },
-    { name: "Shower head / Faucet", checked: false },
-    { name: "Damaged Flooring", checked: false },
-    { name: "Visible Mold", checked: false },
-  ];
-
   @Input()
   get InspectionAreas(): GeneralCondition[] {
     return this.bathrooms;
   }
   set InspectionAreas(value: GeneralCondition[]) {
     this.bathrooms = value;
-    this.AreaUpdated(null);
+    this.AreaUpdated("init");
   }
   bathrooms: GeneralCondition[] = [];
   @Output() AreasListChanged: any = new EventEmitter();
@@ -50,7 +41,9 @@ export class BathroomsComponent implements OnInit {
     if (this.filledAreas >= 1) {
       this.progressColor = "success";
       this.progressPercentage = 1;
-      this.AreasListChanged.emit(this.bathrooms);
+      if ($event != "init") {
+        this.AreasListChanged.emit(this.bathrooms);
+      }
     }
   }
 }

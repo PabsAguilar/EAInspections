@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output } from "@angular/core";
 import { EventEmitter } from "@angular/core";
 import { Area } from "src/app/models/comprehensive-form/area";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-area",
@@ -13,28 +14,39 @@ export class AreaComponent implements OnInit {
   public isMenuOpen: boolean = false;
   public progressPercentage: number = 0;
   public progressColor: string = "danger";
-
+  fields: any[];
+  conditions: any[];
+  areaNameList: any[];
+  selectAreaName: string = "";
   @Input()
   get InspectionArea(): Area {
     return this.area;
   }
   set InspectionArea(value: Area) {
-    if (!value.condition) {
-      value.condition = [];
-    }
-    for (let index = 0; index < this.conditions.length; index++) {
-      const element = this.conditions[index];
-      this.conditions[index].checked = value.condition.includes(element.name);
-    }
     this.area = value;
-    this.changeModel(null);
+    this.inspectionService.getDealsFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        this.conditions = this.fields[
+          this.area.areaBitrixMapping.conditionCode
+        ].items
+          .filter((x) => x.ID != "1893" && x.ID != "1899")
+          .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+        this.areaNameList = this.fields[
+          this.area.areaBitrixMapping.nameCode
+        ].items.map((y) => {
+          return { name: y.VALUE, value: y.ID };
+        });
+      }
+    });
+    this.changeModel("init");
   }
   area: Area = new Area();
-  @Input() readonly: boolean = false;
+
   @Input() title: string = "";
   @Output() InspectionAreaChanged: any = new EventEmitter();
-
-  constructor() {}
+  @Input() readonly: boolean = false;
+  constructor(private inspectionService: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -45,6 +57,9 @@ export class AreaComponent implements OnInit {
   changeModel($event) {
     this.filledProperties = 0;
     if (this.area.name) {
+      this.selectAreaName = this.areaNameList.find(
+        (x) => x.value == this.area.name
+      )?.name;
       this.filledProperties++;
     }
     if (this.area.condition.length > 0) {
@@ -53,7 +68,7 @@ export class AreaComponent implements OnInit {
     if (this.area.moistureLevel) {
       this.filledProperties++;
     }
-    if (this.area.pictures.length > 0) {
+    if (this.area.pictures.images.length > 0) {
       this.filledProperties++;
     }
     if (this.area.notes) {
@@ -64,9 +79,9 @@ export class AreaComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
-    
-
-    this.InspectionAreaChanged.emit(this.area);
+    if ($event != "init") {
+      this.InspectionAreaChanged.emit(this.area);
+    }
 
     switch (true) {
       case this.progressPercentage < 0.5:
@@ -83,21 +98,12 @@ export class AreaComponent implements OnInit {
         break;
     }
   }
-  onConditionChange($event, index: number) {
-    var x = this.conditions.reduce(
-      (result, { name, checked }) => [...result, ...(checked ? [name] : [])],
-      []
-    );
-    this.area.condition = x;
-    this.changeModel(null);
-  }
-
-  conditions: any[] = [
-    { name: "Ceiling stains", checked: false },
-    { name: "Visible mold", checked: false },
-    { name: "Damaged baseboards / Flooring", checked: false },
-    { name: "Window / Door leak", checked: false },
-    { name: "Cracked walls / ceilings", checked: false },
-    { name: "Dirty AC ducts", checked: false },
-  ];
+  // onConditionChange($event, index: number) {
+  //   var x = this.conditions.reduce(
+  //     (result, { name, checked }) => [...result, ...(checked ? [name] : [])],
+  //     []
+  //   );
+  //   this.area.condition = x;
+  //   this.changeModel(null);
+  // }
 }

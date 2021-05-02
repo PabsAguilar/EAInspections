@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Area } from "src/app/models/comprehensive-form/area";
 import { AreaConditionType, BathroomConditions } from "src/app/models/enums";
 import { GeneralCondition } from "src/app/models/comprehensive-form/general-condition";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-area-general-condition",
@@ -16,19 +17,22 @@ export class AreaGeneralConditionComponent implements OnInit {
   progressPercentage: number = 0;
   progressColor: string = "danger";
   _conditions: any[];
+  fields: any[];
   titleColor = "primary";
   @Input()
   set InspectionArea(value: GeneralCondition) {
-    if (!value.condition) {
-      value.condition = [];
-    }
-    for (let index = 0; index < this._conditions.length; index++) {
-      const element = this._conditions[index];
-      this._conditions[index].checked = value.condition.includes(element.name);
-    }
     this.generalCondition = value;
-
-    this.changeModel(null);
+    this.inspectionService.getDealsFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        this._conditions = this.fields[
+          this.generalCondition.generalConditionBitrixMapping.conditionCode
+        ].items
+          .filter((x) => x.ID != "1893" && x.ID != "1899")
+          .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+      }
+    });
+    this.changeModel("init");
   }
   generalCondition: GeneralCondition = new GeneralCondition();
   @Input() title: string = "";
@@ -40,49 +44,21 @@ export class AreaGeneralConditionComponent implements OnInit {
     this._type = value;
     switch (this.type) {
       case AreaConditionType.Bathroom.toString():
-        this._conditions = [
-          { name: "Shower pan", checked: false },
-          { name: "Loose tiles", checked: false },
-          { name: "Leak behind walls", checked: false },
-          { name: "Shower head / Faucet", checked: false },
-          { name: "Damaged Flooring", checked: false },
-          { name: "Visible Mold", checked: false },
-        ];
         break;
       case AreaConditionType.HVAC_AC.toString():
         this.titleColor = "";
         this.showSuccess = true;
-        this._conditions = [
-          { name: "AC Leak", checked: false },
-          { name: "Drain pipe leak", checked: false },
-          { name: "Damaged baseboards / Drywall / Flooring", checked: false },
-          { name: "Dirty Filter", checked: false },
-          { name: "Dirty Coil", checked: false },
-          { name: "Visible Mold", checked: false },
-        ];
+
         break;
       case AreaConditionType.Atic.toString():
         this.titleColor = "";
         this.showSuccess = true;
-        this._conditions = [
-          { name: "Visible water stains", checked: false },
-          { name: "Mold Smell", checked: false },
-          { name: "Wet insulation", checked: false },
-          { name: "Visible Mold", checked: false },
-        ];
+
         break;
       case AreaConditionType.UtilityRoom.toString():
         this.titleColor = "";
         this.showSuccess = true;
-        this._conditions = [
-          { name: "Washer Leak", checked: false },
-          { name: "Drain Pipe Leak", checked: false },
-          { name: "Leak Under Sink", checked: false },
-          { name: "Supply Line Leak", checked: false },
-          { name: "Drain Line Leak", checked: false },
-          { name: "Damaged Baseboards / Flooring", checked: false },
-          { name: "Visible Mold", checked: false },
-        ];
+
         break;
 
       default:
@@ -92,7 +68,7 @@ export class AreaGeneralConditionComponent implements OnInit {
   _type: string = "";
   @Output() InspectionAreaGeneralChanged: any = new EventEmitter();
 
-  constructor() {}
+  constructor(private inspectionService: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -109,7 +85,7 @@ export class AreaGeneralConditionComponent implements OnInit {
     if (this.generalCondition.moistureLevel) {
       this.filledProperties++;
     }
-    if (this.generalCondition.pictures.length > 0) {
+    if (this.generalCondition.pictures.images.length > 0) {
       this.filledProperties++;
     }
     if (this.generalCondition.notes) {

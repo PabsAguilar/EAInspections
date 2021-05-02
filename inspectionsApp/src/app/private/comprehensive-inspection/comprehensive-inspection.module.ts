@@ -21,6 +21,7 @@ import { RecomendationsComponent } from "src/app/components/comprehensive-form/r
 import { InsuranceComponent } from "src/app/components/comprehensive-form/insurance/insurance.component";
 import { RemindersComponent } from "src/app/components/comprehensive-form/reminders/reminders.component";
 import { MultipleRadioComponent } from "src/app/components/multiple-radio/multiple-radio.component";
+import { SharedModule } from "src/app/shared/shared.module";
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { MultipleRadioComponent } from "src/app/components/multiple-radio/multip
     FormsModule,
     IonicModule,
     ComprehensiveInspectionPageRoutingModule,
+    SharedModule,
   ],
   declarations: [
     ComprehensiveInspectionPage,

@@ -4,7 +4,7 @@ export enum InspectionType {
 }
 
 export enum EnumEnterprise {
-  itest = "ITEST",
+  itest = "ITest",
   expertNetworks = "Expert Networks",
 }
 
@@ -127,25 +127,206 @@ export var InspectionRecommendations = [
   { name: "Other", checked: false },
 ];
 
-export enum BitrixDealMapping {
-  propertyYearCode = "UF_CRM_1606466447",
-  pictureHouseNumbersCode = "UF_CRM_1606466494",
-  picturesFrontHouseCode = "UF_CRM_1606466511",
-  propertyTypeCode = "UF_CRM_1606466564",
-  interiorTemperatureCode = "UF_CRM_1606466601",
-  exteriorRelativeHumidityCode = "UF_CRM_1606466624",
-  HVACSystemConditionCode = "UF_CRM_1606466669",
-  ductsConditionCode = "UF_CRM_1606466692",
-  atticConditionCode = "UF_CRM_1606466732",
-  agreementSignedYesNoCode = "UF_CRM_1612683169",
-  inspectionTypes = "UF_CRM_1612433280",
-  typesOfLoss = "UF_CRM_1618512396",
-  affectedArea = "UF_CRM_1618512421",
-  waterDamageCategory = "UF_CRM_1618512488",
-  waterDamageClass = "UF_CRM_1618512548",
+export enum BitrixListsITest {
+  Mold = 48,
+  Bacteria = 50,
+  Soot = 52,
+  Moisture = 34,
+  Asbestos = 32,
+  Leads = 30,
 }
 
-export var bitrixMapping: any = {
+export var ITestDealMapping = {
+  serviceTypeList: "44",
+  dealDateTime: "UF_CRM_1612683055",
+  serviceAddress: "UF_CRM_1606466289",
+  propertyYearCode: "UF_CRM_1606466447",
+  pictureHouseNumbersCode: "UF_CRM_1606466494",
+  picturesFrontHouseCode: "UF_CRM_1606466511",
+  propertyTypeCode: "UF_CRM_1606466564",
+  interiorTemperatureCode: "UF_CRM_1606466601",
+  exteriorRelativeHumidityCode: "UF_CRM_1606466624",
+  HVACSystemConditionCode: "UF_CRM_1606466669",
+  ductsConditionCode: "UF_CRM_1606466692",
+  atticConditionCode: "UF_CRM_1606466732",
+  agreementSignedYesNoCode: "UF_CRM_1612683169",
+  inspectionTypes: "UF_CRM_1612433280",
+  typesOfLoss: "UF_CRM_1618512396",
+  affectedArea: "UF_CRM_1618512421",
+  waterDamageCategory: "UF_CRM_1618512488",
+  waterDamageClass: "UF_CRM_1618512548",
+  insuranceCompany: "UF_CRM_1612691342",
+  referenceContact: "UF_CRM_1612691326",
+  inspector: "UF_CRM_1612682994",
+  instructions: "UF_CRM_1612683023",
+  user: "UF_CRM_1612686317",
+};
+
+export var ENDealMapping = {
+  serviceTypeList: "44",
+  dealDateTime: "UF_CRM_1589438514",
+  serviceAddress: "UF_CRM_1589612508058",
+  propertyYearCode: "UF_CRM_1591251407119",
+  pictureHouseNumbersCode: "UF_CRM_1591107425",
+  picturesFrontHouseCode: "UF_CRM_1591107445",
+  propertyTypeCode: "UF_CRM_1591170207",
+  // interiorTemperatureCode: "UF_CRM_1606466601",
+  // exteriorRelativeHumidityCode: "UF_CRM_1606466624",
+  // HVACSystemConditionCode: "UF_CRM_1606466669",
+  // ductsConditionCode: "UF_CRM_1606466692",
+  // atticConditionCode: "UF_CRM_1606466732",
+  agreementSignedYesNoCode: "UF_CRM_1612683169",
+  // inspectionTypes: "UF_CRM_1612433280",
+  // typesOfLoss: "UF_CRM_1618512396",
+  // affectedArea: "UF_CRM_1618512421",
+  // waterDamageCategory: "UF_CRM_1618512488",
+  // waterDamageClass: "UF_CRM_1618512548",
+  insuranceCompany: "UF_CRM_1593436917",
+  referenceContact: "UF_CRM_1596786399",
+  inspector: "UF_CRM_1589438457",
+  instructions: "UF_CRM_1591251407119",
+  user: "UF_CRM_1590046660",
+};
+
+export var bitrixMappingComprehensive: any = {
+  Area: {
+    nameCode: [
+      "UF_CRM_1590091606",
+      "UF_CRM_1590123351",
+      "UF_CRM_1590123444",
+      "UF_CRM_1590123471",
+      "UF_CRM_1590123491",
+      "UF_CRM_1592307140",
+      "UF_CRM_1592307317",
+      "UF_CRM_1605908610",
+    ],
+    conditionCode: [
+      "UF_CRM_1590091801",
+      "UF_CRM_1590123400",
+      "UF_CRM_1590123636",
+      "UF_CRM_1590123662",
+      "UF_CRM_1590123597",
+      "UF_CRM_1592307176",
+      "UF_CRM_1592307353",
+      "UF_CRM_1605909015",
+    ],
+    moistureLevelCode: [
+      "UF_CRM_1590091825",
+      "UF_CRM_1590123702",
+      "UF_CRM_1590123743",
+      "UF_CRM_1590123756",
+      "UF_CRM_1590123774",
+      "UF_CRM_1592307207",
+      "UF_CRM_1592307390",
+      "UF_CRM_1605908773",
+    ],
+    picturesCode: [
+      "UF_CRM_1590091845",
+      "UF_CRM_1590123821",
+      "UF_CRM_1590123839",
+      "UF_CRM_1590123863",
+      "UF_CRM_1590123888",
+      "UF_CRM_1592307254",
+      "UF_CRM_1592307414",
+      "UF_CRM_1605908799",
+    ],
+    notesCode: [
+      "UF_CRM_1605908160",
+      "UF_CRM_1605908193",
+      "UF_CRM_1605908250",
+      "UF_CRM_1605908265",
+      "UF_CRM_1605908306",
+      "UF_CRM_1605908327",
+      "UF_CRM_1605908343",
+      "UF_CRM_1605908820",
+    ],
+  },
+  Bathrooms: {
+    conditionCode: [
+      "UF_CRM_1590124557",
+      "UF_CRM_1590124580",
+      "UF_CRM_1590124612",
+    ],
+    moistureLevelCode: [
+      "UF_CRM_1590124658",
+      "UF_CRM_1590124669",
+      "UF_CRM_1590124681",
+    ],
+    picturesCode: [
+      "UF_CRM_1590124716",
+      "UF_CRM_1590124731",
+      "UF_CRM_1590124750",
+    ],
+    notesCode: ["UF_CRM_1605909354", "UF_CRM_1605909387", "UF_CRM_1605909416"],
+  },
+  Kitchen: {
+    conditionCode: "UF_CRM_1590124369",
+    moistureLevelCode: "UF_CRM_1590124431",
+    picturesCode: "UF_CRM_1590124454",
+    notesCode: "UF_CRM_1605909491",
+    waterQualityTestCode: "UF_CRM_1590124409",
+  },
+  HVAC_AC: {
+    conditionCode: "UF_CRM_1590124820",
+    moistureLevelCode: "UF_CRM_1590125083",
+    picturesCode: "UF_CRM_1590125112",
+    notesCode: "UF_CRM_1605909537",
+  },
+  UtilityRoom: {
+    conditionCode: "UF_CRM_1590124869",
+    moistureLevelCode: "UF_CRM_1590125151",
+    picturesCode: "UF_CRM_1590125172",
+    notesCode: "UF_CRM_1605909564",
+  },
+  Attic: {
+    conditionCode: "UF_CRM_1590124914",
+    moistureLevelCode: "UF_CRM_1592812942",
+    picturesCode: "UF_CRM_1590125224",
+    notesCode: "UF_CRM_1605909590",
+  },
+  EnvironmentalSection: {
+    MoldSampleTakenCode: "UF_CRM_1591170297",
+    MoldSampleLocationCode: "UF_CRM_1592308608096",
+    MoldLocationPictureCode: "UF_CRM_1605909715",
+    WaterSampleTakenCode: "UF_CRM_1605909741",
+    WaterSamplelocationCode: "UF_CRM_1605909795",
+    MajorReconstructionCode: "UF_CRM_1591170386",
+  },
+
+  Exterior: {
+    conditionCode: "UF_CRM_1590125032",
+    otherCode: "UF_CRM_1590125250",
+    picturesCode: "UF_CRM_1590125270",
+    notesCode: "UF_CRM_1605909665",
+  },
+
+  Recomendations: {
+    damagesFoundCode: "UF_CRM_1589615909",
+    inspectionRecomendationCode: "UF_CRM_1590125408",
+    recomendationCode: "UF_CRM_1590125427",
+  },
+
+  Insurance: {
+    haveInsuranceCode: "UF_CRM_1590126399",
+    insuranceCarrierCode: "UF_CRM_1590126479",
+    picturesPolicyCode: "UF_CRM_1589398484",
+    claimForDamageBeforeCode: "UF_CRM_1590126686",
+    claimInLast5YearsCode: "UF_CRM_1590126714",
+    reasonForClaimCode: "UF_CRM_1590126731",
+    usePublicAdjusterCode: "UF_CRM_1590126768",
+    adjusterNameCode: "UF_CRM_1590126797",
+    quantityOfChecksCode: "UF_CRM_1590782923",
+    notesCode: "UF_CRM_1605909896",
+    assignPAorAttorneyCode: "UF_CRM_1605911600",
+  },
+  Reminders: {
+    stickerCode: "UF_CRM_1590164408797",
+    freeInspectionCode: "UF_CRM_1605910107",
+    brochureCode: "UF_CRM_1605910125",
+    offerFinancingCode: "UF_CRM_1605910140",
+  },
+};
+export var bitrixMappingEnvironmental: any = {
   Mold: {
     inspectionHeader: {
       contactIdCode: "PROPERTY_1344",

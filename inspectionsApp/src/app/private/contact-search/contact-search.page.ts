@@ -34,7 +34,8 @@ export class ContactSearchPage implements OnInit {
     if (this.emailSearchText.length > 1) {
       this.searching = true;
       this.contactsListFound = await this.itestService.getContactsByEmail(
-        this.emailSearchText
+        this.emailSearchText,
+        this.enterprise
       );
       if (!this.contactsListFound || this.contactsListFound.length <= 0) {
         var message = this.toast.create({

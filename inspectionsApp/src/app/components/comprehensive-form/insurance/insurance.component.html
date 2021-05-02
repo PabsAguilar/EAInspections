@@ -14,16 +14,22 @@
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
-  <ion-item lines="inset">
-    <ion-label>Do you have insurance?</ion-label>
-    <ion-toggle
-      slot="start"
+  <ion-item>
+    <ion-label position="floating">Do you have insurance?</ion-label>
+    <ion-select
+      interface="popover"
       name="haveInsurance"
-      color="primary"
-      (ionChange)="changeModel($event)"
+      [disabled]="readonly"
       [(ngModel)]="_data.haveInsurance"
+      (ionChange)="changeModel($event)"
     >
-    </ion-toggle>
+      <ion-select-option
+        *ngFor="let item of haveInsuranceList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
   </ion-item>
 
   <ion-item lines="inset">
@@ -32,6 +38,7 @@
       [(ngModel)]="_data.insuranceCarrier"
       (ionChange)="changeModel($event)"
       type="text"
+      [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
@@ -41,31 +48,48 @@
     title="Insurance Policy Images"
     name="picturesPolicy"
     (photoChanged)="changeModel($event)"
+    [disabled]="readonly"
     [(ngModel)]="_data.picturesPolicy"
   ></app-slides-photos>
 
-  <ion-item lines="inset">
-    <ion-label
+  <ion-item>
+    <ion-label position="floating"
       >Have you filed a claim for any of the above damages before?</ion-label
     >
-    <ion-toggle
-      slot="start"
-      (ionChange)="changeModel($event)"
+    <ion-select
+      interface="popover"
       name="claimForDamageBefore"
-      color="primary"
+      [disabled]="readonly"
       [(ngModel)]="_data.claimForDamageBefore"
-    ></ion-toggle>
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option
+        *ngFor="let item of claimForDamageBeforeList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
   </ion-item>
 
-  <ion-item lines="inset">
-    <ion-label>Have you made a claim in the last (5) five years?</ion-label>
-    <ion-toggle
-      slot="start"
-      (ionChange)="changeModel($event)"
+  <ion-item>
+    <ion-label position="floating"
+      >Have you made a claim in the last (5) five years?</ion-label
+    >
+    <ion-select
+      interface="popover"
       name="claimInLast5Years"
-      color="primary"
+      [disabled]="readonly"
       [(ngModel)]="_data.claimInLast5Years"
-    ></ion-toggle>
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option
+        *ngFor="let item of claimInLast5YearsList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
   </ion-item>
 
   <ion-item lines="inset">
@@ -78,15 +102,24 @@
     ></ion-input>
   </ion-item>
 
-  <ion-item lines="inset">
-    <ion-label>Did you use a public adjuster or lawyer?</ion-label>
-    <ion-toggle
-      slot="start"
-      (ionChange)="changeModel($event)"
+  <ion-item>
+    <ion-label position="floating"
+      >Did you use a public adjuster or lawyer?</ion-label
+    >
+    <ion-select
+      interface="popover"
       name="usePublicAdjuster"
-      color="primary"
+      [disabled]="readonly"
       [(ngModel)]="_data.usePublicAdjuster"
-    ></ion-toggle>
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option
+        *ngFor="let item of usePublicAdjusterList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
   </ion-item>
 
   <ion-item lines="inset" *ngIf="_data.usePublicAdjuster">
@@ -118,13 +151,27 @@
     ></ion-textarea>
   </ion-item>
   <ion-item lines="inset">
-    <ion-label>Assign to PA or Attorney</ion-label>
-    <ion-toggle
-      slot="start"
-      name="assignPAorAttorney"
-      color="primary"
-      (ionChange)="changeModel($event)"
+    <ion-label position="floating">Assign to PA or Attorney</ion-label>
+    <ion-textarea
       [(ngModel)]="_data.assignPAorAttorney"
-    ></ion-toggle>
+      (ionChange)="changeModel($event)"
+      [readonly]="readonly"
+      type="text"
+    ></ion-textarea>
+  </ion-item>
+  <ion-item
+    (click)="toggleAccordion()"
+    lines="none"
+    button
+    class="ion-no-margin"
+  >
+    <ion-label color="warning"> {{ "End Insurance" }}</ion-label>
+
+    <ion-icon
+      slot="end"
+      *ngIf="!isMenuOpen"
+      name="caret-down-outline"
+    ></ion-icon>
+    <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
   </ion-item>
 </div>

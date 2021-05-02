@@ -154,6 +154,14 @@
                 <h2>{{task.contactName}}</h2>
 
                 <p>{{task.serviceAddress}}</p>
+
+                <ion-badge
+                  class="ion-no-margin"
+                  *ngIf="task.wasRejected == true"
+                  color="danger"
+                  slot="end"
+                  >Rejected</ion-badge
+                >
               </ion-label>
             </div>
           </ion-item>

@@ -16,6 +16,11 @@ export class GeneralInfoInspection {
   syncInfo: SyncInfo;
   agreementSignedYesNo: string;
   generalInfoInspectionBitrixMapping: GeneralInfoInspectionBitrixMapping;
+  typeOfLossDesc: string;
+  affectedArea: string;
+  waterDamageCategory: string;
+  waterDamageClass: string;
+
 
   constructor() {
     this.syncInfo = new SyncInfo();
@@ -37,4 +42,9 @@ export class GeneralInfoInspectionBitrixMapping {
   HVACSystemConditionCode: string;
   ductsConditionCode: string;
   atticConditionCode: string;
+  typeOfLossDescCode: string;
+  affectedAreaCode: string;
+  waterDamageCategoryCode: string;
+  waterDamageClassCode: string;
+
 }

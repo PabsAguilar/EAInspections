@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { GeneralInfoInspection } from "src/app/models/comprehensive-form/general-info-inspection";
-import { BitrixDealMapping } from "src/app/models/enums";
+import { ITestDealMapping } from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 import { PhotoService } from "src/app/services/photo.service";
@@ -32,8 +32,8 @@ export class InspectionGeneralComponent implements OnInit {
   HHVACConditions = [];
   DuctConditions = [];
   AticConditions = [];
-  waterDamageClassName: string = "";
-  waterDamageCategoryName: string = "";
+  waterDamageCategories = [];
+  waterDamageClasses = [];
   fields: any[];
 
   generalInfoInspection: GeneralInfoInspection = new GeneralInfoInspection();
@@ -67,41 +67,52 @@ export class InspectionGeneralComponent implements OnInit {
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
-        this.waterDamageClassName = this.fields[
-          BitrixDealMapping.waterDamageClass
-        ].items.find((x) => x.ID == this.task.waterDamageClass)?.VALUE;
-        this.waterDamageCategoryName = this.fields[
-          BitrixDealMapping.waterDamageCategory
-        ].items.find((x) => x.ID == this.task.waterDamageCategory)?.VALUE;
-        this.fields[
-          this.generalInfoInspection.generalInfoInspectionBitrixMapping
-            .agreementSignedYesNoCode
-        ].items.map((y) => {
-          if (y.VALUE == "Yes") {
-            this.generalInfoInspection.agreementSignedYesNo = y.ID;
-          }
-        });
 
-        this.HHVACConditions = this.fields[
-          this.generalInfoInspection.generalInfoInspectionBitrixMapping
-            .HVACSystemConditionCode
-        ].items.map((y) => {
-          return { name: y.VALUE, value: y.ID };
-        });
+        if (value.environmentalInspection) {
+          this.fields[
+            this.generalInfoInspection.generalInfoInspectionBitrixMapping
+              .agreementSignedYesNoCode
+          ].items.map((y) => {
+            if (y.VALUE == "Yes") {
+              this.generalInfoInspection.agreementSignedYesNo = y.ID;
+            }
+          });
 
-        this.DuctConditions = this.fields[
-          this.generalInfoInspection.generalInfoInspectionBitrixMapping
-            .ductsConditionCode
-        ].items.map((y) => {
-          return { name: y.VALUE, value: y.ID };
-        });
+          this.waterDamageCategories = this.fields[
+            this.generalInfoInspection.generalInfoInspectionBitrixMapping
+              .waterDamageCategoryCode
+          ].items.map((y) => {
+            return { name: y.VALUE, value: y.ID };
+          });
 
-        this.AticConditions = this.fields[
-          this.generalInfoInspection.generalInfoInspectionBitrixMapping
-            .atticConditionCode
-        ].items.map((y) => {
-          return { name: y.VALUE, value: y.ID };
-        });
+          this. waterDamageClasses = this.fields[
+            this.generalInfoInspection.generalInfoInspectionBitrixMapping
+              .waterDamageClassCode
+          ].items.map((y) => {
+            return { name: y.VALUE, value: y.ID };
+          });
+
+          this.HHVACConditions = this.fields[
+            this.generalInfoInspection.generalInfoInspectionBitrixMapping
+              .HVACSystemConditionCode
+          ].items.map((y) => {
+            return { name: y.VALUE, value: y.ID };
+          });
+
+          this.DuctConditions = this.fields[
+            this.generalInfoInspection.generalInfoInspectionBitrixMapping
+              .ductsConditionCode
+          ].items.map((y) => {
+            return { name: y.VALUE, value: y.ID };
+          });
+
+          this.AticConditions = this.fields[
+            this.generalInfoInspection.generalInfoInspectionBitrixMapping
+              .atticConditionCode
+          ].items.map((y) => {
+            return { name: y.VALUE, value: y.ID };
+          });
+        }
       }
     });
 

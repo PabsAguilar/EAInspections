@@ -1,26 +1,42 @@
+import { BitrixPictureList } from "../bitrix-picture";
+
 export class Insurance {
-  haveInsurance: boolean;
-  insuranceCarrier: boolean;
-  picturesPolicy: string[];
-  claimForDamageBefore: boolean;
-  claimInLast5Years: boolean;
+  picturesPolicy: BitrixPictureList;
+  insuranceCarrier: string;
+  haveInsurance: string;
+  claimForDamageBefore: string;
+  claimInLast5Years: string;
+  usePublicAdjuster: string;
+  assignPAorAttorney: string;
   reasonForClaim: string;
-  usePublicAdjuster: boolean;
   adjusterName: string;
   quantityOfChecks: number;
   notes: string;
-  assignPAorAttorney: boolean;
+  insuranceBitrixMapping: InsuranceBitrixMapping;
+
   constructor() {
-    this.haveInsurance = false;
-    this.insuranceCarrier = false;
-    this.picturesPolicy = [];
-    this.claimForDamageBefore = false;
-    this.claimInLast5Years = false;
+    this.picturesPolicy = new BitrixPictureList();
+
     this.reasonForClaim = "";
-    this.usePublicAdjuster = false;
+
     this.adjusterName = "";
     this.quantityOfChecks = null;
     this.notes = "";
-    this.assignPAorAttorney = false;
+
+    this.insuranceBitrixMapping = new InsuranceBitrixMapping();
   }
+}
+
+export class InsuranceBitrixMapping {
+  haveInsuranceCode: string;
+  insuranceCarrierCode: string;
+  picturesPolicyCode: string;
+  claimForDamageBeforeCode: string;
+  claimInLast5YearsCode: string;
+  reasonForClaimCode: string;
+  usePublicAdjusterCode: string;
+  adjusterNameCode: string;
+  quantityOfChecksCode: string;
+  notesCode: string;
+  assignPAorAttorneyCode: string;
 }

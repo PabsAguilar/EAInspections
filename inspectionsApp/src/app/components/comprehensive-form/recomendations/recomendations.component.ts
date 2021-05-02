@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Recomendations } from "src/app/models/comprehensive-form/recomendations";
 import { AreaConditionType } from "src/app/models/enums";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-recomendations",
@@ -8,27 +9,34 @@ import { AreaConditionType } from "src/app/models/enums";
   styleUrls: ["./recomendations.component.scss"],
 })
 export class RecomendationsComponent implements OnInit {
-  totalProperties: number = 1;
+  totalProperties: number = 2;
   filledProperties: number = 0;
   isMenuOpen: boolean = false;
   progressPercentage: number = 0;
   progressColor: string = "danger";
-  _conditions: any[];
-
+  recomendationsList: any[];
+  damageFoundList: any[];
+  fields = [];
   @Input()
   set data(value: Recomendations) {
-    if (!value.inspectionRecomendation) {
-      value.inspectionRecomendation = [];
-    }
-    for (let index = 0; index < this._conditions.length; index++) {
-      const element = this._conditions[index];
-      this._conditions[index].checked = value.inspectionRecomendation.includes(
-        element.name
-      );
-    }
     this._data = value;
 
-    this.changeModel(null);
+    this.inspectionService.getDealsFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        this.recomendationsList = this.fields[
+          this._data.recomendationsBitrixMapping.inspectionRecomendationCode
+        ].items
+          .filter((x) => x.ID != "1893" && x.ID != "1899")
+          .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+        this.damageFoundList = this.fields[
+          this._data.recomendationsBitrixMapping.damagesFoundCode
+        ].items.map((y) => {
+          return { name: y.VALUE, value: y.ID };
+        });
+      }
+    });
+    this.changeModel("init");
   }
   @Output() dataChanged: any = new EventEmitter();
   _data: Recomendations = new Recomendations();
@@ -38,35 +46,11 @@ export class RecomendationsComponent implements OnInit {
   }
   set type(value: string) {
     this._type = value;
-    switch (this.type) {
-      case AreaConditionType.InspectionRecommendations.toString():
-        this._conditions = [
-          { name: "Roof Tarp / Wrap", checked: false },
-          { name: "Dryout", checked: false },
-          { name: "Environmental Inspection(s)", checked: false },
-          { name: "Content Cleaning", checked: false },
-          { name: "Asbestos Inspection", checked: false },
-          { name: "Mold Remediation", checked: false },
-          { name: "Roofer", checked: false },
-          { name: "Plumber", checked: false },
-          { name: "HVAC Tech", checked: false },
-          { name: "General Contractor", checked: false },
-          { name: "Electrician", checked: false },
-          { name: "Public Adjuster / Attorney", checked: false },
-          { name: "Handyman", checked: false },
-          { name: "Water Quality Specialist", checked: false },
-          { name: "AC Filter", checked: false },
-          { name: "Other", checked: false },
-        ];
-        break;
-
-      default:
-        break;
-    }
   }
   _type: string = "";
 
-  constructor() {}
+  @Input() readonly: boolean = false;
+  constructor(private inspectionService: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -83,13 +67,17 @@ export class RecomendationsComponent implements OnInit {
     ) {
       this.filledProperties++;
     }
+    if (this._data.damagesFound) {
+      this.filledProperties++;
+    }
 
     this.progressPercentage =
       this.filledProperties == 0
         ? 0
         : this.filledProperties / this.totalProperties;
-
-    this.dataChanged.emit(this._data);
+    if ($event != "init") {
+      this.dataChanged.emit(this._data);
+    }
 
     switch (true) {
       case this.progressPercentage < 0.5:
@@ -105,13 +93,5 @@ export class RecomendationsComponent implements OnInit {
         this.progressColor = "danger";
         break;
     }
-  }
-  onConditionChange($event, index: number) {
-    var x = this._conditions.reduce(
-      (result, { name, checked }) => [...result, ...(checked ? [name] : [])],
-      []
-    );
-    this._data.inspectionRecomendation = x;
-    this.changeModel(null);
   }
 }

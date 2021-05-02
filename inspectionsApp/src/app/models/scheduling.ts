@@ -23,10 +23,7 @@ export class Scheduling implements IStorageModel {
   referalPartnerCompany: Company;
   inspectionTypes: string[];
   inspectionInstructions: string;
-  typeOfLossDesc: string;
-  affectedArea: string;
-  waterDamageCategory: string;
-  waterDamageClass: string;
+  enterprise: string;
 
   internalStatus: string;
   syncInfo: SyncInfo;

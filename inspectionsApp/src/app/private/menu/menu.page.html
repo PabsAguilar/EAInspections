@@ -10,9 +10,20 @@
           <img src="../../../assets/images/avatar.svg" />
         </ion-avatar>
 
+        <img
+          *ngIf="user.enterprise == 'ITest'"
+          src="../../../assets/images/ITestLogo.png"
+          class="card-logo-enterprise"
+        />
+        <img
+          *ngIf="user.enterprise == 'Expert Networks'"
+          src="../../../assets/images/ExpertNetwork.png"
+          class="card-logo-enterprise"
+        />
+
         <div class="card-title">Inspections App</div>
         <div class="card-subtitle">{{user.completeName}}</div>
-        <div class="card-subtitle2">v5.4.0</div>
+        <div class="card-subtitle2">v5.5.0</div>
       </ion-card>
     </ion-header>
     <ion-content>

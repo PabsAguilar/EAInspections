@@ -14,7 +14,7 @@
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
-  <ion-item>
+  <!-- <ion-item>
     <ion-label>Select conditions:</ion-label>
     <ion-chip slot="end" color="warning">{{ _data.condition.length }}</ion-chip>
   </ion-item>
@@ -26,7 +26,17 @@
       [(ngModel)]="item.checked"
     ></ion-checkbox>
     <ion-label>{{ item.name }}</ion-label>
-  </ion-item>
+  </ion-item> -->
+
+  <app-multiple-radio
+    title="Select Conditions: "
+    ngDefaultControl
+    name="areaCondition"
+    [readonly]="readonly"
+    [options]="_conditions"
+    [(data)]="_data.condition"
+    (dataChange)="changeModel($event)"
+  ></app-multiple-radio>
 
   <ion-item lines="inset">
     <ion-label position="floating">Other condition</ion-label>

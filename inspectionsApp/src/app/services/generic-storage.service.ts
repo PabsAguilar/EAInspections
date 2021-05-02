@@ -41,7 +41,10 @@ export class GenericStorageService implements IStorage {
       }
       let newItems = [];
       for (let i of items) {
-        if (i.id === item.id) {
+        if (
+          i.id === item.id &&
+          (item.enterprise == null || item.enterprise == i.enterprise)
+        ) {
           newItems.push(item);
         } else {
           newItems.push(i);
@@ -56,10 +59,20 @@ export class GenericStorageService implements IStorage {
     return this.storage.set(this.collectionName, items);
   }
 
-  getAll(): Promise<any> {
-    return this.storage.get(this.collectionName);
+  getAll(enterprise: string = null): Promise<any> {
+    return this.storage
+      .get(this.collectionName)
+      .then((items: IStorageModel[]) => {
+        if (!items || items.length === 0) {
+          return [];
+        }
+
+        return items.filter(
+          (x) => enterprise == null || enterprise == x.enterprise
+        );
+      });
   }
-  get(id: number): Promise<any> {
+  get(id: number, enterprise: string = null): Promise<any> {
     return this.storage
       .get(this.collectionName)
       .then((items: IStorageModel[]) => {
@@ -68,7 +81,10 @@ export class GenericStorageService implements IStorage {
         }
 
         for (let i of items) {
-          if (i.id === id) {
+          if (
+            i.id === id &&
+            (enterprise == null || enterprise == i.enterprise)
+          ) {
             return i;
           }
         }
@@ -81,7 +97,10 @@ export class GenericStorageService implements IStorage {
       }
       let keepItems = [];
       for (let i of items) {
-        if (i.id !== item.id) {
+        if (
+          i.id !== item.id &&
+          (item.enterprise == null || item.enterprise == i.enterpise)
+        ) {
           keepItems.push(item);
         }
       }

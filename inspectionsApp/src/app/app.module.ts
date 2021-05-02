@@ -11,6 +11,8 @@ import { AppComponent } from "./app.component";
 import { IonicStorageModule } from "@ionic/storage";
 import { CallNumber } from "@ionic-native/call-number/ngx";
 import { LaunchNavigator } from "@ionic-native/launch-navigator/ngx";
+import { EmailComposer } from "@ionic-native/email-composer/ngx";
+import { File } from "@ionic-native/file/ngx";
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +32,8 @@ import { LaunchNavigator } from "@ionic-native/launch-navigator/ngx";
     SplashScreen,
     CallNumber,
     LaunchNavigator,
+    EmailComposer,
+    File,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],

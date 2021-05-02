@@ -4,6 +4,7 @@ import { Storage } from "@ionic/storage";
 import { BehaviorSubject } from "rxjs";
 import { User } from "../models/user";
 import { ItestDealService } from "./itest-deal.service";
+import { HttpClient } from "@angular/common/http";
 
 const TOKEN_KEY = "auth-token";
 const LAST_USER_KEY = "last-user-token";
@@ -14,6 +15,11 @@ const SCHEDULINGS_KEY = "scheduling-form";
 const ENVIRONMENTAL_FIELDS_KEY = "environmental-inspection-fields";
 const DEAL_FIELDS_KEY = "deals-fields";
 
+const iTestUrl = "https://itest.bitrix24.com/rest/6";
+const iTestKey = "rf1a6ygkrbdsho5t";
+const eNUrl = "https://expertnetwork.bitrix24.com/rest/159/";
+const eNKey = "av26roukw3tcyfyf";
+
 @Injectable({
   providedIn: "root",
 })
@@ -23,11 +29,22 @@ export class AuthenticationService {
   constructor(
     private storage: Storage,
     private plt: Platform,
-    private inspectionService: ItestDealService
+    private http: HttpClient
   ) {
     this.plt.ready().then(() => {
       this.checkToken();
     });
+  }
+
+  public getUserByEmailEN(email: string): Promise<any> {
+    return this.http
+      .get(`${eNUrl}/${eNKey}/user.get.json?email=${email}`)
+      .toPromise();
+  }
+  public getUserByEmailITest(email: string): Promise<any> {
+    return this.http
+      .get(`${iTestUrl}/${iTestKey}/user.get.json?email=${email}`)
+      .toPromise();
   }
 
   checkToken() {
@@ -47,8 +64,7 @@ export class AuthenticationService {
   }
   login(user: User) {
     this.storage.set(LAST_USER_KEY, user);
-    this.inspectionService.refreshFieldsFromServer(user.userId);
-    this.inspectionService.getExternal(user.userId);
+
     return this.storage.set(TOKEN_KEY, user).then(() => {
       this.authenticationState.next(true);
     });

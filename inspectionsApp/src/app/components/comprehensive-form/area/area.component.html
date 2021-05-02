@@ -1,7 +1,7 @@
 <ion-item (click)="toggleAccordion()" lines="none" button>
   <ion-label color="primary"> {{ title }} </ion-label>
-  <ion-chip *ngIf="area.name" color="secondary" slot="end">
-    {{ area.name }}
+  <ion-chip *ngIf="selectAreaName" color="secondary" slot="end">
+    {{ selectAreaName }}
   </ion-chip>
   <ion-icon slot="end" *ngIf="!isMenuOpen" name="caret-down-outline"></ion-icon>
   <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
@@ -16,34 +16,28 @@
     <ion-select
       interface="popover"
       name="name"
+      [disabled]="readonly"
       [(ngModel)]="area.name"
       (ionChange)="changeModel($event)"
     >
-      <ion-select-option value="Bedroom 1">Bedroom 1</ion-select-option>
-      <ion-select-option value="Bedroom 2">Bedroom 2</ion-select-option>
-      <ion-select-option value="Bedroom 3">Bedroom 3</ion-select-option>
-      <ion-select-option value="Bedroom 4">Bedroom 4</ion-select-option>
-      <ion-select-option value="Bedroom 5">Bedroom 5</ion-select-option>
-      <ion-select-option value="Bedroom 6">Bedroom 6</ion-select-option>
-      <ion-select-option value="Living Room">Living Room</ion-select-option>
-      <ion-select-option value="Dining Room">Dining Room</ion-select-option>
-      <ion-select-option value="Florida Room">Florida Room</ion-select-option>
-      <ion-select-option value="Other">Other</ion-select-option>
+      <ion-select-option
+        *ngFor="let item of areaNameList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
     </ion-select>
   </ion-item>
-  <ion-item>
-    <ion-label>Conditions</ion-label>
-    <ion-chip slot="end" color="warning">{{ area.condition.length }}</ion-chip>
-  </ion-item>
-  <ion-item *ngFor="let item of conditions; let i = index">
-    <ion-checkbox
-      slot="start"
-      color="warning"
-      (ionChange)="onConditionChange($event, i)"
-      [(ngModel)]="item.checked"
-    ></ion-checkbox>
-    <ion-label>{{ item.name }}</ion-label>
-  </ion-item>
+
+  <app-multiple-radio
+    title="Conditions"
+    ngDefaultControl
+    name="areaCondition"
+    [readonly]="readonly"
+    [options]="conditions"
+    [(data)]="area.condition"
+    (dataChange)="changeModel($event)"
+  ></app-multiple-radio>
 
   <ion-item>
     <ion-label position="floating">Moisture Level</ion-label>
@@ -52,15 +46,18 @@
       (ionChange)="changeModel($event)"
       type="number"
       required
+      [readonly]="readonly"
     ></ion-input>
   </ion-item>
 
   <app-slides-photos
     title="Pictures"
+    *ngIf="isMenuOpen"
     ngDefaultControl
     name="pictures"
     [(ngModel)]="area.pictures"
     (photoChanged)="changeModel($event)"
+    [readonly]="readonly"
   ></app-slides-photos>
 
   <ion-item>
@@ -69,6 +66,23 @@
       [(ngModel)]="area.notes"
       (ionChange)="changeModel($event)"
       type="text"
+      [readonly]="readonly"
     ></ion-textarea>
+  </ion-item>
+
+  <ion-item
+    (click)="toggleAccordion()"
+    lines="none"
+    button
+    class="ion-no-margin"
+  >
+    <ion-label color="warning"> {{ "End " + title }}</ion-label>
+
+    <ion-icon
+      slot="end"
+      *ngIf="!isMenuOpen"
+      name="caret-down-outline"
+    ></ion-icon>
+    <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
   </ion-item>
 </div>

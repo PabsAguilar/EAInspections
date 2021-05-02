@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { AreaConditionType } from "src/app/models/enums";
 import { Kitchen } from "src/app/models/comprehensive-form/kitchen";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-kitchen",
@@ -14,48 +15,42 @@ export class KitchenComponent implements OnInit {
   progressPercentage: number = 0;
   progressColor: string = "danger";
   _conditions: any[];
+  waterQualityList: any[];
+  fields: [];
 
   @Input()
   set Kitchen(value: Kitchen) {
-    if (!value.condition) {
-      value.condition = [];
-    }
-    for (let index = 0; index < this._conditions.length; index++) {
-      const element = this._conditions[index];
-      this._conditions[index].checked = value.condition.includes(element.name);
-    }
     this.kitchen = value;
-
-    this.changeModel(null);
+    this.inspectionService.getDealsFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        this._conditions = this.fields[
+          this.kitchen.generalConditionBitrixMapping.conditionCode
+        ].items
+          .filter((x) => x.ID != "1893" && x.ID != "1899")
+          .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+        this.waterQualityList = this.fields[
+          this.kitchen.generalConditionBitrixMapping.waterQualityTestCode
+        ].items.map((y) => {
+          return { name: y.VALUE, value: y.ID };
+        });
+      }
+    });
+    this.changeModel("init");
   }
   @Output() KitchenChanged: any = new EventEmitter();
   kitchen: Kitchen = new Kitchen();
+  @Input() readonly: boolean = false;
   @Input() title: string = "";
   @Input() get type() {
     return this._type;
   }
   set type(value: string) {
     this._type = value;
-    switch (this.type) {
-      case AreaConditionType.Kitchen.toString():
-        this._conditions = [
-          { name: "Leak under sink", checked: false },
-          { name: "Damaged cabinets", checked: false },
-          { name: "Broken Supply line", checked: false },
-          { name: "Broken Drain line", checked: false },
-          { name: "Damaged Flooring", checked: false },
-          { name: "Dishwasher leak", checked: false },
-          { name: "Visible Mold", checked: false },
-        ];
-        break;
-
-      default:
-        break;
-    }
   }
   _type: string = "";
 
-  constructor() {}
+  constructor(private inspectionService: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -72,7 +67,7 @@ export class KitchenComponent implements OnInit {
     if (this.kitchen.moistureLevel) {
       this.filledProperties++;
     }
-    if (this.kitchen.pictures.length > 0) {
+    if (this.kitchen.pictures.images.length > 0) {
       this.filledProperties++;
     }
     if (this.kitchen.notes) {
@@ -83,7 +78,9 @@ export class KitchenComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
-    this.KitchenChanged.emit(this.kitchen);
+    if ($event != "init") {
+      this.KitchenChanged.emit(this.kitchen);
+    }
 
     switch (true) {
       case this.progressPercentage < 0.5:

@@ -1,4 +1,3 @@
-import { bitrixMapping } from "../enums";
 import { SyncInfo } from "../sync-info";
 
 export class Lead {

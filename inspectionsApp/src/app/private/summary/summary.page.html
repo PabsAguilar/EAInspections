@@ -96,7 +96,7 @@
             <div>
               <ion-label>
                 <h4 style="font-size: small">
-                  <strong>{{task.title}}</strong>
+                  <strong>{{ task.id + " - "+ task.title}}</strong>
                 </h4>
                 <h2>{{task.contactName}}</h2>
 
@@ -140,7 +140,10 @@
         button
       >
         <ion-label>
-          <h2>{{item.contact.firstName +" "+ item.contact.lastName}}</h2>
+          <h2>
+            {{ (item && item.syncInfo ? item.syncInfo.syncCode : "") + " " +
+            item.contact.firstName +" "+ item.contact.lastName}}
+          </h2>
           <h3>{{item.serviceType}}</h3>
           <p>{{item.scheduleDateTime | date: 'MMMM dd, yyyy hh:mm a'}}</p>
           <p>

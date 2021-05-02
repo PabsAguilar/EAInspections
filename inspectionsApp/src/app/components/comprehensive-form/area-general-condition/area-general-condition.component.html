@@ -14,21 +14,15 @@
   value="{{ progressPercentage }}"
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
-  <ion-item>
-    <ion-label>Select conditions:</ion-label>
-    <ion-chip slot="end" color="warning">{{
-      generalCondition.condition.length
-    }}</ion-chip>
-  </ion-item>
-  <ion-item *ngFor="let item of _conditions; let i = index" lines="none">
-    <ion-checkbox
-      slot="start"
-      color="warning"
-      (ionChange)="onConditionChange($event, i)"
-      [(ngModel)]="item.checked"
-    ></ion-checkbox>
-    <ion-label>{{ item.name }}</ion-label>
-  </ion-item>
+  <app-multiple-radio
+    title="Select conditions:"
+    ngDefaultControl
+    name="areaCondition"
+    [readonly]="readonly"
+    [options]="_conditions"
+    [(data)]="generalCondition.condition"
+    (dataChange)="changeModel($event)"
+  ></app-multiple-radio>
 
   <ion-item lines="inset">
     <ion-label position="floating">Moisture Level</ion-label>
@@ -41,9 +35,11 @@
   </ion-item>
 
   <app-slides-photos
+    *ngIf="isMenuOpen"
     ngDefaultControl
     title="Pictures"
-    name="pictures"
+    [readonly]="readonly"
+    name="areaPictures"
     (photoChanged)="changeModel($event)"
     [(ngModel)]="generalCondition.pictures"
   ></app-slides-photos>

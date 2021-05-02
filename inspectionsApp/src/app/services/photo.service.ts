@@ -25,8 +25,7 @@ export class PhotoService {
     const capturedPhoto = await Camera.getPhoto({
       resultType: CameraResultType.Base64,
       source: CameraSource.Camera,
-
-      quality: 70,
+      quality: 30,
     });
 
     return "data:image/png;base64," + capturedPhoto.base64String;

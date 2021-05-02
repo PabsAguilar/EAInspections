@@ -30,7 +30,8 @@ export class CompanySearchPage implements OnInit {
     if (this.nameSearchText.length > 1) {
       this.searching = true;
       this.companiesListFound = await this.itestService.getCompaniesByName(
-        this.nameSearchText
+        this.nameSearchText,
+        this.enterprise
       );
 
       if (!this.companiesListFound || this.companiesListFound.length <= 0) {

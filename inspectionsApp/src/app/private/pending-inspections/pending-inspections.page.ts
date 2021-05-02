@@ -105,7 +105,7 @@ export class PendingInspectionsPage implements OnInit {
 
   async search(searchTerm: string) {
     this.inspectionTasks = await this.inspectionService.getPendingInspections(
-      this.user.userId
+      this.user
     );
     if (searchTerm && searchTerm.trim() !== "") {
       this.inspectionTasks = this.inspectionTasks.filter((term) => {
@@ -129,7 +129,7 @@ export class PendingInspectionsPage implements OnInit {
 
   async segmentChanged($event) {
     this.inspectionTasks = (
-      await this.inspectionService.getPendingInspections(this.user.userId)
+      await this.inspectionService.getPendingInspections(this.user)
     ).filter(
       (task) =>
         this.segmentOption == "All" ||
@@ -160,14 +160,14 @@ export class PendingInspectionsPage implements OnInit {
 
   async loadData(forceFromServer: boolean) {
     this.inspectionTasks = await this.inspectionService.getPendingInspections(
-      this.user.userId
+      this.user
     );
 
     if (forceFromServer || this.inspectionTasks == null) {
-      await this.inspectionService.getExternal(this.user.userId);
-      await this.inspectionService.refreshFieldsFromServer(this.user.userId);
+      await this.inspectionService.getExternal(this.user);
+      await this.inspectionService.refreshFieldsFromServer(this.user);
       this.inspectionTasks = await this.inspectionService.getPendingInspections(
-        this.user.userId
+        this.user
       );
     }
     this.lastSync = await this.inspectionService.getSyncStamp();
@@ -177,7 +177,7 @@ export class PendingInspectionsPage implements OnInit {
       console.log("Pull Event Triggered!");
 
       this.inspectionTasks = await this.inspectionService.getPendingInspections(
-        this.user.userId
+        this.user
       );
       event.target.complete();
     } catch (error) {
@@ -281,13 +281,11 @@ export class PendingInspectionsPage implements OnInit {
                 await this.syncInspection.syncAllPending()
               ).toPromise();
 
-              await this.inspectionService.getExternal(this.user.userId);
-              await this.inspectionService.refreshFieldsFromServer(
-                this.user.userId
-              );
+              await this.inspectionService.getExternal(this.user);
+              await this.inspectionService.refreshFieldsFromServer(this.user);
               this.lastSync = await this.inspectionService.getSyncStamp();
               this.inspectionTasks = await this.inspectionService.getPendingInspections(
-                this.user.userId
+                this.user
               );
             } catch (error) {
               console.log(error);

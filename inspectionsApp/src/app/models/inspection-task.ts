@@ -1,4 +1,5 @@
 import { stringify } from "@angular/compiler/src/util";
+import { IonDatetime } from "@ionic/angular";
 import { IStorageModel } from "../interfaces/Istorage-model";
 import { Agreements } from "./agreements";
 import { Company } from "./company";
@@ -28,6 +29,7 @@ export class InspectionTask implements IStorageModel {
   inspectorName: string;
   inspectorUserId: number;
   inspectionType: string;
+  enterprise: string;
   inspectionSubTypes: TaskSubtype[];
   inspectionSubTypesString: string;
   inspectionsInstructions: string;
@@ -38,6 +40,11 @@ export class InspectionTask implements IStorageModel {
   waterDamageClass: string;
   //..new
 
+  startedSync: boolean;
+  syncStartDate: Date;
+
+  wasRejected: boolean;
+
   internalStatus: string;
   comprehesiveForm: ComprehensiveForm;
   environmentalForm: EnvironmentalForm;
@@ -45,6 +52,8 @@ export class InspectionTask implements IStorageModel {
   expertNetworkAgreements: Agreements;
   bitrixFolder: BitrixFolder;
   constructor() {
+    this.wasRejected = false;
+    this.startedSync = false;
     this.iTestAgreements = new Agreements();
     this.expertNetworkAgreements = new Agreements();
     this.bitrixFolder = new BitrixFolder();

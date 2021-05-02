@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+
 import {
   AlertController,
   LoadingController,
@@ -15,6 +16,8 @@ import { InspectionNavigateService } from "src/app/services/inspection-navigate.
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 import { SyncInspectionService } from "src/app/services/sync-inspection.service";
+import { File } from "@ionic-native/file/ngx";
+import { EmailComposer } from "@ionic-native/email-composer/ngx";
 
 @Component({
   selector: "app-environmental-inspection",
@@ -33,7 +36,9 @@ export class EnvironmentalInspectionPage implements OnInit {
     private inspectionNavigate: InspectionNavigateService,
     private popoverController: PopoverController,
     private syncInspectionService: SyncInspectionService,
-    private inspectionNavigateService: InspectionNavigateService
+    private inspectionNavigateService: InspectionNavigateService,
+    private emailComposer: EmailComposer,
+    private file: File
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
       this.task = this.router.getCurrentNavigation().extras.state.task;
@@ -73,6 +78,10 @@ export class EnvironmentalInspectionPage implements OnInit {
         duration: 2000,
       });
       (await message).present();
+    }
+    var top = await this.loadingController.getTop();
+    if (top) {
+      await this.loadingController.dismiss();
     }
   }
   ngOnInit() {}
@@ -134,6 +143,79 @@ export class EnvironmentalInspectionPage implements OnInit {
 
         break;
 
+      case "ReportIssue":
+        let jFile = JSON.stringify(this.task);
+
+        this.file
+          .writeFile(this.file.dataDirectory, "dealIssue.json", jFile, {
+            replace: true,
+          })
+          .then((x) => {
+            console.log("Directory exists");
+            console.log(x);
+            let email = {
+              to: "pabs.aguilar2806@gmail.com",
+              //cc: "max@mustermann.de",
+              attachments: [this.file.dataDirectory + "/dealIssue.json"],
+              subject: "Issue Inspection " + this.task.id,
+              body:
+                "Having issues with " + this.task.enterprise + " inspection. ",
+              isHtml: true,
+            };
+
+            this.emailComposer.open(email);
+          })
+          .catch((err) => console.log("Directory doesn't exist"));
+
+        break;
+
+      case "Delete":
+        try {
+          const alert = await this.alertController.create({
+            header: "Confirm Delete",
+            message:
+              "Are you sure you want to delete the inspection? All the progress will be clear and deleted from the device.",
+            buttons: [
+              {
+                text: "Cancel",
+                role: "cancel",
+                cssClass: "secondary",
+                handler: () => {
+                  console.log("Cancel action");
+                },
+              },
+              {
+                text: "Ok",
+                handler: async () => {
+                  var random = Math.floor(Math.random() * 100) + 2;
+                  await this.inspectionService.delete(this.task);
+                  await this.navController.navigateRoot(
+                    "menu/tabs/tabs/pending-inspections/" + random
+                  );
+                  var message = this.toast.create({
+                    message: "Inspection is deleted.",
+                    color: "warning",
+                    duration: 3000,
+                  });
+
+                  (await message).present();
+                },
+              },
+            ],
+          });
+          await alert.present();
+        } catch (error) {
+          console.log(error);
+          var message = this.toast.create({
+            message: "Delete: " + error,
+            color: "danger",
+            duration: 2000,
+          });
+          (await message).present();
+        }
+
+        break;
+
       default:
         console.log("Unknow event for generic list");
         break;
@@ -154,6 +236,19 @@ export class EnvironmentalInspectionPage implements OnInit {
           color: "secondary",
           event: "ENAgreements",
           iconName: "reader-outline",
+        },
+        {
+          name: "Delete Inspection from device",
+          color: "danger",
+          event: "Delete",
+          iconName: "trash-outline",
+        },
+
+        {
+          name: "Report an issue with this Inspection",
+          color: "medium",
+          event: "ReportIssue",
+          iconName: "bug-outline",
         },
       ];
       const popover = await this.popoverController.create({

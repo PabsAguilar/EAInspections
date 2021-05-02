@@ -1,15 +1,20 @@
 import { Injectable } from "@angular/core";
 import { async } from "@angular/core/testing";
 import { ToastController } from "@ionic/angular";
-import { Observable, of, Subject } from "rxjs";
+import { ObjectUnsubscribedError, Observable, of, Subject } from "rxjs";
 import { observeOn } from "rxjs/operators";
 import { BitrixPicture, BitrixPictureList } from "../models/bitrix-picture";
 import { Company } from "../models/company";
 import { Contact } from "../models/contact";
 import { DamageInspection } from "../models/damage-inspection";
 import {
+  bitrixMappingComprehensive,
   DamageAreaType,
+  ENDealMapping,
+  EnumEnterprise,
   InspectionStatus,
+  InspectionType,
+  ITestDealMapping,
   ReportStatusDeal,
 } from "../models/enums";
 import { Asbesto } from "../models/environmental-form/asbesto";
@@ -19,12 +24,14 @@ import { MoistureMapping } from "../models/environmental-form/moisture-mapping";
 import { BitrixFolder, InspectionTask } from "../models/inspection-task";
 import { Scheduling } from "../models/scheduling";
 import { SyncInfo } from "../models/sync-info";
+import { User } from "../models/user";
 import { AuthenticationService } from "./authentication.service";
 import { BitrixItestService } from "./bitrix-itest.service";
 import { InspectionsStorageService } from "./inspections-storage.service";
 import { ItestDealService } from "./itest-deal.service";
 import { SchedulingStorageService } from "./scheduling-storage.service";
-
+const ItestImageMainFolder = 100;
+const ENImageMainFolder = 75763;
 @Injectable({
   providedIn: "root",
 })
@@ -50,8 +57,12 @@ export class SyncInspectionService {
 
   async syncSubfolder(task: InspectionTask): Promise<number> {
     try {
+      var idFolder = ItestImageMainFolder;
+      if (task.inspectionType == InspectionType.Comprehensive) {
+        idFolder = ENImageMainFolder;
+      }
       var postData = {
-        id: 100,
+        id: idFolder,
         data: {
           NAME: `${task.id}-${task.title}`,
         },
@@ -120,6 +131,113 @@ export class SyncInspectionService {
     }
     return pictures;
   }
+
+  async syncENTaskImages(task: InspectionTask): Promise<InspectionTask> {
+    await Promise.all(
+      task.comprehesiveForm.areas
+        .filter(
+          (x) =>
+            x.pictures.images.length > 0 &&
+            x.pictures.images.find((y) => !y.isSync) != null
+        )
+        .map(async (item, index) => {
+          task.comprehesiveForm.areas[
+            index
+          ].pictures = await this.syncListImages(
+            task.comprehesiveForm.areas[index].pictures,
+            task.bitrixFolder,
+            "AreaInsp-" + (index + 1)
+          );
+          await this.inspectionStorage.update(task);
+
+          return Promise.resolve(true);
+        })
+    );
+
+    await Promise.all(
+      task.comprehesiveForm.bathrooms
+        .filter(
+          (x) => x.pictures.images.length > 0 && !x.pictures.syncInfo.isSync
+        )
+        .map(async (item, index) => {
+          task.comprehesiveForm.bathrooms[
+            index
+          ].pictures = await this.syncListImages(
+            task.comprehesiveForm.bathrooms[index].pictures,
+            task.bitrixFolder,
+            "Bathroom-Area" + (index + 1)
+          );
+          await this.inspectionStorage.update(task);
+
+          return Promise.resolve(true);
+        })
+    );
+
+    task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers = await this.syncListImages(
+      task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers,
+      task.bitrixFolder,
+      "General-HouseNumber"
+    );
+    await this.inspectionStorage.update(task);
+    task.comprehesiveForm.generalInfoInspection.picturesFrontHouse = await this.syncListImages(
+      task.comprehesiveForm.generalInfoInspection.picturesFrontHouse,
+      task.bitrixFolder,
+      "General-FrontHouse"
+    );
+    await this.inspectionStorage.update(task);
+
+    task.comprehesiveForm.kitchen.pictures = await this.syncListImages(
+      task.comprehesiveForm.kitchen.pictures,
+      task.bitrixFolder,
+      "Kitchen"
+    );
+    await this.inspectionStorage.update(task);
+
+    task.comprehesiveForm.HVAC_AC.pictures = await this.syncListImages(
+      task.comprehesiveForm.HVAC_AC.pictures,
+      task.bitrixFolder,
+      "HVAC_AC"
+    );
+    await this.inspectionStorage.update(task);
+
+    task.comprehesiveForm.utilityRoom.pictures = await this.syncListImages(
+      task.comprehesiveForm.utilityRoom.pictures,
+      task.bitrixFolder,
+      "UtilityRoom"
+    );
+    await this.inspectionStorage.update(task);
+
+    task.comprehesiveForm.atic.pictures = await this.syncListImages(
+      task.comprehesiveForm.atic.pictures,
+      task.bitrixFolder,
+      "Attic"
+    );
+    await this.inspectionStorage.update(task);
+
+    task.comprehesiveForm.enviromentalSection.MoldLocationPicture = await this.syncListImages(
+      task.comprehesiveForm.enviromentalSection.MoldLocationPicture,
+      task.bitrixFolder,
+      "MoldLocation"
+    );
+    await this.inspectionStorage.update(task);
+
+    task.comprehesiveForm.exterior.pictures = await this.syncListImages(
+      task.comprehesiveForm.exterior.pictures,
+      task.bitrixFolder,
+      "Exterior"
+    );
+    await this.inspectionStorage.update(task);
+
+    task.comprehesiveForm.insurance.picturesPolicy = await this.syncListImages(
+      task.comprehesiveForm.insurance.picturesPolicy,
+      task.bitrixFolder,
+      "Policy"
+    );
+    await this.inspectionStorage.update(task);
+
+    return task;
+  }
+
   async syncTaskImages(task: InspectionTask): Promise<InspectionTask> {
     await Promise.all(
       task.environmentalForm.moldAreas.areasInspection
@@ -261,6 +379,23 @@ export class SyncInspectionService {
         postData.fields["UF_CRM_1606466732"] =
           task.environmentalForm.generalInfoInspection.atticCondition;
 
+      if (task.environmentalForm.generalInfoInspection.typeOfLossDesc) {
+        postData.fields[ITestDealMapping.typesOfLoss] =
+          task.environmentalForm.generalInfoInspection.typeOfLossDesc;
+      }
+      if (task.environmentalForm.generalInfoInspection.affectedArea) {
+        postData.fields[ITestDealMapping.affectedArea] =
+          task.environmentalForm.generalInfoInspection.affectedArea;
+      }
+      if (task.environmentalForm.generalInfoInspection.waterDamageCategory) {
+        postData.fields[ITestDealMapping.waterDamageCategory] =
+          task.environmentalForm.generalInfoInspection.waterDamageCategory;
+      }
+      if (task.environmentalForm.generalInfoInspection.waterDamageClass) {
+        postData.fields[ITestDealMapping.waterDamageClass] =
+          task.environmentalForm.generalInfoInspection.waterDamageClass;
+      }
+
       if (
         task.environmentalForm.generalInfoInspection.picturesFrontHouse.images
           .length > 0
@@ -339,7 +474,7 @@ export class SyncInspectionService {
     }
   }
 
-  async syncContact(contact: Contact): Promise<Contact> {
+  async syncContact(contact: Contact, enterprise: string): Promise<Contact> {
     try {
       var postData = {
         fields: {
@@ -350,7 +485,9 @@ export class SyncInspectionService {
           EMAIL: [{ VALUE: contact.email }],
         },
       };
-      var response = await this.bitrix.createContact(postData).toPromise();
+      var response = await this.bitrix
+        .createContact(postData, enterprise)
+        .toPromise();
       if (response?.result > 0) {
         contact.syncInfo.isSync = true;
         contact.syncInfo.syncCode = response.result;
@@ -367,7 +504,7 @@ export class SyncInspectionService {
     return contact;
   }
 
-  async syncCompany(company: Company): Promise<Company> {
+  async syncCompany(company: Company, enterprise: string): Promise<Company> {
     try {
       var postData = {
         fields: {
@@ -380,7 +517,9 @@ export class SyncInspectionService {
           EMAIL: [{ VALUE: company.email }],
         },
       };
-      var response = await this.bitrix.createCompany(postData).toPromise();
+      var response = await this.bitrix
+        .createCompany(postData, enterprise)
+        .toPromise();
       if (response?.result > 0) {
         company.syncInfo.isSync = true;
         company.syncInfo.syncCode = response.result;
@@ -402,19 +541,17 @@ export class SyncInspectionService {
     var schedulingList = await this.schedulingStorageService.getPendingToSync();
     await Promise.all(
       (await schedulingList).map(async (x) => {
-        (await this.syncSchedulingInspection(x, user.userId)).subscribe(
-          async (y) => {
-            if (y) {
-            } else {
-              var message = this.toast.create({
-                message: "Sync failed, please try again later.",
-                color: "warning",
-                duration: 2000,
-              });
-              (await message).present();
-            }
+        (await this.syncSchedulingInspection(x, user)).subscribe(async (y) => {
+          if (y) {
+          } else {
+            var message = this.toast.create({
+              message: "Sync failed, please try again later.",
+              color: "warning",
+              duration: 2000,
+            });
+            (await message).present();
           }
-        );
+        });
       })
     );
 
@@ -479,16 +616,19 @@ export class SyncInspectionService {
       paddatepart(date.getMinutes()) +
       ":" +
       paddatepart(date.getSeconds()) +
-      offset;
+      "-06:00";
     return dateStr;
   }
   async syncSchedulingInspection(
     scheduling: Scheduling,
-    userId: number
+    user: User
   ): Promise<Observable<boolean>> {
     try {
       if (!scheduling.contact.syncInfo.isSync) {
-        scheduling.contact = await this.syncContact(scheduling.contact);
+        scheduling.contact = await this.syncContact(
+          scheduling.contact,
+          scheduling.serviceType
+        );
 
         if (!scheduling.contact.syncInfo.isSync) {
           return of(false);
@@ -503,7 +643,8 @@ export class SyncInspectionService {
         !scheduling.insuranceCompanyContact.syncInfo.isSync
       ) {
         scheduling.insuranceCompanyContact = await this.syncContact(
-          scheduling.insuranceCompanyContact
+          scheduling.insuranceCompanyContact,
+          scheduling.serviceType
         );
 
         if (!scheduling.insuranceCompanyContact.syncInfo.isSync) {
@@ -517,7 +658,8 @@ export class SyncInspectionService {
         !scheduling.referalPartner.syncInfo.isSync
       ) {
         scheduling.referalPartner = await this.syncContact(
-          scheduling.referalPartner
+          scheduling.referalPartner,
+          scheduling.serviceType
         );
         if (!scheduling.referalPartner.syncInfo.isSync) {
           return of(false);
@@ -529,7 +671,8 @@ export class SyncInspectionService {
         !scheduling.referalPartnerCompany.syncInfo.isSync
       ) {
         scheduling.referalPartnerCompany = await this.syncCompany(
-          scheduling.referalPartnerCompany
+          scheduling.referalPartnerCompany,
+          scheduling.serviceType
         );
         if (!scheduling.referalPartnerCompany.syncInfo.isSync) {
           return of(false);
@@ -542,7 +685,8 @@ export class SyncInspectionService {
         !scheduling.insuranceCompany.syncInfo.isSync
       ) {
         scheduling.insuranceCompany = await this.syncCompany(
-          scheduling.insuranceCompany
+          scheduling.insuranceCompany,
+          scheduling.serviceType
         );
         if (!scheduling.insuranceCompany.syncInfo.isSync) {
           return of(false);
@@ -571,14 +715,16 @@ export class SyncInspectionService {
       let postData = {
         fields: {
           TITLE:
-            "ITest Form " +
+            "Form " +
             scheduling.contact.firstName +
             " " +
             scheduling.contact.lastName +
-            " - " +
-            "EnApp",
+            " - EnApp",
           TYPE_ID: "",
-          STAGE_ID: "PREPAYMENT_INVOICE",
+          STAGE_ID:
+            scheduling.serviceType == EnumEnterprise.itest
+              ? "PREPAYMENT_INVOICE"
+              : "NEW",
           COMPANY_ID: "",
           CONTACT_ID: scheduling.contact.idContact,
           OPENED: "N",
@@ -586,35 +732,59 @@ export class SyncInspectionService {
           ASSIGNED_BY_ID: scheduling.inspectorUserId,
           CREATED_BY_ID: scheduling.inspectorUserId,
           COMMENTS: "Created with Scheduling form within EN Mobile APP.",
-          UF_CRM_1612683023: scheduling.notes,
+
           PROBABILITY: null,
           CURRENCY_ID: "USD",
           OPPORTUNITY: 0,
           BEGINDATE: "",
           CLOSEDATE: "",
-          UF_CRM_1612683055: scheduling.scheduleDateString, //this.date2str(scheduling.scheduleDateTime),
-          UF_CRM_1606466289: scheduling.serviceAddress,
-          UF_CRM_1612682994: scheduling.inspectorUserId,
-          UF_CRM_1612686317: scheduling.inspectorUserId,
-          UF_CRM_1612691342: insuranceCompany,
-          UF_CRM_1612433280: scheduling.inspectionTypes,
-          UF_CRM_1618512396: scheduling.typeOfLossDesc,
-          UF_CRM_1618512421: scheduling.affectedArea,
-          UF_CRM_1618512488: scheduling.waterDamageCategory,
-          UF_CRM_1618512548: scheduling.waterDamageClass,
-          UF_CRM_1612691326: referalContact,
         },
       };
 
-      var response = await this.bitrix.createDeal(postData).toPromise();
+      if (scheduling.serviceType == EnumEnterprise.itest) {
+        postData.fields[ITestDealMapping.instructions] = scheduling.notes; //UF_CRM_1612683023
+        postData.fields[ITestDealMapping.dealDateTime] =
+          scheduling.scheduleDateString; //this.date2str(scheduling.scheduleDateTime),  //UF_CRM_1612683055
+        postData.fields[ITestDealMapping.serviceAddress] =
+          scheduling.serviceAddress; //UF_CRM_1606466289
+        postData.fields[ITestDealMapping.inspector] =
+          scheduling.inspectorUserId; //UF_CRM_1612682994
+        postData.fields[ITestDealMapping.user] = user.userId; //UF_CRM_1612686317
+        postData.fields[ITestDealMapping.insuranceCompany] = insuranceCompany; //UF_CRM_1612691342
+        postData.fields[ITestDealMapping.inspectionTypes] =
+          scheduling.inspectionTypes; //UF_CRM_1612433280
+        // postData[ITestDealMapping.typesOfLoss] = scheduling.typeOfLossDesc; //UF_CRM_1618512396
+        // postData[ITestDealMapping.affectedArea] = scheduling.affectedArea; //UF_CRM_1618512421
+        // postData[ITestDealMapping.waterDamageCategory] =
+        //   scheduling.waterDamageCategory; //UF_CRM_1618512488
+        // postData[ITestDealMapping.waterDamageClass] = scheduling.waterDamageClass; //UF_CRM_1618512548
+        postData[ITestDealMapping.referenceContact] = referalContact; //UF_CRM_1612691326
+      } else {
+        postData.fields[ENDealMapping.instructions] = scheduling.notes;
+        postData.fields[ENDealMapping.dealDateTime] =
+          scheduling.scheduleDateString;
+        postData.fields[ENDealMapping.serviceAddress] =
+          scheduling.serviceAddress;
+        postData.fields[ENDealMapping.inspector] = scheduling.inspectorUserId;
+        postData.fields[ENDealMapping.user] = user.userId; //scheduler
+        postData.fields[ENDealMapping.insuranceCompany] = insuranceCompany;
+        postData.fields[ENDealMapping.referenceContact] =
+          scheduling.serviceType == EnumEnterprise.itest
+            ? referalContact
+            : scheduling.referalPartner?.idContact;
+      }
+
+      var response = await this.bitrix
+        .createDeal(postData, scheduling.serviceType)
+        .toPromise();
 
       if (response && response.result > 0) {
         scheduling.syncInfo.isSync = true;
         scheduling.syncInfo.syncCode = response.result;
         scheduling.internalStatus = InspectionStatus.Completed;
         await this.schedulingStorageService.update(scheduling);
-        await this.itestDealService.getExternal(userId);
-        await this.itestDealService.refreshFieldsFromServer(userId);
+        await this.itestDealService.getExternal(user);
+        await this.itestDealService.refreshFieldsFromServer(user);
         return of(true);
       } else return of(false);
     } catch (error) {
@@ -622,9 +792,368 @@ export class SyncInspectionService {
       return of(false);
     }
   }
+  preprareImages(
+    imagesList: BitrixPictureList,
+    taskId: number,
+    fieldName: string
+  ) {
+    var image = imagesList.images.map((s, imageIndex) => {
+      return {
+        fileData: [
+          `${fieldName}-${imageIndex}-${taskId}-${Math.floor(
+            Math.random() * 1000
+          )}.png`,
+          s.base64Image.replace("data:image/png;base64,", ""),
+        ],
+      };
+    });
+    return image;
+  }
+  async syncENTask(task: InspectionTask): Promise<Observable<boolean>> {
+    try {
+      if (!task.bitrixFolder.syncInfo.isSync) {
+        var result = await this.syncSubfolder(task);
+        task.bitrixFolder.syncInfo.isSync = result > 0;
+        task.bitrixFolder.syncInfo.syncCode = result.toString();
+        await this.inspectionStorage.update(task);
+      }
+
+      task = await this.syncENTaskImages(task);
+
+      let postData = {
+        id: task.id,
+        fields: { STAGE_ID: "1" },
+      };
+
+      if (task.comprehesiveForm.generalInfoInspection.propertyYear)
+        postData.fields[
+          task.comprehesiveForm.generalInfoInspection.generalInfoInspectionBitrixMapping.propertyYearCode
+        ] = task.comprehesiveForm.generalInfoInspection.propertyYear;
+      if (task.comprehesiveForm.generalInfoInspection.propertyType)
+        postData.fields[
+          task.comprehesiveForm.generalInfoInspection.generalInfoInspectionBitrixMapping.propertyTypeCode
+        ] = task.comprehesiveForm.generalInfoInspection.propertyType;
+
+      if (
+        task.comprehesiveForm.generalInfoInspection.picturesFrontHouse.images
+          .length > 0
+      ) {
+        var x = await this.preprareImages(
+          task.comprehesiveForm.generalInfoInspection.picturesFrontHouse,
+          task.id,
+          "FrontHouse"
+        );
+        postData.fields["UF_CRM_1591107445"] = x;
+      }
+
+      if (
+        task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers.images
+          .length > 0
+      ) {
+        var x = await this.preprareImages(
+          task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers,
+          task.id,
+          "HouseNumber"
+        );
+        postData.fields["UF_CRM_1591107425"] = x;
+      }
+
+      task.comprehesiveForm.areas.map((x, index) => {
+        Object.entries(x.areaBitrixMapping).map((y) => {
+          var item = x[y[0].replace("Code", "")];
+          if (item) {
+            if (item.images) {
+              var image = item.images.map((s, imageIndex) => {
+                return {
+                  fileData: [
+                    `Area${index + 1}-${imageIndex}-${task.id}-${Math.floor(
+                      Math.random() * 1000
+                    )}.png`,
+                    s.base64Image.replace("data:image/png;base64,", ""),
+                  ],
+                };
+              });
+              if (image.length > 0) {
+                postData.fields[y[1]] = image;
+              }
+            } else {
+              postData.fields[y[1]] = item;
+            }
+          }
+        });
+      });
+
+      task.comprehesiveForm.bathrooms.map((x, index) => {
+        Object.entries(x.generalConditionBitrixMapping).map((y) => {
+          var item = x[y[0].replace("Code", "")];
+          if (item) {
+            if (item.images) {
+              var image = item.images.map((s, imageIndex) => {
+                return {
+                  fileData: [
+                    `Bathroom${index + 1}-${imageIndex}-${task.id}-${Math.floor(
+                      Math.random() * 1000
+                    )}.png`,
+                    s.base64Image.replace("data:image/png;base64,", ""),
+                  ],
+                };
+              });
+              if (image.length > 0) {
+                postData.fields[y[1]] = image;
+              }
+            } else {
+              postData.fields[y[1]] = item;
+            }
+          }
+        });
+      });
+
+      Object.entries(
+        task.comprehesiveForm.atic.generalConditionBitrixMapping
+      ).map((y) => {
+        var item = task.comprehesiveForm.atic[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `Attic-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      Object.entries(
+        task.comprehesiveForm.utilityRoom.generalConditionBitrixMapping
+      ).map((y) => {
+        var item = task.comprehesiveForm.utilityRoom[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `UtilityRoom-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      Object.entries(
+        task.comprehesiveForm.HVAC_AC.generalConditionBitrixMapping
+      ).map((y) => {
+        var item = task.comprehesiveForm.HVAC_AC[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `UtilityRoom-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      Object.entries(
+        task.comprehesiveForm.enviromentalSection
+          .environmentalSectionBitrixMapping
+      ).map((y) => {
+        var item =
+          task.comprehesiveForm.enviromentalSection[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `EnvironmentalSection-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      Object.entries(
+        task.comprehesiveForm.exterior.generalConditionBitrixMapping
+      ).map((y) => {
+        var item = task.comprehesiveForm.exterior[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `Exterior-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      Object.entries(
+        task.comprehesiveForm.insurance.insuranceBitrixMapping
+      ).map((y) => {
+        var item = task.comprehesiveForm.insurance[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `Insurance-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      Object.entries(
+        task.comprehesiveForm.recomendations.recomendationsBitrixMapping
+      ).map((y) => {
+        var item =
+          task.comprehesiveForm.recomendations[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `Recomendations-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[
+              task.comprehesiveForm.recomendations.recomendationsBitrixMapping[
+                y[0]
+              ]
+            ] = item;
+          }
+        }
+      });
+
+      Object.entries(
+        task.comprehesiveForm.reminders.remindersBitrixMapping
+      ).map((y) => {
+        var item = task.comprehesiveForm.reminders[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `Reminders-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[
+              task.comprehesiveForm.reminders.remindersBitrixMapping[y[0]]
+            ] = item;
+          }
+        }
+      });
+
+      var response = await this.bitrix.updateDeal(postData).toPromise();
+      if (response && response.result > 0) {
+        task.internalStatus = InspectionStatus.Completed;
+      }
+      await this.inspectionStorage.update(task);
+      return of(true);
+    } catch (error) {
+      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+      console.log(error);
+      return of(false);
+    }
+  }
 
   async syncTask(task: InspectionTask): Promise<Observable<boolean>> {
     try {
+      if (task.startedSync) {
+        var today = new Date();
+        var lastSync = new Date(task.syncStartDate);
+
+        var difference = today.getTime() - lastSync.getTime();
+        var minutes = Math.round(difference / 60000);
+        if (minutes <= 2) {
+          return of(true);
+        }
+      }
+
+      task.startedSync = true;
+      task.syncStartDate = new Date();
+      if (task.inspectionType == InspectionType.Comprehensive) {
+        return this.syncENTask(task);
+      }
       if (!task.bitrixFolder.syncInfo.isSync) {
         var result = await this.syncSubfolder(task);
         task.bitrixFolder.syncInfo.isSync = result > 0;

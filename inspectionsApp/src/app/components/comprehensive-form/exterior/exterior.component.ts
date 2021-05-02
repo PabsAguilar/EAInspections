@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Exterior } from "src/app/models/comprehensive-form/exterior";
 import { AreaConditionType } from "src/app/models/enums";
+import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
   selector: "app-exterior",
@@ -14,19 +15,23 @@ export class ExteriorComponent implements OnInit {
   progressPercentage: number = 0;
   progressColor: string = "danger";
   _conditions: any[];
+  fields: any[];
 
   @Input()
   set data(value: Exterior) {
-    if (!value.condition) {
-      value.condition = [];
-    }
-    for (let index = 0; index < this._conditions.length; index++) {
-      const element = this._conditions[index];
-      this._conditions[index].checked = value.condition.includes(element.name);
-    }
     this._data = value;
 
-    this.changeModel(null);
+    this.inspectionService.getDealsFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        this._conditions = this.fields[
+          this._data.generalConditionBitrixMapping.conditionCode
+        ].items
+          .filter((x) => x.ID != "1893" && x.ID != "1899")
+          .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+      }
+    });
+    this.changeModel("init");
   }
   @Output() dataChanged: any = new EventEmitter();
   _data: Exterior = new Exterior();
@@ -36,23 +41,11 @@ export class ExteriorComponent implements OnInit {
   }
   set type(value: string) {
     this._type = value;
-    switch (this.type) {
-      case AreaConditionType.Exterior.toString():
-        this._conditions = [
-          { name: "Blue Tarp", checked: false },
-          { name: "Loose roof tiles / shingles", checked: false },
-          { name: "Damaged window seals", checked: false },
-          { name: "Cracks in walls or foundation", checked: false },
-        ];
-        break;
-
-      default:
-        break;
-    }
   }
   _type: string = "";
 
-  constructor() {}
+  @Input() readonly: boolean = false;
+  constructor(private inspectionService: ItestDealService) {}
 
   ngOnInit() {}
 
@@ -67,7 +60,7 @@ export class ExteriorComponent implements OnInit {
       this.filledProperties++;
     }
 
-    if (this._data.pictures.length > 0) {
+    if (this._data.pictures.images.length > 0) {
       this.filledProperties++;
     }
     if (this._data.notes) {
@@ -78,7 +71,9 @@ export class ExteriorComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
-    this.dataChanged.emit(this._data);
+    if ($event != "init") {
+      this.dataChanged.emit(this._data);
+    }
 
     switch (true) {
       case this.progressPercentage < 0.5:
@@ -94,13 +89,5 @@ export class ExteriorComponent implements OnInit {
         this.progressColor = "danger";
         break;
     }
-  }
-  onConditionChange($event, index: number) {
-    var x = this._conditions.reduce(
-      (result, { name, checked }) => [...result, ...(checked ? [name] : [])],
-      []
-    );
-    this._data.condition = x;
-    this.changeModel(null);
   }
 }

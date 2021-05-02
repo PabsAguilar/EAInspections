@@ -1,19 +1,30 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Comprehensive Inspection</ion-title>
-    <!-- <ion-badge
-      slot="end"
-      [color]="task.inspectionType =='Environmental Inspection' ? 'environmental' : 'comprehensive'"
-      style="margin-right: 1em"
-      >{{task.inspectionType}}</ion-badge
-    > -->
+    <ion-buttons slot="start">
+      <ion-back-button defaulthref=""> </ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button slot="end" (click)="presentPopover($event)">
+        <ion-icon
+          slot="icon-only"
+          ios="ellipsis-vertical"
+          md="ellipsis-vertical"
+        ></ion-icon> </ion-button
+    ></ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-item>
+    <ion-label color="primary">
+      <center><h2>{{task.id + " - " + task.title}}</h2></center>
+    </ion-label>
+  </ion-item>
   <app-inspection-general
     ngDefaultControl
     (generalInfoChanged)="UpdateEntity($event)"
+    [readonly]="readonly"
     [(generalInfo)]="task.comprehesiveForm.generalInfoInspection"
   >
   </app-inspection-general>
@@ -21,6 +32,7 @@
   <app-areas
     ngDefaultControl
     (AreasListChanged)="UpdateEntity($event)"
+    [readonly]="readonly"
     [(InspectionAreas)]="task.comprehesiveForm.areas"
   >
   </app-areas>
@@ -28,6 +40,7 @@
   <app-bathrooms
     ngDefaultControl
     (AreasListChanged)="UpdateEntity($event)"
+    [readonly]="readonly"
     [(InspectionAreas)]="task.comprehesiveForm.bathrooms"
   >
   </app-bathrooms>
@@ -36,6 +49,7 @@
     ngDefaultControl
     (KitchenChanged)="UpdateEntity($event)"
     title="Kitchen"
+    [readonly]="readonly"
     type="Kitchen"
     [(Kitchen)]="task.comprehesiveForm.kitchen"
   >
@@ -44,6 +58,7 @@
   <app-area-general-condition
     ngDefaultControl
     title="HVAC / AC"
+    [readonly]="readonly"
     type="HVAC_AC"
     (InspectionAreaGeneralChanged)="UpdateEntity($event)"
     [(InspectionArea)]="task.comprehesiveForm.HVAC_AC"
@@ -53,7 +68,9 @@
     ngDefaultControl
     title="Utility Room"
     type="UtilityRoom"
+    [readonly]="readonly"
     (InspectionAreaGeneralChanged)="UpdateEntity($event)"
+    [readonly]="readonly"
     [(InspectionArea)]="task.comprehesiveForm.utilityRoom"
   ></app-area-general-condition>
 
@@ -63,18 +80,21 @@
     type="Atic"
     (InspectionAreaGeneralChanged)="UpdateEntity($event)"
     [(InspectionArea)]="task.comprehesiveForm.atic"
+    [readonly]="readonly"
   ></app-area-general-condition>
 
   <app-enviromental-section
     ngDefaultControl
     (dataChanged)="UpdateEntity($event)"
     [(data)]="task.comprehesiveForm.enviromentalSection"
+    [readonly]="readonly"
   ></app-enviromental-section>
 
   <app-exterior
     ngDefaultControl
     (dataChanged)="UpdateEntity($event)"
     type="Exterior"
+    [readonly]="readonly"
     [(data)]="task.comprehesiveForm.exterior"
   ></app-exterior>
   <app-recomendations
@@ -82,19 +102,65 @@
     (dataChanged)="UpdateEntity($event)"
     type="InspectionRecommendations"
     [(data)]="task.comprehesiveForm.recomendations"
+    [readonly]="readonly"
   ></app-recomendations>
 
   <app-insurance
     ngDefaultControl
     (dataChanged)="UpdateEntity($event)"
+    [readonly]="readonly"
     [(data)]="task.comprehesiveForm.insurance"
   ></app-insurance>
 
   <app-reminders
     ngDefaultControl
     (dataChanged)="UpdateEntity($event)"
+    [readonly]="readonly"
     [(data)]="task.comprehesiveForm.reminders"
   ></app-reminders>
+
+  <ion-item>
+    <ion-badge
+      [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
+    task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
+      slot="end"
+      >{{task.internalStatus}}</ion-badge
+    >
+  </ion-item>
+
+  <ion-item
+    class="ion-margin"
+    lines="none"
+    (click)="openAgreements('ITestAgreements')"
+  >
+    <ion-label>ITest Agreements</ion-label>
+    <ion-icon slot="start" color="success" name="reader-outline"></ion-icon>
+    <ion-badge
+      [color]=" this.task.iTestAgreements &&
+    this.task.iTestAgreements.signature.images.length > 0? 'success' : 'medium' "
+      slot="end"
+      >{{this.task.iTestAgreements &&
+      this.task.iTestAgreements.signature.images.length > 0? 'Signed' :
+      'Pending'}}</ion-badge
+    >
+  </ion-item>
+
+  <ion-item
+    class="ion-margin"
+    lines="none"
+    (click)="openAgreements('ENAgreements')"
+  >
+    <ion-label>Expert Network Agreements</ion-label>
+    <ion-icon slot="start" color="primary" name="reader-outline"></ion-icon>
+    <ion-badge
+      [color]=" this.task.expertNetworkAgreements &&
+  this.task.expertNetworkAgreements.signature.images.length > 0? 'success' : 'medium' "
+      slot="end"
+      >{{this.task.expertNetworkAgreements &&
+      this.task.expertNetworkAgreements.signature.images.length > 0? 'Signed' :
+      'Pending'}}</ion-badge
+    >
+  </ion-item>
 
   <ion-item class="ion-margin" lines="none">
     <ion-label>Complete Inspection</ion-label>

@@ -5,31 +5,103 @@
     </ion-buttons>
     <ion-title>Log In</ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment value="Expert Networks" [(ngModel)]="segmentOption">
+      <ion-segment-button value="Expert Networks">
+        <ion-label>Expert Network</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ITest">
+        <ion-label>ITest</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen class="ion-padding ion-text-center form">
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <center>
-          <ion-avatar *ngIf="image">
-            <img src="{{image}}" />
-          </ion-avatar>
-        </center>
-        <ion-icon
-          *ngIf="!image"
-          color="primary"
-          style="font-size: 70px"
-          name="person-circle-outline"
-        ></ion-icon>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
   <form
+    *ngIf="segmentOption=='ITest'"
     class="form"
     [formGroup]="validations_form"
     (ngSubmit)="onSubmit(validations_form.value)"
   >
+    <ion-row>
+      <ion-col>
+        <img
+          src="../../../assets/images/ITestLogo.png"
+          style="height: 15vh; width: auto; margin: auto; display: block"
+        />
+      </ion-col>
+    </ion-row>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Email</ion-label>
+      <ion-input
+        formControlName="username"
+        class="form-controll"
+        type="email"
+        required
+      ></ion-input>
+    </ion-item>
+    <div class="validation-errors">
+      <ng-container *ngFor="let validation of validation_messages.username">
+        <div
+          *ngIf="validations_form.get('username').hasError(validation.type) && (validations_form.get('username').dirty || validations_form.get('username').touched)"
+        >
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
+        </div>
+      </ng-container>
+    </div>
+
+    <ion-item lines="full">
+      <ion-label position="floating">Password</ion-label>
+      <ion-input
+        type="password"
+        formControlName="password"
+        class="form-controll"
+        required
+      ></ion-input>
+    </ion-item>
+    <div class="validation-errors">
+      <ng-container *ngFor="let validation of validation_messages.password">
+        <div
+          *ngIf="validations_form.get('password').hasError(validation.type) && (validations_form.get('password').dirty || validations_form.get('password').touched)"
+        >
+          <ion-icon color="danger" name="information-circle-outline"></ion-icon
+          ><ion-label color="danger"> {{ validation.message }}</ion-label>
+        </div>
+      </ng-container>
+    </div>
+
+    <ion-row style="padding-top: 50px">
+      <ion-col>
+        <ion-button
+          full
+          type="submit"
+          [disabled]="!validations_form.valid"
+          type="submit"
+          expand="block"
+          >Log In</ion-button
+        >
+      </ion-col>
+    </ion-row>
+  </form>
+
+  <form
+    *ngIf="segmentOption=='Expert Networks'"
+    class="form"
+    [formGroup]="validations_form"
+    (ngSubmit)="onSubmit(validations_form.value)"
+  >
+    <ion-row>
+      <ion-col>
+        <img
+          src="../../../assets/images/ExpertNetwork.png"
+          style="height: 15vh; width: auto; margin: auto; display: block"
+        />
+      </ion-col>
+    </ion-row>
+
     <ion-item lines="full">
       <ion-label position="floating">Email</ion-label>
       <ion-input

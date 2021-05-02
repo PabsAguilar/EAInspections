@@ -30,7 +30,7 @@
       <ion-col>{{task.serviceAddress}} </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col *ngIf="task.insuranceCompany?.title">
+      <ion-col *ngIf="task.insuranceCompany && task.insuranceCompany.title">
         <ion-label color="medium">Insurance Carrier</ion-label>
       </ion-col>
       <ion-col>{{task.insuranceCompany.title}} </ion-col>

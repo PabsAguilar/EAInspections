@@ -10,7 +10,7 @@ import {
 import { fromEventPattern } from "rxjs";
 import { Contact } from "src/app/models/contact";
 import {
-  BitrixDealMapping,
+  ITestDealMapping,
   InspectionStatus,
   SchedulingStatus,
 } from "src/app/models/enums";
@@ -71,8 +71,7 @@ export class SchedulingPage implements OnInit {
   }
 
   inspectionTypes = [];
-  waterDamageCategories = [];
-  waterDamageClasses = [];
+
   inspectorsList: User[] = [];
 
   user: User = new User();
@@ -88,21 +87,6 @@ export class SchedulingPage implements OnInit {
     this.scheduling.inspectorUserId = this.user.userId;
     this.inspectionTypes = types.map((x) => {
       return { name: x.name, value: x.id, selected: false };
-    });
-    this.inspectionService.getDealsFields().then((x) => {
-      this.fields = x[0];
-
-      this.waterDamageCategories = this.fields[
-        BitrixDealMapping.waterDamageCategory
-      ].items.map((y) => {
-        return { name: y.VALUE, value: y.ID };
-      });
-
-      this.waterDamageClasses = this.fields[
-        BitrixDealMapping.waterDamageClass
-      ].items.map((y) => {
-        return { name: y.VALUE, value: y.ID };
-      });
     });
   }
 
@@ -221,7 +205,7 @@ export class SchedulingPage implements OnInit {
             handler: async () => {
               console.log("Task Completed" + this.scheduling.id);
               console.log(this.scheduling);
-
+              this.scheduling.enterprise = this.scheduling.serviceType;
               this.scheduling.internalStatus = SchedulingStatus.Pending;
               console.log(this.scheduling);
               this.scheduling.scheduleDateTime = new Date(
@@ -253,7 +237,7 @@ export class SchedulingPage implements OnInit {
               (
                 await this.syncInspectionService.syncSchedulingInspection(
                   deal,
-                  this.user.userId
+                  this.user
                 )
               ).subscribe(async (x) => {
                 if (x) {

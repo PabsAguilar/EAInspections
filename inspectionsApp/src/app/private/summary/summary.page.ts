@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
 import { GenericListPopOverComponent } from "src/app/components/generic-list-pop-over/generic-list-pop-over.component";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { Scheduling } from "src/app/models/scheduling";
+import { InspectionNavigateService } from "src/app/services/inspection-navigate.service";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
@@ -27,6 +28,7 @@ export class SummaryPage implements OnInit {
     public schedulingStorageService: SchedulingStorageService,
     public inspectionStorageService: ItestDealService,
 
+    private inspectionNavigate: InspectionNavigateService,
     private router: Router,
     private route: ActivatedRoute,
     private popoverController: PopoverController,
@@ -144,13 +146,7 @@ export class SummaryPage implements OnInit {
 
   async seeInspection(task) {
     try {
-      console.log("Details clicked");
-      let navigationExtras: NavigationExtras = {
-        state: {
-          task: task,
-        },
-      };
-      this.router.navigate(["menu/environmental-inspection"], navigationExtras);
+      this.inspectionNavigate.openInspectionPage(task);
     } catch (error) {
       console.log(error);
     }
