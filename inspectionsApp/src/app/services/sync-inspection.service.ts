@@ -105,9 +105,8 @@ export class SyncInspectionService {
             var response = await this.bitrix.addFile(postData);
             if (response?.result?.FILE_ID > 0) {
               pictures.images[index].isSync = true;
-              pictures.images[
-                index
-              ].syncCode = response.result.FILE_ID.toString();
+              pictures.images[index].syncCode =
+                response.result.FILE_ID.toString();
               pictures.imagesCodesSync.push({
                 file: response.result.FILE_ID,
                 listSync: false,
@@ -141,13 +140,12 @@ export class SyncInspectionService {
             x.pictures.images.find((y) => !y.isSync) != null
         )
         .map(async (item, index) => {
-          task.comprehesiveForm.areas[
-            index
-          ].pictures = await this.syncListImages(
-            task.comprehesiveForm.areas[index].pictures,
-            task.bitrixFolder,
-            "AreaInsp-" + (index + 1)
-          );
+          task.comprehesiveForm.areas[index].pictures =
+            await this.syncListImages(
+              task.comprehesiveForm.areas[index].pictures,
+              task.bitrixFolder,
+              "AreaInsp-" + (index + 1)
+            );
           await this.inspectionStorage.update(task);
 
           return Promise.resolve(true);
@@ -160,30 +158,31 @@ export class SyncInspectionService {
           (x) => x.pictures.images.length > 0 && !x.pictures.syncInfo.isSync
         )
         .map(async (item, index) => {
-          task.comprehesiveForm.bathrooms[
-            index
-          ].pictures = await this.syncListImages(
-            task.comprehesiveForm.bathrooms[index].pictures,
-            task.bitrixFolder,
-            "Bathroom-Area" + (index + 1)
-          );
+          task.comprehesiveForm.bathrooms[index].pictures =
+            await this.syncListImages(
+              task.comprehesiveForm.bathrooms[index].pictures,
+              task.bitrixFolder,
+              "Bathroom-Area" + (index + 1)
+            );
           await this.inspectionStorage.update(task);
 
           return Promise.resolve(true);
         })
     );
 
-    task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers = await this.syncListImages(
-      task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers,
-      task.bitrixFolder,
-      "General-HouseNumber"
-    );
+    task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers =
+      await this.syncListImages(
+        task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers,
+        task.bitrixFolder,
+        "General-HouseNumber"
+      );
     await this.inspectionStorage.update(task);
-    task.comprehesiveForm.generalInfoInspection.picturesFrontHouse = await this.syncListImages(
-      task.comprehesiveForm.generalInfoInspection.picturesFrontHouse,
-      task.bitrixFolder,
-      "General-FrontHouse"
-    );
+    task.comprehesiveForm.generalInfoInspection.picturesFrontHouse =
+      await this.syncListImages(
+        task.comprehesiveForm.generalInfoInspection.picturesFrontHouse,
+        task.bitrixFolder,
+        "General-FrontHouse"
+      );
     await this.inspectionStorage.update(task);
 
     task.comprehesiveForm.kitchen.pictures = await this.syncListImages(
@@ -214,11 +213,12 @@ export class SyncInspectionService {
     );
     await this.inspectionStorage.update(task);
 
-    task.comprehesiveForm.enviromentalSection.MoldLocationPicture = await this.syncListImages(
-      task.comprehesiveForm.enviromentalSection.MoldLocationPicture,
-      task.bitrixFolder,
-      "MoldLocation"
-    );
+    task.comprehesiveForm.enviromentalSection.MoldLocationPicture =
+      await this.syncListImages(
+        task.comprehesiveForm.enviromentalSection.MoldLocationPicture,
+        task.bitrixFolder,
+        "MoldLocation"
+      );
     await this.inspectionStorage.update(task);
 
     task.comprehesiveForm.exterior.pictures = await this.syncListImages(
@@ -247,14 +247,13 @@ export class SyncInspectionService {
             x.areaPictures.images.find((y) => !y.isSync) != null
         )
         .map(async (item, index) => {
-          task.environmentalForm.moldAreas.areasInspection[
-            index
-          ].areaPictures = await this.syncListImages(
-            task.environmentalForm.moldAreas.areasInspection[index]
-              .areaPictures,
-            task.bitrixFolder,
-            "MoldIns-Area" + (index + 1)
-          );
+          task.environmentalForm.moldAreas.areasInspection[index].areaPictures =
+            await this.syncListImages(
+              task.environmentalForm.moldAreas.areasInspection[index]
+                .areaPictures,
+              task.bitrixFolder,
+              "MoldIns-Area" + (index + 1)
+            );
           await this.inspectionStorage.update(task);
 
           return Promise.resolve(true);
@@ -289,31 +288,32 @@ export class SyncInspectionService {
             x.areaPictures.images.length > 0 && !x.areaPictures.syncInfo.isSync
         )
         .map(async (item, index) => {
-          task.environmentalForm.sootAreas.areasInspection[
-            index
-          ].areaPictures = await this.syncListImages(
-            task.environmentalForm.sootAreas.areasInspection[index]
-              .areaPictures,
-            task.bitrixFolder,
-            "Soot-Area" + (index + 1)
-          );
+          task.environmentalForm.sootAreas.areasInspection[index].areaPictures =
+            await this.syncListImages(
+              task.environmentalForm.sootAreas.areasInspection[index]
+                .areaPictures,
+              task.bitrixFolder,
+              "Soot-Area" + (index + 1)
+            );
           await this.inspectionStorage.update(task);
 
           return Promise.resolve(true);
         })
     );
 
-    task.environmentalForm.generalInfoInspection.pictureHouseNumbers = await this.syncListImages(
-      task.environmentalForm.generalInfoInspection.pictureHouseNumbers,
-      task.bitrixFolder,
-      "General-HouseNumber"
-    );
+    task.environmentalForm.generalInfoInspection.pictureHouseNumbers =
+      await this.syncListImages(
+        task.environmentalForm.generalInfoInspection.pictureHouseNumbers,
+        task.bitrixFolder,
+        "General-HouseNumber"
+      );
     await this.inspectionStorage.update(task);
-    task.environmentalForm.generalInfoInspection.picturesFrontHouse = await this.syncListImages(
-      task.environmentalForm.generalInfoInspection.picturesFrontHouse,
-      task.bitrixFolder,
-      "General-FrontHouse"
-    );
+    task.environmentalForm.generalInfoInspection.picturesFrontHouse =
+      await this.syncListImages(
+        task.environmentalForm.generalInfoInspection.picturesFrontHouse,
+        task.bitrixFolder,
+        "General-FrontHouse"
+      );
     await this.inspectionStorage.update(task);
 
     task.iTestAgreements.signature = await this.syncListImages(
@@ -400,18 +400,19 @@ export class SyncInspectionService {
         task.environmentalForm.generalInfoInspection.picturesFrontHouse.images
           .length > 0
       ) {
-        var x = task.environmentalForm.generalInfoInspection.picturesFrontHouse.images.map(
-          (x, index) => {
-            return {
-              fileData: [
-                `FrontHouse-${index}-${task.id}-${Math.floor(
-                  Math.random() * 1000
-                )}.png`,
-                x.base64Image.replace("data:image/png;base64,", ""),
-              ],
-            };
-          }
-        );
+        var x =
+          task.environmentalForm.generalInfoInspection.picturesFrontHouse.images.map(
+            (x, index) => {
+              return {
+                fileData: [
+                  `FrontHouse-${index}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  x.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            }
+          );
         postData.fields["UF_CRM_1606466511"] = x;
       }
 
@@ -446,8 +447,8 @@ export class SyncInspectionService {
           }
         );
 
-        var expertNSignature = task.expertNetworkAgreements.signature.images.map(
-          (x, index) => {
+        var expertNSignature =
+          task.expertNetworkAgreements.signature.images.map((x, index) => {
             return {
               fileData: [
                 `ENSignature-${x.name}-${task.id}-${Math.floor(
@@ -456,8 +457,7 @@ export class SyncInspectionService {
                 x.base64Image.replace("data:image/png;base64,", ""),
               ],
             };
-          }
-        );
+          });
 
         var signatures = itestSignature.concat(expertNSignature);
         postData.fields["UF_CRM_1612780368"] = signatures;
@@ -540,7 +540,9 @@ export class SyncInspectionService {
     var user = await this.autenticateService.getUser();
     var schedulingList = await this.schedulingStorageService.getPendingToSync();
     await Promise.all(
-      (await schedulingList).map(async (x) => {
+      (
+        await schedulingList
+      ).map(async (x) => {
         (await this.syncSchedulingInspection(x, user)).subscribe(async (y) => {
           if (y) {
           } else {
@@ -557,7 +559,9 @@ export class SyncInspectionService {
 
     var inspectionList = await this.inspectionStorage.getPendingToSync();
     await Promise.all(
-      (await inspectionList).map(async (x) => {
+      (
+        await inspectionList
+      ).map(async (x) => {
         (await this.syncTask(x)).subscribe(async (y) => {
           if (y) {
           } else {
@@ -1167,7 +1171,8 @@ export class SyncInspectionService {
         var result = await this.syncGeneralInformation(task);
         if (result > 0) {
           task.environmentalForm.generalInfoInspection.syncInfo.isSync = true;
-          task.environmentalForm.generalInfoInspection.syncInfo.syncCode = result.toString();
+          task.environmentalForm.generalInfoInspection.syncInfo.syncCode =
+            result.toString();
         }
       }
 
@@ -1204,13 +1209,14 @@ export class SyncInspectionService {
             (x) => x.areaName
           )
         ) {
-          task.environmentalForm.bacteriasAreas = await this.sendDamageInspection(
-            task.environmentalForm.bacteriasAreas,
-            task,
-            DamageAreaType.Bacteria,
-            50,
-            "Bacteria Inspection - " + task.title
-          );
+          task.environmentalForm.bacteriasAreas =
+            await this.sendDamageInspection(
+              task.environmentalForm.bacteriasAreas,
+              task,
+              DamageAreaType.Bacteria,
+              50,
+              "Bacteria Inspection - " + task.title
+            );
         } else {
           task.environmentalForm.bacteriasAreas.syncInfo.isSync = true;
           task.environmentalForm.bacteriasAreas.syncInfo.updated = false;
@@ -1660,12 +1666,13 @@ export class SyncInspectionService {
               area.areaPictures.imagesCodesSync
                 .filter((x) => x.listSync == false)
                 .map(async (element, y) => {
-                  postData.FIELDS[
+                  const cleanPostData = JSON.parse(JSON.stringify(postData));
+                  cleanPostData.FIELDS[
                     area.damageInspectionBitrixMapping.areaPicturesCode
                   ] = [element.file];
 
                   var response = await this.bitrix
-                    .syncDamageAreaInspection(postData, list)
+                    .syncDamageAreaInspection(cleanPostData, list)
                     .toPromise();
 
                   if (response && response.result > 0) {
@@ -1680,6 +1687,10 @@ export class SyncInspectionService {
           }
         })
       );
+
+      var response = await this.bitrix
+        .syncDamageAreaInspection(postData, list)
+        .toPromise();
       return areas;
     } catch (error) {
       console.log(error);
@@ -1723,9 +1734,8 @@ export class SyncInspectionService {
       damageInspectionList = areas.areasInspection;
       postData.FIELDS[areas.damageAreasBitrixMapping.contactIdCode] =
         task.contactId;
-      postData.FIELDS[
-        areas.damageAreasBitrixMapping.startDateCode
-      ] = this.getBitrixDateTime(task.environmentalForm.startDate);
+      postData.FIELDS[areas.damageAreasBitrixMapping.startDateCode] =
+        this.getBitrixDateTime(task.environmentalForm.startDate);
       postData.FIELDS[areas.damageAreasBitrixMapping.dealIdCode] = task.id;
       postData.FIELDS[areas.damageAreasBitrixMapping.inspectionType] =
         areas.moldInspectionType;
@@ -1834,6 +1844,8 @@ export class SyncInspectionService {
                 ] = element.cassetteNumber;
                 postData.FIELDS[element.sampleBitrixMapping.toxicMoldCode] =
                   element.toxicMold;
+                postData.FIELDS[element.sampleBitrixMapping.areaSwabCode] =
+                  element.areaSwab;
               }
             });
           }

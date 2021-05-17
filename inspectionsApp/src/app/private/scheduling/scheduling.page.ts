@@ -13,6 +13,7 @@ import {
   ITestDealMapping,
   InspectionStatus,
   SchedulingStatus,
+  EnumEnterprise,
 } from "src/app/models/enums";
 import { Scheduling } from "src/app/models/scheduling";
 import { TaskSubtype } from "src/app/models/task-subtype";
@@ -59,7 +60,8 @@ export class SchedulingPage implements OnInit {
 
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
-        this.scheduling = this.router.getCurrentNavigation().extras.state.scheduling;
+        this.scheduling =
+          this.router.getCurrentNavigation().extras.state.scheduling;
         this.scheduling.scheduleDateTime = new Date(
           this.scheduling.scheduleDateTime
         ).toISOString();
@@ -85,6 +87,8 @@ export class SchedulingPage implements OnInit {
     var types = await this.inspectionService.getInspectionTasksTypesList();
     this.inspectorsList = await this.inspectionService.getInspectors(false);
     this.scheduling.inspectorUserId = this.user.userId;
+    this.scheduling.enterprise = this.user.enterprise;
+    this.scheduling.serviceType = this.user.enterprise;
     this.inspectionTypes = types.map((x) => {
       return { name: x.name, value: x.id, selected: false };
     });

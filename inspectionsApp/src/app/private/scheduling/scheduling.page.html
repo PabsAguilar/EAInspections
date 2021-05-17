@@ -20,21 +20,14 @@
  TODO: insert url to open in bitrix
    </ion-item> -->
     <ion-item>
-      <ion-label position="floating">Select Service</ion-label>
-      <ion-select
-        interface="popover"
-        name="serviceType"
-        [disabled]="scheduling.syncInfo.isSync"
-        #serviceType="ngModel"
-        [(ngModel)]="scheduling.serviceType"
-      >
-        <ion-select-option value="ITest"
-          >Environmental (ITest)</ion-select-option
-        >
-        <ion-select-option value="Expert Networks"
-          >Comprehensive (ExpertNetwork)</ion-select-option
-        >
-      </ion-select>
+      <ion-label color="primary">
+        <center>
+          <h2>
+            {{scheduling.serviceType == 'ITest'? 'Environmental (ITest)':
+            "Expert Networks" }}
+          </h2>
+        </center>
+      </ion-label>
     </ion-item>
 
     <!-- <ion-item lines="none">
@@ -335,7 +328,7 @@
       </div>
     </div>
 
-    <div class="validation-errors">
+    <!-- <div class="validation-errors">
       <div
         *ngIf="serviceType.errors && (serviceType.dirty || serviceType.touched) "
       >
@@ -344,7 +337,7 @@
           <ion-label color="danger"> Required </ion-label>
         </p>
       </div>
-    </div>
+    </div> -->
 
     <ion-item>
       <ion-label position="floating">Select date</ion-label>
@@ -402,7 +395,6 @@
           ( scheduling.serviceAddress && !serviceAddress.errors   
           && scheduling.notes && !notes.errors          
           && scheduling.inspectorUserId && !inspectorUserId.errors
-          && scheduling.serviceType && !serviceType.errors          
           && scheduling.scheduleDateTime && !scheduleDateTime.errors
           && scheduling.contact && scheduling.contact.firstName 
           
