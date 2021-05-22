@@ -38,6 +38,11 @@ export class InspectionTask implements IStorageModel {
   affectedArea: string;
   waterDamageCategory: string;
   waterDamageClass: string;
+
+  policyNumber: string;
+  claimNumber: string;
+  dateOfLoss: string;
+  
   //..new
 
   startedSync: boolean;

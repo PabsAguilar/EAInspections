@@ -35,6 +35,24 @@
       </ion-col>
       <ion-col>{{task.insuranceCompany.title}} </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col *ngIf="task.policyNumber">
+        <ion-label color="medium">Policy Number</ion-label>
+      </ion-col>
+      <ion-col>{{task.policyNumber}} </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col *ngIf="task.claimNumber">
+        <ion-label color="medium">Claim Number</ion-label>
+      </ion-col>
+      <ion-col>{{task.claimNumber}} </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col *ngIf="task.dateOfLoss">
+        <ion-label color="medium">Date Of Loss</ion-label>
+      </ion-col>
+      <ion-col>{{task.dateOfLoss}} </ion-col>
+    </ion-row>
 
     <center><h2>PROJECT MANAGEMENT - WORK AUTHORIZATION</h2></center>
     <h4><b>SERVICES:</b> Project Management</h4>

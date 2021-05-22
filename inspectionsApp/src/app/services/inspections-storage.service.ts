@@ -32,7 +32,7 @@ export class InspectionsStorageService implements IStorage {
     this.storage
   );
 
-  add(item: InspectionTask): Promise<any> {
+  add(item: any): Promise<any> {
     return this.inspectionStore.add(item);
   }
   addItems(item: IStorageModel[]): Promise<any> {

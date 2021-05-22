@@ -160,6 +160,9 @@ export var ITestDealMapping = {
   inspector: "UF_CRM_1612682994",
   instructions: "UF_CRM_1612683023",
   user: "UF_CRM_1612686317",
+  policyNumberCode: "UF_CRM_1619183840",
+  claimNumberCode: "UF_CRM_1619183853",
+  dateOfLossCode: "UF_CRM_1619183827",
 };
 
 export var ENDealMapping = {
