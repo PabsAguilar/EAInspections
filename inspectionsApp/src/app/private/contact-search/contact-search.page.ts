@@ -30,8 +30,9 @@ export class ContactSearchPage implements OnInit {
 
   ngOnInit() {}
 
-  async searchEmail() {
+  async onSearch(event) {
     if (this.emailSearchText.length > 1) {
+      event.target.blur();
       this.searching = true;
       this.contactsListFound = await this.itestService.getContactsByEmail(
         this.emailSearchText,
@@ -49,10 +50,6 @@ export class ContactSearchPage implements OnInit {
     }
   }
 
-  // async searchPhone() {
-  //   var result = this.itestService.getContactPhone(this.phoneSearchText);
-  //   this.scheduling.contact = await result;
-  // }
   back() {
     this.confirmContact();
   }

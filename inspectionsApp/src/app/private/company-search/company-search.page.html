@@ -76,9 +76,10 @@
       <ion-label position="stacked">Search company by name</ion-label>
       <ion-searchbar
         [(ngModel)]="nameSearchText"
-        (keypress)="searchName()"
+        
         placeholder="Press enter to search company"
         name="nameSearchText"
+        (search)="onSearch($event)"
       ></ion-searchbar>
     </ion-item>
     <div *ngIf="searching" class="spinner-container">

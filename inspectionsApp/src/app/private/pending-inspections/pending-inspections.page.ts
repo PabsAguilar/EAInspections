@@ -103,6 +103,10 @@ export class PendingInspectionsPage implements OnInit {
     this.searching = true;
   }
 
+  async onSearch(event) {
+    event.target.blur();
+  }
+
   async search(searchTerm: string) {
     this.inspectionTasks = await this.inspectionService.getPendingInspections(
       this.user
@@ -284,9 +288,8 @@ export class PendingInspectionsPage implements OnInit {
               await this.inspectionService.getExternal(this.user);
               await this.inspectionService.refreshFieldsFromServer(this.user);
               this.lastSync = await this.inspectionService.getSyncStamp();
-              this.inspectionTasks = await this.inspectionService.getPendingInspections(
-                this.user
-              );
+              this.inspectionTasks =
+                await this.inspectionService.getPendingInspections(this.user);
             } catch (error) {
               console.log(error);
             }

@@ -42,6 +42,7 @@
     style="margin-bottom: 1px"
     (ionChange)="onSearchTerm($event)"
     placeholder="Search a deal"
+    (search)="onSearch($event)"
     [formControl]="searchControl"
   ></ion-searchbar>
   <div *ngIf="searching" class="spinner-container">

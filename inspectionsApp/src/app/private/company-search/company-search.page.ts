@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from "@angular/core";
 import { ModalController, ToastController } from "@ionic/angular";
 import { Company } from "src/app/models/company";
 import { ItestDealService } from "src/app/services/itest-deal.service";
-
 @Component({
   selector: "app-company-search",
   templateUrl: "./company-search.page.html",
@@ -26,8 +25,10 @@ export class CompanySearchPage implements OnInit {
 
   segmentOption: string = "search";
 
-  async searchName() {
+  async onSearch(event) {
     if (this.nameSearchText.length > 1) {
+      event.target.blur();
+
       this.searching = true;
       this.companiesListFound = await this.itestService.getCompaniesByName(
         this.nameSearchText,

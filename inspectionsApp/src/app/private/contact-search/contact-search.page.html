@@ -75,7 +75,7 @@
       <ion-label position="stacked">Search contact by email</ion-label>
       <ion-searchbar
         [(ngModel)]="emailSearchText"
-        (keypress)="searchEmail()"
+        (search)="onSearch($event)"
         placeholder="Press enter to search email"
         name="emailSearchText"
       ></ion-searchbar>
