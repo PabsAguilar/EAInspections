@@ -55,10 +55,9 @@ export class AsbestosComponent implements OnInit {
           this.fields[this._model.asbestoBitrixMaping.labResultsCode]
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
+        this.changeModel("init");
       }
     });
-
-    this.changeModel("init");
   }
   _model: Asbesto = new Asbesto();
   @Input() title: string = "";

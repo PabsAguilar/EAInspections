@@ -32,9 +32,8 @@ export class AreasLeadComponent implements OnInit {
           .map((item) => {
             return { name: item.name, value: item.id };
           });
+        this.AreaUpdated("init");
       });
-
-      this.AreaUpdated("init");
     }
   }
   _model: LeadAreas = new LeadAreas();

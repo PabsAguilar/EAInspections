@@ -32,8 +32,8 @@ export class AreasAsbestosComponent implements OnInit {
           .map((item) => {
             return { name: item.name, value: item.id };
           });
+        this.AreaUpdated("init");
       });
-      this.AreaUpdated("init");
     }
   }
   _model: AsbestoAreas = new AsbestoAreas();

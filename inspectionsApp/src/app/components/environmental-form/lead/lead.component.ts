@@ -60,8 +60,8 @@ export class LeadComponent implements OnInit {
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
       }
+      this.changeModel("init");
     });
-    this.changeModel("init");
   }
   _model: Lead = new Lead();
   @Input() title: string = "";
