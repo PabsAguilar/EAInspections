@@ -1,4 +1,4 @@
-<ion-item (click)="toggleAccordion()" lines="none" button>
+<ion-item (click)="toggleAccordion()" lines="none" button detail="false">
   <ion-label>Environmental Test</ion-label>
   <ion-icon
     slot="start"
@@ -87,11 +87,12 @@
     </ion-select>
   </ion-item>
 
-  <ion-item
+    <ion-item
     (click)="toggleAccordion()"
     lines="none"
     button
     class="ion-no-margin"
+    detail="false"
   >
     <ion-label color="warning"> {{ "End Environmental " }}</ion-label>
 

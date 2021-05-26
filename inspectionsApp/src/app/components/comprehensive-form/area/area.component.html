@@ -1,4 +1,4 @@
-<ion-item (click)="toggleAccordion()" lines="none" button>
+<ion-item (click)="toggleAccordion()" lines="none" button detail="false">
   <ion-label color="primary"> {{ title }} </ion-label>
   <ion-chip *ngIf="selectAreaName" color="secondary" slot="end">
     {{ selectAreaName }}
@@ -75,6 +75,7 @@
     lines="none"
     button
     class="ion-no-margin"
+    detail="false"
   >
     <ion-label color="warning"> {{ "End " + title }}</ion-label>
 
