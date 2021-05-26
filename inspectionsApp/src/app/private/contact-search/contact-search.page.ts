@@ -62,6 +62,8 @@ export class ContactSearchPage implements OnInit {
       if (element.idContact == contactId) {
         element.selected = true;
         this.selectedContact = element;
+      } else {
+        element.selected = false;
       }
     });
   }

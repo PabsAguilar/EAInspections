@@ -55,6 +55,8 @@ export class CompanySearchPage implements OnInit {
       if (element.id == id) {
         element.selected = true;
         this.selectedCompany = element;
+      } else {
+        element.selected = false;
       }
     });
   }
