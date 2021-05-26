@@ -6,12 +6,12 @@ export class BitrixPictureList {
   syncInfo: SyncInfo;
   maxPictures: number;
 
-  //imagesCodesSync: any[];
+  imagesCodesSync: any[];
 
   constructor() {
     this.syncInfo = new SyncInfo();
     this.images = [];
-    // this.imagesCodesSync = [];
+    this.imagesCodesSync = [];
     this.maxPictures = 5;
   }
 }

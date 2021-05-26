@@ -39,9 +39,10 @@ export class MoistureMappingComponent implements OnInit {
           }
           return { name: v, value: k };
         });
+        this.changeModel("init");
       }
     });
-    this.changeModel("init");
+    //this.changeModel("init");
   }
   _model: MoistureMapping = new MoistureMapping();
   @Input() title: string = "";

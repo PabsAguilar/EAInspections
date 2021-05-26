@@ -8,6 +8,7 @@ import {
   ToastController,
 } from "@ionic/angular";
 import { fromEventPattern } from "rxjs";
+import { Company } from "src/app/models/company";
 import { Contact } from "src/app/models/contact";
 import {
   ITestDealMapping,
@@ -136,6 +137,34 @@ export class SchedulingPage implements OnInit {
       }
     });
     return await modal.present();
+  }
+
+  async clearSelectedContact(type) {
+    switch (type) {
+      case "inspectionContact":
+        this.scheduling.contact = null;
+        break;
+      case "insurance":
+        this.scheduling.insuranceCompanyContact = null;
+        break;
+      case "referal":
+        this.scheduling.referalPartner = null;
+        break;
+      default:
+        break;
+    }
+  }
+  async clearSelectedCompany(type) {
+    switch (type) {
+      case "insurance":
+        this.scheduling.insuranceCompany = null;
+        break;
+      case "referal":
+        this.scheduling.referalPartnerCompany = null;
+        break;
+      default:
+        break;
+    }
   }
 
   async searchCompany(type: string) {

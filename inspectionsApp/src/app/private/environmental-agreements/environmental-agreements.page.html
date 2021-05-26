@@ -326,6 +326,17 @@
       </div>
     </div>
 
+    <ion-fab
+      vertical="bottom"
+      horizontal="end"
+      slot="fixed"
+      *ngIf="this.task.iTestAgreements.signature.images.length > 0 "
+    >
+      <ion-fab-button color="success" class="ion-margin" (click)="back()">
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
     <div class="text-box" style="margin-top: 15px">
       <center>V.02.21 SUBCONTRACTOR WORK AUTHORIZATION AND ASSIGNMENT</center>
     </div>

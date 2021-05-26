@@ -41,7 +41,7 @@ export class AreaMoldComponent implements OnInit {
   }
   set model(value: DamageInspection) {
     this._model = value;
-    this.changeModel("init");
+
     this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
       this.fields = x[0];
       if (value) {
@@ -143,6 +143,8 @@ export class AreaMoldComponent implements OnInit {
           ).map(([k, v]) => ({ name: v, value: k, sample: index }));
           this.listSampleType = this.listSampleType.concat(s);
         });
+
+        this.changeModel("init");
       }
     });
   }

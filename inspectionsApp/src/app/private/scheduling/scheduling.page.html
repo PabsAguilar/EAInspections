@@ -37,7 +37,7 @@
       <ion-label>Contact </ion-label>
 
       <ion-icon
-        *ngIf="!scheduling.contact.firstName"
+        *ngIf="!scheduling.contact || !scheduling.contact.firstName"
         color="danger"
         name="information-circle-outline"
       ></ion-icon>
@@ -49,12 +49,12 @@
         (click)="searchContact('inspectionContact')"
         slot="end"
       >
-        <ion-label>Search or Create New Contact </ion-label>
+        <ion-label>Search or Create New Contact</ion-label>
         <ion-icon name="person-circle-outline"></ion-icon>
       </ion-chip>
     </ion-item>
 
-    <ion-item *ngIf="scheduling.contact.firstName">
+    <ion-item *ngIf="scheduling.contact && scheduling.contact.firstName">
       <ion-avatar slot="start">
         <img src="../../../assets/images/avatar.svg" />
       </ion-avatar>
@@ -65,6 +65,14 @@
         <p>{{scheduling.contact.phone}}</p>
         <p>{{scheduling.contact.email}}</p>
       </ion-label>
+      <ion-chip
+        color="danger"
+        (click)="clearSelectedContact('inspectionContact')"
+        slot="end"
+      >
+        <ion-label>Clear</ion-label>
+        <ion-icon name="trash-bin-outline"></ion-icon>
+      </ion-chip>
     </ion-item>
 
     <ion-item lines="full">
@@ -113,63 +121,6 @@
       ></ion-textarea>
     </ion-item>
 
-    <!-- <ion-item lines="full">
-      <ion-label position="floating">Type of Loss & Description</ion-label>
-      <ion-textarea
-        name="typeOfLossDesc"
-        #typeOfLossDesc="ngModel"
-        [disabled]="scheduling.syncInfo.isSync"
-        [(ngModel)]="scheduling.typeOfLossDesc"
-        type="text"
-      ></ion-textarea>
-    </ion-item>
-
-    <ion-item lines="full">
-      <ion-label position="floating">Affected Area</ion-label>
-      <ion-textarea
-        name="affectedArea"
-        #affectedArea="ngModel"
-        [disabled]="scheduling.syncInfo.isSync"
-        [(ngModel)]="scheduling.affectedArea"
-        type="text"
-      ></ion-textarea>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="floating">Water Damage Category</ion-label>
-      <ion-select
-        interface="popover"
-        name="waterDamageCategory"
-        #waterDamageCategory="ngModel"
-        [disabled]="scheduling.syncInfo.isSync"
-        [(ngModel)]="scheduling.waterDamageCategory"
-      >
-        <ion-select-option
-          *ngFor="let item of waterDamageCategories; let i = index"
-          [value]="item.value"
-        >
-          {{ item.name }}</ion-select-option
-        >
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Water Damage Class</ion-label>
-      <ion-select
-        interface="popover"
-        name="waterDamageClass"
-        #waterDamageClass="ngModel"
-        [disabled]="scheduling.syncInfo.isSync"
-        [(ngModel)]="scheduling.waterDamageClass"
-      >
-        <ion-select-option
-          *ngFor="let item of waterDamageClasses; let i = index"
-          [value]="item.value"
-        >
-          {{ item.name }}</ion-select-option
-        >
-      </ion-select>
-    </ion-item> -->
-
     <div id="insurance">
       <ion-item lines="none">
         <ion-label>Insurance Company</ion-label>
@@ -213,6 +164,14 @@
           <p>{{scheduling.insuranceCompanyContact.phone}}</p>
           <p>{{scheduling.insuranceCompanyContact.email}}</p>
         </ion-label>
+        <ion-chip
+          color="danger"
+          (click)="clearSelectedContact('insurance')"
+          slot="end"
+        >
+          <ion-label>Clear</ion-label>
+          <ion-icon name="trash-bin-outline"></ion-icon>
+        </ion-chip>
       </ion-item>
 
       <ion-item *ngIf="scheduling.insuranceCompany">
@@ -225,6 +184,14 @@
           <p>{{scheduling.insuranceCompany.phone}}</p>
           <p>{{scheduling.insuranceCompany.email}}</p>
         </ion-label>
+        <ion-chip
+          color="danger"
+          (click)="clearSelectedCompany('insurance')"
+          slot="end"
+        >
+          <ion-label>Clear</ion-label>
+          <ion-icon name="trash-bin-outline"></ion-icon>
+        </ion-chip>
       </ion-item>
     </div>
     <div id="referal">
@@ -269,6 +236,15 @@
           <p>{{scheduling.referalPartner.phone}}</p>
           <p>{{scheduling.referalPartner.email}}</p>
         </ion-label>
+
+        <ion-chip
+          color="danger"
+          (click)="clearSelectedContact('referal')"
+          slot="end"
+        >
+          <ion-label>Clear</ion-label>
+          <ion-icon name="trash-bin-outline"></ion-icon>
+        </ion-chip>
       </ion-item>
 
       <ion-item *ngIf="scheduling.referalPartnerCompany">
@@ -281,6 +257,14 @@
           <p>{{scheduling.referalPartnerCompany.phone}}</p>
           <p>{{scheduling.referalPartnerCompany.email}}</p>
         </ion-label>
+        <ion-chip
+          color="danger"
+          (click)="clearSelectedCompany('referal')"
+          slot="end"
+        >
+          <ion-label>Clear</ion-label>
+          <ion-icon name="trash-bin-outline"></ion-icon>
+        </ion-chip>
       </ion-item>
     </div>
 

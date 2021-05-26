@@ -21,6 +21,20 @@
 </ion-header>
 
 <ion-content>
+  <ion-fab
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+    *ngIf="selectedCompany"
+  >
+    <ion-fab-button
+      color="success"
+      class="ion-margin"
+      (click)="confirmCompany()"
+    >
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
   <ion-item *ngIf="selectedCompany" lines="none">
     <ion-chip
       *ngIf="selectedCompany"
@@ -62,7 +76,7 @@
       <ion-label position="stacked">Search company by name</ion-label>
       <ion-searchbar
         [(ngModel)]="nameSearchText"
-        (keyup.enter)="searchName()"
+        (keypress)="searchName()"
         placeholder="Press enter to search company"
         name="nameSearchText"
       ></ion-searchbar>

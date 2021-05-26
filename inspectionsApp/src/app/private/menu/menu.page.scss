@@ -2,6 +2,11 @@
   border-left: 5px solid var(--ion-color-danger);
 }
 
+body {
+  margin-top: constant(safe-area-inset-top);
+  margin-top: env(safe-area-inset-top);
+}
+
 .card-background-page {
   ion-card {
     position: relative;

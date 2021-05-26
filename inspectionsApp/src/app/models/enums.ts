@@ -1449,9 +1449,9 @@ export var bitrixMappingEnvironmental: any = {
   },
   Moisture: {
     moistureHeader: {
-      dateTesedCode: "PROPERTY_1332",
-      inspectionTypeCode: "PROPERTY_704",
-      contactCode: "PROPERTY_1330",
+      dateTesedCode: "PROPERTY_986",
+      inspectionTypeCode: "PROPERTY_1330",
+      contactCode: "PROPERTY_1332",
     },
     areaOtherCode: [
       "PROPERTY_3824",
