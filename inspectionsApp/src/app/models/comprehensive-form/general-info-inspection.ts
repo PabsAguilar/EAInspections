@@ -15,12 +15,8 @@ export class GeneralInfoInspection {
   atticCondition: string;
   syncInfo: SyncInfo;
   agreementSignedYesNo: string;
-  generalInfoInspectionBitrixMapping: GeneralInfoInspectionBitrixMapping;
   typeOfLossDesc: string;
   affectedArea: string;
-  waterDamageCategory: string;
-  waterDamageClass: string;
-
 
   constructor() {
     this.syncInfo = new SyncInfo();
@@ -29,22 +25,5 @@ export class GeneralInfoInspection {
     this.pictureHouseNumbers = new BitrixPictureList();
     this.pictureHouseNumbers.maxPictures = 1;
     this.propertyType = "";
-    this.generalInfoInspectionBitrixMapping = new GeneralInfoInspectionBitrixMapping();
   }
-}
-export class GeneralInfoInspectionBitrixMapping {
-  agreementSignedYesNoCode: string;
-  propertyYearCode: string;
-  propertyTypeCode: string;
-  environmentalInspectionCode: string;
-  interiorTemperatureCode: string;
-  exteriorRelativeHumidityCode: string;
-  HVACSystemConditionCode: string;
-  ductsConditionCode: string;
-  atticConditionCode: string;
-  typeOfLossDescCode: string;
-  affectedAreaCode: string;
-  waterDamageCategoryCode: string;
-  waterDamageClassCode: string;
-
 }

@@ -447,6 +447,7 @@ export class EnvironmentalInspectionPage implements OnInit {
                 async (x) => {
                   this.syncInspectionService.publishSomeData({
                     syncItem: "deal",
+                    refreshFromServer: true,
                   });
                   if (x) {
                     var message = this.toast.create({

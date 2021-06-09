@@ -98,10 +98,11 @@ export class GenericStorageService implements IStorage {
       let keepItems = [];
       for (let i of items) {
         if (
-          i.id !== item.id &&
-          (item.enterprise == null || item.enterprise == i.enterpise)
+          i.id !== item.id ||
+          item.enterprise == null ||
+          item.enterprise == i.enterpise
         ) {
-          keepItems.push(item);
+          keepItems.push(i);
         }
       }
       return this.storage.set(this.collectionName, keepItems);

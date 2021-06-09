@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output } from "@angular/core";
 import { EventEmitter } from "@angular/core";
 import { Area } from "src/app/models/comprehensive-form/area";
+import { bitrixMappingComprehensive } from "src/app/models/enums";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
@@ -18,6 +19,7 @@ export class AreaComponent implements OnInit {
   conditions: any[];
   areaNameList: any[];
   selectAreaName: string = "";
+  @Input() index: number;
   @Input()
   get InspectionArea(): Area {
     return this.area;
@@ -28,12 +30,13 @@ export class AreaComponent implements OnInit {
       this.fields = x[0];
       if (value) {
         this.conditions = this.fields[
-          this.area.areaBitrixMapping.conditionCode
+          bitrixMappingComprehensive.Area.areaConditionCode[this.index]
         ].items
           .filter((x) => x.ID != "1893" && x.ID != "1899")
           .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+
         this.areaNameList = this.fields[
-          this.area.areaBitrixMapping.nameCode
+          bitrixMappingComprehensive.Area.nameCode[this.index]
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });

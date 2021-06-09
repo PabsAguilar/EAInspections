@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Recomendations } from "src/app/models/comprehensive-form/recomendations";
-import { AreaConditionType } from "src/app/models/enums";
+import {
+  AreaConditionType,
+  bitrixMappingComprehensive,
+} from "src/app/models/enums";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
@@ -25,12 +28,12 @@ export class RecomendationsComponent implements OnInit {
       this.fields = x[0];
       if (value) {
         this.recomendationsList = this.fields[
-          this._data.recomendationsBitrixMapping.inspectionRecomendationCode
+          bitrixMappingComprehensive.Recomendations.inspectionRecomendationCode
         ].items
           .filter((x) => x.ID != "1893" && x.ID != "1899")
           .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
         this.damageFoundList = this.fields[
-          this._data.recomendationsBitrixMapping.damagesFoundCode
+          bitrixMappingComprehensive.Recomendations.damagesFoundCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });

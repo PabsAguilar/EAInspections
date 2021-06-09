@@ -20,6 +20,13 @@
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
   <ion-item>
+    <ion-icon
+      *ngIf="!_model.inspectionType"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+
     <ion-label position="floating">Inspection Type</ion-label>
     <ion-select
       interface="popover"
@@ -38,10 +45,17 @@
   </ion-item>
 
   <ion-item lines="inset">
+    <ion-icon
+      *ngIf="!_model.inspectionDate"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+
     <ion-label position="floating">Inspection Date</ion-label>
     <ion-datetime
       [disabled]="readonly"
-      [(ngModel)]="_model.inspectionDateString"
+      [(ngModel)]="_model.inspectionDate"
       displayFormat="MMMM DD YY"
       pickerFormat="MMMM DD YY"
     ></ion-datetime>

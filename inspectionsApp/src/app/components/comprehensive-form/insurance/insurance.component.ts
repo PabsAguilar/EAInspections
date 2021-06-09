@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Insurance } from "src/app/models/comprehensive-form/insurance";
+import { bitrixMappingComprehensive } from "src/app/models/enums";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
@@ -28,22 +29,22 @@ export class InsuranceComponent implements OnInit {
       this.fields = x[0];
       if (value) {
         this.haveInsuranceList = this.fields[
-          this._data.insuranceBitrixMapping.haveInsuranceCode
+          bitrixMappingComprehensive.Insurance.haveInsuranceCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
         this.claimForDamageBeforeList = this.fields[
-          this._data.insuranceBitrixMapping.claimForDamageBeforeCode
+          bitrixMappingComprehensive.Insurance.claimForDamageBeforeCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
         this.claimInLast5YearsList = this.fields[
-          this._data.insuranceBitrixMapping.claimInLast5YearsCode
+          bitrixMappingComprehensive.Insurance.claimInLast5YearsCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
         this.usePublicAdjusterList = this.fields[
-          this._data.insuranceBitrixMapping.usePublicAdjusterCode
+          bitrixMappingComprehensive.Insurance.usePublicAdjusterCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });

@@ -16,7 +16,7 @@ const ENVIRONMENTAL_FIELDS_KEY = "environmental-inspection-fields";
 const DEAL_FIELDS_KEY = "deals-fields";
 
 const iTestUrl = "https://itest.bitrix24.com/rest/6";
-const iTestKey = "rf1a6ygkrbdsho5t";
+const iTestKey = "jz367c66ft48tm88";
 const eNUrl = "https://expertnetwork.bitrix24.com/rest/159/";
 const eNKey = "av26roukw3tcyfyf";
 

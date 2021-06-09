@@ -22,6 +22,7 @@
   <app-area-general-condition
     *ngFor="let bathroom of bathrooms; let i = index"
     ngDefaultControl
+    [index]="i"
     [title]="'Bathroom ' + (i + 1)"
     type="Bathroom"
     (InspectionAreaGeneralChanged)="AreaUpdated($event)"

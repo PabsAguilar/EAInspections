@@ -21,6 +21,16 @@
 
 <div *ngIf="this.isMenuOpen">
   <app-area
+    *ngFor="let area of areas; let i = index"
+    ngDefaultControl
+    [index]="i"
+    [title]="'Area ' + (i + 1)"
+    [readonly]="readonly"
+    (InspectionAreaChanged)="AreaUpdated($event)"
+    [(InspectionArea)]="areas[i]"
+  ></app-area>
+
+  <!-- <app-area
     ngDefaultControl
     title="Area 1"
     (InspectionAreaChanged)="AreaUpdated()"
@@ -66,5 +76,5 @@
     ngDefaultControl
     title="Area 8"
     [(InspectionArea)]="areas[7]"
-  ></app-area>
+  ></app-area> -->
 </div>

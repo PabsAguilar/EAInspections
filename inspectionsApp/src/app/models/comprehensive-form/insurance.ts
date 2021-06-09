@@ -12,7 +12,7 @@ export class Insurance {
   adjusterName: string;
   quantityOfChecks: number;
   notes: string;
-  insuranceBitrixMapping: InsuranceBitrixMapping;
+  //insuranceBitrixMapping: InsuranceBitrixMapping;
 
   constructor() {
     this.picturesPolicy = new BitrixPictureList();
@@ -23,20 +23,20 @@ export class Insurance {
     this.quantityOfChecks = null;
     this.notes = "";
 
-    this.insuranceBitrixMapping = new InsuranceBitrixMapping();
+   // this.insuranceBitrixMapping = new InsuranceBitrixMapping();
   }
 }
 
-export class InsuranceBitrixMapping {
-  haveInsuranceCode: string;
-  insuranceCarrierCode: string;
-  picturesPolicyCode: string;
-  claimForDamageBeforeCode: string;
-  claimInLast5YearsCode: string;
-  reasonForClaimCode: string;
-  usePublicAdjusterCode: string;
-  adjusterNameCode: string;
-  quantityOfChecksCode: string;
-  notesCode: string;
-  assignPAorAttorneyCode: string;
-}
+// export class InsuranceBitrixMapping {
+//   haveInsuranceCode: string;
+//   insuranceCarrierCode: string;
+//   picturesPolicyCode: string;
+//   claimForDamageBeforeCode: string;
+//   claimInLast5YearsCode: string;
+//   reasonForClaimCode: string;
+//   usePublicAdjusterCode: string;
+//   adjusterNameCode: string;
+//   quantityOfChecksCode: string;
+//   notesCode: string;
+//   assignPAorAttorneyCode: string;
+// }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ComprehensiveEnvironmentalSection } from "src/app/models/comprehensive-form/comprehensive-environmental-section";
+import { bitrixMappingComprehensive } from "src/app/models/enums";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
@@ -28,23 +29,25 @@ export class EnviromentalSectionComponent implements OnInit {
       this.fields = x[0];
       if (value) {
         this.moldSampleTakenList = this.fields[
-          this._data.environmentalSectionBitrixMapping.MoldSampleTakenCode
+          bitrixMappingComprehensive.EnvironmentalSection.MoldSampleTakenCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
         this.waterSampleLocationList = this.fields[
-          this._data.environmentalSectionBitrixMapping.WaterSamplelocationCode
+          bitrixMappingComprehensive.EnvironmentalSection
+            .WaterSamplelocationCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
         this.waterSampleTakenList = this.fields[
-          this._data.environmentalSectionBitrixMapping.WaterSampleTakenCode
+          bitrixMappingComprehensive.EnvironmentalSection.WaterSampleTakenCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
 
         this.majorReconstructionList = this.fields[
-          this._data.environmentalSectionBitrixMapping.MajorReconstructionCode
+          bitrixMappingComprehensive.EnvironmentalSection
+            .MajorReconstructionCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
@@ -53,7 +56,8 @@ export class EnviromentalSectionComponent implements OnInit {
     this.changeModel("init");
   }
   @Output() dataChanged: any = new EventEmitter();
-  _data: ComprehensiveEnvironmentalSection = new ComprehensiveEnvironmentalSection();
+  _data: ComprehensiveEnvironmentalSection =
+    new ComprehensiveEnvironmentalSection();
 
   @Input() readonly: boolean = false;
 

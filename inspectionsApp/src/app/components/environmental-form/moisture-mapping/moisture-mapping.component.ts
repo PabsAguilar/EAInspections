@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { bitrixMappingEnvironmental } from "src/app/models/enums";
 import { MoistureMapping } from "src/app/models/environmental-form/moisture-mapping";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 import { ItestDealService } from "src/app/services/itest-deal.service";
@@ -19,6 +20,7 @@ export class MoistureMappingComponent implements OnInit {
   conditions: any[] = [];
   decontaminationOptions: any[] = [];
   fields: any[] = [];
+
   selectAreaName: string;
   @Input()
   get model(): MoistureMapping {
@@ -31,7 +33,7 @@ export class MoistureMappingComponent implements OnInit {
       this.fields = x[0];
       if (value) {
         this.listArea = Object.entries(
-          this.fields[this._model.moistureMappingBitrixMap.areaCode]
+          this.fields[bitrixMappingEnvironmental.Moisture.areaCode[this.index]]
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => {
           if ((v as string).toLowerCase().includes("other")) {
@@ -46,6 +48,7 @@ export class MoistureMappingComponent implements OnInit {
   }
   _model: MoistureMapping = new MoistureMapping();
   @Input() title: string = "";
+  @Input() index: number;
   @Input() readonly: boolean = false;
 
   @Output() modelChanged: any = new EventEmitter();
@@ -65,6 +68,13 @@ export class MoistureMappingComponent implements OnInit {
       this.selectAreaName = this.listArea.find(
         (x) => x.value == this._model.area
       )?.name;
+      if (
+        this.selectAreaName &&
+        this.selectAreaName.toLowerCase().includes("other") &&
+        this._model.areaOther
+      ) {
+        this.selectAreaName = this._model.areaOther;
+      }
     }
 
     if (this._model.dewPoint) {

@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { AreaConditionType } from "src/app/models/enums";
+import {
+  AreaConditionType,
+  bitrixMappingComprehensive,
+} from "src/app/models/enums";
 import { Kitchen } from "src/app/models/comprehensive-form/kitchen";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
@@ -16,7 +19,7 @@ export class KitchenComponent implements OnInit {
   progressColor: string = "danger";
   _conditions: any[];
   waterQualityList: any[];
-  fields: [];
+  fields: any[];
 
   @Input()
   set Kitchen(value: Kitchen) {
@@ -25,12 +28,13 @@ export class KitchenComponent implements OnInit {
       this.fields = x[0];
       if (value) {
         this._conditions = this.fields[
-          this.kitchen.generalConditionBitrixMapping.conditionCode
+          bitrixMappingComprehensive.Kitchen.conditionCode
         ].items
           .filter((x) => x.ID != "1893" && x.ID != "1899")
           .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+
         this.waterQualityList = this.fields[
-          this.kitchen.generalConditionBitrixMapping.waterQualityTestCode
+          bitrixMappingComprehensive.Kitchen.waterQualityTestCode
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });

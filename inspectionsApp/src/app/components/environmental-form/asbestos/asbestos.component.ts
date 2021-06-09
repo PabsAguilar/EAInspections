@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { bitrixMappingEnvironmental } from "src/app/models/enums";
 import { Asbesto } from "src/app/models/environmental-form/asbesto";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
@@ -20,6 +21,7 @@ export class AsbestosComponent implements OnInit {
   labResultsList: any[] = [];
   selectAreaName: string;
   other: string = "";
+  @Input() index: number = 0;
   @Input() readonly: boolean = false;
   @Input()
   get model(): Asbesto {
@@ -31,8 +33,9 @@ export class AsbestosComponent implements OnInit {
     this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
       this.fields = x[0];
       if (value) {
+        var bitrixFields = bitrixMappingEnvironmental.Asbestos;
         this.materialLocationList = Object.entries(
-          this.fields[this._model.asbestoBitrixMaping.materialLocationCode]
+          this.fields[bitrixFields.materialLocationCode[this.index]]
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => {
           if ((v as string)?.toLowerCase().includes("other")) {
@@ -42,17 +45,16 @@ export class AsbestosComponent implements OnInit {
         });
 
         this.F_NFList = Object.entries(
-          this.fields[this._model.asbestoBitrixMaping.F_NFCode]
-            .DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.F_NFCode[this.index]].DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.conditionList = Object.entries(
-          this.fields[this._model.asbestoBitrixMaping.conditionCode]
+          this.fields[bitrixFields.areaConditionCode[this.index]]
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.labResultsList = Object.entries(
-          this.fields[this._model.asbestoBitrixMaping.labResultsCode]
+          this.fields[bitrixFields.labResultsCode[this.index]]
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
         this.changeModel("init");
@@ -92,6 +94,12 @@ export class AsbestosComponent implements OnInit {
       this.selectAreaName = this.materialLocationList.find(
         (x) => x.value == this._model.materialLocation
       )?.name;
+      if (
+        this.selectAreaName.toLowerCase().includes("other") &&
+        this._model.materialLocationOther
+      ) {
+        this.selectAreaName = this._model.materialLocationOther;
+      }
     }
     if (this._model.observations) {
       this.filledProperties++;

@@ -1,4 +1,4 @@
-import { SampleBitrixMapping } from "../sample-bitrix-mapping";
+//import { SampleBitrixMapping } from "../sample-bitrix-mapping";
 
 export class Sample {
   sampleType: string;
@@ -10,10 +10,10 @@ export class Sample {
   cassetteNumber: string;
   toxicMoldboolean: boolean;
   toxicMold: string;
-  sampleBitrixMapping: SampleBitrixMapping;
+  //sampleBitrixMapping: SampleBitrixMapping;
   constructor(type: string) {
     this.moldSporesFound = [];
     this.sampleType = type;
-    this.sampleBitrixMapping = new SampleBitrixMapping();
+    //this.sampleBitrixMapping = new SampleBitrixMapping();
   }
 }

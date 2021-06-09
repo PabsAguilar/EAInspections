@@ -2,7 +2,7 @@ import { SyncInfo } from "./sync-info";
 
 export class BitrixPictureList {
   images: BitrixPicture[];
-  bitrixTargeCode: string;
+  //bitrixTargeCode: string;
   syncInfo: SyncInfo;
   maxPictures: number;
 

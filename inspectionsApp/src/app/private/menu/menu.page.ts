@@ -96,7 +96,10 @@ export class MenuPage implements OnInit {
       });
     } catch (error) {
       var message = this.toast.create({
-        message: error,
+        message:
+          error && error.error.error_description
+            ? error.error.error_description
+            : error,
         color: "danger",
         duration: 2000,
       });

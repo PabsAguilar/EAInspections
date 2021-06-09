@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { bitrixMappingEnvironmental } from "src/app/models/enums";
 import { Lead } from "src/app/models/environmental-form/lead";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
@@ -21,17 +22,19 @@ export class LeadComponent implements OnInit {
   fields: any[] = [];
   other: string = "";
   selectAreaName: string;
+  @Input() index: number = 0;
   @Input()
   get model(): Lead {
     return this._model;
   }
   set model(value: Lead) {
     this._model = value;
+
     this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
       this.fields = x[0];
       if (value) {
         this.sampleCodeList = Object.entries(
-          this.fields[this._model.bitrixMappingLead.sampleCode]
+          this.fields[bitrixMappingEnvironmental.Lead.sampleCode[this.index]]
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => {
           if ((v as string).toLowerCase().includes("other")) {
@@ -41,23 +44,26 @@ export class LeadComponent implements OnInit {
         });
 
         this.cardinalDirectionList = Object.entries(
-          this.fields[this._model.bitrixMappingLead.cardinalDirectionCode]
-            .DISPLAY_VALUES_FORM
+          this.fields[
+            bitrixMappingEnvironmental.Lead.cardinalDirectionCode[this.index]
+          ].DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.materialCodeList = Object.entries(
-          this.fields[this._model.bitrixMappingLead.materialCode]
+          this.fields[bitrixMappingEnvironmental.Lead.materialCode[this.index]]
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.typeOfSampleCode = Object.entries(
-          this.fields[this._model.bitrixMappingLead.typeOfSampleCode]
-            .DISPLAY_VALUES_FORM
+          this.fields[
+            bitrixMappingEnvironmental.Lead.typeOfSampleCode[this.index]
+          ].DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.labResultsCode = Object.entries(
-          this.fields[this._model.bitrixMappingLead.labResultsCode]
-            .DISPLAY_VALUES_FORM
+          this.fields[
+            bitrixMappingEnvironmental.Lead.labResultsCode[this.index]
+          ].DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
       }
       this.changeModel("init");
@@ -100,6 +106,14 @@ export class LeadComponent implements OnInit {
       this.selectAreaName = this.sampleCodeList.find(
         (x) => x.value == this._model.sample
       )?.name;
+
+      if (
+        this.selectAreaName &&
+        this.selectAreaName.toLowerCase().includes("other") &&
+        this._model.sampleOther
+      ) {
+        this.selectAreaName = this._model.sampleOther;
+      }
     }
     if (this._model.typeOfSample) {
       this.filledProperties++;

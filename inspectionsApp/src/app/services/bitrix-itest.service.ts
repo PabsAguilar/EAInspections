@@ -13,7 +13,7 @@ import { InspectionTask } from "../models/inspection-task";
 import { User } from "../models/user";
 import { AuthenticationService } from "./authentication.service";
 const iTestUrl = "https://itest.bitrix24.com/rest/6";
-const iTestKey = "rf1a6ygkrbdsho5t";
+const iTestKey = "jz367c66ft48tm88"; //"rf1a6ygkrbdsho5t";
 
 const eNUrl = "https://expertnetwork.bitrix24.com/rest/159/";
 const eNKey = "av26roukw3tcyfyf";
@@ -67,6 +67,17 @@ export class BitrixItestService {
     return this.http
       .get(
         `${this.url}/${this.key}/lists.field.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}`
+      )
+      .toPromise();
+  }
+
+  public getEnvironmentalInspectionListsById(
+    id: string,
+    list: number
+  ): Promise<any> {
+    return this.http
+      .get(
+        `${this.url}/${this.key}/lists.element.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}&FILTER[ID]=${id}`
       )
       .toPromise();
   }
@@ -194,7 +205,7 @@ export class BitrixItestService {
     if (user.enterprise == EnumEnterprise.itest) {
       return this.http
         .get(
-          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[${inspectorField}]=${user.userId}`
+          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[STAGE_ID]=EXECUTING&FILTER[UF_CRM_1613380179]=6928&FILTER[UF_CRM_1613380179]=6930&FILTER[UF_CRM_1613380179]=6936&FILTER[UF_CRM_1613380179]=&FILTER[${inspectorField}]=${user.userId}`
         )
         .toPromise();
     } else {
@@ -206,7 +217,7 @@ export class BitrixItestService {
     }
   }
 
-  public getRejectedDeals(user: User): Promise<any> {
+  public getDealsIdByStatus(user: User, dealStatus: number): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
     var inspectorField =
       user.enterprise == EnumEnterprise.itest
@@ -215,7 +226,7 @@ export class BitrixItestService {
     if (user.enterprise == EnumEnterprise.itest) {
       return this.http
         .get(
-          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[UF_CRM_1613380179]=${ReportStatusDeal.Rejected}&FILTER[${inspectorField}]=${user.userId}`
+          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=ID&FILTER[UF_CRM_1613380179]=${dealStatus}&FILTER[${inspectorField}]=${user.userId}`
         )
         .toPromise();
     } else {

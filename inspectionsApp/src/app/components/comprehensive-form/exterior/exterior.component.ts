@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Exterior } from "src/app/models/comprehensive-form/exterior";
-import { AreaConditionType } from "src/app/models/enums";
+import {
+  AreaConditionType,
+  bitrixMappingComprehensive,
+} from "src/app/models/enums";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
 @Component({
@@ -25,7 +28,7 @@ export class ExteriorComponent implements OnInit {
       this.fields = x[0];
       if (value) {
         this._conditions = this.fields[
-          this._data.generalConditionBitrixMapping.conditionCode
+          bitrixMappingComprehensive.Exterior.conditionCode
         ].items
           .filter((x) => x.ID != "1893" && x.ID != "1899")
           .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));

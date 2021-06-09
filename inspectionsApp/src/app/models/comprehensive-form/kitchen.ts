@@ -1,7 +1,7 @@
 import { BitrixPictureList } from "../bitrix-picture";
 import {
   GeneralCondition,
-  GeneralConditionBitrixMapping,
+  //GeneralConditionBitrixMapping,
 } from "./general-condition";
 
 export class Kitchen implements GeneralCondition {
@@ -10,12 +10,12 @@ export class Kitchen implements GeneralCondition {
   pictures: BitrixPictureList;
   notes: string;
   waterQualityTest: string;
-  generalConditionBitrixMapping: GeneralConditionBitrixMapping;
+  //generalConditionBitrixMapping: GeneralConditionBitrixMapping;
   constructor() {
     this.condition = [];
     this.moistureLevel = null;
     this.pictures = new BitrixPictureList();
     this.notes = "";
-    this.generalConditionBitrixMapping = new GeneralConditionBitrixMapping();
+    //this.generalConditionBitrixMapping = new GeneralConditionBitrixMapping();
   }
 }

@@ -9,21 +9,21 @@ export class Lead {
   typeOfSample: string;
   labResults: string;
   observations: string;
-  bitrixMappingLead: BitrixMappingLead;
+  //bitrixMappingLead: BitrixMappingLead;
   syncInfo: SyncInfo;
   constructor() {
     this.syncInfo = new SyncInfo();
-    this.bitrixMappingLead = new BitrixMappingLead();
+    // this.bitrixMappingLead = new BitrixMappingLead();
   }
 }
 
-export class BitrixMappingLead {
-  sampleCode: string;
-  sampleOtherCode: string;
-  cardinalDirectionCode: string;
-  dimensionCm2Code: string;
-  materialCode: string;
-  typeOfSampleCode: string;
-  labResultsCode: string;
-  observationsCode: string;
-}
+// export class BitrixMappingLead {
+//   sampleCode: string;
+//   sampleOtherCode: string;
+//   cardinalDirectionCode: string;
+//   dimensionCm2Code: string;
+//   materialCode: string;
+//   typeOfSampleCode: string;
+//   labResultsCode: string;
+//   observationsCode: string;
+// }

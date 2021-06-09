@@ -145,44 +145,9 @@
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Water Damage Category</ion-label>
-      <ion-select
-        interface="popover"
-        name="waterDamageCategory"
-        [disabled]="readonly"
-        (ionChange)="changeModel($event)"
-        [(ngModel)]="generalInfoInspection.waterDamageCategory"
-      >
-        <ion-select-option
-          *ngFor="let item of waterDamageCategories; let i = index"
-          [value]="item.value"
-        >
-          {{ item.name }}</ion-select-option
-        >
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="floating">Water Damage Class</ion-label>
-      <ion-select
-        interface="popover"
-        name="waterDamageCategory"
-        [disabled]="readonly"
-        (ionChange)="changeModel($event)"
-        [(ngModel)]="generalInfoInspection.waterDamageClass"
-      >
-        <ion-select-option
-          *ngFor="let item of waterDamageClasses; let i = index"
-          [value]="item.value"
-        >
-          {{ item.name }}</ion-select-option
-        >
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
       <ion-label position="floating">Type of Loss & Description</ion-label>
       <ion-textarea
+        autocapitalize="sentences"
         [(ngModel)]="task.typeOfLossDesc"
         name="typeOfLossDesc"
         type="text"
@@ -192,6 +157,7 @@
     <ion-item>
       <ion-label position="floating">Affected Area</ion-label>
       <ion-textarea
+        autocapitalize="sentences"
         [(ngModel)]="task.affectedArea"
         name="affectedArea"
         type="text"

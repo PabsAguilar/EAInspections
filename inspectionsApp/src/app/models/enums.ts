@@ -26,6 +26,10 @@ export enum ReportStatusDeal {
   Archived = 6934,
 }
 
+export enum BitrixCodeDeals {
+  ReportStatus = "UF_CRM_1613380179",
+}
+
 export enum SchedulingStatus {
   Pending = "Pending",
   Completed = "Completed",
@@ -136,60 +140,75 @@ export enum BitrixListsITest {
   Leads = 30,
 }
 
-export var ITestDealMapping = {
-  serviceTypeList: "44",
-  dealDateTime: "UF_CRM_1612683055",
-  serviceAddress: "UF_CRM_1606466289",
-  propertyYearCode: "UF_CRM_1606466447",
-  pictureHouseNumbersCode: "UF_CRM_1606466494",
-  picturesFrontHouseCode: "UF_CRM_1606466511",
-  propertyTypeCode: "UF_CRM_1606466564",
-  interiorTemperatureCode: "UF_CRM_1606466601",
-  exteriorRelativeHumidityCode: "UF_CRM_1606466624",
-  HVACSystemConditionCode: "UF_CRM_1606466669",
-  ductsConditionCode: "UF_CRM_1606466692",
-  atticConditionCode: "UF_CRM_1606466732",
-  agreementSignedYesNoCode: "UF_CRM_1612683169",
-  inspectionTypes: "UF_CRM_1612433280",
-  typesOfLoss: "UF_CRM_1618512396",
-  affectedArea: "UF_CRM_1618512421",
-  waterDamageCategory: "UF_CRM_1618512488",
-  waterDamageClass: "UF_CRM_1618512548",
-  insuranceCompany: "UF_CRM_1612691342",
-  referenceContact: "UF_CRM_1612691326",
-  inspector: "UF_CRM_1612682994",
-  instructions: "UF_CRM_1612683023",
-  user: "UF_CRM_1612686317",
-  policyNumberCode: "UF_CRM_1619183840",
-  claimNumberCode: "UF_CRM_1619183853",
-  dateOfLossCode: "UF_CRM_1619183827",
-};
+export enum ITestDealMapping {
+  reportStatus = "UF_CRM_1613380179",
+  serviceTypeList = "44",
+  dealDateTime = "UF_CRM_1612683055",
+  serviceAddress = "UF_CRM_1606466289",
+  propertyYearCode = "UF_CRM_1606466447",
+  signature = "UF_CRM_1612780368",
+  pictureHouseNumbersCode = "UF_CRM_1606466494",
+  picturesFrontHouseCode = "UF_CRM_1606466511",
+  propertyTypeCode = "UF_CRM_1606466564",
+  interiorTemperatureCode = "UF_CRM_1606466601",
+  exteriorRelativeHumidityCode = "UF_CRM_1606466624",
+  HVACSystemConditionCode = "UF_CRM_1606466669",
+  ductsConditionCode = "UF_CRM_1606466692",
+  atticConditionCode = "UF_CRM_1606466732",
+  agreementSignedYesNoCode = "UF_CRM_1612683169",
+  inspectionTypes = "UF_CRM_1612433280",
+  typesOfLoss = "UF_CRM_1618512396",
+  affectedArea = "UF_CRM_1618512421",
+  waterDamageCategory = "UF_CRM_1618512488",
+  waterDamageClass = "UF_CRM_1618512548",
+  insuranceCompany = "UF_CRM_1612691342",
+  referenceContact = "UF_CRM_1612691326",
+  inspector = "UF_CRM_1612682994",
+  instructions = "UF_CRM_1612683023",
+  user = "UF_CRM_1612686317",
+  policyNumberCode = "UF_CRM_1619183840",
+  claimNumberCode = "UF_CRM_1619183853",
+  dateOfLossCode = "UF_CRM_1619183827",
+  moldListIdCode = "UF_CRM_1619184695",
+  bacteriaListIdCode = "UF_CRM_1619184647",
+  sootListIdCode = "UF_CRM_1619184707",
+  moistureListIdCode = "UF_CRM_1619184683",
+  asbestosListIdCode = "UF_CRM_1619184630",
+  leadListIdCode = "UF_CRM_1619184663",
+}
 
-export var ENDealMapping = {
-  serviceTypeList: "44",
-  dealDateTime: "UF_CRM_1589438514",
-  serviceAddress: "UF_CRM_1589612508058",
-  propertyYearCode: "UF_CRM_1591251407119",
-  pictureHouseNumbersCode: "UF_CRM_1591107425",
-  picturesFrontHouseCode: "UF_CRM_1591107445",
-  propertyTypeCode: "UF_CRM_1591170207",
-  // interiorTemperatureCode: "UF_CRM_1606466601",
-  // exteriorRelativeHumidityCode: "UF_CRM_1606466624",
-  // HVACSystemConditionCode: "UF_CRM_1606466669",
-  // ductsConditionCode: "UF_CRM_1606466692",
-  // atticConditionCode: "UF_CRM_1606466732",
-  agreementSignedYesNoCode: "UF_CRM_1612683169",
-  // inspectionTypes: "UF_CRM_1612433280",
-  // typesOfLoss: "UF_CRM_1618512396",
-  // affectedArea: "UF_CRM_1618512421",
-  // waterDamageCategory: "UF_CRM_1618512488",
-  // waterDamageClass: "UF_CRM_1618512548",
-  insuranceCompany: "UF_CRM_1593436917",
-  referenceContact: "UF_CRM_1596786399",
-  inspector: "UF_CRM_1589438457",
-  instructions: "UF_CRM_1591251407119",
-  user: "UF_CRM_1590046660",
-};
+export enum ENDealMapping {
+  serviceTypeList = "44",
+  dealDateTime = "UF_CRM_1589438514",
+  serviceAddress = "UF_CRM_1589612508058",
+  propertyYearCode = "UF_CRM_1591251407119",
+  pictureHouseNumbersCode = "UF_CRM_1591107425",
+  picturesFrontHouseCode = "UF_CRM_1591107445",
+  propertyTypeCode = "UF_CRM_1591170207",
+  agreementSignedYesNoCode = "UF_CRM_1612683169",
+  insuranceCompany = "UF_CRM_1593436917",
+  referenceContact = "UF_CRM_1596786399",
+  inspector = "UF_CRM_1589438457",
+  instructions = "UF_CRM_1591251407119",
+  user = "UF_CRM_1590046660",
+  segments = "UF_CRM_60BA76C86B6EB",
+  contactSegments = "UF_CRM_1622225712108",
+}
+
+export enum ENContactSegments {
+  Attorney = 3779,
+  Referral_Partner = 3781,
+  Public_Adjuster = 3783,
+  Plumber = 3785,
+  Roofer = 3787,
+  Carpet_Cleaner = 3789,
+  Contractor = 3791,
+  HVAC_Tech = 3793,
+  Restoration = 4365,
+  Remediation = 4367,
+  Client = 4321,
+  DO_NOT_CONTACT = 3803,
+}
 
 export var bitrixMappingComprehensive: any = {
   Area: {
@@ -337,7 +356,33 @@ export var bitrixMappingEnvironmental: any = {
       dealIdCode: "PROPERTY_3530",
       inspectionType: "PROPERTY_1346",
     },
-    areasMoldBitrixCode: [
+
+    waterDamageCategoryCode: [
+      "PROPERTY_4006",
+      "PROPERTY_4008",
+      "PROPERTY_4010",
+      "PROPERTY_4012",
+      "PROPERTY_4014",
+      "PROPERTY_4016",
+      "PROPERTY_4018",
+      "PROPERTY_4020",
+      "PROPERTY_4022",
+      "PROPERTY_4024",
+    ],
+    waterDamageClassCode: [
+      "PROPERTY_4026",
+      "PROPERTY_4028",
+      "PROPERTY_4030",
+      "PROPERTY_4032",
+      "PROPERTY_4034",
+      "PROPERTY_4036",
+      "PROPERTY_4038",
+      "PROPERTY_4040",
+      "PROPERTY_4042",
+      "PROPERTY_4044",
+    ],
+
+    areaNameCode: [
       "PROPERTY_1348",
       "PROPERTY_1362",
       "PROPERTY_1376",
@@ -361,7 +406,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3760",
       "PROPERTY_3762",
     ],
-    areasMoldConditionBitrixCode: [
+    areaConditionCode: [
       "PROPERTY_2112",
       "PROPERTY_2114",
       "PROPERTY_2116",
@@ -374,7 +419,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2130",
     ],
 
-    areaRHCodeMold: [
+    areaRHCode: [
       "PROPERTY_1352",
       "PROPERTY_1366",
       "PROPERTY_1380",
@@ -386,7 +431,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1464",
       "PROPERTY_1478",
     ],
-    areaPicturesCodeMold: [
+    areaPicturesCode: [
       "PROPERTY_1708",
       "PROPERTY_1710",
       "PROPERTY_1712",
@@ -398,7 +443,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1724",
       "PROPERTY_1726",
     ],
-    areaNotesCodeMold: [
+    areaNotesCode: [
       "PROPERTY_2132",
       "PROPERTY_2134",
       "PROPERTY_2136",
@@ -410,7 +455,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2148",
       "PROPERTY_2150",
     ],
-    removeCeilingCodeMold: [
+    removeCeilingCode: [
       "PROPERTY_1354",
       "PROPERTY_1368",
       "PROPERTY_1382",
@@ -422,7 +467,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1466",
       "PROPERTY_1480",
     ],
-    ceilingNotesCodeMold: [
+    ceilingNotesCode: [
       "PROPERTY_1730",
       "PROPERTY_1732",
       "PROPERTY_1734",
@@ -434,7 +479,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1746",
       "PROPERTY_1748",
     ],
-    removeDrywallCodeMold: [
+    removeDrywallCode: [
       "PROPERTY_1356",
       "PROPERTY_1370",
       "PROPERTY_1384",
@@ -446,7 +491,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1468",
       "PROPERTY_1482",
     ],
-    drywallNotesCodeMold: [
+    drywallNotesCode: [
       "PROPERTY_1750",
       "PROPERTY_1752",
       "PROPERTY_1754",
@@ -458,7 +503,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1766",
       "PROPERTY_1768",
     ],
-    removeBaseboardsCodeMold: [
+    removeBaseboardsCode: [
       "PROPERTY_1358",
       "PROPERTY_1372",
       "PROPERTY_1386",
@@ -470,7 +515,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1470",
       "PROPERTY_1484",
     ],
-    baseboardsNotesCodeMold: [
+    baseboardsNotesCode: [
       "PROPERTY_1770",
       "PROPERTY_1772",
       "PROPERTY_1774",
@@ -482,7 +527,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1786",
       "PROPERTY_1788",
     ],
-    removeFlooringCodeMold: [
+    removeFlooringCode: [
       "PROPERTY_1350",
       "PROPERTY_1364",
       "PROPERTY_1378",
@@ -494,7 +539,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1462",
       "PROPERTY_1476",
     ],
-    flooringNotesCodeMold: [
+    flooringNotesCode: [
       "PROPERTY_1360",
       "PROPERTY_1374",
       "PROPERTY_1388",
@@ -506,7 +551,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1472",
       "PROPERTY_1486",
     ],
-    decontaminationCodeMold: [
+    decontaminationCode: [
       "PROPERTY_1628",
       "PROPERTY_1630",
       "PROPERTY_1632",
@@ -518,7 +563,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1644",
       "PROPERTY_1646",
     ],
-    furnitureOptionCodeMold: [
+    furnitureOptionCode: [
       "PROPERTY_1648",
       "PROPERTY_1650",
       "PROPERTY_1652",
@@ -530,7 +575,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1664",
       "PROPERTY_1666",
     ],
-    beddingsOptionCodeMold: [
+    beddingsOptionCode: [
       "PROPERTY_1668",
       "PROPERTY_1670",
       "PROPERTY_1672",
@@ -542,7 +587,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1684",
       "PROPERTY_1686",
     ],
-    observationsCodeMold: [
+    observationsCode: [
       "PROPERTY_1688",
       "PROPERTY_1690",
       "PROPERTY_1692",
@@ -554,7 +599,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1704",
       "PROPERTY_1706",
     ],
-    recomendationsCodeMold: [
+    recomendationsCode: [
       "PROPERTY_2092",
       "PROPERTY_2094",
       "PROPERTY_2096",
@@ -567,7 +612,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2110",
     ],
 
-    sampleTypeCodeSample1Mold: [
+    typeCodeSample1: [
       "PROPERTY_1792",
       "PROPERTY_1794",
       "PROPERTY_1796",
@@ -579,7 +624,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1808",
       "PROPERTY_1810",
     ],
-    volumeCodeSample1Mold: [
+    volumeCodeSample1: [
       "PROPERTY_1972",
       "PROPERTY_1974",
       "PROPERTY_1976",
@@ -591,7 +636,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1988",
       "PROPERTY_1990",
     ],
-    cassetteNumberCodeSample1Mold: [
+    cassetteNumberCodeSample1: [
       "PROPERTY_2032",
       "PROPERTY_2038",
       "PROPERTY_2044",
@@ -603,7 +648,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2080",
       "PROPERTY_2086",
     ],
-    labResultCodeSample1Mold: [
+    labResultCodeSample1: [
       "PROPERTY_1852",
       "PROPERTY_1854",
       "PROPERTY_1856",
@@ -615,7 +660,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1868",
       "PROPERTY_1870",
     ],
-    areaSwabCodeSample1Mold: [
+    areaSwabCodeSample1: [
       "PROPERTY_3678",
       "PROPERTY_3684",
       "PROPERTY_3690",
@@ -627,7 +672,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3726",
       "PROPERTY_3732",
     ],
-    moldSporesFoundCodeSample1Mold: [
+    moldSporesFoundCodeSample1: [
       "PROPERTY_1912",
       "PROPERTY_1914",
       "PROPERTY_1916",
@@ -640,7 +685,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1930",
     ],
 
-    areaSwabCodeSample2Mold: [
+    areaSwabCodeSample2: [
       "PROPERTY_3680",
       "PROPERTY_3686",
       "PROPERTY_3692",
@@ -652,7 +697,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3728",
       "PROPERTY_3734",
     ],
-    moldSporesFoundCodeSample2Mold: [
+    moldSporesFoundCodeSample2: [
       "PROPERTY_1932",
       "PROPERTY_1934",
       "PROPERTY_1936",
@@ -665,7 +710,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1950",
     ],
 
-    areaSwabCodeSample3Mold: [
+    areaSwabCodeSample3: [
       "PROPERTY_3682",
       "PROPERTY_3688",
       "PROPERTY_3694",
@@ -677,7 +722,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3730",
       "PROPERTY_3736",
     ],
-    moldSporesFoundCodeSample3Mold: [
+    moldSporesFoundCodeSample3: [
       "PROPERTY_1952",
       "PROPERTY_1954",
       "PROPERTY_1956",
@@ -690,7 +735,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1970",
     ],
 
-    toxicMoldCodeSample1Mold: [
+    toxicMoldCodeSample1: [
       "PROPERTY_1912",
       "PROPERTY_1914",
       "PROPERTY_1916",
@@ -703,7 +748,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1930",
     ],
 
-    sampleTypeCodeSample2Mold: [
+    typeCodeSample2: [
       "PROPERTY_1812",
       "PROPERTY_1814",
       "PROPERTY_1816",
@@ -715,7 +760,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1828",
       "PROPERTY_1830",
     ],
-    volumeCodeSample2Mold: [
+    volumeCodeSample2: [
       "PROPERTY_1992",
       "PROPERTY_1994",
       "PROPERTY_1996",
@@ -727,7 +772,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2008",
       "PROPERTY_2010",
     ],
-    cassetteNumberCodeSample2Mold: [
+    cassetteNumberCodeSample2: [
       "PROPERTY_2034",
       "PROPERTY_2040",
       "PROPERTY_2046",
@@ -739,7 +784,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2082",
       "PROPERTY_2088",
     ],
-    labResultCodeSample2Mold: [
+    labResultCodeSample2: [
       "PROPERTY_1872",
       "PROPERTY_1874",
       "PROPERTY_1876",
@@ -751,7 +796,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1888",
       "PROPERTY_1890",
     ],
-    toxicMoldCodeSample2Mold: [
+    toxicMoldCodeSample2: [
       "PROPERTY_1932",
       "PROPERTY_1934",
       "PROPERTY_1936",
@@ -764,7 +809,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1950",
     ],
 
-    sampleTypeCodeSample3Mold: [
+    typeCodeSample3: [
       "PROPERTY_1832",
       "PROPERTY_1834",
       "PROPERTY_1836",
@@ -776,7 +821,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1848",
       "PROPERTY_1850",
     ],
-    volumeCodeSample3Mold: [
+    volumeCodeSample3: [
       "PROPERTY_2012",
       "PROPERTY_2014",
       "PROPERTY_2016",
@@ -788,7 +833,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2028",
       "PROPERTY_2030",
     ],
-    cassetteNumberCodeSample3Mold: [
+    cassetteNumberCodeSample3: [
       "PROPERTY_2036",
       "PROPERTY_2042",
       "PROPERTY_2048",
@@ -800,7 +845,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2084",
       "PROPERTY_2090",
     ],
-    labResultCodeSample3Mold: [
+    labResultCodeSample3: [
       "PROPERTY_1892",
       "PROPERTY_1894",
       "PROPERTY_1896",
@@ -812,7 +857,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_1908",
       "PROPERTY_1910",
     ],
-    toxicMoldCodeSample3Mold: [
+    toxicMoldCodeSample3: [
       "PROPERTY_1952",
       "PROPERTY_1954",
       "PROPERTY_1956",
@@ -832,7 +877,32 @@ export var bitrixMappingEnvironmental: any = {
       dealIdCode: "PROPERTY_3524",
       inspectionType: "PROPERTY_2156",
     },
-    areasMoldBitrixCode: [
+    waterDamageCategoryCode: [
+      "PROPERTY_3966",
+      "PROPERTY_3968",
+      "PROPERTY_3970",
+      "PROPERTY_3972",
+      "PROPERTY_3974",
+      "PROPERTY_3976",
+      "PROPERTY_3978",
+      "PROPERTY_3980",
+      "PROPERTY_3982",
+      "PROPERTY_3984",
+    ],
+    waterDamageClassCode: [
+      "PROPERTY_3986",
+      "PROPERTY_3988",
+      "PROPERTY_3990",
+      "PROPERTY_3992",
+      "PROPERTY_3994",
+      "PROPERTY_3996",
+      "PROPERTY_3998",
+      "PROPERTY_4000",
+      "PROPERTY_4002",
+      "PROPERTY_4004",
+    ],
+
+    areaNameCode: [
       "PROPERTY_2158",
       "PROPERTY_2224",
       "PROPERTY_2290",
@@ -856,7 +926,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3800",
       "PROPERTY_3802",
     ],
-    areasMoldConditionBitrixCode: [
+    areaConditionCode: [
       "PROPERTY_2160",
       "PROPERTY_2226",
       "PROPERTY_2292",
@@ -868,7 +938,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2688",
       "PROPERTY_2754",
     ],
-    areaRHCodeMold: [
+    areaRHCode: [
       "PROPERTY_2162",
       "PROPERTY_2228",
       "PROPERTY_2294",
@@ -880,7 +950,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2690",
       "PROPERTY_2756",
     ],
-    areaPicturesCodeMold: [
+    areaPicturesCode: [
       "PROPERTY_2164",
       "PROPERTY_2230",
       "PROPERTY_2296",
@@ -892,7 +962,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2692",
       "PROPERTY_2758",
     ],
-    areaNotesCodeMold: [
+    areaNotesCode: [
       "PROPERTY_2166",
       "PROPERTY_2232",
       "PROPERTY_2298",
@@ -904,7 +974,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2694",
       "PROPERTY_2760",
     ],
-    removeCeilingCodeMold: [
+    removeCeilingCode: [
       "PROPERTY_2168",
       "PROPERTY_2234",
       "PROPERTY_2300",
@@ -916,7 +986,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2696",
       "PROPERTY_2762",
     ],
-    ceilingNotesCodeMold: [
+    ceilingNotesCode: [
       "PROPERTY_2170",
       "PROPERTY_2236",
       "PROPERTY_2302",
@@ -928,7 +998,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2698",
       "PROPERTY_2764",
     ],
-    removeDrywallCodeMold: [
+    removeDrywallCode: [
       "PROPERTY_2172",
       "PROPERTY_2238",
       "PROPERTY_2304",
@@ -940,7 +1010,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2700",
       "PROPERTY_2766",
     ],
-    drywallNotesCodeMold: [
+    drywallNotesCode: [
       "PROPERTY_2174",
       "PROPERTY_2240",
       "PROPERTY_2306",
@@ -952,7 +1022,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2702",
       "PROPERTY_2768",
     ],
-    removeBaseboardsCodeMold: [
+    removeBaseboardsCode: [
       "PROPERTY_2176",
       "PROPERTY_2242",
       "PROPERTY_2308",
@@ -964,7 +1034,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2704",
       "PROPERTY_2770",
     ],
-    baseboardsNotesCodeMold: [
+    baseboardsNotesCode: [
       "PROPERTY_2178",
       "PROPERTY_2244",
       "PROPERTY_2310",
@@ -976,7 +1046,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2706",
       "PROPERTY_2772",
     ],
-    removeFlooringCodeMold: [
+    removeFlooringCode: [
       "PROPERTY_2180",
       "PROPERTY_2246",
       "PROPERTY_2312",
@@ -988,7 +1058,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2708",
       "PROPERTY_2774",
     ],
-    flooringNotesCodeMold: [
+    flooringNotesCode: [
       "PROPERTY_2182",
       "PROPERTY_2248",
       "PROPERTY_2314",
@@ -1000,7 +1070,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2710",
       "PROPERTY_2776",
     ],
-    decontaminationCodeMold: [
+    decontaminationCode: [
       "PROPERTY_2184",
       "PROPERTY_2250",
       "PROPERTY_2316",
@@ -1012,7 +1082,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2712",
       "PROPERTY_2778",
     ],
-    furnitureOptionCodeMold: [
+    furnitureOptionCode: [
       "PROPERTY_2186",
       "PROPERTY_2252",
       "PROPERTY_2318",
@@ -1024,7 +1094,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2714",
       "PROPERTY_2780",
     ],
-    beddingsOptionCodeMold: [
+    beddingsOptionCode: [
       "PROPERTY_2188",
       "PROPERTY_2254",
       "PROPERTY_2320",
@@ -1036,7 +1106,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2716",
       "PROPERTY_2782",
     ],
-    observationsCodeMold: [
+    observationsCode: [
       "PROPERTY_2190",
       "PROPERTY_2256",
       "PROPERTY_2322",
@@ -1049,7 +1119,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2784",
     ],
 
-    sampleTypeCodeSample1Mold: [
+    typeCodeSample1: [
       "PROPERTY_2192",
       "PROPERTY_2258",
       "PROPERTY_2324",
@@ -1061,7 +1131,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2720",
       "PROPERTY_2786",
     ],
-    labResultCodeSample1Mold: [
+    labResultCodeSample1: [
       "PROPERTY_2198",
       "PROPERTY_2264",
       "PROPERTY_2330",
@@ -1074,7 +1144,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2792",
     ],
 
-    sampleTypeCodeSample2Mold: [
+    typeCodeSample2: [
       "PROPERTY_2202",
       "PROPERTY_2268",
       "PROPERTY_2334",
@@ -1086,7 +1156,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2730",
       "PROPERTY_2796",
     ],
-    labResultCodeSample2Mold: [
+    labResultCodeSample2: [
       "PROPERTY_2208",
       "PROPERTY_2274",
       "PROPERTY_2340",
@@ -1099,7 +1169,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2802",
     ],
 
-    sampleTypeCodeSample3Mold: [
+    typeCodeSample3: [
       "PROPERTY_2212",
       "PROPERTY_2278",
       "PROPERTY_2344",
@@ -1111,7 +1181,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2740",
       "PROPERTY_2806",
     ],
-    labResultCodeSample3Mold: [
+    labResultCodeSample3: [
       "PROPERTY_2218",
       "PROPERTY_2284",
       "PROPERTY_2350",
@@ -1123,7 +1193,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_2746",
       "PROPERTY_2812",
     ],
-    recomendationsCodeMold: [
+    recomendationsCode: [
       "PROPERTY_2222",
       "PROPERTY_2288",
       "PROPERTY_2354",
@@ -1143,6 +1213,32 @@ export var bitrixMappingEnvironmental: any = {
       dealIdCode: "PROPERTY_3532",
       inspectionType: "PROPERTY_2822",
     },
+
+    waterDamageCategoryCode: [
+      "PROPERTY_4046",
+      "PROPERTY_4048",
+      "PROPERTY_4050",
+      "PROPERTY_4052",
+      "PROPERTY_4054",
+      "PROPERTY_4056",
+      "PROPERTY_4058",
+      "PROPERTY_4060",
+      "PROPERTY_4062",
+      "PROPERTY_4064",
+    ],
+    waterDamageClassCode: [
+      "PROPERTY_4066",
+      "PROPERTY_4068",
+      "PROPERTY_4070",
+      "PROPERTY_4072",
+      "PROPERTY_4074",
+      "PROPERTY_4076",
+      "PROPERTY_4078",
+      "PROPERTY_4080",
+      "PROPERTY_4082",
+      "PROPERTY_4084",
+    ],
+
     areaNameOtherCode: [
       "PROPERTY_3804",
       "PROPERTY_3806",
@@ -1155,7 +1251,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3820",
       "PROPERTY_3822",
     ],
-    areasMoldBitrixCode: [
+    areaNameCode: [
       "PROPERTY_2824",
       "PROPERTY_2890",
       "PROPERTY_2956",
@@ -1167,7 +1263,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3352",
       "PROPERTY_3418",
     ],
-    areasMoldConditionBitrixCode: [
+    areaConditionCode: [
       "PROPERTY_2826",
       "PROPERTY_2892",
       "PROPERTY_2958",
@@ -1179,7 +1275,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3354",
       "PROPERTY_3420",
     ],
-    areaRHCodeMold: [
+    areaRHCode: [
       "PROPERTY_2828",
       "PROPERTY_2894",
       "PROPERTY_2960",
@@ -1191,7 +1287,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3356",
       "PROPERTY_3422",
     ],
-    areaPicturesCodeMold: [
+    areaPicturesCode: [
       "PROPERTY_2830",
       "PROPERTY_2896",
       "PROPERTY_2962",
@@ -1203,7 +1299,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3358",
       "PROPERTY_3424",
     ],
-    areaNotesCodeMold: [
+    areaNotesCode: [
       "PROPERTY_2832",
       "PROPERTY_2898",
       "PROPERTY_2964",
@@ -1215,7 +1311,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3360",
       "PROPERTY_3426",
     ],
-    removeCeilingCodeMold: [
+    removeCeilingCode: [
       "PROPERTY_2834",
       "PROPERTY_2900",
       "PROPERTY_2966",
@@ -1227,7 +1323,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3362",
       "PROPERTY_3428",
     ],
-    ceilingNotesCodeMold: [
+    ceilingNotesCode: [
       "PROPERTY_2836",
       "PROPERTY_2902",
       "PROPERTY_2968",
@@ -1239,7 +1335,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3364",
       "PROPERTY_3430",
     ],
-    removeDrywallCodeMold: [
+    removeDrywallCode: [
       "PROPERTY_2838",
       "PROPERTY_2904",
       "PROPERTY_2970",
@@ -1251,7 +1347,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3366",
       "PROPERTY_3432",
     ],
-    drywallNotesCodeMold: [
+    drywallNotesCode: [
       "PROPERTY_2840",
       "PROPERTY_2906",
       "PROPERTY_2972",
@@ -1263,7 +1359,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3368",
       "PROPERTY_3434",
     ],
-    removeBaseboardsCodeMold: [
+    removeBaseboardsCode: [
       "PROPERTY_2842",
       "PROPERTY_2908",
       "PROPERTY_2974",
@@ -1275,7 +1371,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3370",
       "PROPERTY_3436",
     ],
-    baseboardsNotesCodeMold: [
+    baseboardsNotesCode: [
       "PROPERTY_2844",
       "PROPERTY_2910",
       "PROPERTY_2976",
@@ -1287,7 +1383,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3372",
       "PROPERTY_3438",
     ],
-    removeFlooringCodeMold: [
+    removeFlooringCode: [
       "PROPERTY_2846",
       "PROPERTY_2912",
       "PROPERTY_2978",
@@ -1299,7 +1395,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3374",
       "PROPERTY_3440",
     ],
-    flooringNotesCodeMold: [
+    flooringNotesCode: [
       "PROPERTY_2848",
       "PROPERTY_2914",
       "PROPERTY_2980",
@@ -1311,7 +1407,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3376",
       "PROPERTY_3442",
     ],
-    decontaminationCodeMold: [
+    decontaminationCode: [
       "PROPERTY_2850",
       "PROPERTY_2916",
       "PROPERTY_2982",
@@ -1323,7 +1419,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3378",
       "PROPERTY_3444",
     ],
-    furnitureOptionCodeMold: [
+    furnitureOptionCode: [
       "PROPERTY_2852",
       "PROPERTY_2918",
       "PROPERTY_2984",
@@ -1335,7 +1431,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3380",
       "PROPERTY_3446",
     ],
-    beddingsOptionCodeMold: [
+    beddingsOptionCode: [
       "PROPERTY_2854",
       "PROPERTY_2920",
       "PROPERTY_2986",
@@ -1347,7 +1443,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3382",
       "PROPERTY_3448",
     ],
-    observationsCodeMold: [
+    observationsCode: [
       "PROPERTY_2856",
       "PROPERTY_2922",
       "PROPERTY_2988",
@@ -1360,7 +1456,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3450",
     ],
 
-    sampleTypeCodeSample1Mold: [
+    typeCodeSample1: [
       "PROPERTY_2858",
       "PROPERTY_2924",
       "PROPERTY_2990",
@@ -1372,7 +1468,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3386",
       "PROPERTY_3452",
     ],
-    labResultCodeSample1Mold: [
+    labResultCodeSample1: [
       "PROPERTY_2864",
       "PROPERTY_2930",
       "PROPERTY_2996",
@@ -1385,7 +1481,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3458",
     ],
 
-    sampleTypeCodeSample2Mold: [
+    typeCodeSample2: [
       "PROPERTY_2868",
       "PROPERTY_2934",
       "PROPERTY_3000",
@@ -1397,7 +1493,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3396",
       "PROPERTY_3462",
     ],
-    labResultCodeSample2Mold: [
+    labResultCodeSample2: [
       "PROPERTY_2874",
       "PROPERTY_2940",
       "PROPERTY_3006",
@@ -1410,7 +1506,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3468",
     ],
 
-    sampleTypeCodeSample3Mold: [
+    typeCodeSample3: [
       "PROPERTY_2878",
       "PROPERTY_2944",
       "PROPERTY_3010",
@@ -1422,7 +1518,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3406",
       "PROPERTY_3472",
     ],
-    labResultCodeSample3Mold: [
+    labResultCodeSample3: [
       "PROPERTY_2884",
       "PROPERTY_2950",
       "PROPERTY_3016",
@@ -1434,7 +1530,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_3412",
       "PROPERTY_3478",
     ],
-    recomendationsCodeMold: [
+    recomendationsCode: [
       "PROPERTY_2888",
       "PROPERTY_2954",
       "PROPERTY_3020",
@@ -1815,7 +1911,7 @@ export var bitrixMappingEnvironmental: any = {
       "PROPERTY_642",
       "PROPERTY_656",
     ],
-    conditionCode: [
+    areaConditionCode: [
       "PROPERTY_392",
       "PROPERTY_406",
       "PROPERTY_420",

@@ -24,6 +24,10 @@ export class AreasMoistureMappingComponent implements OnInit {
   }
   set model(value: MoistureMappingAreas) {
     this._model = value;
+    if (this._model.dateTesed) {
+      this._model.dateTesed = new Date(this._model.dateTesed).toISOString();
+    }
+
     if (value) {
       this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
         this.listInspectionType = data
@@ -47,7 +51,7 @@ export class AreasMoistureMappingComponent implements OnInit {
     this.filledAreas = !this.model.areamoistureMapping
       ? 0
       : this.model.areamoistureMapping.filter((y) => y.area).length;
-this.model.syncInfo.updated = true;
+    this.model.syncInfo.updated = true;
     if (this.filledAreas >= 1 && this.model.dateTesed) {
       this.progressColor = "success";
       this.progressPercentage = 1;

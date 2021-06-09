@@ -283,6 +283,7 @@ export class SchedulingPage implements OnInit {
 
                   this.syncInspectionService.publishSomeData({
                     syncItem: "deal",
+                    refreshFromServer: false,
                   });
                 } else {
                   var message = this.toast.create({

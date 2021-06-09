@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Environmental Inspection</ion-title>
+    <ion-title>{{task.id + " - " + task.title}}</ion-title>
 
     <ion-buttons slot="start">
       <ion-back-button defaulthref=""> </ion-back-button>
@@ -19,7 +19,7 @@
 <ion-content>
   <ion-item>
     <ion-label color="primary">
-      <center><h2>{{task.id + " - " + task.title}}</h2></center>
+      <center><h2>Environmental Inspection</h2></center>
     </ion-label>
   </ion-item>
   <app-inspection-general
@@ -102,11 +102,11 @@
     <ion-label>ITest Agreements</ion-label>
     <ion-icon slot="start" color="success" name="reader-outline"></ion-icon>
     <ion-badge
-      [color]=" this.task.iTestAgreements &&
-    this.task.iTestAgreements.signature.images.length > 0? 'success' : 'medium' "
+      [color]=" this.task.iTestAgreements && (this.task.iTestAgreements.isSigned ||
+    this.task.iTestAgreements.signature.images.length > 0)? 'success' : 'medium' "
       slot="end"
-      >{{this.task.iTestAgreements &&
-      this.task.iTestAgreements.signature.images.length > 0? 'Signed' :
+      >{{this.task.iTestAgreements && (this.task.iTestAgreements.isSigned ||
+      this.task.iTestAgreements.signature.images.length > 0)? 'Signed' :
       'Pending'}}</ion-badge
     >
   </ion-item>
@@ -119,11 +119,13 @@
     <ion-label>Expert Network Agreements</ion-label>
     <ion-icon slot="start" color="primary" name="reader-outline"></ion-icon>
     <ion-badge
-      [color]=" this.task.expertNetworkAgreements &&
-  this.task.expertNetworkAgreements.signature.images.length > 0? 'success' : 'medium' "
+      [color]=" this.task.expertNetworkAgreements && (
+        this.task.expertNetworkAgreements.isSigned ||
+  this.task.expertNetworkAgreements.signature.images.length > 0)? 'success' : 'medium' "
       slot="end"
-      >{{this.task.expertNetworkAgreements &&
-      this.task.expertNetworkAgreements.signature.images.length > 0? 'Signed' :
+      >{{this.task.expertNetworkAgreements && (
+      this.task.expertNetworkAgreements.isSigned ||
+      this.task.expertNetworkAgreements.signature.images.length > 0)? 'Signed' :
       'Pending'}}</ion-badge
     >
   </ion-item>

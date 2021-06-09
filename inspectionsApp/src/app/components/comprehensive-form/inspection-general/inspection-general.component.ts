@@ -8,7 +8,11 @@ import {
   ViewChild,
 } from "@angular/core";
 import { GeneralInfoInspection } from "src/app/models/comprehensive-form/general-info-inspection";
-import { ITestDealMapping } from "src/app/models/enums";
+import {
+  ENDealMapping,
+  InspectionType,
+  ITestDealMapping,
+} from "src/app/models/enums";
 import { InspectionTask } from "src/app/models/inspection-task";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 import { PhotoService } from "src/app/services/photo.service";
@@ -28,12 +32,11 @@ export class InspectionGeneralComponent implements OnInit {
   maxDate: number = this.today.getFullYear();
   minDate: number = this.today.setFullYear(this.today.getFullYear() - 100);
   @Input() readonly: boolean = false;
+
   propertyTypeList = [];
   HHVACConditions = [];
   DuctConditions = [];
   AticConditions = [];
-  waterDamageCategories = [];
-  waterDamageClasses = [];
   fields: any[];
 
   generalInfoInspection: GeneralInfoInspection = new GeneralInfoInspection();
@@ -61,54 +64,43 @@ export class InspectionGeneralComponent implements OnInit {
     this.inspectionService.getDealsFields().then((x) => {
       this.fields = x[0];
       if (value) {
-        this.propertyTypeList = this.fields[
-          this.generalInfoInspection.generalInfoInspectionBitrixMapping
-            .propertyTypeCode
-        ].items.map((y) => {
-          return { name: y.VALUE, value: y.ID };
-        });
-
-        if (value.environmentalInspection) {
-          this.fields[
-            this.generalInfoInspection.generalInfoInspectionBitrixMapping
-              .agreementSignedYesNoCode
-          ].items.map((y) => {
-            if (y.VALUE == "Yes") {
-              this.generalInfoInspection.agreementSignedYesNo = y.ID;
-            }
-          });
-
-          this.waterDamageCategories = this.fields[
-            this.generalInfoInspection.generalInfoInspectionBitrixMapping
-              .waterDamageCategoryCode
+        if (this.generalInfoInspection.environmentalInspection == true) {
+          this.propertyTypeList = this.fields[
+            ITestDealMapping.propertyTypeCode
           ].items.map((y) => {
             return { name: y.VALUE, value: y.ID };
           });
 
-          this. waterDamageClasses = this.fields[
-            this.generalInfoInspection.generalInfoInspectionBitrixMapping
-              .waterDamageClassCode
-          ].items.map((y) => {
-            return { name: y.VALUE, value: y.ID };
-          });
+          if (value.environmentalInspection) {
+            this.fields[ITestDealMapping.agreementSignedYesNoCode].items.map(
+              (y) => {
+                if (y.VALUE == "Yes") {
+                  this.generalInfoInspection.agreementSignedYesNo = y.ID;
+                }
+              }
+            );
 
-          this.HHVACConditions = this.fields[
-            this.generalInfoInspection.generalInfoInspectionBitrixMapping
-              .HVACSystemConditionCode
-          ].items.map((y) => {
-            return { name: y.VALUE, value: y.ID };
-          });
+            this.HHVACConditions = this.fields[
+              ITestDealMapping.HVACSystemConditionCode
+            ].items.map((y) => {
+              return { name: y.VALUE, value: y.ID };
+            });
 
-          this.DuctConditions = this.fields[
-            this.generalInfoInspection.generalInfoInspectionBitrixMapping
-              .ductsConditionCode
-          ].items.map((y) => {
-            return { name: y.VALUE, value: y.ID };
-          });
+            this.DuctConditions = this.fields[
+              ITestDealMapping.ductsConditionCode
+            ].items.map((y) => {
+              return { name: y.VALUE, value: y.ID };
+            });
 
-          this.AticConditions = this.fields[
-            this.generalInfoInspection.generalInfoInspectionBitrixMapping
-              .atticConditionCode
+            this.AticConditions = this.fields[
+              ITestDealMapping.atticConditionCode
+            ].items.map((y) => {
+              return { name: y.VALUE, value: y.ID };
+            });
+          }
+        } else {
+          this.propertyTypeList = this.fields[
+            ENDealMapping.propertyTypeCode
           ].items.map((y) => {
             return { name: y.VALUE, value: y.ID };
           });

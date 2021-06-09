@@ -7,18 +7,18 @@ export class ComprehensiveEnvironmentalSection {
   WaterSampleTaken: boolean;
   WaterSamplelocation: string;
   MajorReconstruction: string;
-  environmentalSectionBitrixMapping: EnvironmentalSectionBitrixMapping;
+  //environmentalSectionBitrixMapping: EnvironmentalSectionBitrixMapping;
 
   constructor() {
     this.MoldLocationPicture = new BitrixPictureList();
-    this.environmentalSectionBitrixMapping = new EnvironmentalSectionBitrixMapping();
+    // this.environmentalSectionBitrixMapping = new EnvironmentalSectionBitrixMapping();
   }
 }
-export class EnvironmentalSectionBitrixMapping {
-  MoldSampleTakenCode: string;
-  MoldSampleLocationCode: string;
-  MoldLocationPictureCode: string;
-  WaterSampleTakenCode: string;
-  WaterSamplelocationCode: string;
-  MajorReconstructionCode: string;
-}
+// export class EnvironmentalSectionBitrixMapping {
+//   MoldSampleTakenCode: string;
+//   MoldSampleLocationCode: string;
+//   MoldLocationPictureCode: string;
+//   WaterSampleTakenCode: string;
+//   WaterSamplelocationCode: string;
+//   MajorReconstructionCode: string;
+// }

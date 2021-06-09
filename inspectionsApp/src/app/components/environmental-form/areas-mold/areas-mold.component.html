@@ -20,6 +20,13 @@
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
   <ion-item>
+    <ion-icon
+      *ngIf="!_model.moldInspectionType"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+
     <ion-label position="floating">Inspection Type</ion-label>
     <ion-select
       interface="popover"
@@ -40,13 +47,14 @@
   <app-area-mold
     *ngFor="let area of _model.areasInspection; let i = index"
     ngDefaultControl
+    [index]="i"
     [readonly]="readonly"
     [title]="'Area ' + (i + 1)"
     (modelChanged)="AreaUpdated($event)"
     [(model)]="_model.areasInspection[i]"
   ></app-area-mold>
 
-    <ion-item
+  <ion-item
     (click)="toggleAccordion()"
     lines="none"
     button

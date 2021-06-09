@@ -9,6 +9,8 @@ import {
   EnumEnterprise,
   ENDealMapping,
   bitrixMappingComprehensive,
+  ReportStatusDeal,
+  BitrixCodeDeals,
 } from "../models/enums";
 import { EnvironmentalForm } from "../models/environmental-form";
 import { TaskSubtype } from "../models/task-subtype";
@@ -19,10 +21,7 @@ import { BitrixItestService } from "./bitrix-itest.service";
 import { InspectionTask } from "../models/inspection-task";
 import { DamageInspection } from "../models/damage-inspection";
 import { Sample } from "../models/environmental-form/sample";
-import {
-  GeneralInfoInspection,
-  GeneralInfoInspectionBitrixMapping,
-} from "../models/comprehensive-form/general-info-inspection";
+import { GeneralInfoInspection } from "../models/comprehensive-form/general-info-inspection";
 import { MoistureMappingAreas } from "../models/environmental-form/moisture-mapping-areas";
 import { MoistureMapping } from "../models/environmental-form/moisture-mapping";
 import { Asbesto } from "../models/environmental-form/asbesto";
@@ -36,13 +35,13 @@ import { ComprehensiveForm } from "../models/comprehensive-form/comprehensive-fo
 import { Area } from "../models/comprehensive-form/area";
 import {
   GeneralCondition,
-  GeneralConditionBitrixMapping,
+  //GeneralConditionBitrixMapping,
 } from "../models/comprehensive-form/general-condition";
 import { Kitchen } from "../models/comprehensive-form/kitchen";
-import { EnvironmentalSectionBitrixMapping } from "../models/comprehensive-form/comprehensive-environmental-section";
-import { RecomendationsBitrixMapping } from "../models/comprehensive-form/recomendations";
-import { InsuranceBitrixMapping } from "../models/comprehensive-form/insurance";
-import { RemindersBitrixMapping } from "../models/comprehensive-form/reminders";
+import { DamageAreas } from "../models/environmental-form/damage-areas";
+import { AsbestoAreas } from "../models/environmental-form/asbesto-areas";
+import { LeadAreas } from "../models/environmental-form/lead-areas";
+
 const SYNCSTAMPKEY = "inspection-stamp-key";
 @Injectable({
   providedIn: "root",
@@ -266,37 +265,11 @@ export class ItestDealService {
     task.environmentalForm.asbestosAreas.inspectionDate = new Date();
     task.environmentalForm.asbestosAreas.inspectionDateString =
       new Date().toISOString();
-    task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.inspectionDateCode =
-      bitrixMappingEnvironmental.Asbestos.asbestosHeader.inspectionDateCode;
-    task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.contactCode =
-      bitrixMappingEnvironmental.Asbestos.asbestosHeader.contactCode;
-    task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.inspectionTypeCode =
-      bitrixMappingEnvironmental.Asbestos.asbestosHeader.inspectionTypeCode;
 
     Promise.all(
       bitrixMappingEnvironmental.Asbestos.materialLocationCode.map(
         (t, index) => {
           var x = new Asbesto();
-
-          x.asbestoBitrixMaping.materialLocationCode =
-            bitrixMappingEnvironmental.Asbestos.materialLocationCode[index];
-          x.asbestoBitrixMaping.materialLocationOtherCode =
-            bitrixMappingEnvironmental.Asbestos.materialLocationOtherCode[
-              index
-            ];
-          x.asbestoBitrixMaping.materialDescriptionCode =
-            bitrixMappingEnvironmental.Asbestos.materialDescriptionCode[index];
-          x.asbestoBitrixMaping.totalQuantityCode =
-            bitrixMappingEnvironmental.Asbestos.totalQuantityCode[index];
-          x.asbestoBitrixMaping.F_NFCode =
-            bitrixMappingEnvironmental.Asbestos.F_NFCode[index];
-          x.asbestoBitrixMaping.conditionCode =
-            bitrixMappingEnvironmental.Asbestos.conditionCode[index];
-          x.asbestoBitrixMaping.labResultsCode =
-            bitrixMappingEnvironmental.Asbestos.labResultsCode[index];
-          x.asbestoBitrixMaping.observationsCode =
-            bitrixMappingEnvironmental.Asbestos.observationsCode[index];
-
           task.environmentalForm.asbestosAreas.asbestosAreas.push(x);
         }
       )
@@ -308,31 +281,10 @@ export class ItestDealService {
     task.environmentalForm.leadAreas.inspectionDate = new Date();
     task.environmentalForm.leadAreas.inspectionDateString =
       new Date().toISOString();
-    task.environmentalForm.leadAreas.leadAreasBitrixMapping.inspectionDateCode =
-      bitrixMappingEnvironmental.Lead.leadHeader.inspectionDateCode;
-    task.environmentalForm.leadAreas.leadAreasBitrixMapping.contactCode =
-      bitrixMappingEnvironmental.Lead.leadHeader.contactCode;
-    task.environmentalForm.leadAreas.leadAreasBitrixMapping.inspectionTypeCode =
-      bitrixMappingEnvironmental.Lead.leadHeader.inspectionTypeCode;
+
     Promise.all(
       bitrixMappingEnvironmental.Lead.sampleCode.map((t, index) => {
         var x = new Lead();
-        x.bitrixMappingLead.sampleCode =
-          bitrixMappingEnvironmental.Lead.sampleCode[index];
-        x.bitrixMappingLead.sampleOtherCode =
-          bitrixMappingEnvironmental.Lead.sampleOtherCode[index];
-        x.bitrixMappingLead.cardinalDirectionCode =
-          bitrixMappingEnvironmental.Lead.cardinalDirectionCode[index];
-        x.bitrixMappingLead.dimensionCm2Code =
-          bitrixMappingEnvironmental.Lead.dimensionCm2Code[index];
-        x.bitrixMappingLead.materialCode =
-          bitrixMappingEnvironmental.Lead.materialCode[index];
-        x.bitrixMappingLead.typeOfSampleCode =
-          bitrixMappingEnvironmental.Lead.typeOfSampleCode[index];
-        x.bitrixMappingLead.labResultsCode =
-          bitrixMappingEnvironmental.Lead.labResultsCode[index];
-        x.bitrixMappingLead.observationsCode =
-          bitrixMappingEnvironmental.Lead.observationsCode[index];
 
         task.environmentalForm.leadAreas.leadAreas.push(x);
       })
@@ -346,149 +298,14 @@ export class ItestDealService {
     Promise.all([
       bitrixMappingComprehensive.Area.nameCode.map((t, index) => {
         var x = new Area();
-        x.areaBitrixMapping.nameCode =
-          bitrixMappingComprehensive.Area.nameCode[index];
-        x.areaBitrixMapping.conditionCode =
-          bitrixMappingComprehensive.Area.conditionCode[index];
-        x.areaBitrixMapping.moistureLevelCode =
-          bitrixMappingComprehensive.Area.moistureLevelCode[index];
-        x.areaBitrixMapping.picturesCode =
-          bitrixMappingComprehensive.Area.picturesCode[index];
-        x.areaBitrixMapping.notesCode =
-          bitrixMappingComprehensive.Area.notesCode[index];
+
         task.comprehesiveForm.areas.push(x);
       }),
       bitrixMappingComprehensive.Bathrooms.conditionCode.map((x, index) => {
         var area = new GeneralCondition();
-        area.generalConditionBitrixMapping.conditionCode =
-          bitrixMappingComprehensive.Bathrooms.conditionCode[index];
-        area.generalConditionBitrixMapping.moistureLevelCode =
-          bitrixMappingComprehensive.Bathrooms.moistureLevelCode[index];
-        area.generalConditionBitrixMapping.picturesCode =
-          bitrixMappingComprehensive.Bathrooms.picturesCode[index];
-        area.generalConditionBitrixMapping.notesCode =
-          bitrixMappingComprehensive.Bathrooms.notesCode[index];
         task.comprehesiveForm.bathrooms.push(area);
       }),
     ]);
-    var kitchen = new GeneralConditionBitrixMapping();
-    kitchen.conditionCode = bitrixMappingComprehensive.Kitchen.conditionCode;
-    kitchen.moistureLevelCode =
-      bitrixMappingComprehensive.Kitchen.moistureLevelCode;
-    kitchen.picturesCode = bitrixMappingComprehensive.Kitchen.picturesCode;
-    kitchen.notesCode = bitrixMappingComprehensive.Kitchen.notesCode;
-    kitchen.waterQualityTestCode =
-      bitrixMappingComprehensive.Kitchen.waterQualityTestCode;
-    task.comprehesiveForm.kitchen.generalConditionBitrixMapping = kitchen;
-
-    kitchen.conditionCode = bitrixMappingComprehensive.Kitchen.conditionCode;
-    kitchen.moistureLevelCode =
-      bitrixMappingComprehensive.Kitchen.moistureLevelCode;
-    kitchen.picturesCode = bitrixMappingComprehensive.Kitchen.picturesCode;
-    kitchen.notesCode = bitrixMappingComprehensive.Kitchen.notesCode;
-    kitchen.waterQualityTestCode =
-      bitrixMappingComprehensive.Kitchen.waterQualityTestCode;
-    task.comprehesiveForm.kitchen.generalConditionBitrixMapping = kitchen;
-    //HVAC_AC
-    var HVAC_AC = new GeneralConditionBitrixMapping();
-    HVAC_AC.conditionCode = bitrixMappingComprehensive.HVAC_AC.conditionCode;
-    HVAC_AC.moistureLevelCode =
-      bitrixMappingComprehensive.HVAC_AC.moistureLevelCode;
-    HVAC_AC.picturesCode = bitrixMappingComprehensive.HVAC_AC.picturesCode;
-    HVAC_AC.notesCode = bitrixMappingComprehensive.HVAC_AC.notesCode;
-    task.comprehesiveForm.HVAC_AC.generalConditionBitrixMapping = HVAC_AC;
-
-    //utilityRoom
-    var utilityRoom = new GeneralConditionBitrixMapping();
-    utilityRoom.conditionCode =
-      bitrixMappingComprehensive.UtilityRoom.conditionCode;
-    utilityRoom.moistureLevelCode =
-      bitrixMappingComprehensive.UtilityRoom.moistureLevelCode;
-    utilityRoom.picturesCode =
-      bitrixMappingComprehensive.UtilityRoom.picturesCode;
-    utilityRoom.notesCode = bitrixMappingComprehensive.UtilityRoom.notesCode;
-    task.comprehesiveForm.utilityRoom.generalConditionBitrixMapping =
-      utilityRoom;
-    //atic
-    var attic = new GeneralConditionBitrixMapping();
-    attic.conditionCode = bitrixMappingComprehensive.Attic.conditionCode;
-    attic.moistureLevelCode =
-      bitrixMappingComprehensive.Attic.moistureLevelCode;
-    attic.picturesCode = bitrixMappingComprehensive.Attic.picturesCode;
-    attic.notesCode = bitrixMappingComprehensive.Attic.notesCode;
-    task.comprehesiveForm.atic.generalConditionBitrixMapping = attic;
-    //exterior
-    var exterior = new GeneralConditionBitrixMapping();
-    exterior.conditionCode = bitrixMappingComprehensive.Exterior.conditionCode;
-    exterior.otherCode = bitrixMappingComprehensive.Exterior.otherCode;
-    exterior.moistureLevelCode =
-      bitrixMappingComprehensive.Exterior.moistureLevelCode;
-    exterior.picturesCode = bitrixMappingComprehensive.Exterior.picturesCode;
-    exterior.notesCode = bitrixMappingComprehensive.Exterior.notesCode;
-    task.comprehesiveForm.exterior.generalConditionBitrixMapping = exterior;
-
-    //environmentalSection
-    var environmental = new EnvironmentalSectionBitrixMapping();
-    environmental.MoldSampleTakenCode =
-      bitrixMappingComprehensive.EnvironmentalSection.MoldSampleTakenCode;
-    environmental.MoldSampleLocationCode =
-      bitrixMappingComprehensive.EnvironmentalSection.MoldSampleLocationCode;
-    environmental.MoldLocationPictureCode =
-      bitrixMappingComprehensive.EnvironmentalSection.MoldLocationPictureCode;
-    environmental.WaterSampleTakenCode =
-      bitrixMappingComprehensive.EnvironmentalSection.WaterSampleTakenCode;
-    environmental.WaterSamplelocationCode =
-      bitrixMappingComprehensive.EnvironmentalSection.WaterSamplelocationCode;
-    environmental.MajorReconstructionCode =
-      bitrixMappingComprehensive.EnvironmentalSection.MajorReconstructionCode;
-    task.comprehesiveForm.enviromentalSection.environmentalSectionBitrixMapping =
-      environmental;
-
-    //Recomendations
-    var recomendations = new RecomendationsBitrixMapping();
-    recomendations.damagesFoundCode =
-      bitrixMappingComprehensive.Recomendations.damagesFoundCode;
-    recomendations.inspectionRecomendationCode =
-      bitrixMappingComprehensive.Recomendations.inspectionRecomendationCode;
-    recomendations.recomendationCode =
-      bitrixMappingComprehensive.Recomendations.recomendationCode;
-    task.comprehesiveForm.recomendations.recomendationsBitrixMapping =
-      recomendations;
-
-    var reminders = new RemindersBitrixMapping();
-    reminders.stickerCode = bitrixMappingComprehensive.Reminders.stickerCode;
-    reminders.freeInspectionCode =
-      bitrixMappingComprehensive.Reminders.freeInspectionCode;
-    reminders.brochureCode = bitrixMappingComprehensive.Reminders.brochureCode;
-    reminders.offerFinancingCode =
-      bitrixMappingComprehensive.Reminders.offerFinancingCode;
-
-    task.comprehesiveForm.reminders.remindersBitrixMapping = reminders;
-
-    //Insurance
-    var insurance = new InsuranceBitrixMapping();
-    insurance.haveInsuranceCode =
-      bitrixMappingComprehensive.Insurance.haveInsuranceCode;
-    insurance.insuranceCarrierCode =
-      bitrixMappingComprehensive.Insurance.insuranceCarrierCode;
-    insurance.picturesPolicyCode =
-      bitrixMappingComprehensive.Insurance.picturesPolicyCode;
-    insurance.claimForDamageBeforeCode =
-      bitrixMappingComprehensive.Insurance.claimForDamageBeforeCode;
-    insurance.claimInLast5YearsCode =
-      bitrixMappingComprehensive.Insurance.claimInLast5YearsCode;
-    insurance.reasonForClaimCode =
-      bitrixMappingComprehensive.Insurance.reasonForClaimCode;
-    insurance.usePublicAdjusterCode =
-      bitrixMappingComprehensive.Insurance.usePublicAdjusterCode;
-    insurance.adjusterNameCode =
-      bitrixMappingComprehensive.Insurance.adjusterNameCode;
-    insurance.quantityOfChecksCode =
-      bitrixMappingComprehensive.Insurance.quantityOfChecksCode;
-    insurance.notesCode = bitrixMappingComprehensive.Insurance.notesCode;
-    insurance.assignPAorAttorneyCode =
-      bitrixMappingComprehensive.Insurance.assignPAorAttorneyCode;
-    task.comprehesiveForm.insurance.insuranceBitrixMapping = insurance;
 
     return task;
   }
@@ -499,52 +316,10 @@ export class ItestDealService {
     task.environmentalForm.moistureMappingAreas.dateTesed = new Date();
     task.environmentalForm.moistureMappingAreas.dateTesedString =
       new Date().toISOString();
-    task.environmentalForm.moistureMappingAreas.moistureMappingAreasBitrixMapping.contactCode =
-      bitrixMappingEnvironmental.Moisture.moistureHeader.contactCode;
-    task.environmentalForm.moistureMappingAreas.moistureMappingAreasBitrixMapping.inspectionTypeCode =
-      bitrixMappingEnvironmental.Moisture.moistureHeader.inspectionTypeCode;
-    task.environmentalForm.moistureMappingAreas.moistureMappingAreasBitrixMapping.dateTesedCode =
-      bitrixMappingEnvironmental.Moisture.moistureHeader.dateTesedCode;
 
     Promise.all(
       bitrixMappingEnvironmental.Moisture.areaCode.map((t, index) => {
         var x = new MoistureMapping();
-        x.moistureMappingBitrixMap.areaCode =
-          bitrixMappingEnvironmental.Moisture.areaCode[index];
-        x.moistureMappingBitrixMap.areaOtherCode =
-          bitrixMappingEnvironmental.Moisture.areaOtherCode[index];
-        x.moistureMappingBitrixMap.areaCode =
-          bitrixMappingEnvironmental.Moisture.areaCode[index];
-        x.moistureMappingBitrixMap.roomTempCode =
-          bitrixMappingEnvironmental.Moisture.roomTempCode[index];
-        x.moistureMappingBitrixMap.relativeHumidityCode =
-          bitrixMappingEnvironmental.Moisture.relativeHumidityCode[index];
-        x.moistureMappingBitrixMap.dewPointCode =
-          bitrixMappingEnvironmental.Moisture.dewPointCode[index];
-        x.moistureMappingBitrixMap.standardTemperatureNorthCode =
-          bitrixMappingEnvironmental.Moisture.standardTemperatureNorthCode[
-            index
-          ];
-        x.moistureMappingBitrixMap.standardTemperatureWestCode =
-          bitrixMappingEnvironmental.Moisture.standardTemperatureWestCode[
-            index
-          ];
-        x.moistureMappingBitrixMap.standardTemperatureSouthCode =
-          bitrixMappingEnvironmental.Moisture.standardTemperatureSouthCode[
-            index
-          ];
-        x.moistureMappingBitrixMap.standardTemperatureEastCode =
-          bitrixMappingEnvironmental.Moisture.standardTemperatureEastCode[
-            index
-          ];
-        x.moistureMappingBitrixMap.standardTemperatureCeilingCode =
-          bitrixMappingEnvironmental.Moisture.standardTemperatureCeilingCode[
-            index
-          ];
-        x.moistureMappingBitrixMap.standardTemperatureFloorCode =
-          bitrixMappingEnvironmental.Moisture.standardTemperatureFloorCode[
-            index
-          ];
 
         task.environmentalForm.moistureMappingAreas.areamoistureMapping.push(x);
       })
@@ -559,127 +334,13 @@ export class ItestDealService {
     var listDamageInspection: DamageInspection[] = [];
     for (
       let index = 0;
-      index < bitrixMappingEnvironmental[damageType].areasMoldBitrixCode.length;
+      index < bitrixMappingEnvironmental[damageType].areaNameCode.length;
       index++
     ) {
       var x = new DamageInspection(damageType);
-      x.damageInspectionBitrixMapping.areaNameCode =
-        bitrixMappingEnvironmental[damageType].areasMoldBitrixCode[index];
-      x.damageInspectionBitrixMapping.areaNameOtherCode =
-        bitrixMappingEnvironmental[damageType].areaNameOtherCode[index];
-      x.damageInspectionBitrixMapping.conditionCode =
-        bitrixMappingEnvironmental[damageType].areasMoldConditionBitrixCode[
-          index
-        ];
-      x.damageInspectionBitrixMapping.areaRHCode =
-        bitrixMappingEnvironmental[damageType].areaRHCodeMold[index];
-      x.damageInspectionBitrixMapping.areaPicturesCode =
-        bitrixMappingEnvironmental[damageType].areaPicturesCodeMold[index];
-      x.damageInspectionBitrixMapping.areaNotesCode =
-        bitrixMappingEnvironmental[damageType].areaNotesCodeMold[index];
-      x.damageInspectionBitrixMapping.removeCeilingCode =
-        bitrixMappingEnvironmental[damageType].removeCeilingCodeMold[index];
-      x.damageInspectionBitrixMapping.ceilingNotesCode =
-        bitrixMappingEnvironmental[damageType].ceilingNotesCodeMold[index];
-      x.damageInspectionBitrixMapping.removeDrywallCode =
-        bitrixMappingEnvironmental[damageType].removeDrywallCodeMold[index];
-      x.damageInspectionBitrixMapping.drywallNotesCode =
-        bitrixMappingEnvironmental[damageType].drywallNotesCodeMold[index];
-      x.damageInspectionBitrixMapping.removeBaseboardsCode =
-        bitrixMappingEnvironmental[damageType].removeBaseboardsCodeMold[index];
-      x.damageInspectionBitrixMapping.baseboardsNotesCode =
-        bitrixMappingEnvironmental[damageType].baseboardsNotesCodeMold[index];
-      x.damageInspectionBitrixMapping.removeFlooringCode =
-        bitrixMappingEnvironmental[damageType].removeFlooringCodeMold[index];
-      x.damageInspectionBitrixMapping.flooringNotesCode =
-        bitrixMappingEnvironmental[damageType].flooringNotesCodeMold[index];
-      x.damageInspectionBitrixMapping.decontaminationCode =
-        bitrixMappingEnvironmental[damageType].decontaminationCodeMold[index];
-      x.damageInspectionBitrixMapping.furnitureOptionCode =
-        bitrixMappingEnvironmental[damageType].furnitureOptionCodeMold[index];
-      x.damageInspectionBitrixMapping.beddingsOptionCode =
-        bitrixMappingEnvironmental[damageType].beddingsOptionCodeMold[index];
-      x.damageInspectionBitrixMapping.observationsCode =
-        bitrixMappingEnvironmental[damageType].observationsCodeMold[index];
-
-      x.areaPictures.bitrixTargeCode =
-        bitrixMappingEnvironmental[damageType].areaPicturesCodeMold[index];
-
-      x.damageInspectionBitrixMapping.recomendationsCode =
-        bitrixMappingEnvironmental[damageType].recomendationsCodeMold[index];
-
       var s = new Sample(damageType);
-      s.sampleBitrixMapping.sampleTypeCode =
-        bitrixMappingEnvironmental[damageType].sampleTypeCodeSample1Mold[index];
-      s.sampleBitrixMapping.labResultCode =
-        bitrixMappingEnvironmental[damageType].labResultCodeSample1Mold[index];
-      if (damageType == DamageAreaType.Mold) {
-        s.sampleBitrixMapping.volumeCode =
-          bitrixMappingEnvironmental[damageType].volumeCodeSample1Mold[index];
-        s.sampleBitrixMapping.cassetteNumberCode =
-          bitrixMappingEnvironmental[damageType].cassetteNumberCodeSample1Mold[
-            index
-          ];
-        s.sampleBitrixMapping.toxicMoldCode =
-          bitrixMappingEnvironmental[damageType].toxicMoldCodeSample1Mold[
-            index
-          ];
-
-        s.sampleBitrixMapping.areaSwabCode =
-          bitrixMappingEnvironmental[damageType].areaSwabCodeSample1Mold[index];
-        s.sampleBitrixMapping.moldSporesFoundCode =
-          bitrixMappingEnvironmental[damageType].moldSporesFoundCodeSample1Mold[
-            index
-          ];
-      }
-
       var s2 = new Sample(damageType);
-      s2.sampleBitrixMapping.sampleTypeCode =
-        bitrixMappingEnvironmental[damageType].sampleTypeCodeSample2Mold[index];
-      s2.sampleBitrixMapping.labResultCode =
-        bitrixMappingEnvironmental[damageType].labResultCodeSample2Mold[index];
-      if (damageType == DamageAreaType.Mold) {
-        s2.sampleBitrixMapping.volumeCode =
-          bitrixMappingEnvironmental[damageType].volumeCodeSample2Mold[index];
-        s2.sampleBitrixMapping.cassetteNumberCode =
-          bitrixMappingEnvironmental[damageType].cassetteNumberCodeSample2Mold[
-            index
-          ];
-        s2.sampleBitrixMapping.toxicMoldCode =
-          bitrixMappingEnvironmental[damageType].toxicMoldCodeSample2Mold[
-            index
-          ];
-        s.sampleBitrixMapping.areaSwabCode =
-          bitrixMappingEnvironmental[damageType].areaSwabCodeSample2Mold[index];
-        s.sampleBitrixMapping.moldSporesFoundCode =
-          bitrixMappingEnvironmental[damageType].moldSporesFoundCodeSample2Mold[
-            index
-          ];
-      }
-
       var s3 = new Sample(damageType);
-      s3.sampleBitrixMapping.sampleTypeCode =
-        bitrixMappingEnvironmental[damageType].sampleTypeCodeSample3Mold[index];
-      s3.sampleBitrixMapping.labResultCode =
-        bitrixMappingEnvironmental[damageType].labResultCodeSample3Mold[index];
-      if (damageType == DamageAreaType.Mold) {
-        s3.sampleBitrixMapping.volumeCode =
-          bitrixMappingEnvironmental[damageType].volumeCodeSample3Mold[index];
-        s3.sampleBitrixMapping.cassetteNumberCode =
-          bitrixMappingEnvironmental[damageType].cassetteNumberCodeSample3Mold[
-            index
-          ];
-        s3.sampleBitrixMapping.toxicMoldCode =
-          bitrixMappingEnvironmental[damageType].toxicMoldCodeSample3Mold[
-            index
-          ];
-        s.sampleBitrixMapping.areaSwabCode =
-          bitrixMappingEnvironmental[damageType].areaSwabCodeSample3Mold[index];
-        s.sampleBitrixMapping.moldSporesFoundCode =
-          bitrixMappingEnvironmental[damageType].moldSporesFoundCodeSample3Mold[
-            index
-          ];
-      }
 
       x.samples.push(s);
       x.samples.push(s2);
@@ -691,38 +352,14 @@ export class ItestDealService {
     switch (damageType) {
       case DamageAreaType.Mold:
         task.environmentalForm.moldAreas.areasInspection = listDamageInspection;
-        task.environmentalForm.moldAreas.damageAreasBitrixMapping.contactIdCode =
-          bitrixMappingEnvironmental.Mold.inspectionHeader.contactIdCode;
-        task.environmentalForm.moldAreas.damageAreasBitrixMapping.dealIdCode =
-          bitrixMappingEnvironmental.Mold.inspectionHeader.dealIdCode;
-        task.environmentalForm.moldAreas.damageAreasBitrixMapping.inspectionType =
-          bitrixMappingEnvironmental.Mold.inspectionHeader.inspectionType;
-        task.environmentalForm.moldAreas.damageAreasBitrixMapping.startDateCode =
-          bitrixMappingEnvironmental.Mold.inspectionHeader.startDateCode;
 
         break;
       case DamageAreaType.Bacteria:
         task.environmentalForm.bacteriasAreas.areasInspection =
           listDamageInspection;
-        task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.contactIdCode =
-          bitrixMappingEnvironmental.Bacteria.inspectionHeader.contactIdCode;
-        task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.dealIdCode =
-          bitrixMappingEnvironmental.Bacteria.inspectionHeader.dealIdCode;
-        task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.inspectionType =
-          bitrixMappingEnvironmental.Bacteria.inspectionHeader.inspectionType;
-        task.environmentalForm.bacteriasAreas.damageAreasBitrixMapping.startDateCode =
-          bitrixMappingEnvironmental.Bacteria.inspectionHeader.startDateCode;
         break;
       case DamageAreaType.Soot:
         task.environmentalForm.sootAreas.areasInspection = listDamageInspection;
-        task.environmentalForm.sootAreas.damageAreasBitrixMapping.contactIdCode =
-          bitrixMappingEnvironmental.Soot.inspectionHeader.contactIdCode;
-        task.environmentalForm.sootAreas.damageAreasBitrixMapping.dealIdCode =
-          bitrixMappingEnvironmental.Soot.inspectionHeader.dealIdCode;
-        task.environmentalForm.sootAreas.damageAreasBitrixMapping.inspectionType =
-          bitrixMappingEnvironmental.Soot.inspectionHeader.inspectionType;
-        task.environmentalForm.sootAreas.damageAreasBitrixMapping.startDateCode =
-          bitrixMappingEnvironmental.Soot.inspectionHeader.startDateCode;
 
         break;
     }
@@ -743,31 +380,6 @@ export class ItestDealService {
     task = await this.initializeAsbestosMapping(task);
     task = await this.initializeLead(task);
 
-    var general = new GeneralInfoInspectionBitrixMapping();
-    general.propertyYearCode = ITestDealMapping.propertyYearCode;
-    general.propertyTypeCode = ITestDealMapping.propertyTypeCode;
-    // general.environmentalInspectionCode =
-    //   BitrixDealMapping.environmentalInspectionCode;
-    general.interiorTemperatureCode = ITestDealMapping.interiorTemperatureCode;
-    general.exteriorRelativeHumidityCode =
-      ITestDealMapping.exteriorRelativeHumidityCode;
-    general.HVACSystemConditionCode = ITestDealMapping.HVACSystemConditionCode;
-    general.ductsConditionCode = ITestDealMapping.ductsConditionCode;
-    general.atticConditionCode = ITestDealMapping.atticConditionCode;
-
-    general.typeOfLossDescCode = ITestDealMapping.typesOfLoss;
-    general.affectedAreaCode = ITestDealMapping.affectedArea;
-    general.waterDamageCategoryCode = ITestDealMapping.waterDamageCategory;
-    general.waterDamageClassCode = ITestDealMapping.waterDamageClass;
-    general.agreementSignedYesNoCode =
-      ITestDealMapping.agreementSignedYesNoCode;
-    task.environmentalForm.generalInfoInspection.generalInfoInspectionBitrixMapping =
-      general;
-    task.environmentalForm.generalInfoInspection.picturesFrontHouse.bitrixTargeCode =
-      ITestDealMapping.picturesFrontHouseCode;
-    task.environmentalForm.generalInfoInspection.pictureHouseNumbers.bitrixTargeCode =
-      ITestDealMapping.pictureHouseNumbersCode;
-
     return task;
   }
 
@@ -777,17 +389,6 @@ export class ItestDealService {
     }
     //initialize mold Areas
     task = await this.initializeComprehensiveArea(task);
-
-    var general = new GeneralInfoInspectionBitrixMapping();
-    general.propertyYearCode = ENDealMapping.propertyYearCode;
-    general.propertyTypeCode = ENDealMapping.propertyTypeCode;
-    general.agreementSignedYesNoCode = ENDealMapping.agreementSignedYesNoCode;
-    task.comprehesiveForm.generalInfoInspection.generalInfoInspectionBitrixMapping =
-      general;
-    task.comprehesiveForm.generalInfoInspection.picturesFrontHouse.bitrixTargeCode =
-      ENDealMapping.picturesFrontHouseCode;
-    task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers.bitrixTargeCode =
-      ENDealMapping.pictureHouseNumbersCode;
 
     return task;
   }
@@ -808,12 +409,15 @@ export class ItestDealService {
     if (!server && list != null) {
       return list;
     }
-    await this.inspectorsService.clear();
+
     var result = await this.bitrixITest.getInspectors();
     if (result.result) {
       usersList = result.result.map((x) => {
         return new User(x);
       });
+      if (usersList && usersList.length > 0) {
+        await this.inspectorsService.clear();
+      }
 
       await this.inspectorsService.addItems(usersList);
     } else {
@@ -856,8 +460,12 @@ export class ItestDealService {
       responseAsbestos.result,
       responseLeads.result
     );
-    await this.environmentalInspectionFieldsListService.clear();
-    await this.environmentalInspectionFieldsListService.add(obj);
+
+    if (obj) {
+      await this.environmentalInspectionFieldsListService.clear();
+      await this.environmentalInspectionFieldsListService.add(obj);
+    }
+
     return await this.environmentalInspectionFieldsListService.getAll();
   }
 
@@ -872,52 +480,90 @@ export class ItestDealService {
   }
   async getDealsFieldsFromServer(): Promise<any> {
     var reponseFields = await this.bitrixITest.getDealFields();
-    await this.dealsFieldsListService.clear();
-    await this.dealsFieldsListService.add(reponseFields.result);
+    if (reponseFields && reponseFields.result) {
+      await this.dealsFieldsListService.clear();
+      await this.dealsFieldsListService.add(reponseFields.result);
+    }
+
     return await this.dealsFieldsListService.getAll();
   }
 
   async getExternal(user: User) {
-    this.storage.set(SYNCSTAMPKEY, new Date());
+    try {
+      this.storage.set(SYNCSTAMPKEY, new Date());
 
-    if (user.enterprise == EnumEnterprise.itest) {
-      await this.RejectedInspection(user);
-    }
-    var startedList = await this.getStartedInspections(user.enterprise);
-    var list = [];
-    if (user.enterprise == EnumEnterprise.itest) {
-      list = await this.getInspectionITestJson(user);
-    } else {
-      list = await this.getInspectionENJson(user);
-    }
-
-    for (let index = 0; index < list.length; index++) {
-      var item = list[index] as InspectionTask;
-      item.internalStatus = InspectionStatus.New;
-
-      var itemStarted: InspectionTask = null;
-      if (startedList != null && startedList.length > 0) {
-        itemStarted = startedList.find((x) => {
-          return x.id === item.id;
-        });
+      if (user.enterprise == EnumEnterprise.itest) {
+        await this.RejectedInspection(user);
+        await this.ArchiveInspection(user);
+      }
+      var startedList = await this.getStartedInspections(user.enterprise);
+      var list = [];
+      if (user.enterprise == EnumEnterprise.itest) {
+        list = await this.getInspectionITestJson(user);
+      } else {
+        list = await this.getInspectionENJson(user);
       }
 
-      if (itemStarted) {
-        item = await this.MergeStartedInspection(item, itemStarted);
-      }
-      list[index] = item;
-    }
+      for (let index = 0; index < list.length; index++) {
+        var item = list[index] as InspectionTask;
 
-    await Promise.all(
-      startedList.map(async (element) => {
-        if (!list.find((x) => x.id == element.id)) {
-          list.push(element);
+        var itemStarted: InspectionTask = null;
+        if (startedList != null && startedList.length > 0) {
+          itemStarted = startedList.find((x) => {
+            return x.id === item.id;
+          });
         }
-      })
-    );
 
-    await this.inspectionStorage.clear();
-    return this.inspectionStorage.addItems(list);
+        if (itemStarted) {
+          item = await this.MergeStartedInspection(item, itemStarted);
+        } else {
+          item = await this.getListAsbestos(item);
+          item = await this.getListMoisture(item);
+          item = await this.getListLead(item);
+          item = await this.getListDamage(
+            item,
+            item.environmentalForm.moldAreas.syncInfo.syncCode,
+            DamageAreaType.Mold,
+            BitrixListsITest.Mold
+          );
+
+          item = await this.getListDamage(
+            item,
+            item.environmentalForm.sootAreas.syncInfo.syncCode,
+            DamageAreaType.Soot,
+            BitrixListsITest.Soot
+          );
+          item = await this.getListDamage(
+            item,
+            item.environmentalForm.bacteriasAreas.syncInfo.syncCode,
+            DamageAreaType.Bacteria,
+            BitrixListsITest.Bacteria
+          );
+        }
+        list[index] = item;
+      }
+
+      await Promise.all(
+        startedList.map(async (element) => {
+          if (
+            !list.find(
+              (x) => x.id == element.id && x.enterprise == element.enterprise
+            )
+          ) {
+            list.push(element);
+          }
+        })
+      );
+
+      if (list && list.length > 0) {
+        await this.inspectionStorage.clear();
+      }
+
+      return this.inspectionStorage.addItems(list);
+    } catch (error) {
+      console.log(error);
+    }
+    return;
   }
 
   async MergeStartedInspection(
@@ -926,7 +572,10 @@ export class ItestDealService {
   ): Promise<InspectionTask> {
     item.iTestAgreements = itemStarted.iTestAgreements;
     item.expertNetworkAgreements = itemStarted.expertNetworkAgreements;
-    item.internalStatus = itemStarted.internalStatus;
+    if (itemStarted.internalStatus != InspectionStatus.New) {
+      item.internalStatus = itemStarted.internalStatus;
+    }
+
     item.bitrixFolder = itemStarted.bitrixFolder;
     item.comprehesiveForm = itemStarted.comprehesiveForm;
 
@@ -1006,6 +655,9 @@ export class ItestDealService {
 
   async getBitrixContact(contactId: string): Promise<Contact> {
     var bitrixContact: Contact = new Contact();
+    if (!contactId) {
+      return new Contact();
+    }
     try {
       var contact = await this.bitrixITest.getContact(contactId);
       contact = contact.result;
@@ -1058,7 +710,10 @@ export class ItestDealService {
   }
 
   async RejectedInspection(user: User) {
-    var data = await this.bitrixITest.getRejectedDeals(user);
+    var data = await this.bitrixITest.getDealsIdByStatus(
+      user,
+      ReportStatusDeal.Rejected
+    );
     if (data.result.length > 0) {
       return Promise.all(
         data.result.map(async (x) => {
@@ -1082,6 +737,364 @@ export class ItestDealService {
     }
   }
 
+  async ArchiveInspection(user: User) {
+    var data = await this.bitrixITest.getDealsIdByStatus(
+      user,
+      ReportStatusDeal.Archived
+    );
+    if (data.result.length > 0) {
+      return Promise.all(
+        data.result.map(async (x) => {
+          var item = await this.inspectionStorage.get(x.ID, user.enterprise);
+          if (item && item.internalStatus.indexOf("Pending") <= 0) {
+            return await this.inspectionStorage.delete(item);
+          }
+        })
+      );
+    }
+  }
+  async isString(x) {
+    return Object.prototype.toString.call(x) === "[object String]";
+  }
+  async getListDamage(
+    task: InspectionTask,
+    id: string,
+    type: string,
+    list: number
+  ): Promise<InspectionTask> {
+    if (!id) {
+      return task;
+    }
+    var data = await this.bitrixITest.getEnvironmentalInspectionListsById(
+      id,
+      list
+    );
+    if (!data || data.result.length <= 0) {
+      return task;
+    }
+
+    data = data.result[0];
+
+    var damageAreas: DamageAreas = new DamageAreas(type);
+
+    var damageInspectionList: DamageInspection[] = [];
+    //
+
+    var sync = new SyncInfo();
+    sync.isSync = true;
+    sync.syncCode = id;
+    damageAreas.syncInfo = sync;
+    for (let index = 0; index < 10; index++) {
+      var fields = Object.entries(bitrixMappingEnvironmental[type]);
+
+      var damageItem: DamageInspection = new DamageInspection(type);
+      damageItem.samples.push(new Sample(type));
+      damageItem.samples.push(new Sample(type));
+      damageItem.samples.push(new Sample(type));
+
+      var typeValue =
+        data[bitrixMappingEnvironmental[type].inspectionHeader.inspectionType];
+      if (typeValue && Object.values(typeValue)) {
+        damageAreas.moldInspectionType = Object.values(typeValue)[0] as string;
+      }
+
+      Promise.all(
+        fields.map((y) => {
+          if (y[0] == "inspectionHeader" || y[0].includes("Pictures")) {
+            return;
+          }
+
+          if (y[0].includes("Sample1")) {
+            var field = y[0].replace("CodeSample1", "");
+            var value = data[y[1][index]];
+            if (
+              value &&
+              typeof Object.values(value)[0] === "object" &&
+              Object.values(value)[0] !== null &&
+              Object.values(value)[0]["TEXT"]
+            ) {
+              value = Object.values(value)[0]["TEXT"];
+            } else if (value && this.isString(Object.values(value)[1])) {
+              value = Object.values(value)[0];
+            }
+            damageItem.samples[0][field] = value == 0 ? null : value;
+
+            return;
+          }
+          if (y[0].includes("Sample2")) {
+            var field = y[0].replace("CodeSample2", "");
+            var value = data[y[1][index]];
+            if (
+              value &&
+              typeof Object.values(value)[0] === "object" &&
+              Object.values(value)[0] !== null &&
+              Object.values(value)[0]["TEXT"]
+            ) {
+              value = Object.values(value)[0]["TEXT"];
+            } else if (value && this.isString(Object.values(value)[1])) {
+              value = Object.values(value)[0];
+            }
+            damageItem.samples[1][field] = value == 0 ? null : value;
+
+            return;
+          }
+
+          if (y[0].includes("Sample3")) {
+            var field = y[0].replace("CodeSample3", "");
+            var value = data[y[1][index]];
+            if (
+              value &&
+              typeof Object.values(value)[0] === "object" &&
+              Object.values(value)[0] !== null &&
+              Object.values(value)[0]["TEXT"]
+            ) {
+              value = Object.values(value)[0]["TEXT"];
+            } else if (value && this.isString(Object.values(value)[1])) {
+              value = Object.values(value)[0];
+            }
+            damageItem.samples[2][field] = value == 0 ? null : value;
+
+            return;
+          }
+
+          var field = y[0].replace("Code", "");
+          var value = data[y[1][index]];
+          if (
+            value &&
+            typeof Object.values(value)[0] === "object" &&
+            Object.values(value)[0] !== null &&
+            Object.values(value)[0]["TEXT"]
+          ) {
+            value = Object.values(value)[0]["TEXT"];
+          } else if (value && this.isString(Object.values(value)[1])) {
+            value = Object.values(value)[0];
+          }
+          damageItem[field] = value == 0 ? null : value;
+        })
+      );
+
+      damageAreas.areasInspection.push(damageItem);
+    }
+
+    if (type == DamageAreaType.Mold) {
+      task.environmentalForm.moldAreas = damageAreas;
+    }
+    if (type == DamageAreaType.Soot) {
+      task.environmentalForm.sootAreas = damageAreas;
+    }
+
+    if (type == DamageAreaType.Bacteria) {
+      task.environmentalForm.bacteriasAreas = damageAreas;
+    }
+
+    return task;
+  }
+
+  async getListAsbestos(task: InspectionTask): Promise<InspectionTask> {
+    var id: string = task.environmentalForm.asbestosAreas.syncInfo.syncCode;
+    if (!id) {
+      return task;
+    }
+    var data = await this.bitrixITest.getEnvironmentalInspectionListsById(
+      id,
+      BitrixListsITest.Asbestos
+    );
+    if (!data || data.result.length <= 0) {
+      return task;
+    }
+
+    data = data.result[0];
+
+    var asbestosAreas: AsbestoAreas = new AsbestoAreas();
+
+    var sync = new SyncInfo();
+    sync.isSync = true;
+    sync.syncCode = id;
+    asbestosAreas.syncInfo = sync;
+
+    var typeValue =
+      data[
+        bitrixMappingEnvironmental.Asbestos.asbestosHeader.inspectionTypeCode
+      ];
+    if (typeValue && Object.values(typeValue)) {
+      asbestosAreas.inspectionType = Object.values(typeValue)[0] as string;
+    }
+
+    typeValue =
+      data[
+        bitrixMappingEnvironmental.Asbestos.asbestosHeader.inspectionDateCode
+      ];
+    if (typeValue && Object.values(typeValue)) {
+      asbestosAreas.inspectionDate = new Date(
+        Object.values(typeValue)[0] as Date
+      );
+    }
+
+    for (let index = 0; index < 20; index++) {
+      var fields = Object.entries(bitrixMappingEnvironmental.Asbestos);
+      var asbestoAreaItem: Asbesto = new Asbesto();
+
+      Promise.all(
+        fields.map((y) => {
+          if (y[0] == "asbestosHeader" || y[0].includes("Pictures")) {
+            return;
+          }
+
+          var field = y[0].replace("Code", "");
+          var value = data[y[1][index]];
+          if (
+            value &&
+            typeof Object.values(value)[0] === "object" &&
+            Object.values(value)[0] !== null &&
+            Object.values(value)[0]["TEXT"]
+          ) {
+            value = Object.values(value)[0]["TEXT"];
+          } else if (value && this.isString(Object.values(value)[1])) {
+            value = Object.values(value)[0];
+          }
+          asbestoAreaItem[field] = value == 0 ? null : value;
+        })
+      );
+
+      asbestosAreas.asbestosAreas.push(asbestoAreaItem);
+    }
+    task.environmentalForm.asbestosAreas = asbestosAreas;
+    return task;
+  }
+
+  async getListMoisture(task: InspectionTask): Promise<InspectionTask> {
+    var id: string =
+      task.environmentalForm.moistureMappingAreas.syncInfo.syncCode;
+    if (!id) {
+      return task;
+    }
+    var data = await this.bitrixITest.getEnvironmentalInspectionListsById(
+      id,
+      BitrixListsITest.Moisture
+    );
+    if (!data || data.result.length <= 0) {
+      return task;
+    }
+
+    data = data.result[0];
+
+    var moistureAreas: MoistureMappingAreas = new MoistureMappingAreas();
+
+    var sync = new SyncInfo();
+    sync.isSync = true;
+    sync.syncCode = id;
+    moistureAreas.syncInfo = sync;
+    var typeValue =
+      data[
+        bitrixMappingEnvironmental.Moisture.moistureHeader.inspectionTypeCode
+      ];
+    if (typeValue && Object.values(typeValue)) {
+      moistureAreas.inspectionType = Object.values(typeValue)[0] as string;
+    }
+
+    typeValue =
+      data[bitrixMappingEnvironmental.Moisture.moistureHeader.dateTesedCode];
+    if (typeValue && Object.values(typeValue)) {
+      moistureAreas.dateTesed = new Date(Object.values(typeValue)[0] as Date);
+    }
+
+    for (let index = 0; index < 20; index++) {
+      var fields = Object.entries(bitrixMappingEnvironmental.Moisture);
+      var moistureAreaItem: MoistureMapping = new MoistureMapping();
+
+      Promise.all(
+        fields.map((y) => {
+          if (y[0] == "moistureHeader" || y[0].includes("Pictures")) {
+            return;
+          }
+
+          var field = y[0].replace("Code", "");
+          var value = data[y[1][index]];
+          if (
+            value &&
+            typeof Object.values(value)[0] === "object" &&
+            Object.values(value)[0] !== null &&
+            Object.values(value)[0]["TEXT"]
+          ) {
+            value = Object.values(value)[0]["TEXT"];
+          } else if (value && this.isString(Object.values(value)[1])) {
+            value = Object.values(value)[0];
+          }
+          moistureAreaItem[field] = value == 0 ? null : value;
+        })
+      );
+
+      moistureAreas.areamoistureMapping.push(moistureAreaItem);
+    }
+    task.environmentalForm.moistureMappingAreas = moistureAreas;
+    return task;
+  }
+
+  async getListLead(task: InspectionTask): Promise<InspectionTask> {
+    var id: string = task.environmentalForm.leadAreas.syncInfo.syncCode;
+    if (!id) {
+      return task;
+    }
+    var data = await this.bitrixITest.getEnvironmentalInspectionListsById(
+      id,
+      BitrixListsITest.Leads
+    );
+    if (!data || data.result.length <= 0) {
+      return task;
+    }
+
+    data = data.result[0];
+
+    var leadAreas: LeadAreas = new LeadAreas();
+
+    var sync = new SyncInfo();
+    sync.isSync = true;
+    sync.syncCode = id;
+    leadAreas.syncInfo = sync;
+    var typeValue =
+      data[bitrixMappingEnvironmental.Lead.leadHeader.inspectionTypeCode];
+    if (typeValue && Object.values(typeValue)) {
+      leadAreas.inspectionType = Object.values(typeValue)[0] as string;
+    }
+
+    typeValue =
+      data[bitrixMappingEnvironmental.Lead.leadHeader.inspectionDateCode];
+    if (typeValue && Object.values(typeValue)) {
+      leadAreas.inspectionDate = new Date(Object.values(typeValue)[0] as Date);
+    }
+
+    for (let index = 0; index < 20; index++) {
+      var fields = Object.entries(bitrixMappingEnvironmental.Lead);
+      var leadAreaItem: Lead = new Lead();
+
+      Promise.all(
+        fields.map((y) => {
+          if (y[0] == "leadHeader" || y[0].includes("Pictures")) {
+            return;
+          }
+
+          var field = y[0].replace("Code", "");
+          var value = data[y[1][index]];
+          if (
+            value &&
+            typeof Object.values(value)[0] === "object" &&
+            Object.values(value)[0] !== null &&
+            Object.values(value)[0]["TEXT"]
+          ) {
+            value = Object.values(value)[0]["TEXT"];
+          } else if (value && this.isString(Object.values(value)[1])) {
+            value = Object.values(value)[0];
+          }
+          leadAreaItem[field] = value == 0 ? null : value;
+        })
+      );
+
+      leadAreas.leadAreas.push(leadAreaItem);
+    }
+    task.environmentalForm.leadAreas = leadAreas;
+    return task;
+  }
+
   async getInspectionITestJson(user: User): Promise<InspectionTask[]> {
     try {
       var subtypes = await this.getInspectionTasksTypesList();
@@ -1089,142 +1102,194 @@ export class ItestDealService {
 
       if (data.result.length > 0) {
         var list: InspectionTask[] = await Promise.all(
-          data.result.map(async (x): Promise<InspectionTask> => {
-            var taskContact = await this.getBitrixContact(x.CONTACT_ID);
+          data.result
+            .filter(
+              (z) =>
+                z[BitrixCodeDeals.ReportStatus] != ReportStatusDeal.Archived
+            )
+            .map(async (x): Promise<InspectionTask> => {
+              var taskContact = await this.getBitrixContact(x.CONTACT_ID);
 
-            var task = await this.initializeEnvironmentalTask(
-              new InspectionTask()
-            );
-
-            task.id = x.ID;
-            task.contactId = x.CONTACT_ID;
-            task.contactName =
-              taskContact.firstName + " " + taskContact.lastName;
-
-            task.title = x.TITLE;
-            task.scheduleDateTime = new Date(x[ITestDealMapping.dealDateTime]);
-            task.scheduleDay = new Date(
-              task.scheduleDateTime.getFullYear(),
-              task.scheduleDateTime.getMonth(),
-              task.scheduleDateTime.getDate()
-            );
-
-            task.serviceAddress = x[ITestDealMapping.serviceAddress];
-            task.environmentalForm.generalInfoInspection.environmentalInspection =
-              true;
-            task.environmentalForm.generalInfoInspection.propertyYear =
-              x[ITestDealMapping.propertyYearCode];
-            task.environmentalForm.generalInfoInspection.propertyType =
-              x[ITestDealMapping.propertyTypeCode];
-            task.environmentalForm.generalInfoInspection.interiorTemperature =
-              x[ITestDealMapping.interiorTemperatureCode];
-            task.environmentalForm.generalInfoInspection.exteriorRelativeHumidity =
-              x[ITestDealMapping.exteriorRelativeHumidityCode];
-            task.environmentalForm.generalInfoInspection.HVACSystemCondition =
-              x[ITestDealMapping.HVACSystemConditionCode];
-            task.environmentalForm.generalInfoInspection.ductsCondition =
-              x[ITestDealMapping.ductsConditionCode];
-            task.environmentalForm.generalInfoInspection.atticCondition =
-              x[ITestDealMapping.atticConditionCode];
-            task.environmentalForm.generalInfoInspection.atticCondition =
-              x[ITestDealMapping.atticConditionCode];
-            task.typeOfLossDesc = x[ITestDealMapping.typesOfLoss];
-            task.affectedArea = x[ITestDealMapping.affectedArea];
-            task.waterDamageCategory = x[ITestDealMapping.waterDamageCategory];
-            task.waterDamageClass = x[ITestDealMapping.waterDamageClass];
-
-            var address = task.serviceAddress.split("|");
-
-            if (address.length > 1) {
-              task.serviceAddress = address[0];
-              task.geoPointText = address[1].replace(";", ",");
-            }
-
-            task.phone = taskContact.phone;
-            task.email = taskContact.email;
-
-            if (
-              Array.isArray(x[ITestDealMapping.insuranceCompany]) &&
-              x[ITestDealMapping.insuranceCompany].length > 0
-            ) {
-              await Promise.all(
-                x[ITestDealMapping.insuranceCompany].map(
-                  async (element: string) => {
-                    if (element.includes("C_")) {
-                      var insuranceContact = await this.getBitrixContact(
-                        element.split("C_")[1]
-                      );
-                      task.insuranceContact = insuranceContact;
-                    }
-                    if (element.includes("CO_")) {
-                      var insuranceCompany = await this.getBitrixCompany(
-                        element.split("CO_")[1]
-                      );
-                      if (insuranceCompany) {
-                        task.insuranceCompany = insuranceCompany;
-                      }
-                    }
-                  }
-                )
+              var task = await this.initializeEnvironmentalTask(
+                new InspectionTask()
               );
-            }
 
-            if (
-              Array.isArray(x[ITestDealMapping.referenceContact]) &&
-              x[ITestDealMapping.referenceContact].length > 0
-            ) {
-              await Promise.all(
-                x[ITestDealMapping.referenceContact].map(
-                  async (element: string) => {
-                    if (element.includes("C_")) {
-                      var contactReference = await this.getBitrixContact(
-                        element.split("C_")[1]
-                      );
-                      task.referalPartnerContact = contactReference;
-                    }
-                    if (element.includes("CO_")) {
-                      var companyReference = await this.getBitrixCompany(
-                        element.split("CO_")[1]
-                      );
-                      if (companyReference) {
-                        task.referalPartnerCompany = companyReference;
-                      }
-                    }
-                  }
-                )
-              );
-            }
+              var reportStatusBitrix: number = x[BitrixCodeDeals.ReportStatus];
+              switch (+reportStatusBitrix) {
+                case ReportStatusDeal.Saved:
+                  task.internalStatus = InspectionStatus.Saved;
+                  break;
 
-            task.inspectorUserId = x[ITestDealMapping.inspector];
-            task.inspectionType = InspectionType.Environmental;
-            task.enterprise = EnumEnterprise.itest;
-            task.inspectionSubTypes = x[ITestDealMapping.inspectionTypes].map(
-              (m) => {
-                if (m != 120) {
-                  return subtypes.find((y) => y.id == m);
-                }
+                case ReportStatusDeal.Labs:
+                  task.internalStatus = InspectionStatus.LabsSent;
+                  break;
+
+                case ReportStatusDeal.Submitted:
+                  task.internalStatus = InspectionStatus.Completed;
+                  break;
+                case ReportStatusDeal.Rejected:
+                  task.internalStatus = InspectionStatus.Saved;
+                  task.wasRejected = true;
+                  break;
+
+                default:
+                  task.internalStatus = InspectionStatus.New;
+                  break;
               }
-            );
-            if (
-              task.inspectionSubTypes.length == 1 &&
-              !task.inspectionSubTypes[0]
-            ) {
-              task.inspectionSubTypes = [];
-            }
-            task.inspectionSubTypesString = task.inspectionSubTypes
-              .map((type) => {
-                return type?.name;
-                x;
-              })
-              .join(",");
-            task.inspectionsInstructions = x[ITestDealMapping.instructions];
-            task.policyNumber = x[ITestDealMapping.policyNumberCode];
-            task.claimNumber = x[ITestDealMapping.claimNumberCode];
-            task.dateOfLoss = x[ITestDealMapping.dateOfLossCode];
-            task.internalStatus = InspectionStatus.New;
 
-            return Promise.resolve(task);
-          })
+              task.id = x.ID;
+              task.contactId = x.CONTACT_ID;
+              task.contactName =
+                (taskContact?.firstName ? taskContact.firstName : "") +
+                " " +
+                (taskContact?.lastName ? taskContact.lastName : "");
+
+              task.title = x.TITLE;
+              task.scheduleDateTime = new Date(
+                x[ITestDealMapping.dealDateTime]
+              );
+              task.scheduleDay = new Date(
+                task.scheduleDateTime.getFullYear(),
+                task.scheduleDateTime.getMonth(),
+                task.scheduleDateTime.getDate()
+              );
+
+              if (x[ITestDealMapping.agreementSignedYesNoCode] == 5204) {
+                task.iTestAgreements.hasOpen = true;
+                task.expertNetworkAgreements.hasOpen = true;
+                task.iTestAgreements.isSigned = true;
+                task.expertNetworkAgreements.isSigned = true;
+              }
+
+              task.serviceAddress = x[ITestDealMapping.serviceAddress];
+              task.environmentalForm.generalInfoInspection.environmentalInspection =
+                true;
+              task.environmentalForm.generalInfoInspection.propertyYear =
+                x[ITestDealMapping.propertyYearCode];
+              task.environmentalForm.generalInfoInspection.propertyType =
+                x[ITestDealMapping.propertyTypeCode];
+              task.environmentalForm.generalInfoInspection.interiorTemperature =
+                x[ITestDealMapping.interiorTemperatureCode];
+              task.environmentalForm.generalInfoInspection.exteriorRelativeHumidity =
+                x[ITestDealMapping.exteriorRelativeHumidityCode];
+              task.environmentalForm.generalInfoInspection.HVACSystemCondition =
+                x[ITestDealMapping.HVACSystemConditionCode];
+              task.environmentalForm.generalInfoInspection.ductsCondition =
+                x[ITestDealMapping.ductsConditionCode];
+              task.environmentalForm.generalInfoInspection.atticCondition =
+                x[ITestDealMapping.atticConditionCode];
+              task.environmentalForm.generalInfoInspection.atticCondition =
+                x[ITestDealMapping.atticConditionCode];
+              task.typeOfLossDesc = x[ITestDealMapping.typesOfLoss];
+              task.affectedArea = x[ITestDealMapping.affectedArea];
+              task.waterDamageCategory =
+                x[ITestDealMapping.waterDamageCategory];
+              task.waterDamageClass = x[ITestDealMapping.waterDamageClass];
+              task.environmentalForm.moldAreas.syncInfo.syncCode =
+                x[ITestDealMapping.moldListIdCode];
+              task.environmentalForm.bacteriasAreas.syncInfo.syncCode =
+                x[ITestDealMapping.bacteriaListIdCode];
+              task.environmentalForm.sootAreas.syncInfo.syncCode =
+                x[ITestDealMapping.sootListIdCode];
+              task.environmentalForm.moistureMappingAreas.syncInfo.syncCode =
+                x[ITestDealMapping.moistureListIdCode];
+              task.environmentalForm.asbestosAreas.syncInfo.syncCode =
+                x[ITestDealMapping.asbestosListIdCode];
+              task.environmentalForm.leadAreas.syncInfo.syncCode =
+                x[ITestDealMapping.leadListIdCode];
+
+              var address = task.serviceAddress.split("|");
+
+              if (address.length > 1) {
+                task.serviceAddress = address[0];
+                task.geoPointText = address[1].replace(";", ",");
+              }
+
+              task.phone = taskContact.phone;
+              task.email = taskContact.email;
+
+              if (
+                Array.isArray(x[ITestDealMapping.insuranceCompany]) &&
+                x[ITestDealMapping.insuranceCompany].length > 0
+              ) {
+                await Promise.all(
+                  x[ITestDealMapping.insuranceCompany].map(
+                    async (element: string) => {
+                      if (element.includes("C_")) {
+                        var insuranceContact = await this.getBitrixContact(
+                          element.split("C_")[1]
+                        );
+                        task.insuranceContact = insuranceContact;
+                      }
+                      if (element.includes("CO_")) {
+                        var insuranceCompany = await this.getBitrixCompany(
+                          element.split("CO_")[1]
+                        );
+                        if (insuranceCompany) {
+                          task.insuranceCompany = insuranceCompany;
+                        }
+                      }
+                    }
+                  )
+                );
+              }
+
+              if (
+                Array.isArray(x[ITestDealMapping.referenceContact]) &&
+                x[ITestDealMapping.referenceContact].length > 0
+              ) {
+                await Promise.all(
+                  x[ITestDealMapping.referenceContact].map(
+                    async (element: string) => {
+                      if (element.includes("C_")) {
+                        var contactReference = await this.getBitrixContact(
+                          element.split("C_")[1]
+                        );
+                        task.referalPartnerContact = contactReference;
+                      }
+                      if (element.includes("CO_")) {
+                        var companyReference = await this.getBitrixCompany(
+                          element.split("CO_")[1]
+                        );
+                        if (companyReference) {
+                          task.referalPartnerCompany = companyReference;
+                        }
+                      }
+                    }
+                  )
+                );
+              }
+
+              task.inspectorUserId = x[ITestDealMapping.inspector];
+              task.inspectionType = InspectionType.Environmental;
+              task.enterprise = EnumEnterprise.itest;
+              task.inspectionSubTypes = x[ITestDealMapping.inspectionTypes].map(
+                (m) => {
+                  if (m != 120) {
+                    return subtypes.find((y) => y.id == m);
+                  }
+                }
+              );
+              if (
+                task.inspectionSubTypes.length == 1 &&
+                !task.inspectionSubTypes[0]
+              ) {
+                task.inspectionSubTypes = [];
+              }
+              task.inspectionSubTypesString = task.inspectionSubTypes
+                .map((type) => {
+                  return type?.name;
+                  x;
+                })
+                .join(",");
+              task.inspectionsInstructions = x[ITestDealMapping.instructions];
+              task.policyNumber = x[ITestDealMapping.policyNumberCode];
+              task.claimNumber = x[ITestDealMapping.claimNumberCode];
+              task.dateOfLoss = x[ITestDealMapping.dateOfLossCode];
+              //  task.internalStatus = InspectionStatus.New;
+
+              return Promise.resolve(task);
+            })
         );
 
         return list;
@@ -1371,4 +1436,11 @@ export class ItestDealService {
       console.log(error);
     }
   }
+}
+export type Entries<T> = {
+  [K in keyof T]: [K, T[K]];
+}[keyof T][];
+
+export function entries<T>(obj: T): Entries<T> {
+  return Object.entries(obj) as any;
 }

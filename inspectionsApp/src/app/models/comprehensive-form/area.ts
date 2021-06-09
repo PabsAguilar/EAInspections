@@ -6,9 +6,9 @@ export class Area {
   moistureLevel: number;
   pictures: BitrixPictureList;
   notes: string;
-  areaBitrixMapping: AreaBitrixMapping;
+  //areaBitrixMapping: AreaBitrixMapping;
   constructor() {
-    this.areaBitrixMapping = new AreaBitrixMapping();
+   // this.areaBitrixMapping = new AreaBitrixMapping();
     this.name = "";
     this.condition = [];
     this.moistureLevel = null;
@@ -17,10 +17,10 @@ export class Area {
   }
 }
 
-export class AreaBitrixMapping {
-  nameCode: string;
-  conditionCode: string;
-  moistureLevelCode: string;
-  picturesCode: string;
-  notesCode: string;
-}
+// export class AreaBitrixMapping {
+//   nameCode: string;
+//   conditionCode: string;
+//   moistureLevelCode: string;
+//   picturesCode: string;
+//   notesCode: string;
+// }

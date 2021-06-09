@@ -24,6 +24,9 @@ export class AreasAsbestosComponent implements OnInit {
   }
   set model(value: AsbestoAreas) {
     this._model = value;
+    this._model.inspectionDate = new Date(
+      this._model.inspectionDate
+    ).toISOString();
 
     if (value) {
       this.inspectionStorage.getInspectionTasksTypesList().then((data) => {

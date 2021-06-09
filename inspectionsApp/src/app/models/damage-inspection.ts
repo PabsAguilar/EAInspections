@@ -1,5 +1,5 @@
 import { BitrixPictureList } from "./bitrix-picture";
-import { DamageInspectionBitrixMapping } from "./damage-inspection-bitrix-mapping";
+//import { DamageInspectionBitrixMapping } from "./damage-inspection-bitrix-mapping";
 import { Sample } from "./environmental-form/sample";
 import { SyncInfo } from "./sync-info";
 
@@ -28,14 +28,16 @@ export class DamageInspection {
   observations: string;
   samples: Sample[];
   recomendations: string;
+  waterDamageCategory: string;
+  waterDamageClass: string;
   type: string;
-  damageInspectionBitrixMapping: DamageInspectionBitrixMapping;
+  //damageInspectionBitrixMapping: DamageInspectionBitrixMapping;
   syncInfo: SyncInfo;
 
   constructor(type: string) {
-    this.damageInspectionBitrixMapping = new DamageInspectionBitrixMapping(
-      type
-    );
+    // this.damageInspectionBitrixMapping = new DamageInspectionBitrixMapping(
+    //   type
+    // );
     this.decontamination = [];
     this.syncInfo = new SyncInfo();
     this.areaPictures = new BitrixPictureList();

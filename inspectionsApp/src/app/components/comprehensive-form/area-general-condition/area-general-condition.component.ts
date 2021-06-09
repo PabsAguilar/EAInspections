@@ -1,6 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Area } from "src/app/models/comprehensive-form/area";
-import { AreaConditionType, BathroomConditions } from "src/app/models/enums";
+import {
+  AreaConditionType,
+  BathroomConditions,
+  bitrixMappingComprehensive,
+  ENDealMapping,
+} from "src/app/models/enums";
 import { GeneralCondition } from "src/app/models/comprehensive-form/general-condition";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 
@@ -22,48 +27,67 @@ export class AreaGeneralConditionComponent implements OnInit {
   @Input()
   set InspectionArea(value: GeneralCondition) {
     this.generalCondition = value;
-    this.inspectionService.getDealsFields().then((x) => {
-      this.fields = x[0];
-      if (value) {
-        this._conditions = this.fields[
-          this.generalCondition.generalConditionBitrixMapping.conditionCode
-        ].items
-          .filter((x) => x.ID != "1893" && x.ID != "1899")
-          .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
-      }
-    });
+
     this.changeModel("init");
   }
   generalCondition: GeneralCondition = new GeneralCondition();
   @Input() title: string = "";
+  @Input() index: number = 0;
   @Input() readonly: boolean = false;
   @Input() get type() {
     return this._type;
   }
   set type(value: string) {
     this._type = value;
-    switch (this.type) {
-      case AreaConditionType.Bathroom.toString():
-        break;
-      case AreaConditionType.HVAC_AC.toString():
-        this.titleColor = "";
-        this.showSuccess = true;
 
-        break;
-      case AreaConditionType.Atic.toString():
-        this.titleColor = "";
-        this.showSuccess = true;
+    this.inspectionService.getDealsFields().then((x) => {
+      this.fields = x[0];
+      if (value) {
+        switch (this.type) {
+          case AreaConditionType.Bathroom.toString():
+            this._conditions = this.fields[
+              bitrixMappingComprehensive.Bathrooms.conditionCode[this.index]
+            ].items
+              .filter((x) => x.ID != "1893" && x.ID != "1899")
+              .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
 
-        break;
-      case AreaConditionType.UtilityRoom.toString():
-        this.titleColor = "";
-        this.showSuccess = true;
+            break;
+          case AreaConditionType.HVAC_AC.toString():
+            this.titleColor = "";
+            this.showSuccess = true;
 
-        break;
+            this._conditions = this.fields[
+              bitrixMappingComprehensive.HVAC_AC.conditionCode
+            ].items
+              .filter((x) => x.ID != "1893" && x.ID != "1899")
+              .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
 
-      default:
-        break;
-    }
+            break;
+          case AreaConditionType.Atic.toString():
+            this.titleColor = "";
+            this.showSuccess = true;
+            this._conditions = this.fields[
+              bitrixMappingComprehensive.Attic.conditionCode
+            ].items
+              .filter((x) => x.ID != "1893" && x.ID != "1899")
+              .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+            break;
+          case AreaConditionType.UtilityRoom.toString():
+            this.titleColor = "";
+            this.showSuccess = true;
+            this._conditions = this.fields[
+              bitrixMappingComprehensive.UtilityRoom.conditionCode
+            ].items
+              .filter((x) => x.ID != "1893" && x.ID != "1899")
+              .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
+
+            break;
+
+          default:
+            break;
+        }
+      }
+    });
   }
   _type: string = "";
   @Output() InspectionAreaGeneralChanged: any = new EventEmitter();

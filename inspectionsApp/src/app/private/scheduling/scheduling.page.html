@@ -39,7 +39,8 @@
       <ion-icon
         *ngIf="!scheduling.contact || !scheduling.contact.firstName"
         color="danger"
-        name="information-circle-outline"
+        slot="start"
+        name="warning-outline"
       ></ion-icon>
     </ion-item>
     <ion-item lines="none" *ngIf="!scheduling.syncInfo.isSync">
@@ -76,6 +77,12 @@
     </ion-item>
 
     <ion-item lines="full">
+      <ion-icon
+        *ngIf="!scheduling.serviceAddress"
+        color="danger"
+        slot="start"
+        name="warning-outline"
+      ></ion-icon>
       <ion-label position="floating">Address</ion-label>
       <ion-input
         name="serviceAddress"
@@ -91,7 +98,7 @@
         *ngIf="serviceAddress.errors && (serviceAddress.dirty || serviceAddress.touched) "
       >
         <p *ngIf="serviceAddress.errors.required">
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+          <ion-icon color="danger" name="warning-outline"></ion-icon>
           <ion-label color="danger"> Required </ion-label>
         </p>
       </div>
@@ -112,6 +119,12 @@
 
     <ion-item lines="full">
       <ion-label position="floating">Inspector Instructions</ion-label>
+      <ion-icon
+        *ngIf="!scheduling.notes"
+        color="danger"
+        slot="start"
+        name="warning-outline"
+      ></ion-icon>
       <ion-textarea
         name="notes"
         #notes="ngModel"
@@ -312,26 +325,14 @@
       </div>
     </div>
 
-    <!-- <div class="validation-errors">
-      <div
-        *ngIf="serviceType.errors && (serviceType.dirty || serviceType.touched) "
-      >
-        <p *ngIf="serviceType.errors.required">
-          <ion-icon color="danger" name="information-circle-outline"></ion-icon>
-          <ion-label color="danger"> Required </ion-label>
-        </p>
-      </div>
-    </div> -->
-
     <ion-item>
+      <ion-icon
+        *ngIf="!scheduling.scheduleDateTime"
+        color="danger"
+        slot="start"
+        name="warning-outline"
+      ></ion-icon>
       <ion-label position="floating">Select date</ion-label>
-      <!-- <ion-datetime
-        [min]="minDate"
-        [max]="maxDate"
-        formControlName="scheduleDateTime"
-        class="form-controll"
-        placeholder="Select Date"
-      ></ion-datetime> -->
 
       <ion-datetime
         [min]="minDate"
@@ -346,14 +347,13 @@
     </ion-item>
 
     <ion-item>
+      <ion-icon
+        *ngIf="!selectedDate"
+        color="danger"
+        slot="start"
+        name="warning-outline"
+      ></ion-icon>
       <ion-label position="floating">Select Hour</ion-label>
-      <!-- <ion-datetime
-        [min]="minDate"
-        [max]="maxDate"
-        formControlName="scheduleDateTime"
-        class="form-controll"
-        placeholder="Select Date"
-      ></ion-datetime> -->
 
       <ion-datetime
         [min]="minDate"

@@ -132,21 +132,7 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   async segmentChanged($event) {
-    this.inspectionTasks = (
-      await this.inspectionService.getPendingInspections(this.user)
-    ).filter(
-      (task) =>
-        this.segmentOption == "All" ||
-        (this.segmentOption == "Pending" &&
-          (task.internalStatus == InspectionStatus.New ||
-            task.internalStatus == InspectionStatus.InProgress)) ||
-        (this.segmentOption == "Saved" &&
-          (task.internalStatus == InspectionStatus.Saved ||
-            task.internalStatus == InspectionStatus.LabsSent ||
-            task.internalStatus == InspectionStatus.PendingSaved ||
-            task.internalStatus == InspectionStatus.PendingSentLab)) ||
-        task.internalStatus == this.segmentOption
-    );
+    await this.loadData(false);
   }
 
   async ionViewDidEnter() {
@@ -163,26 +149,39 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   async loadData(forceFromServer: boolean) {
-    this.inspectionTasks = await this.inspectionService.getPendingInspections(
-      this.user
-    );
+    var tempInspectionTasks = [];
 
     if (forceFromServer || this.inspectionTasks == null) {
       await this.inspectionService.getExternal(this.user);
       await this.inspectionService.refreshFieldsFromServer(this.user);
-      this.inspectionTasks = await this.inspectionService.getPendingInspections(
+      tempInspectionTasks = await this.inspectionService.getPendingInspections(
+        this.user
+      );
+    } else {
+      tempInspectionTasks = await this.inspectionService.getPendingInspections(
         this.user
       );
     }
+    this.inspectionTasks = tempInspectionTasks.filter(
+      (task) =>
+        this.segmentOption == "All" ||
+        (this.segmentOption == "Pending" &&
+          (task.internalStatus == InspectionStatus.New ||
+            task.internalStatus == InspectionStatus.InProgress)) ||
+        (this.segmentOption == "Saved" &&
+          (task.internalStatus == InspectionStatus.Saved ||
+            task.internalStatus == InspectionStatus.LabsSent ||
+            task.internalStatus == InspectionStatus.PendingSaved ||
+            task.internalStatus == InspectionStatus.PendingSentLab)) ||
+        task.internalStatus == this.segmentOption
+    );
     this.lastSync = await this.inspectionService.getSyncStamp();
   }
   async doRefresh(event) {
     try {
       console.log("Pull Event Triggered!");
 
-      this.inspectionTasks = await this.inspectionService.getPendingInspections(
-        this.user
-      );
+      await this.loadData(false);
       event.target.complete();
     } catch (error) {
       console.log(error);

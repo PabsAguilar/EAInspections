@@ -15,7 +15,6 @@ export class EnvironmentalForm {
   moistureMappingAreas: MoistureMappingAreas;
   asbestosAreas: AsbestoAreas;
   leadAreas: LeadAreas;
- 
 
   constructor() {
     this.generalInfoInspection = new GeneralInfoInspection();
@@ -28,6 +27,5 @@ export class EnvironmentalForm {
     this.moistureMappingAreas = new MoistureMappingAreas();
     this.asbestosAreas = new AsbestoAreas();
     this.leadAreas = new LeadAreas();
-  
   }
 }

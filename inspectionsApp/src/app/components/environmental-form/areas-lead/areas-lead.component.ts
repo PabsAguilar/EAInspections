@@ -25,6 +25,9 @@ export class AreasLeadComponent implements OnInit {
   }
   set model(value: LeadAreas) {
     this._model = value;
+    this._model.inspectionDate = new Date(
+      this._model.inspectionDate
+    ).toISOString();
     if (value) {
       this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
         this.listInspectionType = data

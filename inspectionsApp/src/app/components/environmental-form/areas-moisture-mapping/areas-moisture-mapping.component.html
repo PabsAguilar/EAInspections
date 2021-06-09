@@ -20,6 +20,13 @@
 ></ion-progress-bar>
 <div *ngIf="isMenuOpen">
   <ion-item>
+    <ion-icon
+      *ngIf="!_model.inspectionType"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+
     <ion-label position="floating">Inspection Type</ion-label>
     <ion-select
       interface="popover"
@@ -38,12 +45,28 @@
   </ion-item>
 
   <ion-item lines="inset">
+    <ion-icon
+      *ngIf="!_model.dateTesed"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+
     <ion-label position="floating">Date Tesed</ion-label>
+    <!-- <ion-datetime
+      [disabled]="readonly"
+      [(ngModel)]="_model.dateTesed"
+      displayFormat="MMMM DD, YYYY"
+      pickerFormat="MMMM DD YYYY "
+    ></ion-datetime> -->
+
     <ion-datetime
       [disabled]="readonly"
-      [(ngModel)]="_model.dateTesedString"
-      displayFormat="MMMM DD YY"
-      pickerFormat="MMMM DD YY"
+      name="scheduleDateTime"
+      #dateTesed="ngModel"
+      [(ngModel)]="_model.dateTesed"
+      displayFormat="MMMM DD, YYYY"
+      pickerFormat="MMMM DD YYYY "
     ></ion-datetime>
   </ion-item>
 
@@ -52,11 +75,12 @@
     ngDefaultControl
     [readonly]="readonly"
     [title]="'Area ' + (i + 1)"
+    [index]="i"
     (modelChanged)="AreaUpdated($event)"
     [(model)]="_model.areamoistureMapping[i]"
   ></app-moisture-mapping>
 
-    <ion-item
+  <ion-item
     (click)="toggleAccordion()"
     lines="none"
     button

@@ -9,21 +9,21 @@ export class Asbesto {
   condition: string;
   labResults: string;
   observations: string;
-  asbestoBitrixMaping: AsbestoBitrixMaping;
+  //asbestoBitrixMaping: AsbestoBitrixMaping;
   syncInfo: SyncInfo;
   constructor() {
     this.syncInfo = new SyncInfo();
-    this.asbestoBitrixMaping = new AsbestoBitrixMaping();
+   // this.asbestoBitrixMaping = new AsbestoBitrixMaping();
   }
 }
 
-export class AsbestoBitrixMaping {
-  materialLocationCode: string;
-  materialLocationOtherCode: string;
-  materialDescriptionCode: string;
-  totalQuantityCode: string;
-  F_NFCode: string;
-  conditionCode: string;
-  labResultsCode: string;
-  observationsCode: string;
-}
+// export class AsbestoBitrixMaping {
+//   materialLocationCode: string;
+//   materialLocationOtherCode: string;
+//   materialDescriptionCode: string;
+//   totalQuantityCode: string;
+//   F_NFCode: string;
+//   conditionCode: string;
+//   labResultsCode: string;
+//   observationsCode: string;
+// }

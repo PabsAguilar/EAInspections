@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 import { DamageInspection } from "src/app/models/damage-inspection";
-import { DamageAreaType } from "src/app/models/enums";
+import {
+  bitrixMappingEnvironmental,
+  DamageAreaType,
+} from "src/app/models/enums";
 import { Sample } from "src/app/models/environmental-form/sample";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
 import { ItestDealService } from "src/app/services/itest-deal.service";
@@ -12,7 +15,7 @@ import { ItestDealService } from "src/app/services/itest-deal.service";
   styleUrls: ["./area-mold.component.scss"],
 })
 export class AreaMoldComponent implements OnInit {
-  public totalProperties: number = 21;
+  public totalProperties: number = 19;
   public filledProperties: number = 0;
   public isMenuOpen: boolean = false;
   public progressPercentage: number = 0;
@@ -32,8 +35,11 @@ export class AreaMoldComponent implements OnInit {
   listmoldSporesFound: any[] = [];
   listToxicMold: any[] = [];
   listRecomendations: any[] = [];
+  waterDamageCategories: any[] = [];
+  waterDamageClasses: any[] = [];
   selectAreaName: string;
   fields: any[];
+  @Input() index: number = 0;
   @Input() readonly: boolean = false;
   @Input()
   get model(): DamageInspection {
@@ -45,9 +51,9 @@ export class AreaMoldComponent implements OnInit {
     this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
       this.fields = x[0];
       if (value) {
+        var bitrixFields = bitrixMappingEnvironmental[this._model.type];
         this.listArea = Object.entries(
-          this.fields[this._model.damageInspectionBitrixMapping.areaNameCode]
-            .DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.areaNameCode[this.index]].DISPLAY_VALUES_FORM
         ).map(([k, v]) => {
           if ((v as string)?.toLowerCase().includes("other")) {
             this.other = k;
@@ -56,51 +62,53 @@ export class AreaMoldComponent implements OnInit {
         });
 
         this.listCondition = Object.entries(
-          this.fields[this._model.damageInspectionBitrixMapping.conditionCode]
+          this.fields[bitrixFields.areaConditionCode[this.index]]
             .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k, checked: false }));
         this.listRemoveCeiling = Object.entries(
-          this.fields[
-            this._model.damageInspectionBitrixMapping.removeCeilingCode
-          ].DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.removeCeilingCode[this.index]]
+            .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
         this.listRemoveDrywall = Object.entries(
-          this.fields[
-            this._model.damageInspectionBitrixMapping.removeDrywallCode
-          ].DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.removeDrywallCode[this.index]]
+            .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
         this.listRemoveBaseboards = Object.entries(
-          this.fields[
-            this._model.damageInspectionBitrixMapping.removeBaseboardsCode
-          ].DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.removeBaseboardsCode[this.index]]
+            .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
         this.listRemoveFlooring = Object.entries(
-          this.fields[
-            this._model.damageInspectionBitrixMapping.removeFlooringCode
-          ].DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.removeFlooringCode[this.index]]
+            .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.listDecontamination = Object.entries(
-          this.fields[
-            this._model.damageInspectionBitrixMapping.decontaminationCode
-          ].DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.decontaminationCode[this.index]]
+            .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.listFurniture = Object.entries(
-          this.fields[
-            this._model.damageInspectionBitrixMapping.furnitureOptionCode
-          ].DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.furnitureOptionCode[this.index]]
+            .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
         this.listbeddingsOption = Object.entries(
-          this.fields[
-            this._model.damageInspectionBitrixMapping.beddingsOptionCode
-          ].DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.beddingsOptionCode[this.index]]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.waterDamageCategories = Object.entries(
+          this.fields[bitrixFields.waterDamageCategoryCode[this.index]]
+            .DISPLAY_VALUES_FORM
+        ).map(([k, v]) => ({ name: v, value: k }));
+
+        this.waterDamageClasses = Object.entries(
+          this.fields[bitrixFields.waterDamageClassCode[this.index]]
+            .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.listRecomendations = Object.entries(
-          this.fields[
-            this._model.damageInspectionBitrixMapping.recomendationsCode
-          ].DISPLAY_VALUES_FORM
+          this.fields[bitrixFields.recomendationsCode[this.index]]
+            .DISPLAY_VALUES_FORM
         ).map(([k, v]) => ({ name: v, value: k }));
 
         this.listRecomendations.forEach(
@@ -108,39 +116,39 @@ export class AreaMoldComponent implements OnInit {
         );
 
         this.listSampleType = [];
-        this._model.samples.forEach((item: Sample, index) => {
+        this._model.samples.forEach((item: Sample, sampleIndex) => {
+          var varient: string = "Sample" + (sampleIndex + 1);
           if (this._model.type == DamageAreaType.Mold) {
             var t = Object.entries(
-              this.fields[item.sampleBitrixMapping.toxicMoldCode]
+              this.fields[bitrixFields["toxicMoldCode" + varient][this.index]]
                 .DISPLAY_VALUES_FORM
-            ).map(([k, v]) => ({ name: v, value: k, sample: index }));
+            ).map(([k, v]) => ({ name: v, value: k, sample: sampleIndex }));
             this.listToxicMold = this.listToxicMold.concat(t);
 
-            //   if (item.sampleBitrixMapping.moldSporesFoundCode) {
-            //     var u = Object.entries(
-            //       this.fields[item.sampleBitrixMapping.moldSporesFoundCode]
-            //         .DISPLAY_VALUES_FORM
-            //     ).map(([k, v]) => ({
-            //       name: v,
-            //       value: k,
-            //       checked: false,
-            //       sample: index,
-            //     }));
-            //     this.listmoldSporesFound = this.listmoldSporesFound.concat(u);
-            //   }
+            var u = Object.entries(
+              this.fields[
+                bitrixFields["moldSporesFoundCode" + varient][this.index]
+              ].DISPLAY_VALUES_FORM
+            ).map(([k, v]) => ({
+              name: v,
+              value: k,
+              checked: false,
+              sample: sampleIndex,
+            }));
+            this.listmoldSporesFound = this.listmoldSporesFound.concat(u);
           }
           //lab results
           var l = Object.entries(
-            this.fields[item.sampleBitrixMapping.labResultCode]
+            this.fields[bitrixFields["labResultCode" + varient][this.index]]
               .DISPLAY_VALUES_FORM
-          ).map(([k, v]) => ({ name: v, value: k, sample: index }));
+          ).map(([k, v]) => ({ name: v, value: k, sample: sampleIndex }));
           this.listlabResults = this.listlabResults.concat(l);
 
           //sample type
           var s = Object.entries(
-            this.fields[item.sampleBitrixMapping.sampleTypeCode]
+            this.fields[bitrixFields["typeCode" + varient][this.index]]
               .DISPLAY_VALUES_FORM
-          ).map(([k, v]) => ({ name: v, value: k, sample: index }));
+          ).map(([k, v]) => ({ name: v, value: k, sample: sampleIndex }));
           this.listSampleType = this.listSampleType.concat(s);
         });
 
@@ -163,16 +171,26 @@ export class AreaMoldComponent implements OnInit {
 
   changeModel($event) {
     this.filledProperties = 0;
-    if (this._model.areaPictures.images.length > 0) {
-      this.filledProperties++;
-    }
-    if (this._model.areaCondition.length > 0) {
+    // if (
+    //   this._model.areaPictures.images &&
+    //   this._model.areaPictures.images.length > 0
+    // ) {
+    //   this.filledProperties++;
+    // }
+    if (this._model.areaCondition && this._model.areaCondition.length > 0) {
       this.filledProperties++;
     }
     if (this._model.areaName) {
       this.selectAreaName = this.listArea.find(
         (x) => x.value == this._model.areaName
       )?.name;
+      if (
+        this.selectAreaName &&
+        this.selectAreaName.toLowerCase().includes("other") &&
+        this._model.areaNameOther
+      ) {
+        this.selectAreaName = this._model.areaNameOther;
+      }
       this.filledProperties++;
     }
     if (this._model.areaRH) {
@@ -184,15 +202,15 @@ export class AreaMoldComponent implements OnInit {
     if (this._model.ceilingNotes) {
       this.filledProperties++;
     }
-    if (this._model.decontamination.length > 0) {
+    if (this._model.decontamination && this._model.decontamination.length > 0) {
       this.filledProperties++;
     }
     if (this._model.drywallNotes) {
       this.filledProperties++;
     }
-    if (this._model.areaNotes) {
-      this.filledProperties++;
-    }
+    // if (this._model.areaNotes) {
+    //   this.filledProperties++;
+    // }
 
     if (this._model.flooringNotes) {
       this.filledProperties++;

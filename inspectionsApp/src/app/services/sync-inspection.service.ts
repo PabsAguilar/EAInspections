@@ -11,6 +11,7 @@ import {
   bitrixMappingComprehensive,
   bitrixMappingEnvironmental,
   DamageAreaType,
+  ENContactSegments,
   ENDealMapping,
   EnumEnterprise,
   InspectionStatus,
@@ -62,10 +63,19 @@ export class SyncInspectionService {
       if (task.inspectionType == InspectionType.Comprehensive) {
         idFolder = ENImageMainFolder;
       }
+      var d = new Date();
+      var dateString =
+        d.getFullYear().toString() +
+        d.getMonth().toString() +
+        d.getDay().toString() +
+        d.getHours().toString() +
+        d.getHours().toString() +
+        d.getMinutes().toString() +
+        d.getMilliseconds().toString();
       var postData = {
         id: idFolder,
         data: {
-          NAME: `${task.id}-${task.title}`,
+          NAME: `${task.id}-${task.title}-${dateString}`,
         },
       };
       var response = await this.bitrix.createSubfolder(postData).toPromise();
@@ -344,42 +354,46 @@ export class SyncInspectionService {
       };
       switch (task.internalStatus) {
         case InspectionStatus.PendingSaved:
-          postData.fields["UF_CRM_1613380179"] = ReportStatusDeal.Saved;
+          postData.fields[ITestDealMapping.reportStatus] =
+            ReportStatusDeal.Saved;
           break;
 
         case InspectionStatus.PendingSentLab:
-          postData.fields["UF_CRM_1613380179"] = ReportStatusDeal.Labs;
+          postData.fields[ITestDealMapping.reportStatus] =
+            ReportStatusDeal.Labs;
           break;
 
         case InspectionStatus.PendingToComplete:
-          postData.fields["UF_CRM_1613380179"] = ReportStatusDeal.Submitted;
+          postData.fields[ITestDealMapping.reportStatus] =
+            ReportStatusDeal.Submitted;
           break;
 
         default:
-          postData.fields["UF_CRM_1613380179"] = ReportStatusDeal.Saved;
+          postData.fields[ITestDealMapping.reportStatus] =
+            ReportStatusDeal.Saved;
           break;
       }
 
       if (task.environmentalForm.generalInfoInspection.propertyYear)
-        postData.fields["UF_CRM_1606466447"] =
+        postData.fields[ITestDealMapping.propertyYearCode] =
           task.environmentalForm.generalInfoInspection.propertyYear;
       if (task.environmentalForm.generalInfoInspection.propertyType)
-        postData.fields["UF_CRM_1606466564"] =
+        postData.fields[ITestDealMapping.propertyTypeCode] =
           task.environmentalForm.generalInfoInspection.propertyType;
       if (task.environmentalForm.generalInfoInspection.interiorTemperature)
-        postData.fields["UF_CRM_1606466601"] =
+        postData.fields[ITestDealMapping.interiorTemperatureCode] =
           task.environmentalForm.generalInfoInspection.interiorTemperature;
       if (task.environmentalForm.generalInfoInspection.exteriorRelativeHumidity)
-        postData.fields["UF_CRM_1606466624"] =
+        postData.fields[ITestDealMapping.exteriorRelativeHumidityCode] =
           task.environmentalForm.generalInfoInspection.exteriorRelativeHumidity;
       if (task.environmentalForm.generalInfoInspection.HVACSystemCondition)
-        postData.fields["UF_CRM_1606466669"] =
+        postData.fields[ITestDealMapping.HVACSystemConditionCode] =
           task.environmentalForm.generalInfoInspection.HVACSystemCondition;
       if (task.environmentalForm.generalInfoInspection.ductsCondition)
-        postData.fields["UF_CRM_1606466692"] =
+        postData.fields[ITestDealMapping.ductsConditionCode] =
           task.environmentalForm.generalInfoInspection.ductsCondition;
       if (task.environmentalForm.generalInfoInspection.atticCondition)
-        postData.fields["UF_CRM_1606466732"] =
+        postData.fields[ITestDealMapping.atticConditionCode] =
           task.environmentalForm.generalInfoInspection.atticCondition;
 
       if (task.environmentalForm.generalInfoInspection.typeOfLossDesc) {
@@ -389,14 +403,6 @@ export class SyncInspectionService {
       if (task.environmentalForm.generalInfoInspection.affectedArea) {
         postData.fields[ITestDealMapping.affectedArea] =
           task.environmentalForm.generalInfoInspection.affectedArea;
-      }
-      if (task.environmentalForm.generalInfoInspection.waterDamageCategory) {
-        postData.fields[ITestDealMapping.waterDamageCategory] =
-          task.environmentalForm.generalInfoInspection.waterDamageCategory;
-      }
-      if (task.environmentalForm.generalInfoInspection.waterDamageClass) {
-        postData.fields[ITestDealMapping.waterDamageClass] =
-          task.environmentalForm.generalInfoInspection.waterDamageClass;
       }
 
       if (
@@ -416,14 +422,14 @@ export class SyncInspectionService {
               };
             }
           );
-        postData.fields["UF_CRM_1606466511"] = x;
+        postData.fields[ITestDealMapping.picturesFrontHouseCode] = x;
       }
 
       if (
         task.environmentalForm.generalInfoInspection.pictureHouseNumbers.images
           .length > 0
       ) {
-        postData.fields["UF_CRM_1606466494"] = {
+        postData.fields[ITestDealMapping.pictureHouseNumbersCode] = {
           fileData: [
             `HouseNumber-${task.id}-${Math.floor(Math.random() * 1000)}.png`,
             task.environmentalForm.generalInfoInspection.pictureHouseNumbers.images[0].base64Image.replace(
@@ -434,7 +440,7 @@ export class SyncInspectionService {
         };
       }
       if (task.iTestAgreements.signature.images.length > 0) {
-        postData.fields["UF_CRM_1612683169"] =
+        postData.fields[ITestDealMapping.agreementSignedYesNoCode] =
           task.environmentalForm.generalInfoInspection.agreementSignedYesNo;
 
         var itestSignature = task.iTestAgreements.signature.images.map(
@@ -463,7 +469,7 @@ export class SyncInspectionService {
           });
 
         var signatures = itestSignature.concat(expertNSignature);
-        postData.fields["UF_CRM_1612780368"] = signatures;
+        postData.fields[ITestDealMapping.signature] = signatures;
       }
 
       var response = await this.bitrix.updateDeal(postData).toPromise();
@@ -477,10 +483,14 @@ export class SyncInspectionService {
     }
   }
 
-  async syncContact(contact: Contact, enterprise: string): Promise<Contact> {
+  async syncContact(
+    contact: Contact,
+    enterprise: string,
+    type: number = null
+  ): Promise<Contact> {
     try {
       var postData = {
-        fields: {
+        FIELDS: {
           NAME: contact.firstName,
           SECOND_NAME: "",
           LAST_NAME: contact.lastName,
@@ -488,6 +498,10 @@ export class SyncInspectionService {
           EMAIL: [{ VALUE: contact.email }],
         },
       };
+
+      if (enterprise === EnumEnterprise.expertNetworks) {
+        postData.FIELDS[ENDealMapping.contactSegments] = [type];
+      }
       var response = await this.bitrix
         .createContact(postData, enterprise)
         .toPromise();
@@ -631,10 +645,14 @@ export class SyncInspectionService {
     user: User
   ): Promise<Observable<boolean>> {
     try {
-      if (!scheduling.contact.syncInfo.isSync) {
+      if (
+        !scheduling.contact.syncInfo.isSync ||
+        !scheduling.contact.syncInfo.syncCode
+      ) {
         scheduling.contact = await this.syncContact(
           scheduling.contact,
-          scheduling.serviceType
+          scheduling.serviceType,
+          ENContactSegments.Client
         );
 
         if (!scheduling.contact.syncInfo.isSync) {
@@ -647,11 +665,13 @@ export class SyncInspectionService {
       );
       if (
         scheduling.insuranceCompanyContact &&
-        !scheduling.insuranceCompanyContact.syncInfo.isSync
+        (!scheduling.insuranceCompanyContact.syncInfo.isSync ||
+          !scheduling.insuranceCompanyContact.syncInfo.syncCode)
       ) {
         scheduling.insuranceCompanyContact = await this.syncContact(
           scheduling.insuranceCompanyContact,
-          scheduling.serviceType
+          scheduling.serviceType,
+          ENContactSegments.Public_Adjuster
         );
 
         if (!scheduling.insuranceCompanyContact.syncInfo.isSync) {
@@ -662,11 +682,13 @@ export class SyncInspectionService {
 
       if (
         scheduling.referalPartner &&
-        !scheduling.referalPartner.syncInfo.isSync
+        (!scheduling.referalPartner.syncInfo.isSync ||
+          !scheduling.referalPartner.syncInfo.syncCode)
       ) {
         scheduling.referalPartner = await this.syncContact(
           scheduling.referalPartner,
-          scheduling.serviceType
+          scheduling.serviceType,
+          ENContactSegments.Referral_Partner
         );
         if (!scheduling.referalPartner.syncInfo.isSync) {
           return of(false);
@@ -767,6 +789,7 @@ export class SyncInspectionService {
         // postData[ITestDealMapping.waterDamageClass] = scheduling.waterDamageClass; //UF_CRM_1618512548
         postData[ITestDealMapping.referenceContact] = referalContact; //UF_CRM_1612691326
       } else {
+        //postData.fields[ENDealMapping.segments] = [4315];
         postData.fields[ENDealMapping.instructions] = scheduling.notes;
         postData.fields[ENDealMapping.dealDateTime] =
           scheduling.scheduleDateString;
@@ -816,6 +839,7 @@ export class SyncInspectionService {
     });
     return image;
   }
+
   async syncENTask(task: InspectionTask): Promise<Observable<boolean>> {
     try {
       if (!task.bitrixFolder.syncInfo.isSync) {
@@ -833,13 +857,11 @@ export class SyncInspectionService {
       };
 
       if (task.comprehesiveForm.generalInfoInspection.propertyYear)
-        postData.fields[
-          task.comprehesiveForm.generalInfoInspection.generalInfoInspectionBitrixMapping.propertyYearCode
-        ] = task.comprehesiveForm.generalInfoInspection.propertyYear;
+        postData.fields[ENDealMapping.propertyYearCode] =
+          task.comprehesiveForm.generalInfoInspection.propertyYear;
       if (task.comprehesiveForm.generalInfoInspection.propertyType)
-        postData.fields[
-          task.comprehesiveForm.generalInfoInspection.generalInfoInspectionBitrixMapping.propertyTypeCode
-        ] = task.comprehesiveForm.generalInfoInspection.propertyType;
+        postData.fields[ENDealMapping.propertyTypeCode] =
+          task.comprehesiveForm.generalInfoInspection.propertyType;
 
       if (
         task.comprehesiveForm.generalInfoInspection.picturesFrontHouse.images
@@ -850,7 +872,7 @@ export class SyncInspectionService {
           task.id,
           "FrontHouse"
         );
-        postData.fields["UF_CRM_1591107445"] = x;
+        postData.fields[ENDealMapping.picturesFrontHouseCode] = x;
       }
 
       if (
@@ -862,11 +884,13 @@ export class SyncInspectionService {
           task.id,
           "HouseNumber"
         );
-        postData.fields["UF_CRM_1591107425"] = x;
+        postData.fields[ENDealMapping.pictureHouseNumbersCode] = x;
       }
 
-      task.comprehesiveForm.areas.map((x, index) => {
-        Object.entries(x.areaBitrixMapping).map((y) => {
+      task.comprehesiveForm.areas.map((x, index: number) => {
+        var list = entries(bitrixMappingComprehensive.Area);
+        //Object.entries(x.areaBitrixMapping)
+        list.map((y) => {
           var item = x[y[0].replace("Code", "")];
           if (item) {
             if (item.images) {
@@ -890,239 +914,235 @@ export class SyncInspectionService {
         });
       });
 
-      task.comprehesiveForm.bathrooms.map((x, index) => {
-        Object.entries(x.generalConditionBitrixMapping).map((y) => {
-          var item = x[y[0].replace("Code", "")];
-          if (item) {
-            if (item.images) {
-              var image = item.images.map((s, imageIndex) => {
-                return {
-                  fileData: [
-                    `Bathroom${index + 1}-${imageIndex}-${task.id}-${Math.floor(
-                      Math.random() * 1000
-                    )}.png`,
-                    s.base64Image.replace("data:image/png;base64,", ""),
-                  ],
-                };
-              });
-              if (image.length > 0) {
-                postData.fields[y[1]] = image;
-              }
-            } else {
-              postData.fields[y[1]] = item;
-            }
-          }
-        });
-      });
+      // task.comprehesiveForm.bathrooms.map((x, index) => {
+      //   entries(bitrixMappingComprehensive.Atic)  Object.entries(x.generalConditionBitrixMapping).map((y) => {
+      //     var item = x[y[0].replace("Code", "")];
+      //     if (item) {
+      //       if (item.images) {
+      //         var image = item.images.map((s, imageIndex) => {
+      //           return {
+      //             fileData: [
+      //               `Bathroom${index + 1}-${imageIndex}-${task.id}-${Math.floor(
+      //                 Math.random() * 1000
+      //               )}.png`,
+      //               s.base64Image.replace("data:image/png;base64,", ""),
+      //             ],
+      //           };
+      //         });
+      //         if (image.length > 0) {
+      //           postData.fields[y[1]] = image;
+      //         }
+      //       } else {
+      //         postData.fields[y[1]] = item;
+      //       }
+      //     }
+      //   });
+      // });
 
-      Object.entries(
-        task.comprehesiveForm.atic.generalConditionBitrixMapping
-      ).map((y) => {
-        var item = task.comprehesiveForm.atic[y[0].replace("Code", "")];
-        if (item) {
-          if (item.images) {
-            var image = item.images.map((s, imageIndex) => {
-              return {
-                fileData: [
-                  `Attic-${imageIndex}-${task.id}-${Math.floor(
-                    Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
-                ],
-              };
-            });
-            if (image.length > 0) {
-              postData.fields[y[1]] = image;
-            }
-          } else {
-            postData.fields[y[1]] = item;
-          }
-        }
-      });
+      // entries(bitrixMappingComprehensive.Atic).map((y) => {
+      //   var item = task.comprehesiveForm.atic[y[0].replace("Code", "")];
+      //   if (item) {
+      //     if (item.images) {
+      //       var image = item.images.map((s, imageIndex) => {
+      //         return {
+      //           fileData: [
+      //             `Attic-${imageIndex}-${task.id}-${Math.floor(
+      //               Math.random() * 1000
+      //             )}.png`,
+      //             s.base64Image.replace("data:image/png;base64,", ""),
+      //           ],
+      //         };
+      //       });
+      //       if (image.length > 0) {
+      //         postData.fields[y] = image;
+      //       }
+      //     } else {
+      //       postData.fields[y[1]] = item;
+      //     }
+      //   }
+      // });
 
-      Object.entries(
-        task.comprehesiveForm.utilityRoom.generalConditionBitrixMapping
-      ).map((y) => {
-        var item = task.comprehesiveForm.utilityRoom[y[0].replace("Code", "")];
-        if (item) {
-          if (item.images) {
-            var image = item.images.map((s, imageIndex) => {
-              return {
-                fileData: [
-                  `UtilityRoom-${imageIndex}-${task.id}-${Math.floor(
-                    Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
-                ],
-              };
-            });
-            if (image.length > 0) {
-              postData.fields[y[1]] = image;
-            }
-          } else {
-            postData.fields[y[1]] = item;
-          }
-        }
-      });
+      // entries(bitrixMappingComprehensive.UtilityRoom).map((y) => {
+      //   var item = task.comprehesiveForm.utilityRoom[y[0].replace("Code", "")];
+      //   if (item) {
+      //     if (item.images) {
+      //       var image = item.images.map((s, imageIndex) => {
+      //         return {
+      //           fileData: [
+      //             `UtilityRoom-${imageIndex}-${task.id}-${Math.floor(
+      //               Math.random() * 1000
+      //             )}.png`,
+      //             s.base64Image.replace("data:image/png;base64,", ""),
+      //           ],
+      //         };
+      //       });
+      //       if (image.length > 0) {
+      //         postData.fields[y[1]] = image;
+      //       }
+      //     } else {
+      //       postData.fields[y[1]] = item;
+      //     }
+      //   }
+      // });
 
-      Object.entries(
-        task.comprehesiveForm.HVAC_AC.generalConditionBitrixMapping
-      ).map((y) => {
-        var item = task.comprehesiveForm.HVAC_AC[y[0].replace("Code", "")];
-        if (item) {
-          if (item.images) {
-            var image = item.images.map((s, imageIndex) => {
-              return {
-                fileData: [
-                  `UtilityRoom-${imageIndex}-${task.id}-${Math.floor(
-                    Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
-                ],
-              };
-            });
-            if (image.length > 0) {
-              postData.fields[y[1]] = image;
-            }
-          } else {
-            postData.fields[y[1]] = item;
-          }
-        }
-      });
+      // Object.entries(
+      //   task.comprehesiveForm.HVAC_AC.generalConditionBitrixMapping
+      // ).map((y) => {
+      //   var item = task.comprehesiveForm.HVAC_AC[y[0].replace("Code", "")];
+      //   if (item) {
+      //     if (item.images) {
+      //       var image = item.images.map((s, imageIndex) => {
+      //         return {
+      //           fileData: [
+      //             `UtilityRoom-${imageIndex}-${task.id}-${Math.floor(
+      //               Math.random() * 1000
+      //             )}.png`,
+      //             s.base64Image.replace("data:image/png;base64,", ""),
+      //           ],
+      //         };
+      //       });
+      //       if (image.length > 0) {
+      //         postData.fields[y[1]] = image;
+      //       }
+      //     } else {
+      //       postData.fields[y[1]] = item;
+      //     }
+      //   }
+      // });
 
-      Object.entries(
-        task.comprehesiveForm.enviromentalSection
-          .environmentalSectionBitrixMapping
-      ).map((y) => {
-        var item =
-          task.comprehesiveForm.enviromentalSection[y[0].replace("Code", "")];
-        if (item) {
-          if (item.images) {
-            var image = item.images.map((s, imageIndex) => {
-              return {
-                fileData: [
-                  `EnvironmentalSection-${imageIndex}-${task.id}-${Math.floor(
-                    Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
-                ],
-              };
-            });
-            if (image.length > 0) {
-              postData.fields[y[1]] = image;
-            }
-          } else {
-            postData.fields[y[1]] = item;
-          }
-        }
-      });
+      // Object.entries(
+      //   task.comprehesiveForm.enviromentalSection
+      //     .environmentalSectionBitrixMapping
+      // ).map((y) => {
+      //   var item =
+      //     task.comprehesiveForm.enviromentalSection[y[0].replace("Code", "")];
+      //   if (item) {
+      //     if (item.images) {
+      //       var image = item.images.map((s, imageIndex) => {
+      //         return {
+      //           fileData: [
+      //             `EnvironmentalSection-${imageIndex}-${task.id}-${Math.floor(
+      //               Math.random() * 1000
+      //             )}.png`,
+      //             s.base64Image.replace("data:image/png;base64,", ""),
+      //           ],
+      //         };
+      //       });
+      //       if (image.length > 0) {
+      //         postData.fields[y[1]] = image;
+      //       }
+      //     } else {
+      //       postData.fields[y[1]] = item;
+      //     }
+      //   }
+      // });
 
-      Object.entries(
-        task.comprehesiveForm.exterior.generalConditionBitrixMapping
-      ).map((y) => {
-        var item = task.comprehesiveForm.exterior[y[0].replace("Code", "")];
-        if (item) {
-          if (item.images) {
-            var image = item.images.map((s, imageIndex) => {
-              return {
-                fileData: [
-                  `Exterior-${imageIndex}-${task.id}-${Math.floor(
-                    Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
-                ],
-              };
-            });
-            if (image.length > 0) {
-              postData.fields[y[1]] = image;
-            }
-          } else {
-            postData.fields[y[1]] = item;
-          }
-        }
-      });
+      // Object.entries(
+      //   task.comprehesiveForm.exterior.generalConditionBitrixMapping
+      // ).map((y) => {
+      //   var item = task.comprehesiveForm.exterior[y[0].replace("Code", "")];
+      //   if (item) {
+      //     if (item.images) {
+      //       var image = item.images.map((s, imageIndex) => {
+      //         return {
+      //           fileData: [
+      //             `Exterior-${imageIndex}-${task.id}-${Math.floor(
+      //               Math.random() * 1000
+      //             )}.png`,
+      //             s.base64Image.replace("data:image/png;base64,", ""),
+      //           ],
+      //         };
+      //       });
+      //       if (image.length > 0) {
+      //         postData.fields[y[1]] = image;
+      //       }
+      //     } else {
+      //       postData.fields[y[1]] = item;
+      //     }
+      //   }
+      // });
 
-      Object.entries(
-        task.comprehesiveForm.insurance.insuranceBitrixMapping
-      ).map((y) => {
-        var item = task.comprehesiveForm.insurance[y[0].replace("Code", "")];
-        if (item) {
-          if (item.images) {
-            var image = item.images.map((s, imageIndex) => {
-              return {
-                fileData: [
-                  `Insurance-${imageIndex}-${task.id}-${Math.floor(
-                    Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
-                ],
-              };
-            });
-            if (image.length > 0) {
-              postData.fields[y[1]] = image;
-            }
-          } else {
-            postData.fields[y[1]] = item;
-          }
-        }
-      });
+      // Object.entries(
+      //   task.comprehesiveForm.insurance.insuranceBitrixMapping
+      // ).map((y) => {
+      //   var item = task.comprehesiveForm.insurance[y[0].replace("Code", "")];
+      //   if (item) {
+      //     if (item.images) {
+      //       var image = item.images.map((s, imageIndex) => {
+      //         return {
+      //           fileData: [
+      //             `Insurance-${imageIndex}-${task.id}-${Math.floor(
+      //               Math.random() * 1000
+      //             )}.png`,
+      //             s.base64Image.replace("data:image/png;base64,", ""),
+      //           ],
+      //         };
+      //       });
+      //       if (image.length > 0) {
+      //         postData.fields[y[1]] = image;
+      //       }
+      //     } else {
+      //       postData.fields[y[1]] = item;
+      //     }
+      //   }
+      // });
 
-      Object.entries(
-        task.comprehesiveForm.recomendations.recomendationsBitrixMapping
-      ).map((y) => {
-        var item =
-          task.comprehesiveForm.recomendations[y[0].replace("Code", "")];
-        if (item) {
-          if (item.images) {
-            var image = item.images.map((s, imageIndex) => {
-              return {
-                fileData: [
-                  `Recomendations-${imageIndex}-${task.id}-${Math.floor(
-                    Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
-                ],
-              };
-            });
-            if (image.length > 0) {
-              postData.fields[y[1]] = image;
-            }
-          } else {
-            postData.fields[
-              task.comprehesiveForm.recomendations.recomendationsBitrixMapping[
-                y[0]
-              ]
-            ] = item;
-          }
-        }
-      });
+      // Object.entries(
+      //   task.comprehesiveForm.recomendations.recomendationsBitrixMapping
+      // ).map((y) => {
+      //   var item =
+      //     task.comprehesiveForm.recomendations[y[0].replace("Code", "")];
+      //   if (item) {
+      //     if (item.images) {
+      //       var image = item.images.map((s, imageIndex) => {
+      //         return {
+      //           fileData: [
+      //             `Recomendations-${imageIndex}-${task.id}-${Math.floor(
+      //               Math.random() * 1000
+      //             )}.png`,
+      //             s.base64Image.replace("data:image/png;base64,", ""),
+      //           ],
+      //         };
+      //       });
+      //       if (image.length > 0) {
+      //         postData.fields[y[1]] = image;
+      //       }
+      //     } else {
+      //       postData.fields[
+      //         task.comprehesiveForm.recomendations.recomendationsBitrixMapping[
+      //           y[0]
+      //         ]
+      //       ] = item;
+      //     }
+      //   }
+      // });
 
-      Object.entries(
-        task.comprehesiveForm.reminders.remindersBitrixMapping
-      ).map((y) => {
-        var item = task.comprehesiveForm.reminders[y[0].replace("Code", "")];
-        if (item) {
-          if (item.images) {
-            var image = item.images.map((s, imageIndex) => {
-              return {
-                fileData: [
-                  `Reminders-${imageIndex}-${task.id}-${Math.floor(
-                    Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
-                ],
-              };
-            });
-            if (image.length > 0) {
-              postData.fields[y[1]] = image;
-            }
-          } else {
-            postData.fields[
-              task.comprehesiveForm.reminders.remindersBitrixMapping[y[0]]
-            ] = item;
-          }
-        }
-      });
+      // Object.entries(
+      //   task.comprehesiveForm.reminders.remindersBitrixMapping
+      // ).map((y) => {
+      //   var item = task.comprehesiveForm.reminders[y[0].replace("Code", "")];
+      //   if (item) {
+      //     if (item.images) {
+      //       var image = item.images.map((s, imageIndex) => {
+      //         return {
+      //           fileData: [
+      //             `Reminders-${imageIndex}-${task.id}-${Math.floor(
+      //               Math.random() * 1000
+      //             )}.png`,
+      //             s.base64Image.replace("data:image/png;base64,", ""),
+      //           ],
+      //         };
+      //       });
+      //       if (image.length > 0) {
+      //         postData.fields[y[1]] = image;
+      //       }
+      //     } else {
+      //       postData.fields[
+      //         task.comprehesiveForm.reminders.remindersBitrixMapping[y[0]]
+      //       ] = item;
+      //     }
+      //   }
+      // });
 
       var response = await this.bitrix.updateDeal(postData).toPromise();
       if (response && response.result > 0) {
@@ -1229,7 +1249,6 @@ export class SyncInspectionService {
         task.environmentalForm.sootAreas.syncInfo.updated
       ) {
         if (
-          task.environmentalForm.sootAreas.moldInspectionType &&
           task.environmentalForm.sootAreas.areasInspection.find(
             (x) => x.areaName
           )
@@ -1377,57 +1396,60 @@ export class SyncInspectionService {
       }
       if (task.environmentalForm.leadAreas.contact) {
         postData.FIELDS[
-          task.environmentalForm.leadAreas.leadAreasBitrixMapping.contactCode
+          bitrixMappingEnvironmental.Lead.leadHeader.contactCode
         ] = task.contactId;
       }
       if (task.environmentalForm.leadAreas.inspectionDate) {
         postData.FIELDS[
-          task.environmentalForm.leadAreas.leadAreasBitrixMapping.inspectionDateCode
+          bitrixMappingEnvironmental.Lead.leadHeader.inspectionDateCode
         ] = this.getBitrixDateTime(
           task.environmentalForm.leadAreas.inspectionDate
         );
       }
       if (task.environmentalForm.leadAreas.inspectionType) {
         postData.FIELDS[
-          task.environmentalForm.leadAreas.leadAreasBitrixMapping.inspectionTypeCode
+          bitrixMappingEnvironmental.Lead.leadHeader.inspectionTypeCode
         ] = task.environmentalForm.leadAreas.inspectionType;
       }
 
       await Promise.all(
-        task.environmentalForm.leadAreas.leadAreas.map(async (area: Lead) => {
-          if (area.sample) {
-            postData.FIELDS[area.bitrixMappingLead.sampleCode] = area.sample;
-          }
-          if (area.sampleOther) {
-            postData.FIELDS[area.bitrixMappingLead.sampleOtherCode] =
-              area.sampleOther;
-          }
+        task.environmentalForm.leadAreas.leadAreas.map(
+          async (area: Lead, index: number) => {
+            var bitrixFields = bitrixMappingEnvironmental.Lead;
 
-          if (area.cardinalDirection) {
-            postData.FIELDS[area.bitrixMappingLead.cardinalDirectionCode] =
-              area.cardinalDirection;
+            if (area.sample) {
+              postData.FIELDS[bitrixFields.sampleCode[index]] = area.sample;
+            }
+            if (area.sampleOther) {
+              postData.FIELDS[bitrixFields.sampleOtherCode[index]] =
+                area.sampleOther;
+            }
+
+            if (area.cardinalDirection) {
+              postData.FIELDS[bitrixFields.cardinalDirectionCode[index]] =
+                area.cardinalDirection;
+            }
+            if (area.dimensionCm2) {
+              postData.FIELDS[bitrixFields.dimensionCm2Code[index]] =
+                area.dimensionCm2;
+            }
+            if (area.material) {
+              postData.FIELDS[bitrixFields.materialCode[index]] = area.material;
+            }
+            if (area.typeOfSample) {
+              postData.FIELDS[bitrixFields.typeOfSampleCode[index]] =
+                area.typeOfSample;
+            }
+            if (area.labResults) {
+              postData.FIELDS[bitrixFields.labResultsCode[index]] =
+                area.labResults;
+            }
+            if (area.observations) {
+              postData.FIELDS[bitrixFields.observationsCode[index]] =
+                area.observations;
+            }
           }
-          if (area.dimensionCm2) {
-            postData.FIELDS[area.bitrixMappingLead.dimensionCm2Code] =
-              area.dimensionCm2;
-          }
-          if (area.material) {
-            postData.FIELDS[area.bitrixMappingLead.materialCode] =
-              area.material;
-          }
-          if (area.typeOfSample) {
-            postData.FIELDS[area.bitrixMappingLead.typeOfSampleCode] =
-              area.typeOfSample;
-          }
-          if (area.labResults) {
-            postData.FIELDS[area.bitrixMappingLead.labResultsCode] =
-              area.labResults;
-          }
-          if (area.observations) {
-            postData.FIELDS[area.bitrixMappingLead.observationsCode] =
-              area.observations;
-          }
-        })
+        )
       );
 
       var response = await this.bitrix
@@ -1469,57 +1491,68 @@ export class SyncInspectionService {
 
       if (task.environmentalForm.asbestosAreas.contact) {
         postData.FIELDS[
-          task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.contactCode
+          bitrixMappingEnvironmental.Asbestos.leadHeader.contactCode
         ] = task.contactId;
       }
       if (task.environmentalForm.asbestosAreas.inspectionDate) {
         postData.FIELDS[
-          task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.inspectionDateCode
+          bitrixMappingEnvironmental.Lead.leadHeader.inspectionDateCode
         ] = this.getBitrixDateTime(
           task.environmentalForm.asbestosAreas.inspectionDate
         );
       }
       if (task.environmentalForm.asbestosAreas.inspectionType) {
         postData.FIELDS[
-          task.environmentalForm.asbestosAreas.asbestoAreasBitrixMapping.inspectionTypeCode
+          bitrixMappingEnvironmental.Lead.leadHeader.inspectionTypeCode
         ] = task.environmentalForm.asbestosAreas.inspectionType;
       }
 
       await Promise.all(
         task.environmentalForm.asbestosAreas.asbestosAreas.map(
-          async (area: Asbesto) => {
+          async (area: Asbesto, index: number) => {
             if (area.materialLocation) {
-              postData.FIELDS[area.asbestoBitrixMaping.materialLocationCode] =
-                area.materialLocation;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Asbestos.materialLocationCode[index]
+              ] = area.materialLocation;
             }
             if (area.materialLocationOther) {
               postData.FIELDS[
-                area.asbestoBitrixMaping.materialLocationOtherCode
+                bitrixMappingEnvironmental.Asbestos.materialLocationOtherCode[
+                  index
+                ]
               ] = area.materialLocationOther;
             }
             if (area.materialDescription) {
               postData.FIELDS[
-                area.asbestoBitrixMaping.materialDescriptionCode
+                bitrixMappingEnvironmental.Asbestos.materialDescriptionCode[
+                  index
+                ]
               ] = area.materialDescription;
             }
             if (area.totalQuantity) {
-              postData.FIELDS[area.asbestoBitrixMaping.totalQuantityCode] =
-                area.totalQuantity;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Asbestos.totalQuantityCode[index]
+              ] = area.totalQuantity;
             }
             if (area.F_NF) {
-              postData.FIELDS[area.asbestoBitrixMaping.F_NFCode] = area.F_NF;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Asbestos.F_NFCode[index]
+              ] = area.F_NF;
             }
             if (area.condition) {
-              postData.FIELDS[area.asbestoBitrixMaping.conditionCode] =
-                area.condition;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Asbestos.conditionCode[index]
+              ] = area.condition;
             }
             if (area.labResults) {
-              postData.FIELDS[area.asbestoBitrixMaping.labResultsCode] =
-                area.labResults;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Asbestos.labResultsCode[index]
+              ] = area.labResults;
             }
             if (area.observations) {
-              postData.FIELDS[area.asbestoBitrixMaping.observationsCode] =
-                area.observations;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Asbestos.observationsCode[index]
+              ] = area.observations;
             }
           }
         )
@@ -1582,57 +1615,61 @@ export class SyncInspectionService {
 
       await Promise.all(
         task.environmentalForm.moistureMappingAreas.areamoistureMapping.map(
-          async (area: MoistureMapping) => {
+          async (area: MoistureMapping, index) => {
             if (area.area) {
-              postData.FIELDS[area.moistureMappingBitrixMap.areaCode] =
-                area.area;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Moisture.areaCode[index]
+              ] = area.area;
             }
             if (area.areaOther) {
-              postData.FIELDS[area.moistureMappingBitrixMap.areaOtherCode] =
-                area.areaOther;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Moisture.areaOtherCode[index]
+              ] = area.areaOther;
             }
 
             if (area.roomTemp) {
-              postData.FIELDS[area.moistureMappingBitrixMap.roomTempCode] =
-                area.roomTemp;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Moisture.roomTempCode[index]
+              ] = area.roomTemp;
             }
             if (area.relativeHumidity) {
               postData.FIELDS[
-                area.moistureMappingBitrixMap.relativeHumidityCode
+                bitrixMappingEnvironmental.Moisture.relativeHumidityCode
               ] = area.relativeHumidity;
             }
             if (area.dewPoint) {
-              postData.FIELDS[area.moistureMappingBitrixMap.dewPointCode] =
-                area.dewPoint;
+              postData.FIELDS[
+                bitrixMappingEnvironmental.Moisture.dewPointCode[index]
+              ] = area.dewPoint;
             }
             if (area.standardTemperatureNorth) {
               postData.FIELDS[
-                area.moistureMappingBitrixMap.standardTemperatureNorthCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureNorthCode
               ] = area.standardTemperatureNorth;
             }
             if (area.standardTemperatureWest) {
               postData.FIELDS[
-                area.moistureMappingBitrixMap.standardTemperatureWestCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureWestCode
               ] = area.standardTemperatureWest;
             }
             if (area.standardTemperatureSouth) {
               postData.FIELDS[
-                area.moistureMappingBitrixMap.standardTemperatureSouthCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureSouthCode
               ] = area.standardTemperatureSouth;
             }
             if (area.standardTemperatureEast) {
               postData.FIELDS[
-                area.moistureMappingBitrixMap.standardTemperatureEastCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureEastCode
               ] = area.standardTemperatureEast;
             }
             if (area.standardTemperatureCeiling) {
               postData.FIELDS[
-                area.moistureMappingBitrixMap.standardTemperatureCeilingCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureCeilingCode
               ] = area.standardTemperatureCeiling;
             }
             if (area.standardTemperatureFloor) {
               postData.FIELDS[
-                area.moistureMappingBitrixMap.standardTemperatureFloorCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureFloorCode
               ] = area.standardTemperatureFloor;
             }
           }
@@ -1651,21 +1688,30 @@ export class SyncInspectionService {
       return -1;
     }
   }
-  async syncDamageAreaImages(areas: DamageAreas, postData: any, list: number) {
+  async syncDamageAreaImages(
+    areas: DamageAreas,
+    postData: any,
+    list: number,
+    type: string
+  ) {
     try {
+      var bitrixFields = bitrixMappingEnvironmental[type];
       await Promise.all(
-        areas.areasInspection.map(async (area: DamageInspection, index) => {
+        areas.areasInspection.map(async (area: DamageInspection, indexArea) => {
           if (
             area.areaPictures.imagesCodesSync.find((x) => x.listSync == false)
           ) {
             await Promise.all(
               area.areaPictures.imagesCodesSync
-                .filter((x) => x.listSync == false)
-                .map(async (element, y) => {
+                // .filter((x) => x.listSync == false)
+                .map(async (element, indexImages) => {
+                  if (element.listSync == true) {
+                    return;
+                  }
                   const cleanPostData = JSON.parse(JSON.stringify(postData));
 
                   cleanPostData.FIELDS[
-                    area.damageInspectionBitrixMapping.areaPicturesCode
+                    bitrixFields.areaPicturesCode[indexArea]
                   ] = [element.file];
 
                   var response = await this.bitrix
@@ -1673,11 +1719,9 @@ export class SyncInspectionService {
                     .toPromise();
 
                   if (response && response.result > 0) {
-                    areas.areasInspection[index].areaPictures.imagesCodesSync[
-                      area.areaPictures.imagesCodesSync.findIndex(
-                        (o) => o.file == element.file
-                      )
-                    ].listSync = true;
+                    areas.areasInspection[
+                      indexArea
+                    ].areaPictures.imagesCodesSync[indexImages].listSync = true;
                   }
                 })
             );
@@ -1732,129 +1776,148 @@ export class SyncInspectionService {
           list + "-" + task.id + "-" + (Math.random() * 100).toString();
       }
       damageInspectionList = areas.areasInspection;
-      postData.FIELDS[areas.damageAreasBitrixMapping.contactIdCode] =
-        task.contactId;
-      postData.FIELDS[areas.damageAreasBitrixMapping.startDateCode] =
-        await this.getBitrixDateTime(task.environmentalForm.startDate);
-      postData.FIELDS[areas.damageAreasBitrixMapping.dealIdCode] = task.id;
-      postData.FIELDS[areas.damageAreasBitrixMapping.inspectionType] =
-        areas.moldInspectionType;
-
+      postData.FIELDS[
+        bitrixMappingEnvironmental[type].inspectionHeader.contactIdCode
+      ] = task.contactId;
+      postData.FIELDS[
+        bitrixMappingEnvironmental[type].inspectionHeader.startDateCode
+      ] = await this.getBitrixDateTime(task.environmentalForm.startDate);
+      postData.FIELDS[
+        bitrixMappingEnvironmental[type].inspectionHeader.dealIdCode
+      ] = task.id;
+      postData.FIELDS[
+        bitrixMappingEnvironmental[type].inspectionHeader.inspectionType
+      ] = areas.moldInspectionType;
+      var bitrixFields = bitrixMappingEnvironmental[type];
       await Promise.all(
-        areas.areasInspection.map(async (area: DamageInspection) => {
-          // if (area.areaPictures.imagesCodesSync.length > 0) {
-          //   postData.FIELDS[
-          //     area.damageInspectionBitrixMapping.areaPicturesCode
-          //   ] = area.areaPictures.imagesCodesSync.map((y) => y.file);
-          // }
-          if (area.areaName) {
-            postData.FIELDS[area.damageInspectionBitrixMapping.areaNameCode] =
-              area.areaName;
-          }
-          if (area.areaNameOther) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.areaNameOtherCode
-            ] = area.areaNameOther;
-          }
-          if (area.areaRH) {
-            postData.FIELDS[area.damageInspectionBitrixMapping.areaRHCode] =
-              area.areaRH;
-          }
+        areas.areasInspection.map(
+          async (area: DamageInspection, index: number) => {
+            if (area.areaName) {
+              postData.FIELDS[bitrixFields.areaNameCode[index]] = area.areaName;
+            }
+            if (area.areaNameOther) {
+              postData.FIELDS[bitrixFields.areaNameOtherCode[index]] =
+                area.areaNameOther;
+            }
+            if (area.areaRH) {
+              postData.FIELDS[bitrixFields.areaRHCode[index]] = area.areaRH;
+            }
 
-          if (area.areaCondition.length > 0) {
-            postData.FIELDS[area.damageInspectionBitrixMapping.conditionCode] =
-              area.areaCondition;
-          }
+            if (area.areaCondition && area.areaCondition.length > 0) {
+              postData.FIELDS[bitrixFields.areaConditionCode[index]] =
+                area.areaCondition;
+            }
 
-          if (area.areaNotes) {
-            postData.FIELDS[area.damageInspectionBitrixMapping.areaNotesCode] =
-              area.areaNotes;
+            if (area.areaNotes) {
+              postData.FIELDS[bitrixFields.areaNotesCode[index]] =
+                area.areaNotes;
+            }
+            if (area.removeCeiling) {
+              postData.FIELDS[bitrixFields.removeCeilingCode[index]] =
+                area.removeCeiling;
+            }
+            if (area.ceilingNotes) {
+              postData.FIELDS[bitrixFields.ceilingNotesCode[index]] =
+                area.ceilingNotes;
+            }
+            if (area.removeDrywall) {
+              postData.FIELDS[bitrixFields.removeDrywallCode[index]] =
+                area.removeDrywall;
+            }
+            if (area.drywallNotes) {
+              postData.FIELDS[bitrixFields.drywallNotesCode[index]] =
+                area.drywallNotes;
+            }
+            if (area.removeBaseboards) {
+              postData.FIELDS[bitrixFields.removeBaseboardsCode[index]] =
+                area.removeBaseboards;
+            }
+            if (area.baseboardsNotes) {
+              postData.FIELDS[bitrixFields.baseboardsNotesCode[index]] =
+                area.baseboardsNotes;
+            }
+            if (area.removeFlooring) {
+              postData.FIELDS[bitrixFields.removeFlooringCode[index]] =
+                area.removeFlooring;
+            }
+            if (area.flooringNotes) {
+              postData.FIELDS[bitrixFields.flooringNotesCode[index]] =
+                area.flooringNotes;
+            }
+            if (area.decontamination) {
+              postData.FIELDS[bitrixFields.decontaminationCode[index]] =
+                area.decontamination;
+            }
+            if (area.furnitureOption) {
+              postData.FIELDS[bitrixFields.furnitureOptionCode[index]] =
+                area.furnitureOption;
+            }
+            if (area.beddingsOption) {
+              postData.FIELDS[bitrixFields.beddingsOptionCode[index]] =
+                area.beddingsOption;
+            }
+            if (area.observations) {
+              postData.FIELDS[bitrixFields.observationsCode[index]] =
+                area.observations;
+            }
+            if (area.waterDamageCategory) {
+              postData.FIELDS[bitrixFields.waterDamageCategoryCode[index]] =
+                area.waterDamageCategory;
+            }
+            if (area.waterDamageClass) {
+              postData.FIELDS[bitrixFields.waterDamageClassCode[index]] =
+                area.waterDamageClass;
+            }
+            if (area.samples) {
+              await Promise.all(
+                area.samples.map((element, sampleIndex: number) => {
+                  var varient: string = "Sample" + (sampleIndex + 1);
+
+                  if (element.type) {
+                    postData.FIELDS[bitrixFields["typeCode" + varient][index]] =
+                      element.type;
+                  }
+
+                  if (element.labResult) {
+                    postData.FIELDS[
+                      bitrixFields["labResultCode" + varient][index]
+                    ] = element.labResult;
+                  }
+
+                  if (type == DamageAreaType.Mold) {
+                    if (element.volume) {
+                      postData.FIELDS[
+                        bitrixFields["volumeCode" + varient][index]
+                      ] = element.volume;
+                    }
+
+                    if (element.cassetteNumber) {
+                      postData.FIELDS[
+                        bitrixFields["cassetteNumberCode" + varient][index]
+                      ] = element.cassetteNumber;
+                    }
+
+                    if (element.toxicMold) {
+                      postData.FIELDS[
+                        bitrixFields["toxicMoldCode" + varient][index]
+                      ] = element.toxicMold;
+                    }
+
+                    if (element.areaSwab) {
+                      postData.FIELDS[
+                        bitrixFields["areaSwabCode" + varient][index]
+                      ] = element.areaSwab;
+                    }
+                  }
+                })
+              );
+            }
+            if (area.recomendations) {
+              postData.FIELDS[bitrixFields.recomendationsCode[index]] =
+                area.recomendations;
+            }
           }
-          if (area.removeCeiling) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.removeCeilingCode
-            ] = area.removeCeiling;
-          }
-          if (area.ceilingNotes) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.ceilingNotesCode
-            ] = area.ceilingNotes;
-          }
-          if (area.removeDrywall) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.removeDrywallCode
-            ] = area.removeDrywall;
-          }
-          if (area.drywallNotes) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.drywallNotesCode
-            ] = area.drywallNotes;
-          }
-          if (area.removeBaseboards) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.removeBaseboardsCode
-            ] = area.removeBaseboards;
-          }
-          if (area.baseboardsNotes) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.baseboardsNotesCode
-            ] = area.baseboardsNotes;
-          }
-          if (area.removeFlooring) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.removeFlooringCode
-            ] = area.removeFlooring;
-          }
-          if (area.flooringNotes) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.flooringNotesCode
-            ] = area.flooringNotes;
-          }
-          if (area.decontamination) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.decontaminationCode
-            ] = area.decontamination;
-          }
-          if (area.furnitureOption) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.furnitureOptionCode
-            ] = area.furnitureOption;
-          }
-          if (area.beddingsOption) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.beddingsOptionCode
-            ] = area.beddingsOption;
-          }
-          if (area.observations) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.observationsCode
-            ] = area.observations;
-          }
-          if (area.samples) {
-            area.samples.forEach((element) => {
-              postData.FIELDS[element.sampleBitrixMapping.sampleTypeCode] =
-                element.type;
-              postData.FIELDS[element.sampleBitrixMapping.labResultCode] =
-                element.labResult;
-              if (type == DamageAreaType.Mold) {
-                postData.FIELDS[element.sampleBitrixMapping.volumeCode] =
-                  element.volume;
-                postData.FIELDS[
-                  element.sampleBitrixMapping.cassetteNumberCode
-                ] = element.cassetteNumber;
-                postData.FIELDS[element.sampleBitrixMapping.toxicMoldCode] =
-                  element.toxicMold;
-                postData.FIELDS[element.sampleBitrixMapping.areaSwabCode] =
-                  element.areaSwab;
-              }
-            });
-          }
-          if (area.recomendations) {
-            postData.FIELDS[
-              area.damageInspectionBitrixMapping.recomendationsCode
-            ] = area.recomendations;
-          }
-        })
+        )
       );
 
       var response = await this.bitrix
@@ -1870,10 +1933,12 @@ export class SyncInspectionService {
           postData["ELEMENT_ID"] = areas.syncInfo.syncCode;
           areas.syncInfo.isSync = result > 0;
           areas.syncInfo.updated = false;
-          areas = await this.syncDamageAreaImages(areas, postData, list);
+          areas = await this.syncDamageAreaImages(areas, postData, list, type);
           if (
             areas.areasInspection.find((area) =>
-              area.areaPictures.imagesCodesSync.find((x) => x.listSync == false)
+              area.areaPictures.imagesCodesSync.find(
+                (x) => x?.listSync && x?.listSync == false
+              )
             )
           ) {
             areas.syncInfo.isSync = false;
@@ -1895,4 +1960,12 @@ export class SyncInspectionService {
       return areas;
     }
   }
+}
+
+export type Entries<T> = {
+  [K in keyof T]: [K, T[K]];
+}[keyof T][];
+
+export function entries<T>(obj: T): Entries<T> {
+  return Object.entries(obj) as any;
 }
