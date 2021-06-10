@@ -4,6 +4,7 @@ import { IStorage } from "../interfaces/Istorage";
 import { IStorageModel } from "../interfaces/Istorage-model";
 
 import { Scheduling } from "../models/scheduling";
+import { User } from "../models/user";
 import { GenericStorageService } from "./generic-storage.service";
 const SYNCSTAMPKEY = "inspection-stamp-key";
 @Injectable({
@@ -40,12 +41,14 @@ export class SchedulingStorageService implements IStorage {
     return this.genericStorage.delete(item);
   }
 
-  async getPendingToSync() {
+  async getPendingToSync(user: User) {
     var list = await this.getAll();
     if (list == null || list.length == 0) {
       return [];
     }
 
-    return list.filter((x) => x.internalStatus === "Pending");
+    return list.filter(
+      (x) => x.internalStatus === "Pending" && x.enterprise == user.enterprise
+    );
   }
 }

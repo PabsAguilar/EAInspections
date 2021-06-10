@@ -872,7 +872,7 @@ export var bitrixMappingEnvironmental: any = {
   },
   Bacteria: {
     inspectionHeader: {
-      contactIdCode: "PROPERTY_1344",
+      contactIdCode: "PROPERTY_2154",
       startDateCode: "PROPERTY_2152",
       dealIdCode: "PROPERTY_3524",
       inspectionType: "PROPERTY_2156",

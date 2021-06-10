@@ -30,7 +30,7 @@ export class AreaComponent implements OnInit {
       this.fields = x[0];
       if (value) {
         this.conditions = this.fields[
-          bitrixMappingComprehensive.Area.areaConditionCode[this.index]
+          bitrixMappingComprehensive.Area.conditionCode[this.index]
         ].items
           .filter((x) => x.ID != "1893" && x.ID != "1899")
           .map((y) => ({ name: y.VALUE, value: y.ID, checked: false }));
@@ -40,9 +40,9 @@ export class AreaComponent implements OnInit {
         ].items.map((y) => {
           return { name: y.VALUE, value: y.ID };
         });
+        this.changeModel("init");
       }
     });
-    this.changeModel("init");
   }
   area: Area = new Area();
 
@@ -60,9 +60,9 @@ export class AreaComponent implements OnInit {
   changeModel($event) {
     this.filledProperties = 0;
     if (this.area.name) {
-      this.selectAreaName = this.areaNameList.find(
-        (x) => x.value == this.area.name
-      )?.name;
+      this.selectAreaName = !this.areaNameList
+        ? ""
+        : this.areaNameList.find((x) => x.value == this.area.name)?.name;
       this.filledProperties++;
     }
     if (this.area.condition.length > 0) {

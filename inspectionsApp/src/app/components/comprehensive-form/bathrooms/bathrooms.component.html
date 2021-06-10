@@ -28,4 +28,21 @@
     (InspectionAreaGeneralChanged)="AreaUpdated($event)"
     [(InspectionArea)]="bathrooms[i]"
   ></app-area-general-condition>
+
+  <ion-item
+    (click)="toggleAccordion()"
+    lines="none"
+    button
+    class="ion-no-margin"
+    detail="false"
+  >
+    <ion-label color="warning"> {{ "End Bathrooms" }}</ion-label>
+
+    <ion-icon
+      slot="end"
+      *ngIf="!isMenuOpen"
+      name="caret-down-outline"
+    ></ion-icon>
+    <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+  </ion-item>
 </div>

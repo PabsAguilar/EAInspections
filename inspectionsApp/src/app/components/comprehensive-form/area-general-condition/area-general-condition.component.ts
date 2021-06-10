@@ -86,6 +86,8 @@ export class AreaGeneralConditionComponent implements OnInit {
           default:
             break;
         }
+
+        this.changeModel("init");
       }
     });
   }
@@ -120,7 +122,9 @@ export class AreaGeneralConditionComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
-    this.InspectionAreaGeneralChanged.emit(this.generalCondition);
+    if ($event != "init") {
+      this.InspectionAreaGeneralChanged.emit(this.generalCondition);
+    }
 
     switch (true) {
       case this.progressPercentage < 0.5:

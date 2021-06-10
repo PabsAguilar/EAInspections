@@ -34,10 +34,10 @@ export class InspectionTask implements IStorageModel {
   inspectionSubTypesString: string;
   inspectionsInstructions: string;
   //new
-  typeOfLossDesc: string;
-  affectedArea: string;
-  waterDamageCategory: string;
-  waterDamageClass: string;
+  // typeOfLossDesc: string;
+  // affectedArea: string;
+  // waterDamageCategory: string;
+  // waterDamageClass: string;
 
   policyNumber: string;
   claimNumber: string;

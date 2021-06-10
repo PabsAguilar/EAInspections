@@ -555,7 +555,9 @@ export class SyncInspectionService {
 
   async syncAllPending(): Promise<Observable<boolean>> {
     var user = await this.autenticateService.getUser();
-    var schedulingList = await this.schedulingStorageService.getPendingToSync();
+    var schedulingList = await this.schedulingStorageService.getPendingToSync(
+      user
+    );
     await Promise.all(
       (
         await schedulingList
@@ -574,7 +576,7 @@ export class SyncInspectionService {
       })
     );
 
-    var inspectionList = await this.inspectionStorage.getPendingToSync();
+    var inspectionList = await this.inspectionStorage.getPendingToSync(user);
     await Promise.all(
       (
         await inspectionList
@@ -640,6 +642,36 @@ export class SyncInspectionService {
       "-06:00";
     return dateStr;
   }
+
+  async getBitrixDateTime1(date) {
+    date = new Date(date);
+    var offset: any = date.getTimezoneOffset();
+    offset =
+      (offset < 0 ? "+" : "-") + // Note the reversed sign!
+      this.pad(parseInt(Math.abs(offset / 60).toString()), 2) +
+      ":" +
+      this.pad(Math.abs(offset % 60), 2);
+
+    var paddatepart = function (part) {
+      return part >= 10 ? part.toString() : "0" + part.toString();
+    };
+
+    var dateStr =
+      date.getFullYear() +
+      "-" +
+      paddatepart(1 + date.getMonth()) +
+      "-" +
+      paddatepart(date.getDate()) +
+      "T" +
+      paddatepart(date.getHours()) +
+      ":" +
+      paddatepart(date.getMinutes()) +
+      ":" +
+      paddatepart(date.getSeconds()) +
+      offset;
+    return dateStr;
+  }
+
   async syncSchedulingInspection(
     scheduling: Scheduling,
     user: User
@@ -887,8 +919,8 @@ export class SyncInspectionService {
         postData.fields[ENDealMapping.pictureHouseNumbersCode] = x;
       }
 
+      var list = entries(bitrixMappingComprehensive.Area);
       task.comprehesiveForm.areas.map((x, index: number) => {
-        var list = entries(bitrixMappingComprehensive.Area);
         //Object.entries(x.areaBitrixMapping)
         list.map((y) => {
           var item = x[y[0].replace("Code", "")];
@@ -905,39 +937,225 @@ export class SyncInspectionService {
                 };
               });
               if (image.length > 0) {
-                postData.fields[y[1]] = image;
+                postData.fields[y[1][index]] = image;
               }
             } else {
-              postData.fields[y[1]] = item;
+              postData.fields[y[1][index]] = item;
             }
           }
         });
       });
 
-      // task.comprehesiveForm.bathrooms.map((x, index) => {
-      //   entries(bitrixMappingComprehensive.Atic)  Object.entries(x.generalConditionBitrixMapping).map((y) => {
-      //     var item = x[y[0].replace("Code", "")];
-      //     if (item) {
-      //       if (item.images) {
-      //         var image = item.images.map((s, imageIndex) => {
-      //           return {
-      //             fileData: [
-      //               `Bathroom${index + 1}-${imageIndex}-${task.id}-${Math.floor(
-      //                 Math.random() * 1000
-      //               )}.png`,
-      //               s.base64Image.replace("data:image/png;base64,", ""),
-      //             ],
-      //           };
-      //         });
-      //         if (image.length > 0) {
-      //           postData.fields[y[1]] = image;
-      //         }
-      //       } else {
-      //         postData.fields[y[1]] = item;
-      //       }
-      //     }
-      //   });
-      // });
+      list = entries(bitrixMappingComprehensive.Bathrooms);
+      task.comprehesiveForm.bathrooms.map((x, index: number) => {
+        list.map((y) => {
+          var item = x[y[0].replace("Code", "")];
+          if (item) {
+            if (item.images) {
+              var image = item.images.map((s, imageIndex) => {
+                return {
+                  fileData: [
+                    `Bathroom-${index + 1}-${imageIndex}-${
+                      task.id
+                    }-${Math.floor(Math.random() * 1000)}.png`,
+                    s.base64Image.replace("data:image/png;base64,", ""),
+                  ],
+                };
+              });
+              if (image.length > 0) {
+                postData.fields[y[1][index]] = image;
+              }
+            } else {
+              postData.fields[y[1][index]] = item;
+            }
+          }
+        });
+      });
+
+      list = entries(bitrixMappingComprehensive.Kitchen);
+      list.map((y) => {
+        var item = task.comprehesiveForm.kitchen[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `Kitchen-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      list = entries(bitrixMappingComprehensive.HVAC_AC);
+      list.map((y) => {
+        var item = task.comprehesiveForm.HVAC_AC[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `HVAC_AC-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+      list = entries(bitrixMappingComprehensive.UtilityRoom);
+      list.map((y) => {
+        var item = task.comprehesiveForm.utilityRoom[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `UtilityRoom-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      list = entries(bitrixMappingComprehensive.Attic);
+      list.map((y) => {
+        var item = task.comprehesiveForm.atic[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `Atic-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      list = entries(bitrixMappingComprehensive.EnvironmentalSection);
+      list.map((y) => {
+        var item =
+          task.comprehesiveForm.enviromentalSection[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `environmental-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      list = entries(bitrixMappingComprehensive.Exterior);
+      list.map((y) => {
+        var item = task.comprehesiveForm.exterior[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `exterior-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      list = entries(bitrixMappingComprehensive.Recomendations);
+      list.map((y) => {
+        var item =
+          task.comprehesiveForm.recomendations[y[0].replace("Code", "")];
+        if (item) {
+          postData.fields[y[1]] = item;
+        }
+      });
+
+      list = entries(bitrixMappingComprehensive.Insurance);
+      list.map((y) => {
+        var item = task.comprehesiveForm.insurance[y[0].replace("Code", "")];
+        if (item) {
+          if (item.images) {
+            var image = item.images.map((s, imageIndex) => {
+              return {
+                fileData: [
+                  `insurance-${imageIndex}-${task.id}-${Math.floor(
+                    Math.random() * 1000
+                  )}.png`,
+                  s.base64Image.replace("data:image/png;base64,", ""),
+                ],
+              };
+            });
+            if (image.length > 0) {
+              postData.fields[y[1]] = image;
+            }
+          } else {
+            postData.fields[y[1]] = item;
+          }
+        }
+      });
+
+      list = entries(bitrixMappingComprehensive.Reminders);
+      list.map((y) => {
+        var item = task.comprehesiveForm.reminders[y[0].replace("Code", "")];
+        if (item) {
+          postData.fields[y[1]] = item;
+        }
+      });
 
       // entries(bitrixMappingComprehensive.Atic).map((y) => {
       //   var item = task.comprehesiveForm.atic[y[0].replace("Code", "")];
@@ -1394,15 +1612,14 @@ export class SyncInspectionService {
         postData["ELEMENT_CODE"] =
           30 + "-" + task.id + "-" + (Math.random() * 100).toString();
       }
-      if (task.environmentalForm.leadAreas.contact) {
-        postData.FIELDS[
-          bitrixMappingEnvironmental.Lead.leadHeader.contactCode
-        ] = task.contactId;
-      }
+
+      postData.FIELDS[bitrixMappingEnvironmental.Lead.leadHeader.contactCode] =
+        task.contactId;
+
       if (task.environmentalForm.leadAreas.inspectionDate) {
         postData.FIELDS[
           bitrixMappingEnvironmental.Lead.leadHeader.inspectionDateCode
-        ] = this.getBitrixDateTime(
+        ] = await this.getBitrixDateTime1(
           task.environmentalForm.leadAreas.inspectionDate
         );
       }
@@ -1411,12 +1628,10 @@ export class SyncInspectionService {
           bitrixMappingEnvironmental.Lead.leadHeader.inspectionTypeCode
         ] = task.environmentalForm.leadAreas.inspectionType;
       }
-
+      var bitrixFields = bitrixMappingEnvironmental.Lead;
       await Promise.all(
         task.environmentalForm.leadAreas.leadAreas.map(
           async (area: Lead, index: number) => {
-            var bitrixFields = bitrixMappingEnvironmental.Lead;
-
             if (area.sample) {
               postData.FIELDS[bitrixFields.sampleCode[index]] = area.sample;
             }
@@ -1489,15 +1704,15 @@ export class SyncInspectionService {
           32 + "-" + task.id + "-" + (Math.random() * 100).toString();
       }
 
-      if (task.environmentalForm.asbestosAreas.contact) {
-        postData.FIELDS[
-          bitrixMappingEnvironmental.Asbestos.asbestosHeader.contactCode
-        ] = task.contactId;
-      }
+      postData.FIELDS[
+        bitrixMappingEnvironmental.Asbestos.asbestosHeader.contactCode
+      ] = task.contactId;
+
       if (task.environmentalForm.asbestosAreas.inspectionDate) {
+        //TODO fix date
         postData.FIELDS[
           bitrixMappingEnvironmental.Asbestos.asbestosHeader.inspectionDateCode
-        ] = this.getBitrixDateTime(
+        ] = await this.getBitrixDateTime1(
           task.environmentalForm.asbestosAreas.inspectionDate
         );
       }
@@ -1601,9 +1816,10 @@ export class SyncInspectionService {
         ] = task.contactId;
       }
       if (task.environmentalForm.moistureMappingAreas.dateTesed) {
+        //TODO: fix
         postData.FIELDS[
           bitrixMappingEnvironmental.Moisture.moistureHeader.dateTesedCode
-        ] = await this.getBitrixDateTime(
+        ] = await this.getBitrixDateTime1(
           task.environmentalForm.moistureMappingAreas.dateTesed
         );
       }

@@ -130,6 +130,7 @@ export class ItestDealService {
           }
 
           company.syncInfo.isSync = true;
+          company.syncInfo.syncCode = item.ID;
 
           return company;
         })
@@ -164,6 +165,7 @@ export class ItestDealService {
           }
 
           contact.syncInfo.isSync = true;
+          contact.syncInfo.syncCode = item.ID;
 
           return contact;
         })
@@ -517,28 +519,30 @@ export class ItestDealService {
         if (itemStarted) {
           item = await this.MergeStartedInspection(item, itemStarted);
         } else {
-          item = await this.getListAsbestos(item);
-          item = await this.getListMoisture(item);
-          item = await this.getListLead(item);
-          item = await this.getListDamage(
-            item,
-            item.environmentalForm.moldAreas.syncInfo.syncCode,
-            DamageAreaType.Mold,
-            BitrixListsITest.Mold
-          );
+          if (user.enterprise == EnumEnterprise.itest) {
+            item = await this.getListAsbestos(item);
+            item = await this.getListMoisture(item);
+            item = await this.getListLead(item);
+            item = await this.getListDamage(
+              item,
+              item.environmentalForm.moldAreas.syncInfo.syncCode,
+              DamageAreaType.Mold,
+              BitrixListsITest.Mold
+            );
 
-          item = await this.getListDamage(
-            item,
-            item.environmentalForm.sootAreas.syncInfo.syncCode,
-            DamageAreaType.Soot,
-            BitrixListsITest.Soot
-          );
-          item = await this.getListDamage(
-            item,
-            item.environmentalForm.bacteriasAreas.syncInfo.syncCode,
-            DamageAreaType.Bacteria,
-            BitrixListsITest.Bacteria
-          );
+            item = await this.getListDamage(
+              item,
+              item.environmentalForm.sootAreas.syncInfo.syncCode,
+              DamageAreaType.Soot,
+              BitrixListsITest.Soot
+            );
+            item = await this.getListDamage(
+              item,
+              item.environmentalForm.bacteriasAreas.syncInfo.syncCode,
+              DamageAreaType.Bacteria,
+              BitrixListsITest.Bacteria
+            );
+          }
         }
         list[index] = item;
       }
@@ -620,6 +624,11 @@ export class ItestDealService {
         itemStarted.environmentalForm.generalInfoInspection.atticCondition
           ? itemStarted.environmentalForm.generalInfoInspection.atticCondition
           : item.environmentalForm.generalInfoInspection.atticCondition;
+
+      itemStarted.environmentalForm.generalInfoInspection.affectedArea =
+        itemStarted.environmentalForm.generalInfoInspection.affectedArea
+          ? itemStarted.environmentalForm.generalInfoInspection.affectedArea
+          : item.environmentalForm.generalInfoInspection.affectedArea;
 
       item.environmentalForm = itemStarted.environmentalForm;
     } else {
@@ -1180,11 +1189,13 @@ export class ItestDealService {
                 x[ITestDealMapping.atticConditionCode];
               task.environmentalForm.generalInfoInspection.atticCondition =
                 x[ITestDealMapping.atticConditionCode];
-              task.typeOfLossDesc = x[ITestDealMapping.typesOfLoss];
-              task.affectedArea = x[ITestDealMapping.affectedArea];
-              task.waterDamageCategory =
-                x[ITestDealMapping.waterDamageCategory];
-              task.waterDamageClass = x[ITestDealMapping.waterDamageClass];
+              task.environmentalForm.generalInfoInspection.typeOfLossDesc =
+                x[ITestDealMapping.typesOfLoss];
+              task.environmentalForm.generalInfoInspection.affectedArea =
+                x[ITestDealMapping.affectedArea];
+              // task.waterDamageCategory =
+              //   x[ITestDealMapping.waterDamageCategory];
+              // task.waterDamageClass = x[ITestDealMapping.waterDamageClass];
               task.environmentalForm.moldAreas.syncInfo.syncCode =
                 x[ITestDealMapping.moldListIdCode];
               task.environmentalForm.bacteriasAreas.syncInfo.syncCode =

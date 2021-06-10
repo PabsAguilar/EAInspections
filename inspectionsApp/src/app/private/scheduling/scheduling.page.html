@@ -87,6 +87,7 @@
       <ion-input
         name="serviceAddress"
         #serviceAddress="ngModel"
+        autocapitalize="words"
         [(ngModel)]="scheduling.serviceAddress"
         type="text"
         [disabled]="scheduling.syncInfo.isSync"
@@ -128,6 +129,7 @@
       <ion-textarea
         name="notes"
         #notes="ngModel"
+        autocapitalize="sentences"
         [disabled]="scheduling.syncInfo.isSync"
         [(ngModel)]="scheduling.notes"
         type="text"

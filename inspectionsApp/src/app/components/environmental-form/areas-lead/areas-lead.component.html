@@ -65,6 +65,7 @@
     *ngFor="let area of _model.leadAreas; let i = index"
     [readonly]="readonly"
     ngDefaultControl
+    [index]="i"
     [title]="'Area ' + (i + 1)"
     (modelChanged)="AreaUpdated($event)"
     [(model)]="_model.leadAreas[i]"

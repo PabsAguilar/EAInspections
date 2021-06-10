@@ -41,6 +41,7 @@
       [(ngModel)]="_model.areaNameOther"
       (ionChange)="changeModel($event)"
       type="text"
+      autocapitalize="sentences"
       [readonly]="readonly"
     ></ion-input>
   </ion-item>
@@ -341,6 +342,7 @@ listbeddingsOption -->
       <ion-label position="floating">Area (Swab)</ion-label>
       <ion-input
         [(ngModel)]="item.areaSwab"
+        autocapitalize="sentences"
         (ionChange)="changeModel($event)"
         type="text"
         required
@@ -351,6 +353,7 @@ listbeddingsOption -->
       <ion-input
         [(ngModel)]="item.cassetteNumber"
         (ionChange)="changeModel($event)"
+        autocapitalize="sentences"
         type="text"
         required
       ></ion-input>

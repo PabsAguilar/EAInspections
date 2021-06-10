@@ -76,12 +76,13 @@
   <ion-item>
     <ion-label position="floating">Notes</ion-label>
     <ion-textarea
+      autocapitalize="sentences"
       [(ngModel)]="kitchen.notes"
       (ionChange)="changeModel($event)"
       type="text"
     ></ion-textarea>
   </ion-item>
-    <ion-item
+  <ion-item
     (click)="toggleAccordion()"
     lines="none"
     button

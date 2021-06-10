@@ -17,6 +17,7 @@ import { EnvironmentalForm } from "../models/environmental-form";
 import { Sample } from "../models/environmental-form/sample";
 import { InspectionTask } from "../models/inspection-task";
 import { TaskSubtype } from "../models/task-subtype";
+import { User } from "../models/user";
 import { BitrixItestService } from "./bitrix-itest.service";
 import { GenericStorageService } from "./generic-storage.service";
 const SYNCSTAMPKEY = "inspection-stamp-key";
@@ -58,7 +59,7 @@ export class InspectionsStorageService implements IStorage {
     return this.inspectionStore.clear();
   }
 
-  async getPendingToSync() {
+  async getPendingToSync(user: User) {
     var list = await this.getAll();
     if (list == null || list.length == 0) {
       return [];
@@ -66,9 +67,10 @@ export class InspectionsStorageService implements IStorage {
 
     return list.filter(
       (x) =>
-        x.internalStatus === InspectionStatus.PendingSaved ||
-        x.internalStatus === InspectionStatus.PendingSentLab ||
-        x.internalStatus === InspectionStatus.PendingToComplete
+        user.enterprise == x.enterprise &&
+        (x.internalStatus === InspectionStatus.PendingSaved ||
+          x.internalStatus === InspectionStatus.PendingSentLab ||
+          x.internalStatus === InspectionStatus.PendingToComplete)
     );
   }
 }

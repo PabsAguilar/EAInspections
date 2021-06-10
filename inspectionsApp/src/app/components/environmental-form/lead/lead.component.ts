@@ -22,7 +22,7 @@ export class LeadComponent implements OnInit {
   fields: any[] = [];
   other: string = "";
   selectAreaName: string;
-  @Input() index: number = 0;
+  @Input() index: number;
   @Input()
   get model(): Lead {
     return this._model;
