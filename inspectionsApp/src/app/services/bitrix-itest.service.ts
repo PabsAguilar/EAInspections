@@ -196,18 +196,29 @@ export class BitrixItestService {
   }
 
   //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[UF_CRM_1612682994]=6
-  public getInspectionsDeals(user: User): Promise<any> {
+  public async getInspectionsDeals(user: User): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
     var inspectorField =
       user.enterprise == EnumEnterprise.itest
         ? ITestDealMapping.inspector
         : ENDealMapping.inspector;
     if (user.enterprise == EnumEnterprise.itest) {
-      return this.http
+      var newDeals: any = await this.http
         .get(
-          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[STAGE_ID]=EXECUTING&FILTER[UF_CRM_1613380179]=6928&FILTER[UF_CRM_1613380179]=6930&FILTER[UF_CRM_1613380179]=6936&FILTER[UF_CRM_1613380179]=&FILTER[${inspectorField}]=${user.userId}`
+          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=PREPAYMENT_INVOICE&FILTER[${inspectorField}]=${user.userId}`
         )
         .toPromise();
+
+      if (newDeals) {
+        var inProgress: any = await this.http
+          .get(
+            `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=EXECUTING&FILTER[${inspectorField}]=${user.userId}`
+          )
+          .toPromise();
+
+        newDeals.result.push(...inProgress.result);
+        return newDeals;
+      }
     } else {
       return this.http
         .get(

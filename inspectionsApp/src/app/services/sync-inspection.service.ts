@@ -1491,19 +1491,19 @@ export class SyncInspectionService {
 
       if (task.environmentalForm.asbestosAreas.contact) {
         postData.FIELDS[
-          bitrixMappingEnvironmental.Asbestos.leadHeader.contactCode
+          bitrixMappingEnvironmental.Asbestos.asbestosHeader.contactCode
         ] = task.contactId;
       }
       if (task.environmentalForm.asbestosAreas.inspectionDate) {
         postData.FIELDS[
-          bitrixMappingEnvironmental.Lead.leadHeader.inspectionDateCode
+          bitrixMappingEnvironmental.Asbestos.asbestosHeader.inspectionDateCode
         ] = this.getBitrixDateTime(
           task.environmentalForm.asbestosAreas.inspectionDate
         );
       }
       if (task.environmentalForm.asbestosAreas.inspectionType) {
         postData.FIELDS[
-          bitrixMappingEnvironmental.Lead.leadHeader.inspectionTypeCode
+          bitrixMappingEnvironmental.Asbestos.asbestosHeader.inspectionTypeCode
         ] = task.environmentalForm.asbestosAreas.inspectionType;
       }
 
@@ -1541,7 +1541,7 @@ export class SyncInspectionService {
             }
             if (area.condition) {
               postData.FIELDS[
-                bitrixMappingEnvironmental.Asbestos.conditionCode[index]
+                bitrixMappingEnvironmental.Asbestos.areaConditionCode[index]
               ] = area.condition;
             }
             if (area.labResults) {
@@ -1634,7 +1634,7 @@ export class SyncInspectionService {
             }
             if (area.relativeHumidity) {
               postData.FIELDS[
-                bitrixMappingEnvironmental.Moisture.relativeHumidityCode
+                bitrixMappingEnvironmental.Moisture.relativeHumidityCode[index]
               ] = area.relativeHumidity;
             }
             if (area.dewPoint) {
@@ -1644,32 +1644,44 @@ export class SyncInspectionService {
             }
             if (area.standardTemperatureNorth) {
               postData.FIELDS[
-                bitrixMappingEnvironmental.Moisture.standardTemperatureNorthCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureNorthCode[
+                  index
+                ]
               ] = area.standardTemperatureNorth;
             }
             if (area.standardTemperatureWest) {
               postData.FIELDS[
-                bitrixMappingEnvironmental.Moisture.standardTemperatureWestCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureWestCode[
+                  index
+                ]
               ] = area.standardTemperatureWest;
             }
             if (area.standardTemperatureSouth) {
               postData.FIELDS[
-                bitrixMappingEnvironmental.Moisture.standardTemperatureSouthCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureSouthCode[
+                  index
+                ]
               ] = area.standardTemperatureSouth;
             }
             if (area.standardTemperatureEast) {
               postData.FIELDS[
-                bitrixMappingEnvironmental.Moisture.standardTemperatureEastCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureEastCode[
+                  index
+                ]
               ] = area.standardTemperatureEast;
             }
             if (area.standardTemperatureCeiling) {
               postData.FIELDS[
-                bitrixMappingEnvironmental.Moisture.standardTemperatureCeilingCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureCeilingCode[
+                  index
+                ]
               ] = area.standardTemperatureCeiling;
             }
             if (area.standardTemperatureFloor) {
               postData.FIELDS[
-                bitrixMappingEnvironmental.Moisture.standardTemperatureFloorCode
+                bitrixMappingEnvironmental.Moisture.standardTemperatureFloorCode[
+                  index
+                ]
               ] = area.standardTemperatureFloor;
             }
           }
