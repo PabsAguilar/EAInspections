@@ -262,6 +262,7 @@ listbeddingsOption -->
       name="name"
       [(ngModel)]="_model.furnitureOption"
       (ionChange)="changeModel($event)"
+      [disabled]="readonly"
     >
       <ion-select-option
         *ngFor="let item of listFurniture; let i = index"
@@ -276,6 +277,7 @@ listbeddingsOption -->
     <ion-label position="floating">Beddings</ion-label>
     <ion-select
       interface="popover"
+      [disabled]="readonly"
       name="name"
       [(ngModel)]="_model.beddingsOption"
       (ionChange)="changeModel($event)"
@@ -295,6 +297,7 @@ listbeddingsOption -->
       autocapitalize="sentences"
       [(ngModel)]="_model.observations"
       (ionInput)="changeModel($event)"
+      [readonly]="readonly"
       type="text"
     ></ion-textarea>
   </ion-item>
@@ -318,6 +321,7 @@ listbeddingsOption -->
         name="itemType"
         [(ngModel)]="item.type"
         (ionChange)="changeModel($event)"
+        [disabled]="readonly"
       >
         <ion-select-option
           *ngFor="
@@ -334,6 +338,7 @@ listbeddingsOption -->
       <ion-input
         [(ngModel)]="item.volume"
         (ionChange)="changeModel($event)"
+        [readonly]="readonly"
         type="number"
         required
       ></ion-input>
@@ -343,6 +348,7 @@ listbeddingsOption -->
       <ion-input
         [(ngModel)]="item.areaSwab"
         autocapitalize="sentences"
+        [readonly]="readonly"
         (ionChange)="changeModel($event)"
         type="text"
         required
@@ -354,6 +360,7 @@ listbeddingsOption -->
         [(ngModel)]="item.cassetteNumber"
         (ionChange)="changeModel($event)"
         autocapitalize="sentences"
+        [readonly]="readonly"
         type="text"
         required
       ></ion-input>
@@ -364,6 +371,7 @@ listbeddingsOption -->
       <ion-select
         interface="popover"
         name="labResult"
+        [disabled]="readonly"
         [(ngModel)]="item.labResult"
         (ionChange)="changeModel($event)"
       >
@@ -378,22 +386,12 @@ listbeddingsOption -->
       </ion-select>
     </ion-item>
 
-    <!-- <app-multiple-radio
-      *ngIf="item.sampleType == 'Mold'"
-      title="Mold Spores Found"
-      ngDefaultControl
-      name="areaCondition"
-      [readonly]="readonly"
-      [options]="listmoldSporesFound | filterByField: 'sample':i:'number'"
-      [(data)]="item.moldSporesFound"
-      (dataChange)="changeModel($event)"
-    ></app-multiple-radio> -->
-
     <ion-item lines="inset" *ngIf="item.sampleType == 'Mold'">
       <ion-label position="floating">Toxic Mold</ion-label>
       <ion-select
         interface="popover"
         name="toxicMold"
+        [disabled]="readonly"
         [(ngModel)]="item.toxicMold"
         (ionChange)="changeModel($event)"
       >
@@ -427,6 +425,7 @@ listbeddingsOption -->
     <ion-select
       interface="action-sheet"
       name="recomendations"
+      [disabled]="readonly"
       [(ngModel)]="_model.recomendations"
       (ionChange)="changeModel($event)"
     >

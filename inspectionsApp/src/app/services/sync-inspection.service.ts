@@ -274,44 +274,49 @@ export class SyncInspectionService {
     );
 
     await Promise.all(
-      task.environmentalForm.bacteriasAreas.areasInspection
-        .filter(
-          (x) =>
-            x.areaPictures.images.length > 0 && !x.areaPictures.syncInfo.isSync
-        )
-        .map(async (item, index) => {
-          task.environmentalForm.bacteriasAreas.areasInspection[
-            index
-          ].areaPictures = await this.syncListImages(
-            task.environmentalForm.bacteriasAreas.areasInspection[index]
-              .areaPictures,
-            task.bitrixFolder,
-            "BactIns-Area" + (index + 1)
-          );
-          await this.inspectionStorage.update(task);
+      task.environmentalForm.bacteriasAreas.areasInspection.map(
+        async (item, index) => {
+          if (
+            item.areaPictures.images.length > 0 &&
+            item.areaPictures.images.find((y) => !y.isSync) != null
+          ) {
+            task.environmentalForm.bacteriasAreas.areasInspection[
+              index
+            ].areaPictures = await this.syncListImages(
+              task.environmentalForm.bacteriasAreas.areasInspection[index]
+                .areaPictures,
+              task.bitrixFolder,
+              "BactIns-Area" + (index + 1)
+            );
+            await this.inspectionStorage.update(task);
+          }
 
           return Promise.resolve(true);
-        })
+        }
+      )
     );
 
     await Promise.all(
-      task.environmentalForm.sootAreas.areasInspection
-        .filter(
-          (x) =>
-            x.areaPictures.images.length > 0 && !x.areaPictures.syncInfo.isSync
-        )
-        .map(async (item, index) => {
-          task.environmentalForm.sootAreas.areasInspection[index].areaPictures =
-            await this.syncListImages(
+      task.environmentalForm.sootAreas.areasInspection.map(
+        async (item, index) => {
+          if (
+            item.areaPictures.images.length > 0 &&
+            item.areaPictures.images.find((y) => !y.isSync) != null
+          ) {
+            task.environmentalForm.sootAreas.areasInspection[
+              index
+            ].areaPictures = await this.syncListImages(
               task.environmentalForm.sootAreas.areasInspection[index]
                 .areaPictures,
               task.bitrixFolder,
               "Soot-Area" + (index + 1)
             );
-          await this.inspectionStorage.update(task);
+            await this.inspectionStorage.update(task);
+          }
 
           return Promise.resolve(true);
-        })
+        }
+      )
     );
 
     task.environmentalForm.generalInfoInspection.pictureHouseNumbers =

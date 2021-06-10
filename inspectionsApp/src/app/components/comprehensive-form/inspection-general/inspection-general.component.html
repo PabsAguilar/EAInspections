@@ -148,6 +148,7 @@
       <ion-label position="floating">Type of Loss & Description</ion-label>
       <ion-textarea
         autocapitalize="sentences"
+        [disabled]="readonly"
         [(ngModel)]="generalInfoInspection.typeOfLossDesc"
         name="typeOfLossDesc"
         type="text"
@@ -160,6 +161,7 @@
         autocapitalize="sentences"
         [(ngModel)]="generalInfoInspection.affectedArea"
         name="affectedArea"
+        [disabled]="readonly"
         type="text"
       ></ion-textarea>
     </ion-item>

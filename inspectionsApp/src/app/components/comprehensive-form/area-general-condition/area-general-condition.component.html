@@ -50,6 +50,7 @@
       [(ngModel)]="generalCondition.notes"
       (ionChange)="changeModel($event)"
       type="text"
+      [readonly]="readonly"
       autocapitalize="sentences"
     ></ion-textarea>
   </ion-item>
