@@ -40,6 +40,7 @@
     <ion-input
       [(ngModel)]="_model.areaOther"
       (ionChange)="changeModel($event)"
+      autocapitalize="sentences"
       type="text"
       [readonly]="readonly"
     ></ion-input>
@@ -137,7 +138,7 @@
     ></ion-input>
   </ion-item>
 
-    <ion-item
+  <ion-item
     (click)="toggleAccordion()"
     lines="none"
     button

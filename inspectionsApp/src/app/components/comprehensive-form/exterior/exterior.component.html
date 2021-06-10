@@ -44,6 +44,7 @@
       [(ngModel)]="_data.conditionOther"
       (ionChange)="changeModel($event)"
       type="text"
+      autocapitalize="sentences"
       required
     ></ion-input>
   </ion-item>
@@ -59,6 +60,7 @@
   <ion-item>
     <ion-label position="floating">Notes</ion-label>
     <ion-textarea
+      autocapitalize="sentences"
       [(ngModel)]="_data.notes"
       (ionChange)="changeModel($event)"
       type="text"

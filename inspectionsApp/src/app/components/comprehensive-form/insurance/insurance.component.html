@@ -37,6 +37,7 @@
     <ion-input
       [(ngModel)]="_data.insuranceCarrier"
       (ionChange)="changeModel($event)"
+      autocapitalize="sentences"
       type="text"
       [readonly]="readonly"
       required
@@ -98,6 +99,7 @@
       [(ngModel)]="_data.reasonForClaim"
       (ionChange)="changeModel($event)"
       type="text"
+      autocapitalize="sentences"
       required
     ></ion-input>
   </ion-item>
@@ -128,6 +130,7 @@
       [(ngModel)]="_data.adjusterName"
       (ionChange)="changeModel($event)"
       type="text"
+      autocapitalize="sentences"
       required
     ></ion-input>
   </ion-item>
@@ -146,6 +149,7 @@
     <ion-label position="floating">Notes</ion-label>
     <ion-textarea
       [(ngModel)]="_data.notes"
+      autocapitalize="sentences"
       (ionChange)="changeModel($event)"
       type="text"
     ></ion-textarea>
@@ -156,10 +160,11 @@
       [(ngModel)]="_data.assignPAorAttorney"
       (ionChange)="changeModel($event)"
       [readonly]="readonly"
+      autocapitalize="sentences"
       type="text"
     ></ion-textarea>
   </ion-item>
-    <ion-item
+  <ion-item
     (click)="toggleAccordion()"
     lines="none"
     button

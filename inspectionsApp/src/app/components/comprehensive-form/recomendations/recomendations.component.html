@@ -48,12 +48,13 @@
       [(ngModel)]="_data.recomendation"
       (ionChange)="changeModel($event)"
       type="text"
+      autocapitalize="sentences"
       [readonly]="readonly"
       required
     ></ion-input>
   </ion-item>
 
-    <ion-item
+  <ion-item
     (click)="toggleAccordion()"
     lines="none"
     button

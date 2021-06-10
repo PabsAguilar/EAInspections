@@ -38,6 +38,7 @@
       [(ngModel)]="_data.MoldSampleLocation"
       (ionChange)="changeModel($event)"
       type="text"
+      autocapitalize="sentences"
       [readonly]="readonly"
       required
     ></ion-input>
@@ -87,7 +88,7 @@
     </ion-select>
   </ion-item>
 
-    <ion-item
+  <ion-item
     (click)="toggleAccordion()"
     lines="none"
     button

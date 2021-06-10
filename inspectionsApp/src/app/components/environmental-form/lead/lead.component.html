@@ -37,6 +37,7 @@
   <ion-item lines="inset" *ngIf="other == _model.sample">
     <ion-label position="floating">Sample Area (Other)</ion-label>
     <ion-input
+      autocapitalize="sentences"
       [(ngModel)]="_model.sampleOther"
       (ionChange)="changeModel($event)"
       type="text"
@@ -132,6 +133,7 @@
   <ion-item>
     <ion-label position="floating">Observations and Recommendations</ion-label>
     <ion-textarea
+      autocapitalize="sentences"
       [(ngModel)]="_model.observations"
       (ionInput)="changeModel($event)"
       [readonly]="readonly"
