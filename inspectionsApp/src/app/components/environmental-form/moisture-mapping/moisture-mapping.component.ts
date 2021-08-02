@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { BitrixPictureList } from "src/app/models/bitrix-picture";
 import { bitrixMappingEnvironmental } from "src/app/models/enums";
 import { MoistureMapping } from "src/app/models/environmental-form/moisture-mapping";
 import { InspectionsStorageService } from "src/app/services/inspections-storage.service";
@@ -28,19 +29,35 @@ export class MoistureMappingComponent implements OnInit {
   }
   set model(value: MoistureMapping) {
     this._model = value;
-
+    if (!this._model.areaPictures) {
+      this._model.areaPictures = new BitrixPictureList();
+    }
     this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
       this.fields = x[0];
       if (value) {
         this.listArea = Object.entries(
           this.fields[bitrixMappingEnvironmental.Moisture.areaCode[this.index]]
             .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => {
-          if ((v as string).toLowerCase().includes("other")) {
-            this.other = k;
-          }
-          return { name: v, value: k };
-        });
+        )
+          .sort(function (a, b) {
+            if (
+              (a[1] as string).toLowerCase().includes("control") &&
+              !(b[1] as string).toLowerCase().includes("control")
+            ) {
+              return -1;
+            } else if (
+              !(a[1] as string).toLowerCase().includes("control") &&
+              (b[1] as string).toLowerCase().includes("control")
+            ) {
+              return 1;
+            } else return 0;
+          })
+          .map(([k, v]) => {
+            if ((v as string).toLowerCase().includes("other")) {
+              this.other = k;
+            }
+            return { name: v, value: k };
+          });
         this.changeModel("init");
       }
     });

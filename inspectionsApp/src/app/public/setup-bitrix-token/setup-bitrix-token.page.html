@@ -1,0 +1,170 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start">
+      <ion-back-button defaulthref=""> </ion-back-button>
+    </ion-buttons>
+    <ion-title>Bitrix setup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label color="primary"> Expert Networks setup </ion-label>
+    <ion-chip *ngIf="testingSucessfullEN" color="success" slot="end">
+      Valid
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </ion-chip>
+    <ion-chip *ngIf="testingSucessfullEN==false" color="danger" slot="end">
+      Failed
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-chip>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-icon
+      *ngIf="!bitrixSetup.expertNetworksURL"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+    <ion-label position="floating">URL</ion-label>
+    <ion-input
+      (ionChange)="change($event)"
+      name="expertNetworksURL"
+      #expertNetworksURL="ngModel"
+      [(ngModel)]="bitrixSetup.expertNetworksURL"
+      type="url"
+      required
+    ></ion-input>
+  </ion-item>
+  <div class="validation-errors">
+    <div
+      *ngIf="expertNetworksURL.errors && (expertNetworksURL.dirty || expertNetworksURL.touched) "
+    >
+      <p *ngIf="expertNetworksURL.errors.required">
+        <ion-icon color="danger" name="warning-outline"></ion-icon>
+        <ion-label color="danger"> Required </ion-label>
+      </p>
+    </div>
+  </div>
+
+  <ion-item lines="full">
+    <ion-icon
+      *ngIf="!bitrixSetup.expertNetworksToken"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+    <ion-label position="floating">Token</ion-label>
+    <ion-input
+      (ionChange)="change($event)"
+      name="expertNetworksToken"
+      #expertNetworksToken="ngModel"
+      [(ngModel)]="bitrixSetup.expertNetworksToken"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+  <div class="validation-errors">
+    <div
+      *ngIf="expertNetworksToken.errors && (expertNetworksToken.dirty || expertNetworksToken.touched) "
+    >
+      <p *ngIf="expertNetworksURL.errors.required">
+        <ion-icon color="danger" name="warning-outline"></ion-icon>
+        <ion-label color="danger"> Required </ion-label>
+      </p>
+    </div>
+  </div>
+
+  <ion-item>
+    <ion-label color="primary"> ITest setup </ion-label>
+    <ion-chip *ngIf="testingSucessfullITest" color="success" slot="end">
+      Valid
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </ion-chip>
+    <ion-chip *ngIf="testingSucessfullITest==false" color="danger" slot="end">
+      Failed
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-chip>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-icon
+      *ngIf="!bitrixSetup.itestURL"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+    <ion-label position="floating">URL</ion-label>
+    <ion-input
+      (ionChange)="change($event)"
+      name="itestURL"
+      #itestURL="ngModel"
+      [(ngModel)]="bitrixSetup.itestURL"
+      type="url"
+      required
+    ></ion-input>
+  </ion-item>
+  <div class="validation-errors">
+    <div *ngIf="itestURL.errors && (itestURL.dirty || itestURL.touched) ">
+      <p *ngIf="itestURL.errors.required">
+        <ion-icon color="danger" name="warning-outline"></ion-icon>
+        <ion-label color="danger"> Required </ion-label>
+      </p>
+    </div>
+  </div>
+
+  <ion-item lines="full">
+    <ion-icon
+      *ngIf="!bitrixSetup.itestToken"
+      color="danger"
+      slot="start"
+      name="warning-outline"
+    ></ion-icon>
+    <ion-label position="floating">Token</ion-label>
+    <ion-input
+      (ionChange)="change($event)"
+      name="itestToken"
+      #itestToken="ngModel"
+      [(ngModel)]="bitrixSetup.itestToken"
+      type="text"
+      required
+    ></ion-input>
+  </ion-item>
+  <div class="validation-errors">
+    <div *ngIf="itestToken.errors && (itestToken.dirty || itestToken.touched) ">
+      <p *ngIf="expertNetworksURL.errors.required">
+        <ion-icon color="danger" name="warning-outline"></ion-icon>
+        <ion-label color="danger"> Required </ion-label>
+      </p>
+    </div>
+  </div>
+
+  <ion-grid
+    ><ion-row>
+      <ion-col class="row-center">
+        <ion-button
+          class="ion-margin"
+          color="secondary"
+          expand="block"
+          (click)="userWantsToTestENSetup()"
+        >
+          Test &nbsp;&nbsp;
+          <ion-icon name="cloud-upload-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col class="row-center">
+        <ion-button
+          (click)="userWantsToUpdateSetup()"
+          class="ion-margin"
+          expand="block"
+          [disabled]="!testingSucessfullEN 
+       || !testingSucessfullITest"
+        >
+          Save &nbsp;&nbsp;
+          <ion-icon name="save-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

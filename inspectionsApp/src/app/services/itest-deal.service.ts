@@ -90,6 +90,12 @@ export class ItestDealService {
     return this.inspectionStorage.delete(task);
   }
 
+  async getPendingToSyncCount(user: User): Promise<number> {
+    var pending = await this.inspectionStorage.getPendingToSync(user);
+
+    return pending.length;
+  }
+
   async getContactPhone(phone: string): Promise<Contact> {
     var result = await this.bitrixITest.getContactByPhone(phone);
     if (result.length > 0) {
@@ -195,6 +201,10 @@ export class ItestDealService {
     }
 
     return pending;
+  }
+
+  async login(url: string, token: string, email: string) {
+    return await this.bitrixITest.getUserByEmail(url, token, email);
   }
 
   async getCompletedInspections() {

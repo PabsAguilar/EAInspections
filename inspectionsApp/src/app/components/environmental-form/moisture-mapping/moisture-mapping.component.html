@@ -46,6 +46,16 @@
     ></ion-input>
   </ion-item>
 
+  <app-slides-photos
+    *ngIf="isMenuOpen"
+    ngDefaultControl
+    title="Area Pictures"
+    [readonly]="readonly"
+    name="areaPictures"
+    (photoChanged)="changeModel($event)"
+    [(ngModel)]="_model.areaPictures"
+  ></app-slides-photos>
+
   <ion-item lines="inset">
     <ion-label position="floating">Room temperature</ion-label>
     <ion-input

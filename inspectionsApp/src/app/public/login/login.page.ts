@@ -17,6 +17,8 @@ import { BitrixItestService } from "src/app/services/bitrix-itest.service";
 import { ItestDealService } from "src/app/services/itest-deal.service";
 import { BitrixENService } from "src/app/services/bitrix-inspection.service";
 import { EnumEnterprise } from "src/app/models/enums";
+import { Router } from "@angular/router";
+import { BitrixTokenSetupService } from "src/app/services/bitrix-token-setup.service";
 
 @Component({
   selector: "app-login",
@@ -32,10 +34,12 @@ export class LoginPage implements OnInit {
     // private eNBitrixService: BitrixENService,
 
     private inspectionService: ItestDealService,
+    private bitrixSetupService: BitrixTokenSetupService,
     public formBuilder: FormBuilder,
     public alertController: AlertController,
     private loadingController: LoadingController,
-    private toast: ToastController
+    private toast: ToastController,
+    private router: Router
   ) {}
 
   ngOnInit() {}
@@ -107,11 +111,21 @@ export class LoginPage implements OnInit {
     try {
       await loading.present();
       var data;
+      var setup = await this.bitrixSetupService.getBitrixSetup();
       if (this.segmentOption == EnumEnterprise.itest) {
-        data = await this.authService.getUserByEmailITest(values.username);
+        data = await this.inspectionService.login(
+          setup.itestURL,
+          setup.itestToken,
+          values.username
+        );
       } else {
-        data = await this.authService.getUserByEmailEN(values.username);
+        data = await this.inspectionService.login(
+          setup.expertNetworksURL,
+          setup.expertNetworksToken,
+          values.username
+        );
       }
+
       if (data && data.result.length > 0) {
         data.result[0].ENTERPRISE = this.segmentOption;
         var user = new User(data.result[0]);
@@ -146,6 +160,10 @@ export class LoginPage implements OnInit {
         loading.dismiss();
       }
     }
+  }
+
+  async userWantsToOpenSettings() {
+    this.router.navigate(["/setup-bitrix-token"]);
   }
 
   async presentAlert() {

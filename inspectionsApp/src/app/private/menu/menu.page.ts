@@ -37,7 +37,7 @@ export class MenuPage implements OnInit {
   authservice = this.auth;
   user: User = new User();
   activePath = "";
-
+  pendingToSync: number = 0;
   ngOnInit() {}
   darkMode: boolean;
 
@@ -45,6 +45,7 @@ export class MenuPage implements OnInit {
     //TODO: Validate connection to internet
     try {
       this.user = await this.authservice.getUser();
+   
     } catch (error) {
       var message = this.toast.create({
         message: error,
@@ -82,6 +83,7 @@ export class MenuPage implements OnInit {
   userWantsToLogout() {
     this.authservice.logout();
   }
+  
   async userWantsToGetFromServer() {
     var loading = await this.loadingController.create({
       message: "Getting Inspection Deals",

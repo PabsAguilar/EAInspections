@@ -405,6 +405,7 @@ listbeddingsOption -->
         >
       </ion-select>
     </ion-item>
+
     <ion-item
       *ngIf="item.sampleType == 'Mold' && item.toxicMoldboolean"
       color="danger"
@@ -420,6 +421,21 @@ listbeddingsOption -->
       </p>
     </ion-item>
   </div>
+
+  <ion-item
+    *ngIf="
+      _model.samples[0]?.type ||
+      _model.samples[1]?.type ||
+      _model.samples[2]?.type
+    "
+    color="success"
+  >
+    <p>
+      Fill in lab form with name: {{ contactName }} and deal number:
+      {{ taskId }}, and mail or drop off to lab.
+    </p>
+  </ion-item>
+
   <ion-item>
     <ion-label position="floating">Recommendations per area</ion-label>
     <ion-select

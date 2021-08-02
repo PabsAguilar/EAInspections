@@ -150,9 +150,12 @@
             <div style="padding-left: 5px">
               <ion-label>
                 <h4 style="font-size: small">
-                  {{task.id}} - <strong>{{task.title}}</strong>
+                  {{task.id}} -
+                  <strong
+                    >{{ task.contactName&&task.contactName!= ""
+                    ?task.contactName : task.title}}</strong
+                  >
                 </h4>
-                <h2>{{task.contactName}}</h2>
 
                 <p>{{task.serviceAddress}}</p>
 

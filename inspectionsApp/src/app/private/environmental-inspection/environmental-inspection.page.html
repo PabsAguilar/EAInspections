@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>{{task.id + " - " + task.title}}</ion-title>
+    <ion-title
+      >{{task.id + " - " +( task.contactName&&task.contactName!= ""
+      ?task.contactName : task.title)}}</ion-title
+    >
 
     <ion-buttons slot="start">
       <ion-back-button defaulthref=""> </ion-back-button>
@@ -21,6 +24,12 @@
     <ion-label color="primary">
       <center><h2>Environmental Inspection</h2></center>
     </ion-label>
+    <ion-badge
+      [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
+  task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
+      slot="end"
+      >{{task.internalStatus}}</ion-badge
+    >
   </ion-item>
   <app-inspection-general
     ngDefaultControl
@@ -37,6 +46,8 @@
     [readonly]="readonly"
     (modelChanged)="UpdateEntity($event)"
     [(model)]="task.environmentalForm.moldAreas"
+    [taskId]="task.id"
+    [contactName]="task.contactName"
   >
   </app-areas-mold>
 
@@ -85,78 +96,111 @@
   >
   </app-areas-lead>
 
-  <ion-item>
-    <ion-badge
-      [color]="task.internalStatus === 'Completed'? 'success' : task.internalStatus.includes('Pending') ? 'danger' :
-    task.internalStatus === 'In Progress'? 'warning' :  task.internalStatus === 'Saved'? 'primary' : task.internalStatus === 'Labs Sent'?'tertiary' :'medium' "
-      slot="end"
-      >{{task.internalStatus}}</ion-badge
-    >
-  </ion-item>
+  <!-- <ion-item>
+    <ion-label><strong>Summary</strong> </ion-label>
+  </ion-item> -->
 
-  <ion-item
-    class="ion-margin"
-    lines="none"
-    (click)="openAgreements('ITestAgreements')"
-  >
-    <ion-label>ITest Agreements</ion-label>
-    <ion-icon slot="start" color="success" name="reader-outline"></ion-icon>
-    <ion-badge
-      [color]=" this.task.iTestAgreements && (this.task.iTestAgreements.isSigned ||
+  <ion-list class="summary-table">
+    <ion-item-group>
+      <ion-item>
+        <ion-label> <strong> Samples Taken</strong></ion-label>
+        <ion-badge
+          slot="end"
+          [color]="moldCount+ bacteriaCount +sootCount+moistureCount+asbestosCount +leadsCount 
+        > 0? 'success'  : 'danger '"
+          >{{moldCount+ bacteriaCount +sootCount+moistureCount+asbestosCount
+          +leadsCount }}</ion-badge
+        >
+      </ion-item>
+
+      <ion-item lines="full">
+        <ion-label>Mold </ion-label>
+        <ion-badge [color]="moldCount> 0? 'primary'  : 'warning'" slot="end"
+          >{{moldCount}}
+        </ion-badge>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label>Bacteria </ion-label>
+        <ion-badge [color]="bacteriaCount> 0? 'primary'  : 'warning'" slot="end"
+          >{{bacteriaCount}}</ion-badge
+        >
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label>Soot </ion-label>
+        <ion-badge [color]="sootCount> 0? 'primary'  : 'warning'" slot="end"
+          >{{sootCount}}</ion-badge
+        >
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label>Moisture </ion-label>
+        <ion-badge [color]="moistureCount> 0? 'primary'  : 'warning'" slot="end"
+          >{{moistureCount}}</ion-badge
+        >
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label>Asbestos </ion-label>
+        <ion-badge [color]="asbestosCount> 0? 'primary'  : 'warning'" slot="end"
+          >{{asbestosCount}}</ion-badge
+        >
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label>Lead </ion-label>
+        <ion-badge [color]="leadsCount> 0? 'primary'  : 'warning'" slot="end"
+          >{{leadsCount}}</ion-badge
+        >
+      </ion-item>
+    </ion-item-group>
+
+    <ion-item-group>
+      <ion-item>
+        <ion-label><strong> Agreements</strong> </ion-label>
+      </ion-item>
+
+      <ion-item lines="full" (click)="openAgreements('ITestAgreements')">
+        <ion-label>ITest Agreements</ion-label>
+        <ion-icon slot="start" color="success" name="reader-outline"></ion-icon>
+        <ion-badge
+          [color]=" this.task.iTestAgreements && (this.task.iTestAgreements.isSigned ||
     this.task.iTestAgreements.signature.images.length > 0)? 'success' : 'medium' "
-      slot="end"
-      >{{this.task.iTestAgreements && (this.task.iTestAgreements.isSigned ||
-      this.task.iTestAgreements.signature.images.length > 0)? 'Signed' :
-      'Pending'}}</ion-badge
-    >
-  </ion-item>
+          slot="end"
+          >{{this.task.iTestAgreements && (this.task.iTestAgreements.isSigned ||
+          this.task.iTestAgreements.signature.images.length > 0)? 'Signed' :
+          'Pending'}}</ion-badge
+        >
+      </ion-item>
 
-  <ion-item
-    class="ion-margin"
-    lines="none"
-    (click)="openAgreements('ENAgreements')"
-  >
-    <ion-label>Expert Network Agreements</ion-label>
-    <ion-icon slot="start" color="primary" name="reader-outline"></ion-icon>
-    <ion-badge
-      [color]=" this.task.expertNetworkAgreements && (
+      <ion-item lines="full" (click)="openAgreements('ENAgreements')">
+        <ion-label>Expert Network Agreements</ion-label>
+        <ion-icon slot="start" color="primary" name="reader-outline"></ion-icon>
+        <ion-badge
+          [color]=" this.task.expertNetworkAgreements && (
         this.task.expertNetworkAgreements.isSigned ||
   this.task.expertNetworkAgreements.signature.images.length > 0)? 'success' : 'medium' "
-      slot="end"
-      >{{this.task.expertNetworkAgreements && (
-      this.task.expertNetworkAgreements.isSigned ||
-      this.task.expertNetworkAgreements.signature.images.length > 0)? 'Signed' :
-      'Pending'}}</ion-badge
-    >
-  </ion-item>
+          slot="end"
+          >{{this.task.expertNetworkAgreements && (
+          this.task.expertNetworkAgreements.isSigned ||
+          this.task.expertNetworkAgreements.signature.images.length > 0)?
+          'Signed' : 'Pending'}}</ion-badge
+        >
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
 
-  <ion-item
-    class="ion-margin"
-    lines="none"
-    *ngIf="!readonly"
-  >
+  <ion-item class="ion-margin" lines="none" *ngIf="!readonly">
     <ion-label>Save for later</ion-label>
     <ion-fab-button color="primary" (click)="saveTask()" class="ion-margin">
       <ion-icon name="save-outline"></ion-icon>
     </ion-fab-button>
   </ion-item>
 
-  <ion-item
-    class="ion-margin"
-    lines="none"
-    *ngIf="!readonly "
-  >
+  <ion-item class="ion-margin" lines="none" *ngIf="!readonly ">
     <ion-label>Send Labs</ion-label>
     <ion-fab-button color="primary" (click)="sendLabs()" class="ion-margin">
       <ion-icon name="flask-outline"></ion-icon>
     </ion-fab-button>
   </ion-item>
 
-  <ion-item
-    class="ion-margin"
-    lines="none"
-    *ngIf="!readonly "
-  >
+  <ion-item class="ion-margin" lines="none" *ngIf="!readonly ">
     <ion-label>Complete Inspection</ion-label>
     <ion-fab-button color="success" (click)="completeTask()" class="ion-margin">
       <ion-icon name="walk-outline"></ion-icon>

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { BitrixPictureList } from "src/app/models/bitrix-picture";
 import { bitrixMappingEnvironmental } from "src/app/models/enums";
 import { Lead } from "src/app/models/environmental-form/lead";
 import { ItestDealService } from "src/app/services/itest-deal.service";
@@ -29,6 +30,9 @@ export class LeadComponent implements OnInit {
   }
   set model(value: Lead) {
     this._model = value;
+    if (!this._model.areaPictures) {
+      this._model.areaPictures = new BitrixPictureList();
+    }
 
     this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
       this.fields = x[0];
@@ -36,12 +40,26 @@ export class LeadComponent implements OnInit {
         this.sampleCodeList = Object.entries(
           this.fields[bitrixMappingEnvironmental.Lead.sampleCode[this.index]]
             .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => {
-          if ((v as string).toLowerCase().includes("other")) {
-            this.other = k;
-          }
-          return { name: v, value: k };
-        });
+        )
+          .sort(function (a, b) {
+            if (
+              (a[1] as string).toLowerCase().includes("control") &&
+              !(b[1] as string).toLowerCase().includes("control")
+            ) {
+              return -1;
+            } else if (
+              !(a[1] as string).toLowerCase().includes("control") &&
+              (b[1] as string).toLowerCase().includes("control")
+            ) {
+              return 1;
+            } else return 0;
+          })
+          .map(([k, v]) => {
+            if ((v as string).toLowerCase().includes("other")) {
+              this.other = k;
+            }
+            return { name: v, value: k };
+          });
 
         this.cardinalDirectionList = Object.entries(
           this.fields[

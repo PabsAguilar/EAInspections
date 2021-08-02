@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Comprehensive Inspection</ion-title>
+    <ion-title>
+      {{task.id + " - " + (task.contactName&&task.contactName!= ""
+      ?task.contactName : task.title) }}
+    </ion-title>
     <ion-buttons slot="start">
       <ion-back-button defaulthref=""> </ion-back-button>
     </ion-buttons>
@@ -18,7 +21,7 @@
 <ion-content>
   <ion-item>
     <ion-label color="primary">
-      <center><h2>{{task.id + " - " + task.title}}</h2></center>
+      <center><h2>Comprehensive Inspection</h2></center>
     </ion-label>
   </ion-item>
   <app-inspection-general

@@ -1,7 +1,9 @@
+import { BitrixPictureList } from "../bitrix-picture";
 import { SyncInfo } from "../sync-info";
 
 export class Lead {
   sample: string;
+  areaPictures: BitrixPictureList;
   sampleOther: string;
   cardinalDirection: string;
   dimensionCm2: string;
@@ -9,21 +11,9 @@ export class Lead {
   typeOfSample: string;
   labResults: string;
   observations: string;
-  //bitrixMappingLead: BitrixMappingLead;
   syncInfo: SyncInfo;
   constructor() {
     this.syncInfo = new SyncInfo();
-    // this.bitrixMappingLead = new BitrixMappingLead();
+    this.areaPictures = new BitrixPictureList();
   }
 }
-
-// export class BitrixMappingLead {
-//   sampleCode: string;
-//   sampleOtherCode: string;
-//   cardinalDirectionCode: string;
-//   dimensionCm2Code: string;
-//   materialCode: string;
-//   typeOfSampleCode: string;
-//   labResultsCode: string;
-//   observationsCode: string;
-// }

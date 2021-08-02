@@ -12,56 +12,74 @@ import {
 import { InspectionTask } from "../models/inspection-task";
 import { User } from "../models/user";
 import { AuthenticationService } from "./authentication.service";
-const iTestUrl = "https://itest.bitrix24.com/rest/6";
-const iTestKey = "jz367c66ft48tm88"; //"rf1a6ygkrbdsho5t";
-
-const eNUrl = "https://expertnetwork.bitrix24.com/rest/159/";
-const eNKey = "av26roukw3tcyfyf";
+import { BitrixTokenSetupService } from "./bitrix-token-setup.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class BitrixItestService {
-  constructor(private http: HttpClient, authService: AuthenticationService) {
-    authService.getUser().then((x) => {
-      if (!x) {
-        return;
-      }
-      if (x.enterprise === EnumEnterprise.itest) {
-        this.url = iTestUrl;
-        this.key = iTestKey;
-      } else {
-        this.url = eNUrl;
-        this.key = eNKey;
-      }
+  constructor(
+    private http: HttpClient,
+    authService: AuthenticationService,
+    private bitrixTokenService: BitrixTokenSetupService
+  ) {
+    bitrixTokenService.getBitrixSetup().then((y) => {
+      authService.getUser().then((x) => {
+        if (!x) {
+          return;
+        }
+        if (x.enterprise === EnumEnterprise.itest) {
+          this.url = y.itestURL;
+          this.key = y.itestToken;
+        } else {
+          this.url = y.expertNetworksURL;
+          this.key = y.expertNetworksToken;
+        }
+      });
     });
   }
 
-  setUrlandKey(enterprise) {
+  async setUrlandKey(enterprise) {
+    var y = await this.bitrixTokenService.getBitrixSetup();
     if (enterprise === EnumEnterprise.itest) {
-      this.url = iTestUrl;
-      this.key = iTestKey;
+      this.url = y.itestURL;
+      this.key = y.itestToken;
     } else {
-      this.url = eNUrl;
-      this.key = eNKey;
+      this.url = y.expertNetworksURL;
+      this.key = y.expertNetworksToken;
     }
   }
   url = ""; //url = "https://itest.bitrix24.com/rest/6";
   key = ""; //key = "rf1a6ygkrbdsho5t";
 
-  public getUserByEmail(email: string): Promise<any> {
+  public getUserByEmail(url: string, key: string, email: string): Promise<any> {
     return this.http
-      .get(`${this.url}/${this.key}/user.get.json?email=${email}`)
+      .get(`${url}/${key}/user.get.json?email=${email}`)
       .toPromise();
   }
 
   public getInspectionTypesITest(list: string): Promise<any> {
     return this.http
       .get(
-        `${iTestUrl}/${iTestKey}/lists.element.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}`
+        `${this.url}/${this.key}/lists.element.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}`
       )
       .toPromise();
   }
+
+  public async testSetup(url: string, key: string): Promise<boolean> {
+    try {
+      var x = await this.http.get(`${url}/${key}/crm.deal.fields.json`);
+      var res: any = await x.toPromise();
+
+      if (res && res.result && res.result.ID) {
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
   //https://itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/lists.field.get.json?IBLOCK_TYPE_ID=lists&IBLOCK_ID=48
   public getEnvironmentalInspectionListsFields(list: number): Promise<any> {
     return this.http
@@ -143,19 +161,20 @@ export class BitrixItestService {
       .toPromise();
   }
 
-  public getContactByEmailByEnterprise(
+  public async getContactByEmailByEnterprise(
     email: string,
     enterprise: string
   ): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.contact.get.json?ID=6
-    var tempUrl = iTestUrl;
-    var tempKey = iTestKey;
+    var y = await this.bitrixTokenService.getBitrixSetup();
+    var tempUrl = this.url;
+    var tempKey = this.key;
     if (enterprise === EnumEnterprise.itest) {
-      tempUrl = iTestUrl;
-      tempKey = iTestKey;
+      tempUrl = y.itestURL;
+      tempKey = y.itestToken;
     } else {
-      tempUrl = eNUrl;
-      tempKey = eNKey;
+      tempUrl = y.expertNetworksURL;
+      tempKey = y.expertNetworksToken;
     }
     return this.http
       .get(
@@ -173,19 +192,20 @@ export class BitrixItestService {
       .toPromise();
   }
 
-  public getCompaniesByNameAndEnterprise(
+  public async getCompaniesByNameAndEnterprise(
     name: string,
     enterprise: string
   ): Promise<any> {
     //itest.bitrix24.com/rest/6/rf1a6ygkrbdsho5t/crm.company.list.json?SELECT[]=*&FILTER[%TITLE]=Test
-    var tempUrl = iTestUrl;
-    var tempKey = iTestKey;
+    var y = await this.bitrixTokenService.getBitrixSetup();
+    var tempUrl = this.url;
+    var tempKey = this.key;
     if (enterprise === EnumEnterprise.itest) {
-      tempUrl = iTestUrl;
-      tempKey = iTestKey;
+      tempUrl = y.itestURL;
+      tempKey = y.itestToken;
     } else {
-      tempUrl = eNUrl;
-      tempKey = eNKey;
+      tempUrl = y.expertNetworksURL;
+      tempKey = y.expertNetworksToken;
     }
 
     https: return this.http
@@ -286,51 +306,59 @@ export class BitrixItestService {
     });
   }
 
-  public createDeal(postData: any, enterprise: string): Observable<any> {
-    var tempUrl = iTestUrl;
-    var tempKey = iTestKey;
+  public async createDeal(postData: any, enterprise: string): Promise<any> {
+    var y = await this.bitrixTokenService.getBitrixSetup();
+    var tempUrl = this.url;
+    var tempKey = this.key;
     if (enterprise === EnumEnterprise.itest) {
-      tempUrl = iTestUrl;
-      tempKey = iTestKey;
+      tempUrl = y.itestURL;
+      tempKey = y.itestToken;
     } else {
-      tempUrl = eNUrl;
-      tempKey = eNKey;
+      tempUrl = y.expertNetworksURL;
+      tempKey = y.expertNetworksToken;
     }
-    return this.http.post(`${tempUrl}/${tempKey}/crm.deal.add`, postData, {
-      headers: { "Content-Type": "application/json" },
-    });
+    return this.http
+      .post(`${tempUrl}/${tempKey}/crm.deal.add`, postData, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .toPromise();
   }
 
-  public createContact(postData: any, enterprise: string): Observable<any> {
-    var tempUrl = iTestUrl;
-    var tempKey = iTestKey;
+  public async createContact(postData: any, enterprise: string): Promise<any> {
+    var y = await this.bitrixTokenService.getBitrixSetup();
+    var tempUrl = this.url;
+    var tempKey = this.key;
     if (enterprise === EnumEnterprise.itest) {
-      tempUrl = iTestUrl;
-      tempKey = iTestKey;
+      tempUrl = y.itestURL;
+      tempKey = y.itestToken;
     } else {
-      tempUrl = eNUrl;
-      tempKey = eNKey;
+      tempUrl = y.expertNetworksURL;
+      tempKey = y.expertNetworksToken;
     }
 
-    return this.http.post(`${tempUrl}/${tempKey}/crm.contact.add`, postData, {
-      headers: { "Content-Type": "application/json" },
-    });
+    return this.http
+      .post(`${tempUrl}/${tempKey}/crm.contact.add`, postData, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .toPromise();
   }
 
-  public createCompany(postData: any, enterprise: string): Observable<any> {
-    var tempUrl = iTestUrl;
-    var tempKey = iTestKey;
+  public async createCompany(postData: any, enterprise: string): Promise<any> {
+    var y = await this.bitrixTokenService.getBitrixSetup();
+    var tempUrl = this.url;
+    var tempKey = this.key;
     if (enterprise === EnumEnterprise.itest) {
-      tempUrl = iTestUrl;
-      tempKey = iTestKey;
+      tempUrl = y.itestURL;
+      tempKey = y.itestToken;
     } else {
-      tempUrl = eNUrl;
-      tempKey = eNKey;
+      tempUrl = y.expertNetworksURL;
+      tempKey = y.expertNetworksToken;
     }
-
-    return this.http.post(`${tempUrl}/${tempKey}/crm.company.add`, postData, {
-      headers: { "Content-Type": "application/json" },
-    });
+    return this.http
+      .post(`${tempUrl}/${tempKey}/crm.company.add`, postData, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .toPromise();
   }
 
   public addFile(postData: any): Promise<any> {

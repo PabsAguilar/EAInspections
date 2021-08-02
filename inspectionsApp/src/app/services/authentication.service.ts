@@ -5,6 +5,7 @@ import { BehaviorSubject } from "rxjs";
 import { User } from "../models/user";
 import { ItestDealService } from "./itest-deal.service";
 import { HttpClient } from "@angular/common/http";
+import { BitrixTokenSetupService } from "./bitrix-token-setup.service";
 
 const TOKEN_KEY = "auth-token";
 const LAST_USER_KEY = "last-user-token";
@@ -14,11 +15,6 @@ const INSPECTIONS_KEY = "inspections-task";
 const SCHEDULINGS_KEY = "scheduling-form";
 const ENVIRONMENTAL_FIELDS_KEY = "environmental-inspection-fields";
 const DEAL_FIELDS_KEY = "deals-fields";
-
-const iTestUrl = "https://itest.bitrix24.com/rest/6";
-const iTestKey = "jz367c66ft48tm88";
-const eNUrl = "https://expertnetwork.bitrix24.com/rest/159/";
-const eNKey = "av26roukw3tcyfyf";
 
 @Injectable({
   providedIn: "root",
@@ -36,16 +32,16 @@ export class AuthenticationService {
     });
   }
 
-  public getUserByEmailEN(email: string): Promise<any> {
-    return this.http
-      .get(`${eNUrl}/${eNKey}/user.get.json?email=${email}`)
-      .toPromise();
-  }
-  public getUserByEmailITest(email: string): Promise<any> {
-    return this.http
-      .get(`${iTestUrl}/${iTestKey}/user.get.json?email=${email}`)
-      .toPromise();
-  }
+  // public getUserByEmailEN(email: string): Promise<any> {
+  //   return this.http
+  //     .get(`${eNUrl}/${eNKey}/user.get.json?email=${email}`)
+  //     .toPromise();
+  // }
+  // public getUserByEmailITest(email: string): Promise<any> {
+  //   return this.http
+  //     .get(`${iTestUrl}/${iTestKey}/user.get.json?email=${email}`)
+  //     .toPromise();
+  // }
 
   checkToken() {
     this.storage.get(TOKEN_KEY).then((res) => {

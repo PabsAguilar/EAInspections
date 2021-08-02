@@ -21,6 +21,8 @@ export class AreasMoldComponent implements OnInit {
   }
   @Input() readonly: boolean = false;
   @Input() title: string = "";
+  @Input() taskId: string = "";
+  @Input() contactName: string = "";
   @Input()
   get model(): DamageAreas {
     return this._model;

@@ -1,3 +1,4 @@
+import { BitrixPictureList } from "../bitrix-picture";
 import { SyncInfo } from "../sync-info";
 
 export class MoistureMapping {
@@ -12,24 +13,10 @@ export class MoistureMapping {
   standardTemperatureEast: number;
   standardTemperatureCeiling: number;
   standardTemperatureFloor: number;
-  //moistureMappingBitrixMap: MoistureMappingBitrixMap;
+  areaPictures: BitrixPictureList;
   syncInfo: SyncInfo;
   constructor() {
     this.syncInfo = new SyncInfo();
-   // this.moistureMappingBitrixMap = new MoistureMappingBitrixMap();
+    this.areaPictures = new BitrixPictureList();
   }
 }
-
-// export class MoistureMappingBitrixMap {
-//   areaCode: string;
-//   areaOtherCode: string;
-//   roomTempCode: string;
-//   relativeHumidityCode: string;
-//   dewPointCode: string;
-//   standardTemperatureNorthCode: string;
-//   standardTemperatureWestCode: string;
-//   standardTemperatureSouthCode: string;
-//   standardTemperatureEastCode: string;
-//   standardTemperatureCeilingCode: string;
-//   standardTemperatureFloorCode: string;
-// }

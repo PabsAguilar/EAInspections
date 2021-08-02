@@ -3,6 +3,13 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button slot="end" (click)="userWantsToOpenSettings($event)">
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
     <ion-title>Log In</ion-title>
   </ion-toolbar>
   <ion-toolbar>

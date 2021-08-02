@@ -40,6 +40,8 @@ export class AreaMoldComponent implements OnInit {
   selectAreaName: string;
   fields: any[];
   @Input() index: number = 0;
+  @Input() taskId: string = "";
+  @Input() contactName: string = "";
   @Input() readonly: boolean = false;
   @Input()
   get model(): DamageInspection {
@@ -54,12 +56,26 @@ export class AreaMoldComponent implements OnInit {
         var bitrixFields = bitrixMappingEnvironmental[this._model.type];
         this.listArea = Object.entries(
           this.fields[bitrixFields.areaNameCode[this.index]].DISPLAY_VALUES_FORM
-        ).map(([k, v]) => {
-          if ((v as string)?.toLowerCase().includes("other")) {
-            this.other = k;
-          }
-          return { name: v, value: k };
-        });
+        )
+          .sort(function (a, b) {
+            if (
+              (a[1] as string).toLowerCase().includes("control") &&
+              !(b[1] as string).toLowerCase().includes("control")
+            ) {
+              return -1;
+            } else if (
+              !(a[1] as string).toLowerCase().includes("control") &&
+              (b[1] as string).toLowerCase().includes("control")
+            ) {
+              return 1;
+            } else return 0;
+          })
+          .map(([k, v]) => {
+            if ((v as string)?.toLowerCase().includes("other")) {
+              this.other = k;
+            }
+            return { name: v, value: k };
+          });
 
         this.listCondition = Object.entries(
           this.fields[bitrixFields.areaConditionCode[this.index]]

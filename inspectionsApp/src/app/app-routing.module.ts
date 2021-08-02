@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'image-modal',
     loadChildren: () => import('./components/image-modal/image-modal.module').then( m => m.ImageModalPageModule)
   },
+  {
+    path: 'setup-bitrix-token',
+    loadChildren: () => import('./public/setup-bitrix-token/setup-bitrix-token.module').then( m => m.SetupBitrixTokenPageModule)
+  },
 
 ];
 @NgModule({

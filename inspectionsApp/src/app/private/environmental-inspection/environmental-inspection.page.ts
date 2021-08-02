@@ -26,6 +26,14 @@ import { EmailComposer } from "@ionic-native/email-composer/ngx";
 })
 export class EnvironmentalInspectionPage implements OnInit {
   task: InspectionTask;
+
+  moldCount: number = 0;
+  bacteriaCount: number = 0;
+  sootCount: number = 0;
+  moistureCount: number = 0;
+  asbestosCount: number = 0;
+  leadsCount: number = 0;
+
   constructor(
     private router: Router,
     public alertController: AlertController,
@@ -488,6 +496,38 @@ export class EnvironmentalInspectionPage implements OnInit {
         this.task.internalStatus = "In Progress";
       }
       await this.inspectionService.update(this.task);
+
+      this.moldCount = this.task.environmentalForm.moldAreas.areasInspection
+        //arr.reduce(function (acc, obj) { return acc + obj.x; }, 0);
+        .reduce(function (acc, b) {
+          return acc + b.samples.filter((x) => x.type).length;
+        }, 0);
+      this.bacteriaCount =
+        this.task.environmentalForm.bacteriasAreas.areasInspection.reduce(
+          function (acc, b) {
+            return acc + b.samples.filter((x) => x.type).length;
+          },
+          0
+        );
+      this.sootCount =
+        this.task.environmentalForm.sootAreas.areasInspection.reduce(function (
+          acc,
+          b
+        ) {
+          return acc + b.samples.filter((x) => x.type).length;
+        },
+        0);
+      this.moistureCount =
+        this.task.environmentalForm.moistureMappingAreas.areamoistureMapping.filter(
+          (x) => x.area
+        ).length;
+      this.asbestosCount =
+        this.task.environmentalForm.asbestosAreas.asbestosAreas.filter(
+          (x) => x.materialLocation
+        ).length;
+      this.leadsCount = this.task.environmentalForm.leadAreas.leadAreas.filter(
+        (x) => x.material
+      ).length;
     } catch (error) {
       console.log(error);
       var message = this.toast.create({
