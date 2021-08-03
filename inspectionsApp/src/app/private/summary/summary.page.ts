@@ -52,12 +52,14 @@ export class SummaryPage implements OnInit {
         .getObservable()
         .subscribe(async (data) => {
           this.schedulingList = await this.schedulingStorageService.getAll();
-          this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+          this.inspectionTasks =
+            await this.inspectionStorageService.getCompletedInspections();
         });
 
       //TODO: Validate connection to internet
       this.schedulingList = await this.schedulingStorageService.getAll();
-      this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+      this.inspectionTasks =
+        await this.inspectionStorageService.getCompletedInspections();
 
       this.route.queryParams.subscribe((params) => {
         if (params && params.segment) {
@@ -83,7 +85,8 @@ export class SummaryPage implements OnInit {
     try {
       console.log("Pull inspections Event Triggered!");
       if (this.segmentOption === "inspections") {
-        this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+        this.inspectionTasks =
+          await this.inspectionStorageService.getCompletedInspections();
       } else {
         this.schedulingList = await this.schedulingStorageService.getAll();
       }
@@ -119,8 +122,9 @@ export class SummaryPage implements OnInit {
         }
         switch (result.data.event) {
           case "syncToServer":
-            await (await this.syncInspection.syncAllPending()).toPromise();
-            this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
+            await await this.syncInspection.syncAllPending();
+            this.inspectionTasks =
+              await this.inspectionStorageService.getCompletedInspections();
             this.schedulingList = await this.schedulingStorageService.getAll();
 
             break;
@@ -167,24 +171,24 @@ export class SummaryPage implements OnInit {
   }
 
   async trySync(task) {
-    (await this.syncInspection.syncTask(task)).subscribe(async (x) => {
-      if (x) {
-        this.inspectionTasks = await this.inspectionStorageService.getCompletedInspections();
-        var message = this.toast.create({
-          message: "Inspection is synched.",
-          color: "success",
-          duration: 5000,
-        });
-        (await message).present();
-      } else {
-        var message = this.toast.create({
-          message: "Sync failed, please try again later.",
-          color: "warning",
-          duration: 300,
-        });
-        (await message).present();
-      }
-    });
+    var x = await this.syncInspection.syncTask(task);
+    if (x) {
+      this.inspectionTasks =
+        await this.inspectionStorageService.getCompletedInspections();
+      var message = this.toast.create({
+        message: "Inspection is synched.",
+        color: "success",
+        duration: 5000,
+      });
+      (await message).present();
+    } else {
+      var message = this.toast.create({
+        message: "Sync failed, please try again later.",
+        color: "warning",
+        duration: 300,
+      });
+      (await message).present();
+    }
   }
 
   async seeSchedulingDetails(scheduling: Scheduling) {

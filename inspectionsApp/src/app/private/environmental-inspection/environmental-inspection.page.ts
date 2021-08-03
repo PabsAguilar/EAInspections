@@ -307,9 +307,7 @@ export class EnvironmentalInspectionPage implements OnInit {
               this.task.internalStatus = InspectionStatus.PendingSaved;
               var random = Math.floor(Math.random() * 100) + 2;
               await this.inspectionService.update(this.task);
-              await this.navController.navigateRoot(
-                "menu/tabs/tabs/pending-inspections/" + random
-              );
+
               var message = this.toast.create({
                 message: "Inspection is saved.",
                 color: "success",
@@ -317,29 +315,34 @@ export class EnvironmentalInspectionPage implements OnInit {
               });
 
               (await message).present();
+              await this.syncTask();
 
-              (await this.syncInspectionService.syncTask(this.task)).subscribe(
-                async (x) => {
-                  if (x) {
-                    this.syncInspectionService.publishSomeData({
-                      syncItem: "deal",
-                    });
-                    var message = this.toast.create({
-                      message: "Inspection is synched.",
-                      color: "success",
-                      duration: 5000,
-                    });
-                    (await message).present();
-                  } else {
-                    var message = this.toast.create({
-                      message: "Sync failed, please start a manual sync.",
-                      color: "warning",
-                      duration: 5000,
-                    });
-                    (await message).present();
-                  }
-                }
+              await this.navController.navigateRoot(
+                "menu/tabs/tabs/pending-inspections/" + random
               );
+
+              // (await this.syncInspectionService.syncTask(this.task)).subscribe(
+              //   async (x) => {
+              //     if (x) {
+              //       this.syncInspectionService.publishSomeData({
+              //         syncItem: "deal",
+              //       });
+              //       var message = this.toast.create({
+              //         message: "Inspection is synched.",
+              //         color: "success",
+              //         duration: 5000,
+              //       });
+              //       (await message).present();
+              //     } else {
+              //       var message = this.toast.create({
+              //         message: "Sync failed, please start a manual sync.",
+              //         color: "warning",
+              //         duration: 5000,
+              //       });
+              //       (await message).present();
+              //     }
+              //   }
+              // );
             },
           },
         ],
@@ -356,6 +359,76 @@ export class EnvironmentalInspectionPage implements OnInit {
     }
   }
 
+  async syncTask() {
+    try {
+      const loading = await this.loadingController.create({
+        message: "Uploading to Bitrix...",
+      });
+      await loading.present();
+      this.task.startedSync = false;
+      var x = await this.syncInspectionService.syncTask(this.task);
+
+      if (x) {
+        this.syncInspectionService.publishSomeData({
+          syncItem: "deal",
+        });
+        var top = await this.loadingController.getTop();
+        if (top) {
+          await this.loadingController.dismiss();
+        }
+
+        var message = this.toast.create({
+          message: "Deal is synched.",
+          color: "success",
+          duration: 5000,
+        });
+        (await message).present();
+      } else {
+        var message = this.toast.create({
+          message: "Sync failed, please start a manual sync.",
+          color: "warning",
+          duration: 5000,
+        });
+        (await message).present();
+      }
+      (await message).present();
+    } catch (error) {
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 5000,
+      });
+    } finally {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
+    }
+
+    // (await this.syncInspectionService.syncTask(this.task)).subscribe(
+    //   async (x) => {
+    //     if (x) {
+    //       this.syncInspectionService.publishSomeData({
+    //         syncItem: "deal",
+    //       });
+    //       var message = this.toast.create({
+    //         message: "Inspection is synched.",
+    //         color: "success",
+    //         duration: 5000,
+    //       });
+    //       (await message).present();
+    //     } else {
+    //       var message = this.toast.create({
+    //         message: "Sync failed, please start a manual sync.",
+    //         color: "warning",
+    //         duration: 5000,
+    //       });
+    //       (await message).present();
+    //     }
+    //   }
+    // );
+  }
+
   async sendLabs() {
     try {
       this.task.internalStatus = InspectionStatus.PendingSentLab;
@@ -367,6 +440,7 @@ export class EnvironmentalInspectionPage implements OnInit {
         color: "success",
         duration: 3000,
       });
+
       const alert = await this.alertController.create({
         header: "Reminder",
         message: `Fill in lab form with name: ${this.task.contactName} and deal number: ${this.task.id}, and mail or drop off to lab.`,
@@ -374,6 +448,7 @@ export class EnvironmentalInspectionPage implements OnInit {
           {
             text: "Ok",
             handler: async () => {
+              var x = await this.syncTask();
               await this.navController.navigateRoot(
                 "menu/tabs/tabs/pending-inspections/" + random
               );
@@ -382,29 +457,6 @@ export class EnvironmentalInspectionPage implements OnInit {
         ],
       });
       await alert.present();
-
-      (await this.syncInspectionService.syncTask(this.task)).subscribe(
-        async (x) => {
-          if (x) {
-            this.syncInspectionService.publishSomeData({
-              syncItem: "deal",
-            });
-            var message = this.toast.create({
-              message: "Inspection is synched.",
-              color: "success",
-              duration: 5000,
-            });
-            (await message).present();
-          } else {
-            var message = this.toast.create({
-              message: "Sync failed, please start a manual sync.",
-              color: "warning",
-              duration: 5000,
-            });
-            (await message).present();
-          }
-        }
-      );
 
       (await message).present();
     } catch (error) {
@@ -440,40 +492,39 @@ export class EnvironmentalInspectionPage implements OnInit {
               this.task.internalStatus = InspectionStatus.PendingToComplete;
               var random = Math.floor(Math.random() * 100) + 2;
               await this.inspectionService.update(this.task);
+              await this.syncTask();
               await this.navController.navigateRoot(
                 "menu/tabs/tabs/pending-inspections/" + random
               );
-              var message = this.toast.create({
-                message: "Inspection is completed.",
-                color: "success",
-                duration: 3000,
-              });
+              // var message = this.toast.create({
+              //   message: "Inspection is completed.",
+              //   color: "success",
+              //   duration: 3000,
+              // });
 
-              (await message).present();
-
-              (await this.syncInspectionService.syncTask(this.task)).subscribe(
-                async (x) => {
-                  this.syncInspectionService.publishSomeData({
-                    syncItem: "deal",
-                    refreshFromServer: true,
-                  });
-                  if (x) {
-                    var message = this.toast.create({
-                      message: "Inspection is synched.",
-                      color: "success",
-                      duration: 5000,
-                    });
-                    (await message).present();
-                  } else {
-                    var message = this.toast.create({
-                      message: "Sync failed, please start a manual sync.",
-                      color: "warning",
-                      duration: 5000,
-                    });
-                    (await message).present();
-                  }
-                }
-              );
+              // (await this.syncInspectionService.syncTask(this.task)) .subscribe(
+              //   async (x) => {
+              //     this.syncInspectionService.publishSomeData({
+              //       syncItem: "deal",
+              //       refreshFromServer: true,
+              //     });
+              //     if (x) {
+              //       var message = this.toast.create({
+              //         message: "Inspection is synched.",
+              //         color: "success",
+              //         duration: 5000,
+              //       });
+              //       (await message).present();
+              //     } else {
+              //       var message = this.toast.create({
+              //         message: "Sync failed, please start a manual sync.",
+              //         color: "warning",
+              //         duration: 5000,
+              //       });
+              //       (await message).present();
+              //     }
+              //   }
+              // );
             },
           },
         ],

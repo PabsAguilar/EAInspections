@@ -61,54 +61,59 @@ export class InspectionGeneralComponent implements OnInit {
     }
     this.generalInfoInspection = value;
 
-    this.inspectionService.getDealsFields().then((x) => {
-      this.fields = x[0];
-      if (value) {
-        if (this.generalInfoInspection.environmentalInspection == true) {
-          this.propertyTypeList = this.fields[
-            ITestDealMapping.propertyTypeCode
-          ].items.map((y) => {
-            return { name: y.VALUE, value: y.ID };
-          });
+    try {
+      this.inspectionService.getDealsFields().then((x) => {
+        this.fields = x[0];
+        if (value) {
+          if (this.generalInfoInspection.environmentalInspection == true) {
+            this.propertyTypeList = this.fields[
+              ITestDealMapping.propertyTypeCode
+            ].items.map((y) => {
+              return { name: y.VALUE, value: y.ID };
+            });
 
-          if (value.environmentalInspection) {
-            this.fields[ITestDealMapping.agreementSignedYesNoCode].items.map(
-              (y) => {
-                if (y.VALUE == "Yes") {
-                  this.generalInfoInspection.agreementSignedYesNo = y.ID;
+            if (value.environmentalInspection) {
+              this.fields[ITestDealMapping.agreementSignedYesNoCode].items.map(
+                (y) => {
+                  if (y.VALUE == "Yes") {
+                    this.generalInfoInspection.agreementSignedYesNo = y.ID;
+                  }
                 }
-              }
-            );
+              );
 
-            this.HHVACConditions = this.fields[
-              ITestDealMapping.HVACSystemConditionCode
-            ].items.map((y) => {
-              return { name: y.VALUE, value: y.ID };
-            });
+              this.HHVACConditions = this.fields[
+                ITestDealMapping.HVACSystemConditionCode
+              ].items.map((y) => {
+                return { name: y.VALUE, value: y.ID };
+              });
 
-            this.DuctConditions = this.fields[
-              ITestDealMapping.ductsConditionCode
-            ].items.map((y) => {
-              return { name: y.VALUE, value: y.ID };
-            });
+              this.DuctConditions = this.fields[
+                ITestDealMapping.ductsConditionCode
+              ].items.map((y) => {
+                return { name: y.VALUE, value: y.ID };
+              });
 
-            this.AticConditions = this.fields[
-              ITestDealMapping.atticConditionCode
+              this.AticConditions = this.fields[
+                ITestDealMapping.atticConditionCode
+              ].items.map((y) => {
+                return { name: y.VALUE, value: y.ID };
+              });
+            }
+          } else {
+            this.propertyTypeList = this.fields[
+              ENDealMapping.propertyTypeCode
             ].items.map((y) => {
               return { name: y.VALUE, value: y.ID };
             });
           }
-        } else {
-          this.propertyTypeList = this.fields[
-            ENDealMapping.propertyTypeCode
-          ].items.map((y) => {
-            return { name: y.VALUE, value: y.ID };
-          });
         }
-      }
-    });
+      });
 
-    this.changeModel(null);
+      this.changeModel(null);
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
+    }
   }
 
   @Output() generalInfoChanged: any = new EventEmitter();
@@ -121,7 +126,7 @@ export class InspectionGeneralComponent implements OnInit {
   ngOnInit() {}
   changeModel($event) {
     try {
-      console.log(this.generalInfoInspection);
+      //console.log(this.generalInfoInspection);
       this.filledProperties = 0;
       if (
         this.generalInfoInspection.propertyYear &&

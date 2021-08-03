@@ -24,19 +24,25 @@ export class AreasMoistureMappingComponent implements OnInit {
   }
   set model(value: MoistureMappingAreas) {
     this._model = value;
-    if (this._model.dateTesed) {
-      this._model.dateTesed = new Date(this._model.dateTesed).toISOString();
-    }
 
-    if (value) {
-      this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
-        this.listInspectionType = data
-          .filter((x) => x.name.toLowerCase().indexOf("moisture") >= 0)
-          .map((item) => {
-            return { name: item.name, value: item.id };
-          });
-      });
-      this.AreaUpdated(null);
+    try {
+      if (this._model.dateTesed) {
+        this._model.dateTesed = new Date(this._model.dateTesed).toISOString();
+      }
+
+      if (value) {
+        this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
+          this.listInspectionType = data
+            .filter((x) => x.name.toLowerCase().indexOf("moisture") >= 0)
+            .map((item) => {
+              return { name: item.name, value: item.id };
+            });
+        });
+        this.AreaUpdated(null);
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
   _model: MoistureMappingAreas = new MoistureMappingAreas();
@@ -48,15 +54,20 @@ export class AreasMoistureMappingComponent implements OnInit {
   ngOnInit() {}
 
   AreaUpdated($event) {
-    this.filledAreas = !this.model.areamoistureMapping
-      ? 0
-      : this.model.areamoistureMapping.filter((y) => y.area).length;
-    this.model.syncInfo.updated = true;
-    if (this.filledAreas >= 1 && this.model.dateTesed) {
-      this.progressColor = "success";
-      this.progressPercentage = 1;
-      console.log(this.model);
-      this.modelChanged.emit(this.model);
+    try {
+      this.filledAreas = !this.model.areamoistureMapping
+        ? 0
+        : this.model.areamoistureMapping.filter((y) => y.area).length;
+      this.model.syncInfo.updated = true;
+      if (this.filledAreas >= 1 && this.model.dateTesed) {
+        this.progressColor = "success";
+        this.progressPercentage = 1;
+        console.log(this.model);
+        this.modelChanged.emit(this.model);
+      }
+    } catch (error) {
+      console.log("Unspected error changing areas model.");
+      console.log(error);
     }
   }
 }

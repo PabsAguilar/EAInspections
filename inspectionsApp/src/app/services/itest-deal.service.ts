@@ -660,13 +660,17 @@ export class ItestDealService {
   }
 
   async refreshFieldsFromServer(user: User) {
-    //await this.getExternal(idUser);
-    if (user.enterprise == EnumEnterprise.itest) {
-      await this.getEnvironmentalFromServerInspectionFields();
-    }
+    try {
+      if (user.enterprise == EnumEnterprise.itest) {
+        await this.getEnvironmentalFromServerInspectionFields();
+      }
 
-    await this.getDealsFieldsFromServer();
-    await this.getInspectors(true);
+      await this.getDealsFieldsFromServer();
+      await this.getInspectors(true);
+    } catch (error) {
+      console.log(error);
+    }
+    //await this.getExternal(idUser);
   }
   async getSyncStamp() {
     return await this.storage.get(SYNCSTAMPKEY);

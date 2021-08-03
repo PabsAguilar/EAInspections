@@ -624,7 +624,7 @@ export class SyncInspectionService {
     return company;
   }
 
-  async syncAllPending(): Promise<Observable<boolean>> {
+  async syncAllPending(): Promise<boolean> {
     var user = await this.autenticateService.getUser();
     var schedulingList = await this.schedulingStorageService.getPendingToSync(
       user
@@ -652,18 +652,16 @@ export class SyncInspectionService {
       (
         await inspectionList
       ).map(async (x) => {
-        (await this.syncTask(x)).subscribe(async (y) => {
-          if (y) {
-          } else {
-            var message = this.toast.create({
-              message:
-                "Sync failed for " + x.title + ", please try again later.",
-              color: "warning",
-              duration: 2000,
-            });
-            (await message).present();
-          }
-        });
+        var y = await this.syncTask(x);
+        if (y) {
+        } else {
+          var message = this.toast.create({
+            message: "Sync failed for deal " + x.id + ", please try again later.",
+            color: "warning",
+            duration: 2000,
+          });
+          (await message).present();
+        }
       })
     );
     if (schedulingList.length == 0 && inspectionList.length == 0) {
@@ -674,7 +672,7 @@ export class SyncInspectionService {
       });
       (await message).present();
     }
-    return of(true);
+    return true;
   }
 
   pad(number, length) {
@@ -911,7 +909,7 @@ export class SyncInspectionService {
         postData,
         scheduling.serviceType
       );
-      var r = response.toPromise();
+
       if (response && response.result > 0) {
         scheduling.syncInfo.isSync = true;
         scheduling.syncInfo.syncCode = response.result;
@@ -944,7 +942,7 @@ export class SyncInspectionService {
     return image;
   }
 
-  async syncENTask(task: InspectionTask): Promise<Observable<boolean>> {
+  async syncENTask(task: InspectionTask): Promise<boolean> {
     try {
       if (!task.bitrixFolder.syncInfo.isSync) {
         var result = await this.syncSubfolder(task);
@@ -1439,7 +1437,7 @@ export class SyncInspectionService {
         task.internalStatus = InspectionStatus.Completed;
       }
       await this.inspectionStorage.update(task);
-      return of(true);
+      return true;
     } catch (error) {
       console.log(error);
       var message = this.toast.create({
@@ -1449,11 +1447,11 @@ export class SyncInspectionService {
       });
       (await message).present();
       console.log(error);
-      return of(false);
+      return false;
     }
   }
 
-  async syncTask(task: InspectionTask): Promise<Observable<boolean>> {
+  async syncTask(task: InspectionTask): Promise<boolean> {
     try {
       if (task.startedSync) {
         var today = new Date();
@@ -1462,7 +1460,7 @@ export class SyncInspectionService {
         var difference = today.getTime() - lastSync.getTime();
         var minutes = Math.round(difference / 60000);
         if (minutes <= 2) {
-          return of(true);
+          return true;
         }
       }
 
@@ -1627,10 +1625,10 @@ export class SyncInspectionService {
         }
 
         await this.inspectionStorage.update(task);
-        return of(true);
+        return true;
       } else {
         await this.inspectionStorage.update(task);
-        return of(false);
+        return false;
       }
     } catch (error) {
       console.log(error);
@@ -1641,7 +1639,7 @@ export class SyncInspectionService {
       });
       (await message).present();
       console.log(error);
-      return of(false);
+      return false;
     }
   }
 

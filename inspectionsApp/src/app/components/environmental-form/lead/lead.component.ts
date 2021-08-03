@@ -30,62 +30,69 @@ export class LeadComponent implements OnInit {
   }
   set model(value: Lead) {
     this._model = value;
-    if (!this._model.areaPictures) {
-      this._model.areaPictures = new BitrixPictureList();
-    }
 
-    this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
-      this.fields = x[0];
-      if (value) {
-        this.sampleCodeList = Object.entries(
-          this.fields[bitrixMappingEnvironmental.Lead.sampleCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        )
-          .sort(function (a, b) {
-            if (
-              (a[1] as string).toLowerCase().includes("control") &&
-              !(b[1] as string).toLowerCase().includes("control")
-            ) {
-              return -1;
-            } else if (
-              !(a[1] as string).toLowerCase().includes("control") &&
-              (b[1] as string).toLowerCase().includes("control")
-            ) {
-              return 1;
-            } else return 0;
-          })
-          .map(([k, v]) => {
-            if ((v as string).toLowerCase().includes("other")) {
-              this.other = k;
-            }
-            return { name: v, value: k };
-          });
-
-        this.cardinalDirectionList = Object.entries(
-          this.fields[
-            bitrixMappingEnvironmental.Lead.cardinalDirectionCode[this.index]
-          ].DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.materialCodeList = Object.entries(
-          this.fields[bitrixMappingEnvironmental.Lead.materialCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.typeOfSampleCode = Object.entries(
-          this.fields[
-            bitrixMappingEnvironmental.Lead.typeOfSampleCode[this.index]
-          ].DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.labResultsCode = Object.entries(
-          this.fields[
-            bitrixMappingEnvironmental.Lead.labResultsCode[this.index]
-          ].DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
+    try {
+      if (!this._model.areaPictures) {
+        this._model.areaPictures = new BitrixPictureList();
       }
-      this.changeModel("init");
-    });
+
+      this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
+        this.fields = x[0];
+        if (value) {
+          this.sampleCodeList = Object.entries(
+            this.fields[bitrixMappingEnvironmental.Lead.sampleCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          )
+            .sort(function (a, b) {
+              if (
+                (a[1] as string).toLowerCase().includes("control") &&
+                !(b[1] as string).toLowerCase().includes("control")
+              ) {
+                return -1;
+              } else if (
+                !(a[1] as string).toLowerCase().includes("control") &&
+                (b[1] as string).toLowerCase().includes("control")
+              ) {
+                return 1;
+              } else return 0;
+            })
+            .map(([k, v]) => {
+              if ((v as string).toLowerCase().includes("other")) {
+                this.other = k;
+              }
+              return { name: v, value: k };
+            });
+
+          this.cardinalDirectionList = Object.entries(
+            this.fields[
+              bitrixMappingEnvironmental.Lead.cardinalDirectionCode[this.index]
+            ].DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.materialCodeList = Object.entries(
+            this.fields[
+              bitrixMappingEnvironmental.Lead.materialCode[this.index]
+            ].DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.typeOfSampleCode = Object.entries(
+            this.fields[
+              bitrixMappingEnvironmental.Lead.typeOfSampleCode[this.index]
+            ].DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.labResultsCode = Object.entries(
+            this.fields[
+              bitrixMappingEnvironmental.Lead.labResultsCode[this.index]
+            ].DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+        }
+        this.changeModel("init");
+      });
+    } catch (error) {
+      console.log("Unspected error setting model.");
+      console.log(error);
+    }
   }
   _model: Lead = new Lead();
   @Input() title: string = "";
@@ -102,63 +109,68 @@ export class LeadComponent implements OnInit {
   }
 
   changeModel($event) {
-    this.filledProperties = 0;
-    if (this._model.cardinalDirection) {
-      this.filledProperties++;
-    }
-
-    if (this._model.dimensionCm2) {
-      this.filledProperties++;
-    }
-    if (this._model.labResults) {
-      this.filledProperties++;
-    }
-    if (this._model.material) {
-      this.filledProperties++;
-    }
-    if (this._model.observations) {
-      this.filledProperties++;
-    }
-    if (this._model.sample) {
-      this.filledProperties++;
-      this.selectAreaName = this.sampleCodeList.find(
-        (x) => x.value == this._model.sample
-      )?.name;
-
-      if (
-        this.selectAreaName &&
-        this.selectAreaName.toLowerCase().includes("other") &&
-        this._model.sampleOther
-      ) {
-        this.selectAreaName = this._model.sampleOther;
+    try {
+      this.filledProperties = 0;
+      if (this._model.cardinalDirection) {
+        this.filledProperties++;
       }
-    }
-    if (this._model.typeOfSample) {
-      this.filledProperties++;
-    }
 
-    this.progressPercentage =
-      this.filledProperties == 0
-        ? 0
-        : this.filledProperties / this.totalProperties;
+      if (this._model.dimensionCm2) {
+        this.filledProperties++;
+      }
+      if (this._model.labResults) {
+        this.filledProperties++;
+      }
+      if (this._model.material) {
+        this.filledProperties++;
+      }
+      if (this._model.observations) {
+        this.filledProperties++;
+      }
+      if (this._model.sample) {
+        this.filledProperties++;
+        this.selectAreaName = this.sampleCodeList.find(
+          (x) => x.value == this._model.sample
+        )?.name;
 
-    if ($event != "init") {
-      this.modelChanged.emit(this._model);
-    }
+        if (
+          this.selectAreaName &&
+          this.selectAreaName.toLowerCase().includes("other") &&
+          this._model.sampleOther
+        ) {
+          this.selectAreaName = this._model.sampleOther;
+        }
+      }
+      if (this._model.typeOfSample) {
+        this.filledProperties++;
+      }
 
-    switch (true) {
-      case this.progressPercentage < 0.5:
-        this.progressColor = "danger";
-        break;
-      case this.progressPercentage < 1:
-        this.progressColor = "warning";
-        break;
-      case this.progressPercentage >= 1:
-        this.progressColor = "success";
-        break;
-      default:
-        this.progressColor = "danger";
-        break;
+      this.progressPercentage =
+        this.filledProperties == 0
+          ? 0
+          : this.filledProperties / this.totalProperties;
+
+      if ($event != "init") {
+        this.modelChanged.emit(this._model);
+      }
+
+      switch (true) {
+        case this.progressPercentage < 0.5:
+          this.progressColor = "danger";
+          break;
+        case this.progressPercentage < 1:
+          this.progressColor = "warning";
+          break;
+        case this.progressPercentage >= 1:
+          this.progressColor = "success";
+          break;
+        default:
+          this.progressColor = "danger";
+          break;
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
 }

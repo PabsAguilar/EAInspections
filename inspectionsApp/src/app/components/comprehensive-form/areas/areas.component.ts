@@ -32,13 +32,18 @@ export class AreasComponent implements OnInit {
   ngOnInit() {}
 
   AreaUpdated() {
-    this.filledAreas = !this.areas
-      ? 0
-      : this.areas.filter((y) => y.name != "").length;
-    if (this.filledAreas >= 1) {
-      this.progressColor = "success";
-      this.progressPercentage = 1;
-      this.AreasListChanged.emit(this.areas);
+    try {
+      this.filledAreas = !this.areas
+        ? 0
+        : this.areas.filter((y) => y.name != "").length;
+      if (this.filledAreas >= 1) {
+        this.progressColor = "success";
+        this.progressPercentage = 1;
+        this.AreasListChanged.emit(this.areas);
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
 }

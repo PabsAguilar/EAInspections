@@ -72,11 +72,15 @@ export class PendingInspectionsPage implements OnInit {
       this.subscription = this.syncInspection
         .getObservable()
         .subscribe(async (data) => {
-          var fromServer = true;
-          if (data && data.refreshFromServer != null) {
-            fromServer = data.refreshFromServer;
+          try {
+            var fromServer = true;
+            if (data && data.refreshFromServer != null) {
+              fromServer = data.refreshFromServer;
+            }
+            await this.loadData(fromServer);
+          } catch (error) {
+            console.log(error);
           }
-          await this.loadData(fromServer);
         });
 
       //TODO: Validate connection to internet
@@ -149,33 +153,44 @@ export class PendingInspectionsPage implements OnInit {
   }
 
   async loadData(forceFromServer: boolean) {
-    var tempInspectionTasks = [];
+    try {
+      const loading = await this.loadingController.create({
+        message: "Loading...",
+      });
+      await loading.present();
+      var tempInspectionTasks = [];
 
-    if (forceFromServer || this.inspectionTasks == null) {
-      await this.inspectionService.getExternal(this.user);
-      await this.inspectionService.refreshFieldsFromServer(this.user);
-      tempInspectionTasks = await this.inspectionService.getPendingInspections(
-        this.user
+      if (forceFromServer || this.inspectionTasks == null) {
+        await this.inspectionService.getExternal(this.user);
+        await this.inspectionService.refreshFieldsFromServer(this.user);
+        tempInspectionTasks =
+          await this.inspectionService.getPendingInspections(this.user);
+      } else {
+        tempInspectionTasks =
+          await this.inspectionService.getPendingInspections(this.user);
+      }
+      this.inspectionTasks = tempInspectionTasks.filter(
+        (task) =>
+          this.segmentOption == "All" ||
+          (this.segmentOption == "Pending" &&
+            (task.internalStatus == InspectionStatus.New ||
+              task.internalStatus == InspectionStatus.InProgress)) ||
+          (this.segmentOption == "Saved" &&
+            (task.internalStatus == InspectionStatus.Saved ||
+              task.internalStatus == InspectionStatus.LabsSent ||
+              task.internalStatus == InspectionStatus.PendingSaved ||
+              task.internalStatus == InspectionStatus.PendingSentLab)) ||
+          task.internalStatus == this.segmentOption
       );
-    } else {
-      tempInspectionTasks = await this.inspectionService.getPendingInspections(
-        this.user
-      );
+      this.lastSync = await this.inspectionService.getSyncStamp();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
     }
-    this.inspectionTasks = tempInspectionTasks.filter(
-      (task) =>
-        this.segmentOption == "All" ||
-        (this.segmentOption == "Pending" &&
-          (task.internalStatus == InspectionStatus.New ||
-            task.internalStatus == InspectionStatus.InProgress)) ||
-        (this.segmentOption == "Saved" &&
-          (task.internalStatus == InspectionStatus.Saved ||
-            task.internalStatus == InspectionStatus.LabsSent ||
-            task.internalStatus == InspectionStatus.PendingSaved ||
-            task.internalStatus == InspectionStatus.PendingSentLab)) ||
-        task.internalStatus == this.segmentOption
-    );
-    this.lastSync = await this.inspectionService.getSyncStamp();
   }
   async doRefresh(event) {
     try {
@@ -280,9 +295,7 @@ export class PendingInspectionsPage implements OnInit {
             await loading.present();
 
             try {
-              var response = await (
-                await this.syncInspection.syncAllPending()
-              ).toPromise();
+              var response = await this.syncInspection.syncAllPending();
 
               await this.inspectionService.getExternal(this.user);
               await this.inspectionService.refreshFieldsFromServer(this.user);

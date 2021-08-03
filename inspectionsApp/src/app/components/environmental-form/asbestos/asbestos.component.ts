@@ -30,53 +30,59 @@ export class AsbestosComponent implements OnInit {
   }
   set model(value: Asbesto) {
     this._model = value;
-    if (!this._model.areaPictures) {
-      this._model.areaPictures = new BitrixPictureList();
-    }
-    this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
-      this.fields = x[0];
-      if (value) {
-        var bitrixFields = bitrixMappingEnvironmental.Asbestos;
-        this.materialLocationList = Object.entries(
-          this.fields[bitrixFields.materialLocationCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        )
-          .sort(function (a, b) {
-            if (
-              (a[1] as string).toLowerCase().includes("control") &&
-              !(b[1] as string).toLowerCase().includes("control")
-            ) {
-              return -1;
-            } else if (
-              !(a[1] as string).toLowerCase().includes("control") &&
-              (b[1] as string).toLowerCase().includes("control")
-            ) {
-              return 1;
-            } else return 0;
-          })
-          .map(([k, v]) => {
-            if ((v as string)?.toLowerCase().includes("other")) {
-              this.other = k;
-            }
-            return { name: v, value: k };
-          });
 
-        this.F_NFList = Object.entries(
-          this.fields[bitrixFields.F_NFCode[this.index]].DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.conditionList = Object.entries(
-          this.fields[bitrixFields.areaConditionCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.labResultsList = Object.entries(
-          this.fields[bitrixFields.labResultsCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-        this.changeModel("init");
+    try {
+      if (!this._model.areaPictures) {
+        this._model.areaPictures = new BitrixPictureList();
       }
-    });
+      this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
+        this.fields = x[0];
+        if (value) {
+          var bitrixFields = bitrixMappingEnvironmental.Asbestos;
+          this.materialLocationList = Object.entries(
+            this.fields[bitrixFields.materialLocationCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          )
+            .sort(function (a, b) {
+              if (
+                (a[1] as string).toLowerCase().includes("control") &&
+                !(b[1] as string).toLowerCase().includes("control")
+              ) {
+                return -1;
+              } else if (
+                !(a[1] as string).toLowerCase().includes("control") &&
+                (b[1] as string).toLowerCase().includes("control")
+              ) {
+                return 1;
+              } else return 0;
+            })
+            .map(([k, v]) => {
+              if ((v as string)?.toLowerCase().includes("other")) {
+                this.other = k;
+              }
+              return { name: v, value: k };
+            });
+
+          this.F_NFList = Object.entries(
+            this.fields[bitrixFields.F_NFCode[this.index]].DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.conditionList = Object.entries(
+            this.fields[bitrixFields.areaConditionCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.labResultsList = Object.entries(
+            this.fields[bitrixFields.labResultsCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+          this.changeModel("init");
+        }
+      });
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
+    }
   }
   _model: Asbesto = new Asbesto();
   @Input() title: string = "";
@@ -92,61 +98,66 @@ export class AsbestosComponent implements OnInit {
   }
 
   changeModel($event) {
-    this.filledProperties = 0;
-    if (this._model.F_NF) {
-      this.filledProperties++;
-    }
-
-    if (this._model.condition) {
-      this.filledProperties++;
-    }
-    if (this._model.labResults) {
-      this.filledProperties++;
-    }
-    if (this._model.materialDescription) {
-      this.filledProperties++;
-    }
-    if (this._model.materialLocation) {
-      this.filledProperties++;
-      this.selectAreaName = this.materialLocationList.find(
-        (x) => x.value == this._model.materialLocation
-      )?.name;
-      if (
-        this.selectAreaName.toLowerCase().includes("other") &&
-        this._model.materialLocationOther
-      ) {
-        this.selectAreaName = this._model.materialLocationOther;
+    try {
+      this.filledProperties = 0;
+      if (this._model.F_NF) {
+        this.filledProperties++;
       }
-    }
-    if (this._model.observations) {
-      this.filledProperties++;
-    }
-    if (this._model.totalQuantity) {
-      this.filledProperties++;
-    }
 
-    this.progressPercentage =
-      this.filledProperties == 0
-        ? 0
-        : this.filledProperties / this.totalProperties;
+      if (this._model.condition) {
+        this.filledProperties++;
+      }
+      if (this._model.labResults) {
+        this.filledProperties++;
+      }
+      if (this._model.materialDescription) {
+        this.filledProperties++;
+      }
+      if (this._model.materialLocation) {
+        this.filledProperties++;
+        this.selectAreaName = this.materialLocationList.find(
+          (x) => x.value == this._model.materialLocation
+        )?.name;
+        if (
+          this.selectAreaName.toLowerCase().includes("other") &&
+          this._model.materialLocationOther
+        ) {
+          this.selectAreaName = this._model.materialLocationOther;
+        }
+      }
+      if (this._model.observations) {
+        this.filledProperties++;
+      }
+      if (this._model.totalQuantity) {
+        this.filledProperties++;
+      }
 
-    if ($event != "init") {
-      this.modelChanged.emit(this._model);
-    }
+      this.progressPercentage =
+        this.filledProperties == 0
+          ? 0
+          : this.filledProperties / this.totalProperties;
 
-    switch (true) {
-      case this.progressPercentage < 0.5:
-        this.progressColor = "danger";
-        break;
-      case this.progressPercentage < 1:
-        this.progressColor = "warning";
-        break;
-      case this.progressPercentage >= 1:
-        this.progressColor = "success";
-        break;
-      default:
-        this.progressColor = "danger";
-        break;
+      if ($event != "init") {
+        this.modelChanged.emit(this._model);
+      }
+
+      switch (true) {
+        case this.progressPercentage < 0.5:
+          this.progressColor = "danger";
+          break;
+        case this.progressPercentage < 1:
+          this.progressColor = "warning";
+          break;
+        case this.progressPercentage >= 1:
+          this.progressColor = "success";
+          break;
+        default:
+          this.progressColor = "danger";
+          break;
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
 }

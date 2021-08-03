@@ -24,19 +24,24 @@ export class AreasAsbestosComponent implements OnInit {
   }
   set model(value: AsbestoAreas) {
     this._model = value;
-    this._model.inspectionDate = new Date(
-      this._model.inspectionDate
-    ).toISOString();
+    try {
+      this._model.inspectionDate = new Date(
+        this._model.inspectionDate
+      ).toISOString();
 
-    if (value) {
-      this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
-        this.listInspectionType = data
-          .filter((x) => x.name.toLowerCase().indexOf("asbesto") >= 0)
-          .map((item) => {
-            return { name: item.name, value: item.id };
-          });
-        this.AreaUpdated("init");
-      });
+      if (value) {
+        this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
+          this.listInspectionType = data
+            .filter((x) => x.name.toLowerCase().indexOf("asbesto") >= 0)
+            .map((item) => {
+              return { name: item.name, value: item.id };
+            });
+          this.AreaUpdated("init");
+        });
+      }
+    } catch (error) {
+      console.log("Unspected error setting model asbestos areas.");
+      console.log(error);
     }
   }
   _model: AsbestoAreas = new AsbestoAreas();
@@ -48,18 +53,23 @@ export class AreasAsbestosComponent implements OnInit {
   ngOnInit() {}
 
   AreaUpdated($event) {
-    this.filledAreas = !this.model.asbestosAreas
-      ? 0
-      : this.model.asbestosAreas.filter((y) => y.materialLocation).length;
-    if ($event != "init") {
-      this.model.syncInfo.updated = true;
-    }
+    try {
+      this.filledAreas = !this.model.asbestosAreas
+        ? 0
+        : this.model.asbestosAreas.filter((y) => y.materialLocation).length;
+      if ($event != "init") {
+        this.model.syncInfo.updated = true;
+      }
 
-    if (this.filledAreas >= 1 && this.model.inspectionType) {
-      this.progressColor = "success";
-      this.progressPercentage = 1;
-      console.log(this.model);
-      this.modelChanged.emit(this.model);
+      if (this.filledAreas >= 1 && this.model.inspectionType) {
+        this.progressColor = "success";
+        this.progressPercentage = 1;
+        console.log(this.model);
+        this.modelChanged.emit(this.model);
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
 }

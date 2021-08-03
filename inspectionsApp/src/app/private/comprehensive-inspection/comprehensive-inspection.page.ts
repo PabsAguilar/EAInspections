@@ -307,28 +307,25 @@ export class ComprehensiveInspectionPage implements OnInit {
 
                 (await message).present();
 
-                (
-                  await this.syncInspectionService.syncENTask(this.task)
-                ).subscribe(async (x) => {
-                  this.syncInspectionService.publishSomeData({
-                    syncItem: "deal",
-                  });
-                  if (x) {
-                    var message = this.toast.create({
-                      message: "Inspection is synched.",
-                      color: "success",
-                      duration: 5000,
-                    });
-                    (await message).present();
-                  } else {
-                    var message = this.toast.create({
-                      message: "Sync failed, please start a manual sync.",
-                      color: "warning",
-                      duration: 7000,
-                    });
-                    (await message).present();
-                  }
+                var x = await this.syncInspectionService.syncENTask(this.task);
+                this.syncInspectionService.publishSomeData({
+                  syncItem: "deal",
                 });
+                if (x) {
+                  var message = this.toast.create({
+                    message: "Inspection is synched.",
+                    color: "success",
+                    duration: 5000,
+                  });
+                  (await message).present();
+                } else {
+                  var message = this.toast.create({
+                    message: "Sync failed, please start a manual sync.",
+                    color: "warning",
+                    duration: 7000,
+                  });
+                  (await message).present();
+                }
               } catch (error) {
                 var message = this.toast.create({
                   message: "Sync failed, " + error,

@@ -25,18 +25,24 @@ export class AreasLeadComponent implements OnInit {
   }
   set model(value: LeadAreas) {
     this._model = value;
-    this._model.inspectionDate = new Date(
-      this._model.inspectionDate
-    ).toISOString();
-    if (value) {
-      this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
-        this.listInspectionType = data
-          .filter((x) => x.name.toLowerCase().indexOf("lead") >= 0)
-          .map((item) => {
-            return { name: item.name, value: item.id };
-          });
-        this.AreaUpdated("init");
-      });
+
+    try {
+      this._model.inspectionDate = new Date(
+        this._model.inspectionDate
+      ).toISOString();
+      if (value) {
+        this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
+          this.listInspectionType = data
+            .filter((x) => x.name.toLowerCase().indexOf("lead") >= 0)
+            .map((item) => {
+              return { name: item.name, value: item.id };
+            });
+          this.AreaUpdated("init");
+        });
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
   _model: LeadAreas = new LeadAreas();
@@ -48,18 +54,23 @@ export class AreasLeadComponent implements OnInit {
   ngOnInit() {}
 
   AreaUpdated($event) {
-    this.filledAreas = !this.model.leadAreas
-      ? 0
-      : this.model.leadAreas.filter((y) => y.sample).length;
-    if ($event != "init") {
-      this.model.syncInfo.updated = true;
-    }
+    try {
+      this.filledAreas = !this.model.leadAreas
+        ? 0
+        : this.model.leadAreas.filter((y) => y.sample).length;
+      if ($event != "init") {
+        this.model.syncInfo.updated = true;
+      }
 
-    if (this.filledAreas >= 1 && this.model.inspectionType) {
-      this.progressColor = "success";
-      this.progressPercentage = 1;
-      console.log(this.model);
-      this.modelChanged.emit(this.model);
+      if (this.filledAreas >= 1 && this.model.inspectionType) {
+        this.progressColor = "success";
+        this.progressPercentage = 1;
+        console.log(this.model);
+        this.modelChanged.emit(this.model);
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
 }

@@ -79,72 +79,77 @@ export class MoistureMappingComponent implements OnInit {
   }
 
   changeModel($event) {
-    this.filledProperties = 0;
-    if (this._model.area) {
-      this.filledProperties++;
-      this.selectAreaName = this.listArea.find(
-        (x) => x.value == this._model.area
-      )?.name;
-      if (
-        this.selectAreaName &&
-        this.selectAreaName.toLowerCase().includes("other") &&
-        this._model.areaOther
-      ) {
-        this.selectAreaName = this._model.areaOther;
+    try {
+      this.filledProperties = 0;
+      if (this._model.area) {
+        this.filledProperties++;
+        this.selectAreaName = this.listArea.find(
+          (x) => x.value == this._model.area
+        )?.name;
+        if (
+          this.selectAreaName &&
+          this.selectAreaName.toLowerCase().includes("other") &&
+          this._model.areaOther
+        ) {
+          this.selectAreaName = this._model.areaOther;
+        }
       }
-    }
 
-    if (this._model.dewPoint) {
-      this.filledProperties++;
-    }
+      if (this._model.dewPoint) {
+        this.filledProperties++;
+      }
 
-    if (this._model.relativeHumidity) {
-      this.filledProperties++;
-    }
-    if (this._model.roomTemp) {
-      this.filledProperties++;
-    }
-    if (this._model.standardTemperatureCeiling) {
-      this.filledProperties++;
-    }
-    if (this._model.standardTemperatureEast) {
-      this.filledProperties++;
-    }
-    if (this._model.standardTemperatureFloor) {
-      this.filledProperties++;
-    }
-    if (this._model.standardTemperatureNorth) {
-      this.filledProperties++;
-    }
-    if (this._model.standardTemperatureSouth) {
-      this.filledProperties++;
-    }
-    if (this._model.standardTemperatureWest) {
-      this.filledProperties++;
-    }
+      if (this._model.relativeHumidity) {
+        this.filledProperties++;
+      }
+      if (this._model.roomTemp) {
+        this.filledProperties++;
+      }
+      if (this._model.standardTemperatureCeiling) {
+        this.filledProperties++;
+      }
+      if (this._model.standardTemperatureEast) {
+        this.filledProperties++;
+      }
+      if (this._model.standardTemperatureFloor) {
+        this.filledProperties++;
+      }
+      if (this._model.standardTemperatureNorth) {
+        this.filledProperties++;
+      }
+      if (this._model.standardTemperatureSouth) {
+        this.filledProperties++;
+      }
+      if (this._model.standardTemperatureWest) {
+        this.filledProperties++;
+      }
 
-    this.progressPercentage =
-      this.filledProperties == 0
-        ? 0
-        : this.filledProperties / this.totalProperties;
+      this.progressPercentage =
+        this.filledProperties == 0
+          ? 0
+          : this.filledProperties / this.totalProperties;
 
-    if ($event != "init") {
-      this.modelChanged.emit(this._model);
-    }
+      if ($event != "init") {
+        this.modelChanged.emit(this._model);
+      }
 
-    switch (true) {
-      case this.progressPercentage < 0.5:
-        this.progressColor = "danger";
-        break;
-      case this.progressPercentage < 1:
-        this.progressColor = "warning";
-        break;
-      case this.progressPercentage >= 1:
-        this.progressColor = "success";
-        break;
-      default:
-        this.progressColor = "danger";
-        break;
+      switch (true) {
+        case this.progressPercentage < 0.5:
+          this.progressColor = "danger";
+          break;
+        case this.progressPercentage < 1:
+          this.progressColor = "warning";
+          break;
+        case this.progressPercentage >= 1:
+          this.progressColor = "success";
+          break;
+        default:
+          this.progressColor = "danger";
+          break;
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
 }

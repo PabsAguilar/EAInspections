@@ -49,128 +49,133 @@ export class AreaMoldComponent implements OnInit {
   }
   set model(value: DamageInspection) {
     this._model = value;
+    try {
+      this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
+        this.fields = x[0];
+        if (value) {
+          var bitrixFields = bitrixMappingEnvironmental[this._model.type];
+          this.listArea = Object.entries(
+            this.fields[bitrixFields.areaNameCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          )
+            .sort(function (a, b) {
+              if (
+                (a[1] as string).toLowerCase().includes("control") &&
+                !(b[1] as string).toLowerCase().includes("control")
+              ) {
+                return -1;
+              } else if (
+                !(a[1] as string).toLowerCase().includes("control") &&
+                (b[1] as string).toLowerCase().includes("control")
+              ) {
+                return 1;
+              } else return 0;
+            })
+            .map(([k, v]) => {
+              if ((v as string)?.toLowerCase().includes("other")) {
+                this.other = k;
+              }
+              return { name: v, value: k };
+            });
 
-    this.inspectionStorage.getEnvironmentalInspectionFields().then((x) => {
-      this.fields = x[0];
-      if (value) {
-        var bitrixFields = bitrixMappingEnvironmental[this._model.type];
-        this.listArea = Object.entries(
-          this.fields[bitrixFields.areaNameCode[this.index]].DISPLAY_VALUES_FORM
-        )
-          .sort(function (a, b) {
-            if (
-              (a[1] as string).toLowerCase().includes("control") &&
-              !(b[1] as string).toLowerCase().includes("control")
-            ) {
-              return -1;
-            } else if (
-              !(a[1] as string).toLowerCase().includes("control") &&
-              (b[1] as string).toLowerCase().includes("control")
-            ) {
-              return 1;
-            } else return 0;
-          })
-          .map(([k, v]) => {
-            if ((v as string)?.toLowerCase().includes("other")) {
-              this.other = k;
+          this.listCondition = Object.entries(
+            this.fields[bitrixFields.areaConditionCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k, checked: false }));
+          this.listRemoveCeiling = Object.entries(
+            this.fields[bitrixFields.removeCeilingCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+          this.listRemoveDrywall = Object.entries(
+            this.fields[bitrixFields.removeDrywallCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+          this.listRemoveBaseboards = Object.entries(
+            this.fields[bitrixFields.removeBaseboardsCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+          this.listRemoveFlooring = Object.entries(
+            this.fields[bitrixFields.removeFlooringCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.listDecontamination = Object.entries(
+            this.fields[bitrixFields.decontaminationCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.listFurniture = Object.entries(
+            this.fields[bitrixFields.furnitureOptionCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+          this.listbeddingsOption = Object.entries(
+            this.fields[bitrixFields.beddingsOptionCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.waterDamageCategories = Object.entries(
+            this.fields[bitrixFields.waterDamageCategoryCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.waterDamageClasses = Object.entries(
+            this.fields[bitrixFields.waterDamageClassCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.listRecomendations = Object.entries(
+            this.fields[bitrixFields.recomendationsCode[this.index]]
+              .DISPLAY_VALUES_FORM
+          ).map(([k, v]) => ({ name: v, value: k }));
+
+          this.listRecomendations.forEach(
+            (x) => (x.name = x.name.slice(0, 100) + "...")
+          );
+
+          this.listSampleType = [];
+          this._model.samples.forEach((item: Sample, sampleIndex) => {
+            var varient: string = "Sample" + (sampleIndex + 1);
+            if (this._model.type == DamageAreaType.Mold) {
+              var t = Object.entries(
+                this.fields[bitrixFields["toxicMoldCode" + varient][this.index]]
+                  .DISPLAY_VALUES_FORM
+              ).map(([k, v]) => ({ name: v, value: k, sample: sampleIndex }));
+              this.listToxicMold = this.listToxicMold.concat(t);
+
+              var u = Object.entries(
+                this.fields[
+                  bitrixFields["moldSporesFoundCode" + varient][this.index]
+                ].DISPLAY_VALUES_FORM
+              ).map(([k, v]) => ({
+                name: v,
+                value: k,
+                checked: false,
+                sample: sampleIndex,
+              }));
+              this.listmoldSporesFound = this.listmoldSporesFound.concat(u);
             }
-            return { name: v, value: k };
-          });
-
-        this.listCondition = Object.entries(
-          this.fields[bitrixFields.areaConditionCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k, checked: false }));
-        this.listRemoveCeiling = Object.entries(
-          this.fields[bitrixFields.removeCeilingCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-        this.listRemoveDrywall = Object.entries(
-          this.fields[bitrixFields.removeDrywallCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-        this.listRemoveBaseboards = Object.entries(
-          this.fields[bitrixFields.removeBaseboardsCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-        this.listRemoveFlooring = Object.entries(
-          this.fields[bitrixFields.removeFlooringCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.listDecontamination = Object.entries(
-          this.fields[bitrixFields.decontaminationCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.listFurniture = Object.entries(
-          this.fields[bitrixFields.furnitureOptionCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-        this.listbeddingsOption = Object.entries(
-          this.fields[bitrixFields.beddingsOptionCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.waterDamageCategories = Object.entries(
-          this.fields[bitrixFields.waterDamageCategoryCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.waterDamageClasses = Object.entries(
-          this.fields[bitrixFields.waterDamageClassCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.listRecomendations = Object.entries(
-          this.fields[bitrixFields.recomendationsCode[this.index]]
-            .DISPLAY_VALUES_FORM
-        ).map(([k, v]) => ({ name: v, value: k }));
-
-        this.listRecomendations.forEach(
-          (x) => (x.name = x.name.slice(0, 100) + "...")
-        );
-
-        this.listSampleType = [];
-        this._model.samples.forEach((item: Sample, sampleIndex) => {
-          var varient: string = "Sample" + (sampleIndex + 1);
-          if (this._model.type == DamageAreaType.Mold) {
-            var t = Object.entries(
-              this.fields[bitrixFields["toxicMoldCode" + varient][this.index]]
+            //lab results
+            var l = Object.entries(
+              this.fields[bitrixFields["labResultCode" + varient][this.index]]
                 .DISPLAY_VALUES_FORM
             ).map(([k, v]) => ({ name: v, value: k, sample: sampleIndex }));
-            this.listToxicMold = this.listToxicMold.concat(t);
+            this.listlabResults = this.listlabResults.concat(l);
 
-            var u = Object.entries(
-              this.fields[
-                bitrixFields["moldSporesFoundCode" + varient][this.index]
-              ].DISPLAY_VALUES_FORM
-            ).map(([k, v]) => ({
-              name: v,
-              value: k,
-              checked: false,
-              sample: sampleIndex,
-            }));
-            this.listmoldSporesFound = this.listmoldSporesFound.concat(u);
-          }
-          //lab results
-          var l = Object.entries(
-            this.fields[bitrixFields["labResultCode" + varient][this.index]]
-              .DISPLAY_VALUES_FORM
-          ).map(([k, v]) => ({ name: v, value: k, sample: sampleIndex }));
-          this.listlabResults = this.listlabResults.concat(l);
+            //sample type
+            var s = Object.entries(
+              this.fields[bitrixFields["typeCode" + varient][this.index]]
+                .DISPLAY_VALUES_FORM
+            ).map(([k, v]) => ({ name: v, value: k, sample: sampleIndex }));
+            this.listSampleType = this.listSampleType.concat(s);
+          });
 
-          //sample type
-          var s = Object.entries(
-            this.fields[bitrixFields["typeCode" + varient][this.index]]
-              .DISPLAY_VALUES_FORM
-          ).map(([k, v]) => ({ name: v, value: k, sample: sampleIndex }));
-          this.listSampleType = this.listSampleType.concat(s);
-        });
-
-        this.changeModel("init");
-      }
-    });
+          this.changeModel("init");
+        }
+      });
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
+    }
   }
   _model: DamageInspection = new DamageInspection("");
   @Input() title: string = "";
@@ -186,116 +191,124 @@ export class AreaMoldComponent implements OnInit {
   }
 
   changeModel($event) {
-    this.filledProperties = 0;
-    // if (
-    //   this._model.areaPictures.images &&
-    //   this._model.areaPictures.images.length > 0
-    // ) {
-    //   this.filledProperties++;
-    // }
-    if (this._model.areaCondition && this._model.areaCondition.length > 0) {
-      this.filledProperties++;
-    }
-    if (this._model.areaName) {
-      this.selectAreaName = this.listArea.find(
-        (x) => x.value == this._model.areaName
-      )?.name;
-      if (
-        this.selectAreaName &&
-        this.selectAreaName.toLowerCase().includes("other") &&
-        this._model.areaNameOther
-      ) {
-        this.selectAreaName = this._model.areaNameOther;
+    try {
+      this.filledProperties = 0;
+      // if (
+      //   this._model.areaPictures.images &&
+      //   this._model.areaPictures.images.length > 0
+      // ) {
+      //   this.filledProperties++;
+      // }
+      if (this._model.areaCondition && this._model.areaCondition.length > 0) {
+        this.filledProperties++;
       }
-      this.filledProperties++;
-    }
-    if (this._model.areaRH) {
-      this.filledProperties++;
-    }
-    if (this._model.beddingsOption) {
-      this.filledProperties++;
-    }
-    if (this._model.ceilingNotes) {
-      this.filledProperties++;
-    }
-    if (this._model.decontamination && this._model.decontamination.length > 0) {
-      this.filledProperties++;
-    }
-    if (this._model.drywallNotes) {
-      this.filledProperties++;
-    }
-    // if (this._model.areaNotes) {
-    //   this.filledProperties++;
-    // }
-
-    if (this._model.flooringNotes) {
-      this.filledProperties++;
-    }
-    if (this._model.furnitureOption) {
-      this.filledProperties++;
-    }
-    if (this._model.observations) {
-      this.filledProperties++;
-    }
-    if (this._model.baseboardsNotes) {
-      this.filledProperties++;
-    }
-    if (this._model.removeBaseboards) {
-      this.filledProperties++;
-    }
-    if (this._model.removeCeiling) {
-      this.filledProperties++;
-    }
-    if (this._model.recomendations) {
-      this.filledProperties++;
-    }
-
-    this.filledProperties =
-      this.filledProperties +
-      this._model.samples.filter((x) => x.type && x.labResult).length;
-
-    if (this._model.type == DamageAreaType.Mold) {
-      this._model.samples.forEach((item) => {
-        if (item.toxicMold) {
-          this.listToxicMold.forEach((toxicItem) => {
-            if (item.toxicMold == toxicItem.value) {
-              item.toxicMoldboolean = toxicItem.name == "Yes" ? true : false;
-            }
-          });
+      if (this._model.areaName) {
+        this.selectAreaName = this.listArea.find(
+          (x) => x.value == this._model.areaName
+        )?.name;
+        if (
+          this.selectAreaName &&
+          this.selectAreaName.toLowerCase().includes("other") &&
+          this._model.areaNameOther
+        ) {
+          this.selectAreaName = this._model.areaNameOther;
         }
-      });
-    }
+        this.filledProperties++;
+      }
+      if (this._model.areaRH) {
+        this.filledProperties++;
+      }
+      if (this._model.beddingsOption) {
+        this.filledProperties++;
+      }
+      if (this._model.ceilingNotes) {
+        this.filledProperties++;
+      }
+      if (
+        this._model.decontamination &&
+        this._model.decontamination.length > 0
+      ) {
+        this.filledProperties++;
+      }
+      if (this._model.drywallNotes) {
+        this.filledProperties++;
+      }
+      // if (this._model.areaNotes) {
+      //   this.filledProperties++;
+      // }
 
-    if (this._model.removeDrywall) {
-      this.filledProperties++;
-    }
-    if (this._model.removeFlooring) {
-      this.filledProperties++;
-    }
+      if (this._model.flooringNotes) {
+        this.filledProperties++;
+      }
+      if (this._model.furnitureOption) {
+        this.filledProperties++;
+      }
+      if (this._model.observations) {
+        this.filledProperties++;
+      }
+      if (this._model.baseboardsNotes) {
+        this.filledProperties++;
+      }
+      if (this._model.removeBaseboards) {
+        this.filledProperties++;
+      }
+      if (this._model.removeCeiling) {
+        this.filledProperties++;
+      }
+      if (this._model.recomendations) {
+        this.filledProperties++;
+      }
 
-    this.progressPercentage =
-      this.filledProperties == 0
-        ? 0
-        : this.filledProperties / this.totalProperties;
+      this.filledProperties =
+        this.filledProperties +
+        this._model.samples.filter((x) => x.type && x.labResult).length;
 
-    if ($event != "init") {
-      this._model.syncInfo.updated = true;
-      this.modelChanged.emit(this._model);
-    }
+      if (this._model.type == DamageAreaType.Mold) {
+        this._model.samples.forEach((item) => {
+          if (item.toxicMold) {
+            this.listToxicMold.forEach((toxicItem) => {
+              if (item.toxicMold == toxicItem.value) {
+                item.toxicMoldboolean = toxicItem.name == "Yes" ? true : false;
+              }
+            });
+          }
+        });
+      }
 
-    switch (true) {
-      case this.progressPercentage < 0.5:
-        this.progressColor = "danger";
-        break;
-      case this.progressPercentage < 1:
-        this.progressColor = "warning";
-        break;
-      case this.progressPercentage >= 1:
-        this.progressColor = "success";
-        break;
-      default:
-        this.progressColor = "danger";
-        break;
+      if (this._model.removeDrywall) {
+        this.filledProperties++;
+      }
+      if (this._model.removeFlooring) {
+        this.filledProperties++;
+      }
+
+      this.progressPercentage =
+        this.filledProperties == 0
+          ? 0
+          : this.filledProperties / this.totalProperties;
+
+      if ($event != "init") {
+        this._model.syncInfo.updated = true;
+        this.modelChanged.emit(this._model);
+      }
+
+      switch (true) {
+        case this.progressPercentage < 0.5:
+          this.progressColor = "danger";
+          break;
+        case this.progressPercentage < 1:
+          this.progressColor = "warning";
+          break;
+        case this.progressPercentage >= 1:
+          this.progressColor = "success";
+          break;
+        default:
+          this.progressColor = "danger";
+          break;
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
 }

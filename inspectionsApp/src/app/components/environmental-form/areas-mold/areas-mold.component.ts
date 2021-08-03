@@ -29,37 +29,42 @@ export class AreasMoldComponent implements OnInit {
   }
   set model(value: DamageAreas) {
     this._model = value;
-    if (value) {
-      this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
-        switch (value.type) {
-          case DamageAreaType.Bacteria:
-            this.damageInspectionType = data
-              .filter((x) => x.name.toLowerCase().indexOf("bacteria") >= 0)
-              .map((item) => {
-                return { name: item.name, value: item.id };
-              });
+    try {
+      if (value) {
+        this.inspectionStorage.getInspectionTasksTypesList().then((data) => {
+          switch (value.type) {
+            case DamageAreaType.Bacteria:
+              this.damageInspectionType = data
+                .filter((x) => x.name.toLowerCase().indexOf("bacteria") >= 0)
+                .map((item) => {
+                  return { name: item.name, value: item.id };
+                });
 
-            break;
-          case DamageAreaType.Mold:
-            this.damageInspectionType = data
-              .filter((x) => x.name.toLowerCase().indexOf("mold") >= 0)
-              .map((item) => {
-                return { name: item.name, value: item.id };
-              });
-            break;
+              break;
+            case DamageAreaType.Mold:
+              this.damageInspectionType = data
+                .filter((x) => x.name.toLowerCase().indexOf("mold") >= 0)
+                .map((item) => {
+                  return { name: item.name, value: item.id };
+                });
+              break;
 
-          case DamageAreaType.Soot:
-            this.damageInspectionType = data
-              .filter((x) => x.name.toLowerCase().indexOf("soot") >= 0)
-              .map((item) => {
-                return { name: item.name, value: item.id };
-              });
-            break;
-        }
-      });
-      this._model = value;
+            case DamageAreaType.Soot:
+              this.damageInspectionType = data
+                .filter((x) => x.name.toLowerCase().indexOf("soot") >= 0)
+                .map((item) => {
+                  return { name: item.name, value: item.id };
+                });
+              break;
+          }
+        });
+        this._model = value;
 
-      this.AreaUpdated(null);
+        this.AreaUpdated(null);
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
   _model: DamageAreas = new DamageAreas("");
@@ -71,15 +76,20 @@ export class AreasMoldComponent implements OnInit {
   ngOnInit() {}
 
   AreaUpdated($event) {
-    this.filledAreas = !this.model.areasInspection
-      ? 0
-      : this.model.areasInspection.filter((y) => y.areaName).length;
-    this._model.syncInfo.updated = true;
-    if (this.filledAreas >= 1 && this.model.moldInspectionType) {
-      this.progressColor = "success";
-      this.progressPercentage = 1;
-      console.log(this.model);
-      this.modelChanged.emit(this.model);
+    try {
+      this.filledAreas = !this.model.areasInspection
+        ? 0
+        : this.model.areasInspection.filter((y) => y.areaName).length;
+      this._model.syncInfo.updated = true;
+      if (this.filledAreas >= 1 && this.model.moldInspectionType) {
+        this.progressColor = "success";
+        this.progressPercentage = 1;
+        console.log(this.model);
+        this.modelChanged.emit(this.model);
+      }
+    } catch (error) {
+      console.log("Unspected error changing model.");
+      console.log(error);
     }
   }
 }

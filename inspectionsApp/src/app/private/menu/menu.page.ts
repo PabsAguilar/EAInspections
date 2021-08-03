@@ -45,7 +45,6 @@ export class MenuPage implements OnInit {
     //TODO: Validate connection to internet
     try {
       this.user = await this.authservice.getUser();
-   
     } catch (error) {
       var message = this.toast.create({
         message: error,
@@ -83,7 +82,7 @@ export class MenuPage implements OnInit {
   userWantsToLogout() {
     this.authservice.logout();
   }
-  
+
   async userWantsToGetFromServer() {
     var loading = await this.loadingController.create({
       message: "Getting Inspection Deals",
@@ -119,10 +118,7 @@ export class MenuPage implements OnInit {
     await loading.present();
 
     try {
-      var response = await (
-        await this.syncInspectionService.syncAllPending()
-      ).toPromise();
-
+      var response = await this.syncInspectionService.syncAllPending();
       await this.inspectionService.getExternal(this.user);
       await this.inspectionService.refreshFieldsFromServer(this.user);
       this.syncInspectionService.publishSomeData({
