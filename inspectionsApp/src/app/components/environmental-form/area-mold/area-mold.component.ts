@@ -188,9 +188,15 @@ export class AreaMoldComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.modelChanged.emit(this._model);
+    console.log("saved");
   }
 
+
+
+
   changeModel($event) {
+    //console.log($event);
     try {
       this.filledProperties = 0;
       // if (
@@ -289,7 +295,7 @@ export class AreaMoldComponent implements OnInit {
 
       if ($event != "init") {
         this._model.syncInfo.updated = true;
-        this.modelChanged.emit(this._model);
+        //  this.modelChanged.emit(this._model);
       }
 
       switch (true) {

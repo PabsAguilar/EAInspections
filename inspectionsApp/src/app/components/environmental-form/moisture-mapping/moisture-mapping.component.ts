@@ -76,6 +76,7 @@ export class MoistureMappingComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.modelChanged.emit(this._model);
   }
 
   changeModel($event) {
@@ -130,7 +131,7 @@ export class MoistureMappingComponent implements OnInit {
           : this.filledProperties / this.totalProperties;
 
       if ($event != "init") {
-        this.modelChanged.emit(this._model);
+        this._model.syncInfo.updated = true;
       }
 
       switch (true) {

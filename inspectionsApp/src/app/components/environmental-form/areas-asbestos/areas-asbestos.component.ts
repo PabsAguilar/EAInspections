@@ -15,6 +15,7 @@ export class AreasAsbestosComponent implements OnInit {
   listInspectionType: any[] = [];
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.modelChanged.emit(this.model);
   }
   @Input() readonly: boolean = false;
   @Input() title: string = "";
@@ -64,7 +65,7 @@ export class AreasAsbestosComponent implements OnInit {
       if (this.filledAreas >= 1 && this.model.inspectionType) {
         this.progressColor = "success";
         this.progressPercentage = 1;
-        console.log(this.model);
+        // console.log(this.model);
         this.modelChanged.emit(this.model);
       }
     } catch (error) {

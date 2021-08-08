@@ -18,6 +18,7 @@ export class AreasMoldComponent implements OnInit {
   progressPercentage: number = 0;
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.modelChanged.emit(this.model);
   }
   @Input() readonly: boolean = false;
   @Input() title: string = "";

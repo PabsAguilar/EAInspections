@@ -16,10 +16,10 @@ export class BitrixTokenSetupService {
     this.defaultSetup = new BitrixSetup();
 
     this.defaultSetup.itestURL = "https://itest.bitrix24.com/rest/6";
-    this.defaultSetup.itestToken = "jz367c66ft48tm88";
+    this.defaultSetup.itestToken = "47l05pykidr3q3b4";
     this.defaultSetup.expertNetworksURL =
       "https://expertnetwork.bitrix24.com/rest/159/";
-    this.defaultSetup.expertNetworksToken = "av26roukw3tcyfyf";
+    this.defaultSetup.expertNetworksToken = "yzoep7omss7673hw";
   }
 
   async getBitrixSetup(): Promise<BitrixSetup> {

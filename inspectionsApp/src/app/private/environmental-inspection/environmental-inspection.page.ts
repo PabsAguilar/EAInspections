@@ -94,6 +94,10 @@ export class EnvironmentalInspectionPage implements OnInit {
   }
   ngOnInit() {}
 
+  async ionViewWillLeave() {
+    //this.UpdateEntity(null);
+  }
+
   async validateAgreements() {
     if (
       !this.task.iTestAgreements ||
@@ -546,6 +550,7 @@ export class EnvironmentalInspectionPage implements OnInit {
       if (this.task.internalStatus == InspectionStatus.New) {
         this.task.internalStatus = "In Progress";
       }
+      console.log("Task update");
       await this.inspectionService.update(this.task);
 
       this.moldCount = this.task.environmentalForm.moldAreas.areasInspection
