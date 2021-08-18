@@ -15,7 +15,7 @@ export class AreasMoistureMappingComponent implements OnInit {
   listInspectionType: any[] = [];
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
-    this.modelChanged.emit(this.model);
+    this.modelChanged.emit("save");
   }
   @Input() readonly: boolean = false;
   @Input() title: string = "";
@@ -39,7 +39,7 @@ export class AreasMoistureMappingComponent implements OnInit {
               return { name: item.name, value: item.id };
             });
         });
-        this.AreaUpdated(null);
+        this.AreaUpdated("init");
       }
     } catch (error) {
       console.log("Unspected error changing model.");
@@ -64,7 +64,10 @@ export class AreasMoistureMappingComponent implements OnInit {
         this.progressColor = "success";
         this.progressPercentage = 1;
         // console.log(this.model);
-        this.modelChanged.emit(this.model);
+      }
+      if ($event != "init") {
+        this.model.syncInfo.updated = true;
+        this.modelChanged.emit($event);
       }
     } catch (error) {
       console.log("Unspected error changing areas model.");

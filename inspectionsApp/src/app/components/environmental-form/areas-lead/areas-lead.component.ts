@@ -16,7 +16,7 @@ export class AreasLeadComponent implements OnInit {
 
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
-    this.modelChanged.emit(this.model);
+    this.modelChanged.emit("save");
   }
   @Input() readonly: boolean = false;
   @Input() title: string = "";
@@ -61,13 +61,14 @@ export class AreasLeadComponent implements OnInit {
         : this.model.leadAreas.filter((y) => y.sample).length;
       if ($event != "init") {
         this.model.syncInfo.updated = true;
+        this.modelChanged.emit($event);
       }
 
       if (this.filledAreas >= 1 && this.model.inspectionType) {
         this.progressColor = "success";
         this.progressPercentage = 1;
         //console.log(this.model);
-        this.modelChanged.emit(this.model);
+        //this.modelChanged.emit(this.model);
       }
     } catch (error) {
       console.log("Unspected error changing model.");

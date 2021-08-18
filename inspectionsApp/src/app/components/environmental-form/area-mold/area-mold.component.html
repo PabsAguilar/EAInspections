@@ -25,6 +25,7 @@
       [disabled]="readonly"
       [(ngModel)]="_model.areaName"
       (ionChange)="changeModel($event)"
+      debounce="2000"
     >
       <ion-select-option
         *ngFor="let item of listArea; let i = index"
@@ -40,6 +41,7 @@
     <ion-input
       [(ngModel)]="_model.areaNameOther"
       (ionChange)="changeModel($event)"
+      debounce="2000"
       type="text"
       autocapitalize="sentences"
       [readonly]="readonly"
@@ -61,6 +63,7 @@
     <ion-input
       [(ngModel)]="_model.areaRH"
       (ionChange)="changeModel($event)"
+      debounce="2000"
       type="number"
       [readonly]="readonly"
       required
@@ -84,6 +87,7 @@
       name="waterDamageCategory"
       [disabled]="readonly"
       (ionChange)="changeModel($event)"
+      debounce="2000"
       [(ngModel)]="model.waterDamageCategory"
     >
       <ion-select-option
@@ -102,6 +106,7 @@
       name="waterDamageCategory"
       [disabled]="readonly"
       (ionChange)="changeModel($event)"
+      debounce="2000"
       [(ngModel)]="model.waterDamageClass"
     >
       <ion-select-option
@@ -133,6 +138,7 @@
       name="name"
       [(ngModel)]="_model.removeCeiling"
       (ionChange)="changeModel($event)"
+      debounce="2000"
     >
       <ion-select-option
         *ngFor="let item of listRemoveCeiling; let i = index"
@@ -162,6 +168,7 @@
       [disabled]="readonly"
       [(ngModel)]="_model.removeDrywall"
       (ionChange)="changeModel($event)"
+      debounce="2000"
     >
       <ion-select-option
         *ngFor="let item of listRemoveDrywall; let i = index"
@@ -192,6 +199,7 @@
       [disabled]="readonly"
       [(ngModel)]="_model.removeBaseboards"
       (ionChange)="changeModel($event)"
+      debounce="2000"
     >
       <ion-select-option
         *ngFor="let item of listRemoveBaseboards; let i = index"
@@ -221,6 +229,7 @@
       [disabled]="readonly"
       [(ngModel)]="_model.removeFlooring"
       (ionChange)="changeModel($event)"
+      debounce="2000"
     >
       <ion-select-option
         *ngFor="let item of listRemoveFlooring; let i = index"
@@ -262,6 +271,7 @@ listbeddingsOption -->
       name="name"
       [(ngModel)]="_model.furnitureOption"
       (ionChange)="changeModel($event)"
+      debounce="2000"
       [disabled]="readonly"
     >
       <ion-select-option
@@ -281,6 +291,7 @@ listbeddingsOption -->
       name="name"
       [(ngModel)]="_model.beddingsOption"
       (ionChange)="changeModel($event)"
+      debounce="2000"
     >
       <ion-select-option
         *ngFor="let item of listbeddingsOption; let i = index"
@@ -321,6 +332,7 @@ listbeddingsOption -->
         name="itemType"
         [(ngModel)]="item.type"
         (ionChange)="changeModel($event)"
+        debounce="2000"
         [disabled]="readonly"
       >
         <ion-select-option
@@ -338,6 +350,7 @@ listbeddingsOption -->
       <ion-input
         [(ngModel)]="item.volume"
         (ionChange)="changeModel($event)"
+        debounce="2000"
         [readonly]="readonly"
         type="number"
         required
@@ -350,6 +363,7 @@ listbeddingsOption -->
         autocapitalize="sentences"
         [readonly]="readonly"
         (ionChange)="changeModel($event)"
+        debounce="2000"
         type="text"
         required
       ></ion-input>
@@ -359,6 +373,7 @@ listbeddingsOption -->
       <ion-input
         [(ngModel)]="item.cassetteNumber"
         (ionChange)="changeModel($event)"
+        debounce="2000"
         autocapitalize="sentences"
         [readonly]="readonly"
         type="text"
@@ -374,6 +389,7 @@ listbeddingsOption -->
         [disabled]="readonly"
         [(ngModel)]="item.labResult"
         (ionChange)="changeModel($event)"
+        debounce="2000"
       >
         <ion-select-option
           *ngFor="
@@ -394,6 +410,7 @@ listbeddingsOption -->
         [disabled]="readonly"
         [(ngModel)]="item.toxicMold"
         (ionChange)="changeModel($event)"
+        debounce="2000"
       >
         <ion-select-option
           *ngFor="
@@ -444,6 +461,7 @@ listbeddingsOption -->
       [disabled]="readonly"
       [(ngModel)]="_model.recomendations"
       (ionChange)="changeModel($event)"
+      debounce="2000"
     >
       <ion-select-option
         *ngFor="let item of listRecomendations; let i = index"

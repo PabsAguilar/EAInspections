@@ -41,6 +41,7 @@ import { Kitchen } from "../models/comprehensive-form/kitchen";
 import { DamageAreas } from "../models/environmental-form/damage-areas";
 import { AsbestoAreas } from "../models/environmental-form/asbesto-areas";
 import { LeadAreas } from "../models/environmental-form/lead-areas";
+import { ToastController } from "@ionic/angular";
 
 const SYNCSTAMPKEY = "inspection-stamp-key";
 @Injectable({
@@ -75,7 +76,8 @@ export class ItestDealService {
   constructor(
     private inspectionStorage: InspectionsStorageService,
     private bitrixITest: BitrixItestService,
-    private storage: Storage
+    private storage: Storage,
+    private toast: ToastController
   ) {}
 
   async setEnterprise(enterprise: string) {
@@ -84,6 +86,10 @@ export class ItestDealService {
 
   async update(task: InspectionTask) {
     return this.inspectionStorage.update(task);
+  }
+
+  async getInspectionTask(id,enterprise): Promise<InspectionTask>{
+    return this.inspectionStorage.get(id, enterprise);
   }
 
   async delete(task: InspectionTask) {
@@ -575,9 +581,28 @@ export class ItestDealService {
 
       return this.inspectionStorage.addItems(list);
     } catch (error) {
-      console.log(error);
+      this.showError(error);
     }
     return;
+  }
+
+  async showError(error) {
+    if (error.status && error.status == 401) {
+      var message = this.toast.create({
+        message: "Invalid Credential, please log out and update credentials.",
+        color: "danger",
+        duration: 5000,
+      });
+      (await message).present();
+    } else {
+      var message = this.toast.create({
+        message: error.message ? error.message : error.toString(),
+        color: "danger",
+        duration: 5000,
+      });
+      (await message).present();
+      console.log(error);
+    }
   }
 
   async MergeStartedInspection(
@@ -668,7 +693,7 @@ export class ItestDealService {
       await this.getDealsFieldsFromServer();
       await this.getInspectors(true);
     } catch (error) {
-      console.log(error);
+      this.showError(error);
     }
     //await this.getExternal(idUser);
   }
@@ -700,7 +725,7 @@ export class ItestDealService {
       bitrixContact.syncInfo.syncCode = contactId;
       return bitrixContact;
     } catch (error) {
-      console.log(error);
+      this.showError(error);
     }
     return new Contact();
   }
@@ -727,7 +752,7 @@ export class ItestDealService {
       bitrixCompany.syncInfo.isSync = true;
       bitrixCompany.syncInfo.syncCode = companyId;
     } catch (error) {
-      console.log(error);
+      this.showError(error);
     }
     return bitrixCompany;
   }
@@ -1322,7 +1347,7 @@ export class ItestDealService {
         return [];
       }
     } catch (error) {
-      console.log(error);
+      this.showError(error);
     }
   }
 
@@ -1458,7 +1483,7 @@ export class ItestDealService {
         return [];
       }
     } catch (error) {
-      console.log(error);
+      this.showError(error);
     }
   }
 }

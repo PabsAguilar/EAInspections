@@ -17,7 +17,6 @@ export class GeneralInfoInspection {
   agreementSignedYesNo: string;
   typeOfLossDesc: string;
   affectedArea: string;
-
   constructor() {
     this.syncInfo = new SyncInfo();
     this.picturesFrontHouse = new BitrixPictureList();

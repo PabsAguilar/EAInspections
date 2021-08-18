@@ -23,6 +23,16 @@ export class GenericStorageService implements IStorage {
     });
   }
 
+  async complexAdd(item: IStorageModel): Promise<any> {
+    if (!item.id) {
+      throw new Error("item id is missing.");
+    }
+    return this.storage.set(
+      this.collectionName + "_" + item.id + (item.enterprise ?? ""),
+      item
+    );
+  }
+
   addItems(newItems): Promise<any> {
     return this.storage.get(this.collectionName).then((items) => {
       if (items) {
@@ -32,6 +42,14 @@ export class GenericStorageService implements IStorage {
         return this.storage.set(this.collectionName, newItems);
       }
     });
+  }
+
+  complexAddItems(newItems: IStorageModel[]): Promise<any> {
+    return Promise.all(
+      newItems.map((x) => {
+        return this.complexAdd(x);
+      })
+    );
   }
 
   update(item: IStorageModel): Promise<any> {
@@ -55,6 +73,16 @@ export class GenericStorageService implements IStorage {
     });
   }
 
+  complexUpdate(item: IStorageModel): Promise<any> {
+    if (!item.id) {
+      throw new Error("item id is missing.");
+    }
+    return this.storage.set(
+      this.collectionName + "_" + item.id + (item.enterprise ?? ""),
+      item
+    );
+  }
+
   updateAll(items: IStorageModel[]) {
     return this.storage.set(this.collectionName, items);
   }
@@ -72,6 +100,23 @@ export class GenericStorageService implements IStorage {
         );
       });
   }
+
+  async complexGetAll(enterprise: string = null): Promise<any> {
+    var keys = await (
+      await this.storage.keys()
+    ).filter((x) => x.indexOf(this.collectionName) == 0);
+
+    var result = await Promise.all(
+      keys.map(async (k): Promise<IStorageModel> => {
+        var item: IStorageModel = await this.storage.get(k);
+        return item;
+      })
+    );
+    return result.filter(
+      (x) => enterprise == null || enterprise == x.enterprise
+    );
+  }
+
   get(id: number, enterprise: string = null): Promise<any> {
     return this.storage
       .get(this.collectionName)
@@ -90,6 +135,18 @@ export class GenericStorageService implements IStorage {
         }
       });
   }
+
+  complexGet(id: number, enterprise: string = null): Promise<any> {
+    return this.storage.get(this.collectionName + "_" + id + (enterprise ?? ""));
+  }
+
+  complexDelete(item: IStorageModel): Promise<any> {
+    return this.storage.remove(
+      this.collectionName + "_" + item.id + (item.enterprise ?? "")
+     
+    );
+  }
+
   delete(item: IStorageModel): Promise<any> {
     return this.storage.get(this.collectionName).then((items) => {
       if (!items || items.length === 0) {
@@ -110,5 +167,15 @@ export class GenericStorageService implements IStorage {
   }
   clear(): Promise<any> {
     return this.storage.set(this.collectionName, null);
+  }
+
+  async complexClear(): Promise<any> {
+    var list = await this.getAll();
+
+    return Promise.all(
+      list.map((x) => {
+        this.delete(x);
+      })
+    );
   }
 }

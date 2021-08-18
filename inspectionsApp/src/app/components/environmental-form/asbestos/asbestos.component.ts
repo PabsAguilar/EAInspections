@@ -95,7 +95,7 @@ export class AsbestosComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
-    this.modelChanged.emit(this._model);
+    this.modelChanged.emit("refresh");
   }
 
   changeModel($event) {

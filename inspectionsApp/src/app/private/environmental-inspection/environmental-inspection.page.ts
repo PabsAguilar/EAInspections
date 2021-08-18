@@ -78,6 +78,7 @@ export class EnvironmentalInspectionPage implements OnInit {
         await this.loadingController.dismiss();
       }
       await this.validateAgreements();
+      await this.refreshSummary(null);
     } catch (error) {
       console.log(error);
       var message = this.toast.create({
@@ -117,7 +118,8 @@ export class EnvironmentalInspectionPage implements OnInit {
     }
   }
 
-  back() {
+  async back() {
+    await this.UpdateEntity(null);
     this.inspectionNavigateService.backToPending();
   }
 
@@ -156,29 +158,40 @@ export class EnvironmentalInspectionPage implements OnInit {
         break;
 
       case "ReportIssue":
-        let jFile = JSON.stringify(this.task);
+        try {
+          let jFile = JSON.stringify(this.task);
 
-        this.file
-          .writeFile(this.file.dataDirectory, "dealIssue.json", jFile, {
-            replace: true,
-          })
-          .then((x) => {
-            console.log("Directory exists");
-            console.log(x);
-            let email = {
-              to: "pabs.aguilar2806@gmail.com",
-              //cc: "max@mustermann.de",
-              attachments: [this.file.dataDirectory + "/dealIssue.json"],
-              subject: "Issue Inspection " + this.task.id,
-              body:
-                "Having issues with " + this.task.enterprise + " inspection. ",
-              isHtml: true,
-            };
+          this.file
+            .writeFile(this.file.dataDirectory, "dealIssue.json", jFile, {
+              replace: true,
+            })
+            .then((x) => {
+              console.log("Directory exists");
+              console.log(x);
+              let email = {
+                to: "pabs.aguilar2806@gmail.com",
+                //cc: "max@mustermann.de",
+                attachments: [this.file.dataDirectory + "/dealIssue.json"],
+                subject: "Issue Inspection " + this.task.id,
+                body:
+                  "Having issues with " +
+                  this.task.enterprise +
+                  " inspection. ",
+                isHtml: true,
+              };
 
-            this.emailComposer.open(email);
-          })
-          .catch((err) => console.log("Directory doesn't exist"));
-
+              this.emailComposer.open(email);
+            })
+            .catch((err) => console.log("Directory doesn't exist"));
+        } catch (error) {
+          console.log(error);
+          var message = this.toast.create({
+            message: "Delete: " + error,
+            color: "danger",
+            duration: 2000,
+          });
+          (await message).present();
+        }
         break;
 
       case "Delete":
@@ -324,29 +337,6 @@ export class EnvironmentalInspectionPage implements OnInit {
               await this.navController.navigateRoot(
                 "menu/tabs/tabs/pending-inspections/" + random
               );
-
-              // (await this.syncInspectionService.syncTask(this.task)).subscribe(
-              //   async (x) => {
-              //     if (x) {
-              //       this.syncInspectionService.publishSomeData({
-              //         syncItem: "deal",
-              //       });
-              //       var message = this.toast.create({
-              //         message: "Inspection is synched.",
-              //         color: "success",
-              //         duration: 5000,
-              //       });
-              //       (await message).present();
-              //     } else {
-              //       var message = this.toast.create({
-              //         message: "Sync failed, please start a manual sync.",
-              //         color: "warning",
-              //         duration: 5000,
-              //       });
-              //       (await message).present();
-              //     }
-              //   }
-              // );
             },
           },
         ],
@@ -408,29 +398,6 @@ export class EnvironmentalInspectionPage implements OnInit {
         await this.loadingController.dismiss();
       }
     }
-
-    // (await this.syncInspectionService.syncTask(this.task)).subscribe(
-    //   async (x) => {
-    //     if (x) {
-    //       this.syncInspectionService.publishSomeData({
-    //         syncItem: "deal",
-    //       });
-    //       var message = this.toast.create({
-    //         message: "Inspection is synched.",
-    //         color: "success",
-    //         duration: 5000,
-    //       });
-    //       (await message).present();
-    //     } else {
-    //       var message = this.toast.create({
-    //         message: "Sync failed, please start a manual sync.",
-    //         color: "warning",
-    //         duration: 5000,
-    //       });
-    //       (await message).present();
-    //     }
-    //   }
-    // );
   }
 
   async sendLabs() {
@@ -500,35 +467,6 @@ export class EnvironmentalInspectionPage implements OnInit {
               await this.navController.navigateRoot(
                 "menu/tabs/tabs/pending-inspections/" + random
               );
-              // var message = this.toast.create({
-              //   message: "Inspection is completed.",
-              //   color: "success",
-              //   duration: 3000,
-              // });
-
-              // (await this.syncInspectionService.syncTask(this.task)) .subscribe(
-              //   async (x) => {
-              //     this.syncInspectionService.publishSomeData({
-              //       syncItem: "deal",
-              //       refreshFromServer: true,
-              //     });
-              //     if (x) {
-              //       var message = this.toast.create({
-              //         message: "Inspection is synched.",
-              //         color: "success",
-              //         duration: 5000,
-              //       });
-              //       (await message).present();
-              //     } else {
-              //       var message = this.toast.create({
-              //         message: "Sync failed, please start a manual sync.",
-              //         color: "warning",
-              //         duration: 5000,
-              //       });
-              //       (await message).present();
-              //     }
-              //   }
-              // );
             },
           },
         ],
@@ -545,14 +483,14 @@ export class EnvironmentalInspectionPage implements OnInit {
     }
   }
 
-  public async UpdateEntity($event): Promise<void> {
+  dirty: boolean = false;
+
+  public async refreshSummary($event): Promise<void> {
     try {
       if (this.task.internalStatus == InspectionStatus.New) {
         this.task.internalStatus = "In Progress";
       }
-      console.log("Task update");
-      await this.inspectionService.update(this.task);
-
+      this.dirty = true;
       this.moldCount = this.task.environmentalForm.moldAreas.areasInspection
         //arr.reduce(function (acc, obj) { return acc + obj.x; }, 0);
         .reduce(function (acc, b) {
@@ -592,6 +530,39 @@ export class EnvironmentalInspectionPage implements OnInit {
         duration: 2000,
       });
       (await message).present();
+    }
+  }
+
+  public async UpdateEntity($event): Promise<void> {
+    if ($event == "refresh") {
+      return this.refreshSummary($event);
+    }
+    const loading = await this.loadingController.create({
+      message: "Please Wait...",
+    });
+    await loading.present();
+
+    try {
+      if (this.task.internalStatus == InspectionStatus.New) {
+        this.task.internalStatus = "In Progress";
+      }
+      console.log("Task update");
+      await this.inspectionService.update(this.task);
+      // this.dirty = false;
+      this.refreshSummary(null);
+    } catch (error) {
+      console.log(error);
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 2000,
+      });
+      (await message).present();
+    } finally {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
     }
   }
 }

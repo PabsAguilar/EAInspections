@@ -18,7 +18,7 @@ export class AreasMoldComponent implements OnInit {
   progressPercentage: number = 0;
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
-    this.modelChanged.emit(this.model);
+    this.modelChanged.emit("save");
   }
   @Input() readonly: boolean = false;
   @Input() title: string = "";
@@ -61,7 +61,7 @@ export class AreasMoldComponent implements OnInit {
         });
         this._model = value;
 
-        this.AreaUpdated(null);
+        this.AreaUpdated("init");
       }
     } catch (error) {
       console.log("Unspected error changing model.");
@@ -85,8 +85,10 @@ export class AreasMoldComponent implements OnInit {
       if (this.filledAreas >= 1 && this.model.moldInspectionType) {
         this.progressColor = "success";
         this.progressPercentage = 1;
-        console.log(this.model);
-        this.modelChanged.emit(this.model);
+        //console.log(this.model);
+        if ($event != "init") {
+          this.modelChanged.emit($event);
+        }
       }
     } catch (error) {
       console.log("Unspected error changing model.");

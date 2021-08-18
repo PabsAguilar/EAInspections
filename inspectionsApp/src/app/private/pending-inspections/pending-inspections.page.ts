@@ -39,7 +39,7 @@ export class PendingInspectionsPage implements OnInit {
   today = Date.now();
   lastSync = Date.now();
   inspectionTasks = Array<InspectionTask>();
-  selectedTask: InspectionTask;
+
   segmentOption: string = "All";
   searching: any = false;
   user: User = new User();
@@ -169,6 +169,26 @@ export class PendingInspectionsPage implements OnInit {
         tempInspectionTasks =
           await this.inspectionService.getPendingInspections(this.user);
       }
+      tempInspectionTasks = await Promise.all(
+        tempInspectionTasks.map((x: InspectionTask) => {
+          var result = new InspectionTask();
+          result.id = x.id;
+          result.title = x.title;
+          result.scheduleDateTime = x.scheduleDateTime;
+          result.scheduleDay = x.scheduleDay;
+          result.contactName = x.contactName;
+          result.contactId = x.contactId;
+          result.serviceAddress = x.serviceAddress;
+          result.phone = x.phone;
+          result.email = x.email;
+          result.inspectorUserId = x.inspectorUserId;
+          result.inspectionType = x.inspectionType;
+          result.enterprise = x.enterprise;
+          result.internalStatus = x.internalStatus;
+          result.wasRejected = x.wasRejected;
+          return result;
+        })
+      );
       this.inspectionTasks = tempInspectionTasks.filter(
         (task) =>
           this.segmentOption == "All" ||
@@ -182,6 +202,7 @@ export class PendingInspectionsPage implements OnInit {
               task.internalStatus == InspectionStatus.PendingSentLab)) ||
           task.internalStatus == this.segmentOption
       );
+
       this.lastSync = await this.inspectionService.getSyncStamp();
     } catch (error) {
       console.log(error);
@@ -228,10 +249,15 @@ export class PendingInspectionsPage implements OnInit {
 
   async seeDetails(task: InspectionTask) {
     try {
+      var completeTask = await this.inspectionService.getInspectionTask(
+        task.id,
+        task.enterprise
+      );
+
       console.log("Details clicked");
       let navigationExtras: NavigationExtras = {
         state: {
-          task: task,
+          task: completeTask,
         },
       };
       this.router.navigate(["menu/details"], navigationExtras);
@@ -258,8 +284,11 @@ export class PendingInspectionsPage implements OnInit {
   async startInspection(task: InspectionTask) {
     try {
       console.log("Start clicked");
-      this.selectedTask = task;
-      this.inspectionNavigate.startInspection(task);
+      var completeTask = await this.inspectionService.getInspectionTask(
+        task.id,
+        task.enterprise
+      );
+      this.inspectionNavigate.startInspection(completeTask);
     } catch (error) {}
   }
 

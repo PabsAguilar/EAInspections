@@ -109,7 +109,7 @@ export class InspectionGeneralComponent implements OnInit {
         }
       });
 
-      this.changeModel(null);
+      this.changeModel("init");
     } catch (error) {
       console.log("Unspected error changing model.");
       console.log(error);
@@ -126,7 +126,6 @@ export class InspectionGeneralComponent implements OnInit {
   ngOnInit() {}
   changeModel($event) {
     try {
-      //console.log(this.generalInfoInspection);
       this.filledProperties = 0;
       if (
         this.generalInfoInspection.propertyYear &&
@@ -163,13 +162,14 @@ export class InspectionGeneralComponent implements OnInit {
           this.filledProperties++;
         }
       }
+      if ($event != "init") {
+        this.generalInfoInspection.syncInfo.updated = true;
+      }
 
       this.progressPercentage =
         this.filledProperties == 0
           ? 0
           : this.filledProperties / this.totalProperties;
-
-      this.generalInfoChanged.emit(this.generalInfoInspection);
 
       switch (true) {
         case this.progressPercentage < 0.5:
@@ -197,5 +197,6 @@ export class InspectionGeneralComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.generalInfoChanged.emit("save");
   }
 }

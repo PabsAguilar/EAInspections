@@ -24,7 +24,7 @@ const SYNCSTAMPKEY = "inspection-stamp-key";
 @Injectable({
   providedIn: "root",
 })
-export class InspectionsStorageService implements IStorage {
+export class InspectionsStorageService {
   constructor(private storage: Storage) {}
 
   collectionName: string = "inspections-task";
@@ -34,29 +34,29 @@ export class InspectionsStorageService implements IStorage {
   );
 
   add(item: any): Promise<any> {
-    return this.inspectionStore.add(item);
+    return this.inspectionStore.complexAdd(item);
   }
   addItems(item: IStorageModel[]): Promise<any> {
-    return this.inspectionStore.addItems(item);
+    return this.inspectionStore.complexAddItems(item);
   }
   update(item: InspectionTask): Promise<any> {
-    return this.inspectionStore.update(item);
+    return this.inspectionStore.complexUpdate(item);
   }
-  updateAll(items: IStorageModel[]): Promise<any> {
-    return this.inspectionStore.updateAll(items);
-  }
+  // updateAll(items: IStorageModel[]): Promise<any> {
+  //   return this.inspectionStore.updateAll(items);
+  // }
   getAll(): Promise<InspectionTask[]> {
-    return this.inspectionStore.getAll();
+    return this.inspectionStore.complexGetAll();
   }
   get(id: number, enterprise: string = null): Promise<InspectionTask> {
-    return this.inspectionStore.get(id, enterprise);
+    return this.inspectionStore.complexGet(id, enterprise);
   }
   delete(item: any): Promise<InspectionTask> {
-    return this.inspectionStore.delete(item);
+    return this.inspectionStore.complexDelete(item);
   }
 
   clear(): Promise<boolean> {
-    return this.inspectionStore.clear();
+    return this.inspectionStore.complexClear();
   }
 
   async getPendingToSync(user: User) {

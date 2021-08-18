@@ -269,10 +269,12 @@ export class BitrixItestService {
     postData: any,
     list: number
   ): Observable<any> {
+    var random = Math.floor(Math.random() * 100) + 2;
+
     if (postData.ELEMENT_ID) {
       return this.http.post(
         //`${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=48`,
-        `${this.url}/${this.key}/lists.element.update`,
+        `${this.url}/${this.key}/lists.element.update?random=${random}`,
         postData,
         {
           headers: { "Content-Type": "application/json" },
@@ -281,7 +283,7 @@ export class BitrixItestService {
     } else {
       return this.http.post(
         //`${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=48`,
-        `${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}`,
+        `${this.url}/${this.key}/lists.element.add?IBLOCK_TYPE_ID=lists&IBLOCK_ID=${list}&random=${random}`,
         postData,
         {
           headers: { "Content-Type": "application/json" },

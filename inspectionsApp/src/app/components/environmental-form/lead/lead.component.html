@@ -79,6 +79,7 @@
     <ion-input
       [(ngModel)]="_model.dimensionCm2"
       (ionInput)="changeModel($event)"
+      debounce="2000"
       type="number"
       [readonly]="readonly"
       required
@@ -146,6 +147,7 @@
       autocapitalize="sentences"
       [(ngModel)]="_model.observations"
       (ionInput)="changeModel($event)"
+      debounce="2000"
       [readonly]="readonly"
       type="text"
     ></ion-textarea>

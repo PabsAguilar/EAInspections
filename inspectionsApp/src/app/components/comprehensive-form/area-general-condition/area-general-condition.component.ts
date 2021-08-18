@@ -100,6 +100,7 @@ export class AreaGeneralConditionComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.InspectionAreaGeneralChanged.emit(this.generalCondition);
   }
 
   changeModel($event) {
@@ -123,7 +124,8 @@ export class AreaGeneralConditionComponent implements OnInit {
         : this.filledProperties / this.totalProperties;
 
     if ($event != "init") {
-      this.InspectionAreaGeneralChanged.emit(this.generalCondition);
+      //this.InspectionAreaGeneralChanged.emit(this.generalCondition);
+  
     }
 
     switch (true) {

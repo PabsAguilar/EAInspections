@@ -58,13 +58,7 @@ export class LoginPage implements OnInit {
         await this.loadingController.dismiss();
       }
     } catch (error) {
-      console.log(error);
-      var message = this.toast.create({
-        message: error,
-        color: "danger",
-        duration: 3000,
-      });
-      (await message).present();
+      this.showError(error);
     }
   }
 
@@ -141,24 +135,27 @@ export class LoginPage implements OnInit {
         await this.presentAlert();
       }
     } catch (error) {
+      loading.dismiss();
+      this.showError(error);
+    }
+  }
+
+  async showError(error) {
+    if (error.status && error.status == 401) {
+      var message = this.toast.create({
+        message: "Invalid Credential, please log out and update credentials.",
+        color: "danger",
+        duration: 5000,
+      });
+      (await message).present();
+    } else {
+      var message = this.toast.create({
+        message: error.message ? error.message : error.toString(),
+        color: "danger",
+        duration: 5000,
+      });
+      (await message).present();
       console.log(error);
-      if (error.status == 0) {
-        var message = this.toast.create({
-          message: "Unable to connect, review your connection.",
-          color: "danger",
-          duration: 3000,
-        });
-        (await message).present();
-        loading.dismiss();
-      } else {
-        var message = this.toast.create({
-          message: error.message,
-          color: "danger",
-          duration: 3000,
-        });
-        (await message).present();
-        loading.dismiss();
-      }
     }
   }
 
@@ -177,13 +174,7 @@ export class LoginPage implements OnInit {
 
       await alert.present();
     } catch (error) {
-      console.log(error);
-      var message = this.toast.create({
-        message: error,
-        color: "danger",
-        duration: 3000,
-      });
-      (await message).present();
+      this.showError(error);
     }
   }
 }
