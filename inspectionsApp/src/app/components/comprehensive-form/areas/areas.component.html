@@ -77,4 +77,21 @@
     title="Area 8"
     [(InspectionArea)]="areas[7]"
   ></app-area> -->
+
+  <ion-item
+  (click)="toggleAccordion()"
+  lines="none"
+  button
+  class="ion-no-margin"
+  detail="false"
+>
+  <ion-label color="warning"> End Areas</ion-label>
+
+  <ion-icon
+    slot="end"
+    *ngIf="!isMenuOpen"
+    name="caret-down-outline"
+  ></ion-icon>
+  <ion-icon slot="end" *ngIf="isMenuOpen" name="caret-up-outline"></ion-icon>
+</ion-item>
 </div>

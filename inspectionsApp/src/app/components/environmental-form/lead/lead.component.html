@@ -78,8 +78,8 @@
     <ion-label position="floating">Dimension cm2</ion-label>
     <ion-input
       [(ngModel)]="_model.dimensionCm2"
-      (ionInput)="changeModel($event)"
-      debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="500"
       type="number"
       [readonly]="readonly"
       required
@@ -146,8 +146,8 @@
     <ion-textarea
       autocapitalize="sentences"
       [(ngModel)]="_model.observations"
-      (ionInput)="changeModel($event)"
-      debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="500"
       [readonly]="readonly"
       type="text"
     ></ion-textarea>

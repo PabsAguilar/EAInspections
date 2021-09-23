@@ -18,6 +18,7 @@ export class BitrixPictureList {
 
 export class BitrixPicture {
   base64Image: string;
+  format: string;
   name: string;
   isSync: boolean;
   syncCode: string;

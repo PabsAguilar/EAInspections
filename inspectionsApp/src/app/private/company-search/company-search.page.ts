@@ -17,6 +17,7 @@ export class CompanySearchPage implements OnInit {
   ngOnInit() {}
 
   @Input() enterprise: string = "";
+  @Input() target: string = "";
   nameSearchText: string = "";
   searching: any = false;
   selectedCompany: Company;

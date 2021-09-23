@@ -77,13 +77,19 @@ export class MoistureMappingComponent implements OnInit {
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
     this.modelChanged.emit("refresh");
+    this.changeModel("init");
   }
 
   changeModel($event) {
+    if ($event != "init") {
+      this._model.syncInfo.updated = true;
+    }
+
     try {
+      var progress = 0;
       this.filledProperties = 0;
       if (this._model.area) {
-        this.filledProperties++;
+        progress++;
         this.selectAreaName = this.listArea.find(
           (x) => x.value == this._model.area
         )?.name;
@@ -97,42 +103,38 @@ export class MoistureMappingComponent implements OnInit {
       }
 
       if (this._model.dewPoint) {
-        this.filledProperties++;
+        progress++;
       }
 
       if (this._model.relativeHumidity) {
-        this.filledProperties++;
+        progress++;
       }
       if (this._model.roomTemp) {
-        this.filledProperties++;
+        progress++;
       }
       if (this._model.standardTemperatureCeiling) {
-        this.filledProperties++;
+        progress++;
       }
       if (this._model.standardTemperatureEast) {
-        this.filledProperties++;
+        progress++;
       }
       if (this._model.standardTemperatureFloor) {
-        this.filledProperties++;
+        progress++;
       }
       if (this._model.standardTemperatureNorth) {
-        this.filledProperties++;
+        progress++;
       }
       if (this._model.standardTemperatureSouth) {
-        this.filledProperties++;
+        progress++;
       }
       if (this._model.standardTemperatureWest) {
-        this.filledProperties++;
+        progress++;
       }
 
       this.progressPercentage =
-        this.filledProperties == 0
-          ? 0
-          : this.filledProperties / this.totalProperties;
+        progress == 0 ? 0 : progress / this.totalProperties;
 
-      if ($event != "init") {
-        this._model.syncInfo.updated = true;
-      }
+      this.filledProperties = progress;
 
       switch (true) {
         case this.progressPercentage < 0.5:

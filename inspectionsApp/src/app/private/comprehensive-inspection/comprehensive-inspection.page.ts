@@ -269,6 +269,53 @@ export class ComprehensiveInspectionPage implements OnInit {
   }
   ngOnInit() {}
 
+  async syncTask() {
+    try {
+      const loading = await this.loadingController.create({
+        message: "Uploading to Bitrix...",
+      });
+      await loading.present();
+      this.task.startedSync = false;
+      var x = await this.syncInspectionService.syncENTask(this.task);
+
+      if (x) {
+        this.syncInspectionService.publishSomeData({
+          syncItem: "deal",
+        });
+        var top = await this.loadingController.getTop();
+        if (top) {
+          await this.loadingController.dismiss();
+        }
+
+        var message = this.toast.create({
+          message: "Deal is synched.",
+          color: "success",
+          duration: 5000,
+        });
+        (await message).present();
+      } else {
+        var message = this.toast.create({
+          message: "Sync failed, please start a manual sync.",
+          color: "warning",
+          duration: 5000,
+        });
+        (await message).present();
+      }
+      (await message).present();
+    } catch (error) {
+      var message = this.toast.create({
+        message: error,
+        color: "danger",
+        duration: 5000,
+      });
+    } finally {
+      var top = await this.loadingController.getTop();
+      if (top) {
+        await this.loadingController.dismiss();
+      }
+    }
+  }
+
   async completeTask() {
     try {
       const alert = await this.alertController.create({
@@ -307,25 +354,7 @@ export class ComprehensiveInspectionPage implements OnInit {
 
                 (await message).present();
 
-                var x = await this.syncInspectionService.syncENTask(this.task);
-                this.syncInspectionService.publishSomeData({
-                  syncItem: "deal",
-                });
-                if (x) {
-                  var message = this.toast.create({
-                    message: "Inspection is synched.",
-                    color: "success",
-                    duration: 5000,
-                  });
-                  (await message).present();
-                } else {
-                  var message = this.toast.create({
-                    message: "Sync failed, please start a manual sync.",
-                    color: "warning",
-                    duration: 7000,
-                  });
-                  (await message).present();
-                }
+                var x = await this.syncTask();
               } catch (error) {
                 var message = this.toast.create({
                   message: "Sync failed, " + error,

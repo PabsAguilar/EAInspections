@@ -115,6 +115,7 @@ export class SchedulingPage implements OnInit {
       cssClass: "my-custom-class",
       componentProps: {
         enterprise: this.scheduling.serviceType,
+        target: type,
       },
     });
 
@@ -122,7 +123,7 @@ export class SchedulingPage implements OnInit {
       const contact = data["data"]; // Here's your selected user!
       if (contact != null && contact.firstName) {
         switch (type) {
-          case "inspectionContact":
+          case "contact":
             this.scheduling.contact = contact;
             break;
           case "insurance":
@@ -141,7 +142,7 @@ export class SchedulingPage implements OnInit {
 
   async clearSelectedContact(type) {
     switch (type) {
-      case "inspectionContact":
+      case "contact":
         this.scheduling.contact = null;
         break;
       case "insurance":
@@ -173,6 +174,7 @@ export class SchedulingPage implements OnInit {
       cssClass: "my-custom-class",
       componentProps: {
         enterprise: this.scheduling.serviceType,
+        target: type,
       },
     });
 

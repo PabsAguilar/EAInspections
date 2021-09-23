@@ -55,9 +55,9 @@ export class SlidesPhotosComponent implements OnInit {
     modal.present();
   }
   public async takePicture() {
-    var photo = await this.photoService.takePhoto();
-    var picture = new BitrixPicture();
-    picture.base64Image = photo;
+    var picture = await this.photoService.takePhotoB();
+    //var picture = new BitrixPicture();
+    //picture.base64Image = photo;
     picture.isSync = false;
     this._photoArray.images.push(picture);
     await this.ionSlides.update();

@@ -18,6 +18,7 @@ export class ContactSearchPage implements OnInit {
   ) {}
 
   @Input() enterprise: string = "";
+  @Input() target: string = "";
   emailSearchText: string = "";
   searching: any = false;
   selectedContact: Contact;

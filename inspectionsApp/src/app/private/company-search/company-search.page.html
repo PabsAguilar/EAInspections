@@ -1,11 +1,11 @@
 <ion-header>
-  <ion-toolbar color="tertiary">
+  <ion-toolbar color="secondary">
     <ion-buttons slot="start">
       <ion-button (click)="back()">
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Search Company {{enterprise}}</ion-title>
+    <ion-title> {{enterprise}} {{target}}</ion-title>
   </ion-toolbar>
 
   <ion-toolbar>
@@ -76,7 +76,6 @@
       <ion-label position="stacked">Search company by name</ion-label>
       <ion-searchbar
         [(ngModel)]="nameSearchText"
-        
         placeholder="Press enter to search company"
         name="nameSearchText"
         (search)="onSearch($event)"

@@ -105,17 +105,20 @@ export class SyncInspectionService {
       await Promise.all(
         pictures.images.map(async (item, index) => {
           if (!item.isSync) {
+            if (!item.format || item.format == "") {
+              item.format = "jpeg";
+            }
             var postData = {
               id: folder.syncInfo.syncCode,
+
               data: {
                 NAME: `${name}-${index + 1}-${Math.floor(
                   Math.random() * 1000
-                )}.png`,
+                )}.${item.format}`,
               },
-              fileContent: item.base64Image.replace(
-                "data:image/png;base64,",
-                ""
-              ),
+              fileContent: item.base64Image
+                .replace("data:image/png;base64,", "")
+                .replace("data:image/jpeg;base64,", ""),
             };
 
             var response = await this.bitrix.addFile(postData);
@@ -914,14 +917,11 @@ export class SyncInspectionService {
         postData.fields[ITestDealMapping.insuranceCompany] = insuranceCompany; //UF_CRM_1612691342
         postData.fields[ITestDealMapping.inspectionTypes] =
           scheduling.inspectionTypes; //UF_CRM_1612433280
-        // postData[ITestDealMapping.typesOfLoss] = scheduling.typeOfLossDesc; //UF_CRM_1618512396
-        // postData[ITestDealMapping.affectedArea] = scheduling.affectedArea; //UF_CRM_1618512421
-        // postData[ITestDealMapping.waterDamageCategory] =
-        //   scheduling.waterDamageCategory; //UF_CRM_1618512488
-        // postData[ITestDealMapping.waterDamageClass] = scheduling.waterDamageClass; //UF_CRM_1618512548
-        postData[ITestDealMapping.referenceContact] = referalContact; //UF_CRM_1612691326
+        postData.fields[ITestDealMapping.referenceContact] = referalContact; //UF_CRM_1612691326
       } else {
         //postData.fields[ENDealMapping.segments] = [4315];
+        postData.fields[ENDealMapping.paymentType] =
+          ENDealMapping.paymentType_pendingVal;
         postData.fields[ENDealMapping.instructions] = scheduling.notes;
         postData.fields[ENDealMapping.dealDateTime] =
           scheduling.scheduleDateString;
@@ -1484,17 +1484,6 @@ export class SyncInspectionService {
 
   async syncTask(task: InspectionTask): Promise<boolean> {
     try {
-      // if (task.startedSync) {
-      //   var today = new Date();
-      //   var lastSync = new Date(task.syncStartDate);
-
-      //   var difference = today.getTime() - lastSync.getTime();
-      //   var minutes = Math.round(difference / 60000);
-      //   if (minutes <= 2) {
-      //     return true;
-      //   }
-      // }
-
       task.startedSync = true;
       task.syncStartDate = new Date();
       if (task.inspectionType == InspectionType.Comprehensive) {
@@ -1638,6 +1627,24 @@ export class SyncInspectionService {
         }
         await this.inspectionStorage.update(task);
       }
+
+      var log =
+        " moldAreas: " +
+        task.environmentalForm.moldAreas.syncInfo.isSync +
+        ", bacteriasAreas: " +
+        task.environmentalForm.bacteriasAreas.syncInfo.isSync +
+        ", sootAreas: " +
+        task.environmentalForm.sootAreas.syncInfo.isSync +
+        ", generalInfoInspection: " +
+        task.environmentalForm.generalInfoInspection.syncInfo.isSync +
+        ", moistureMappingAreas: " +
+        task.environmentalForm.moistureMappingAreas.syncInfo.isSync +
+        ", leadAreas: " +
+        task.environmentalForm.leadAreas.syncInfo.isSync +
+        ", asbestosAreas: " +
+        task.environmentalForm.asbestosAreas.syncInfo.isSync;
+
+      console.log(log);
 
       if (
         task.environmentalForm.moldAreas.syncInfo.isSync &&
@@ -2250,7 +2257,7 @@ export class SyncInspectionService {
       var bitrixFields = bitrixMappingEnvironmental[type];
       for (
         let index = 0;
-        index < areas.areasInspection[0].areaPictures.images.length;
+        index < areas.areasInspection[0].areaPictures.maxPictures;
         index++
       ) {
         try {
@@ -2317,7 +2324,7 @@ export class SyncInspectionService {
 
       for (
         let index = 0;
-        index < areas.leadAreas[0].areaPictures.images.length;
+        index < areas.leadAreas[0].areaPictures.maxPictures;
         index++
       ) {
         try {
@@ -2384,7 +2391,7 @@ export class SyncInspectionService {
 
       for (
         let index = 0;
-        index < areas.areamoistureMapping[0].areaPictures.images.length;
+        index < areas.areamoistureMapping[0].areaPictures.maxPictures;
         index++
       ) {
         try {
@@ -2450,7 +2457,7 @@ export class SyncInspectionService {
 
       for (
         let index = 0;
-        index < areas.asbestosAreas[0].areaPictures.images.length;
+        index < areas.asbestosAreas[0].areaPictures.maxPictures;
         index++
       ) {
         try {

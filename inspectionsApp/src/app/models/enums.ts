@@ -193,6 +193,8 @@ export enum ENDealMapping {
   user = "UF_CRM_1590046660",
   segments = "UF_CRM_60BA76C86B6EB",
   contactSegments = "UF_CRM_1622225712108",
+  paymentType = "UF_CRM_1589398611",
+  paymentType_pendingVal = "4539",
 }
 
 export enum ENContactSegments {

@@ -123,12 +123,17 @@ var SyncInspectionService = /** @class */ (function () {
                                     switch (_b.label) {
                                         case 0:
                                             if (!!item.isSync) return [3 /*break*/, 2];
+                                            if (!item.format || item.format == "") {
+                                                item.format = "jpeg";
+                                            }
                                             postData = {
                                                 id: folder.syncInfo.syncCode,
                                                 data: {
-                                                    NAME: name + "-" + (index + 1) + "-" + Math.floor(Math.random() * 1000) + ".png"
+                                                    NAME: name + "-" + (index + 1) + "-" + Math.floor(Math.random() * 1000) + "." + item.format
                                                 },
-                                                fileContent: item.base64Image.replace("data:image/png;base64,", "")
+                                                fileContent: item.base64Image
+                                                    .replace("data:image/png;base64,", "")
+                                                    .replace("data:image/jpeg;base64,", "")
                                             };
                                             return [4 /*yield*/, this.bitrix.addFile(postData)];
                                         case 1:
@@ -972,15 +977,12 @@ var SyncInspectionService = /** @class */ (function () {
                             postData.fields[enums_1.ITestDealMapping.insuranceCompany] = insuranceCompany; //UF_CRM_1612691342
                             postData.fields[enums_1.ITestDealMapping.inspectionTypes] =
                                 scheduling.inspectionTypes; //UF_CRM_1612433280
-                            // postData[ITestDealMapping.typesOfLoss] = scheduling.typeOfLossDesc; //UF_CRM_1618512396
-                            // postData[ITestDealMapping.affectedArea] = scheduling.affectedArea; //UF_CRM_1618512421
-                            // postData[ITestDealMapping.waterDamageCategory] =
-                            //   scheduling.waterDamageCategory; //UF_CRM_1618512488
-                            // postData[ITestDealMapping.waterDamageClass] = scheduling.waterDamageClass; //UF_CRM_1618512548
-                            postData[enums_1.ITestDealMapping.referenceContact] = referalContact; //UF_CRM_1612691326
+                            postData.fields[enums_1.ITestDealMapping.referenceContact] = referalContact; //UF_CRM_1612691326
                         }
                         else {
                             //postData.fields[ENDealMapping.segments] = [4315];
+                            postData.fields[enums_1.ENDealMapping.paymentType] =
+                                enums_1.ENDealMapping.paymentType_pendingVal;
                             postData.fields[enums_1.ENDealMapping.instructions] = scheduling.notes;
                             postData.fields[enums_1.ENDealMapping.dealDateTime] =
                                 scheduling.scheduleDateString;
@@ -1326,20 +1328,11 @@ var SyncInspectionService = /** @class */ (function () {
     };
     SyncInspectionService.prototype.syncTask = function (task) {
         return __awaiter(this, void 0, Promise, function () {
-            var result, result, _a, _b, _c, _d, _e, _f, error_14, message;
+            var result, result, _a, _b, _c, _d, _e, _f, log, error_14, message;
             return __generator(this, function (_g) {
                 switch (_g.label) {
                     case 0:
                         _g.trys.push([0, 41, , 43]);
-                        // if (task.startedSync) {
-                        //   var today = new Date();
-                        //   var lastSync = new Date(task.syncStartDate);
-                        //   var difference = today.getTime() - lastSync.getTime();
-                        //   var minutes = Math.round(difference / 60000);
-                        //   if (minutes <= 2) {
-                        //     return true;
-                        //   }
-                        // }
                         task.startedSync = true;
                         task.syncStartDate = new Date();
                         if (task.inspectionType == enums_1.InspectionType.Comprehensive) {
@@ -1476,6 +1469,21 @@ var SyncInspectionService = /** @class */ (function () {
                         _g.sent();
                         _g.label = 36;
                     case 36:
+                        log = " moldAreas: " +
+                            task.environmentalForm.moldAreas.syncInfo.isSync +
+                            ", bacteriasAreas: " +
+                            task.environmentalForm.bacteriasAreas.syncInfo.isSync +
+                            ", sootAreas: " +
+                            task.environmentalForm.sootAreas.syncInfo.isSync +
+                            ", generalInfoInspection: " +
+                            task.environmentalForm.generalInfoInspection.syncInfo.isSync +
+                            ", moistureMappingAreas: " +
+                            task.environmentalForm.moistureMappingAreas.syncInfo.isSync +
+                            ", leadAreas: " +
+                            task.environmentalForm.leadAreas.syncInfo.isSync +
+                            ", asbestosAreas: " +
+                            task.environmentalForm.asbestosAreas.syncInfo.isSync;
+                        console.log(log);
                         if (!(task.environmentalForm.moldAreas.syncInfo.isSync &&
                             task.environmentalForm.bacteriasAreas.syncInfo.isSync &&
                             task.environmentalForm.sootAreas.syncInfo.isSync &&
@@ -2044,7 +2052,7 @@ var SyncInspectionService = /** @class */ (function () {
                         index = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(index < areas.areasInspection[0].areaPictures.images.length)) return [3 /*break*/, 4];
+                        if (!(index < areas.areasInspection[0].areaPictures.maxPictures)) return [3 /*break*/, 4];
                         return [5 /*yield**/, _loop_1(index)];
                     case 2:
                         _a.sent();
@@ -2129,7 +2137,7 @@ var SyncInspectionService = /** @class */ (function () {
                         index = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(index < areas.leadAreas[0].areaPictures.images.length)) return [3 /*break*/, 4];
+                        if (!(index < areas.leadAreas[0].areaPictures.maxPictures)) return [3 /*break*/, 4];
                         return [5 /*yield**/, _loop_2(index)];
                     case 2:
                         _a.sent();
@@ -2214,7 +2222,7 @@ var SyncInspectionService = /** @class */ (function () {
                         index = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(index < areas.areamoistureMapping[0].areaPictures.images.length)) return [3 /*break*/, 4];
+                        if (!(index < areas.areamoistureMapping[0].areaPictures.maxPictures)) return [3 /*break*/, 4];
                         return [5 /*yield**/, _loop_3(index)];
                     case 2:
                         _a.sent();
@@ -2299,7 +2307,7 @@ var SyncInspectionService = /** @class */ (function () {
                         index = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(index < areas.asbestosAreas[0].areaPictures.images.length)) return [3 /*break*/, 4];
+                        if (!(index < areas.asbestosAreas[0].areaPictures.maxPictures)) return [3 /*break*/, 4];
                         return [5 /*yield**/, _loop_4(index)];
                     case 2:
                         _a.sent();

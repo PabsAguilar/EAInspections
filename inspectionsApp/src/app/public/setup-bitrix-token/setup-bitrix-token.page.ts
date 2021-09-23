@@ -26,6 +26,8 @@ export class SetupBitrixTokenPage implements OnInit {
 
   async ionViewDidEnter() {
     this.bitrixSetup = await this.bitrixTokenService.getBitrixSetup();
+    this.bitrixSetup.itestToken = "";
+    this.bitrixSetup.expertNetworksToken = "";
   }
 
   async userWantsToUpdateSetup() {

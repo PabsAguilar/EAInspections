@@ -6,8 +6,10 @@ import {
   FilesystemDirectory,
   CameraPhoto,
   CameraSource,
+  CameraDirection,
 } from "@capacitor/core";
 import { Platform } from "@ionic/angular";
+import { BitrixPicture } from "../models/bitrix-picture";
 
 const { Camera, Filesystem, Storage } = Plugins;
 
@@ -22,13 +24,33 @@ export class PhotoService {
 
   public async takePhoto(): Promise<string> {
     // Take a photo
+
     const capturedPhoto = await Camera.getPhoto({
-      resultType: CameraResultType.Base64,
+      resultType: CameraResultType.DataUrl,
       source: CameraSource.Camera,
-      quality: 25,
+      quality: 40,
+      width: 1920,
+    });
+    var result = capturedPhoto.dataUrl;
+
+    return result;
+  }
+
+  public async takePhotoB(): Promise<BitrixPicture> {
+    // Take a photo
+
+    const capturedPhoto = await Camera.getPhoto({
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Camera,
+      quality: 40,
+      width: 1920,
     });
 
-    return "data:image/png;base64," + capturedPhoto.base64String;
+    var result = new BitrixPicture();
+    result.base64Image = capturedPhoto.dataUrl;
+    result.format = capturedPhoto.format;
+
+    return result;
   }
   convertBlobToBase64 = (blob: Blob) =>
     new Promise((resolve, reject) => {

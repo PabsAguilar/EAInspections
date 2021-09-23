@@ -60,7 +60,8 @@
     <ion-label position="floating">Room temperature</ion-label>
     <ion-input
       [(ngModel)]="_model.roomTemp"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="500"
       type="number"
       [readonly]="readonly"
       required
@@ -71,7 +72,8 @@
     <ion-label position="floating">Relative Humidity</ion-label>
     <ion-input
       [(ngModel)]="_model.relativeHumidity"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="500"
       type="number"
       [readonly]="readonly"
       required
@@ -81,7 +83,8 @@
     <ion-label position="floating">Dew Point</ion-label>
     <ion-input
       [(ngModel)]="_model.dewPoint"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="500"
       [readonly]="readonly"
       type="number"
       required
@@ -91,7 +94,8 @@
     <ion-label position="floating">Standard Temperature (North)</ion-label>
     <ion-input
       [(ngModel)]="_model.standardTemperatureNorth"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="500"
       [readonly]="readonly"
       type="number"
       required
@@ -101,7 +105,8 @@
     <ion-label position="floating">Standard Temperature (West)</ion-label>
     <ion-input
       [(ngModel)]="_model.standardTemperatureWest"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="500"
       [readonly]="readonly"
       type="number"
       required
@@ -111,7 +116,8 @@
     <ion-label position="floating">Standard Temperature (South)</ion-label>
     <ion-input
       [(ngModel)]="_model.standardTemperatureSouth"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="250"
       type="number"
       [readonly]="readonly"
       required
@@ -121,7 +127,8 @@
     <ion-label position="floating">Standard Temperature (East)</ion-label>
     <ion-input
       [(ngModel)]="_model.standardTemperatureEast"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="250"
       type="number"
       [readonly]="readonly"
       required
@@ -131,7 +138,8 @@
     <ion-label position="floating">Standard Temperature (Ceiling)</ion-label>
     <ion-input
       [(ngModel)]="_model.standardTemperatureCeiling"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="250"
       [readonly]="readonly"
       type="number"
       required
@@ -141,7 +149,8 @@
     <ion-label position="floating">Standard Temperature (Floor)</ion-label>
     <ion-input
       [(ngModel)]="_model.standardTemperatureFloor"
-      (ionInput)="changeModel($event)" debounce="2000"
+      (ionChange)="changeModel($event)"
+      debounce="250"
       [readonly]="readonly"
       type="number"
       required
