@@ -22,7 +22,7 @@ export class AreasComponent implements OnInit {
   }
   set InspectionAreas(value: Area[]) {
     this.areas = value;
-    this.AreaUpdated();
+    this.AreaUpdated("init");
   }
   areas: Area[] = [];
   @Output() AreasListChanged: any = new EventEmitter();
@@ -31,7 +31,7 @@ export class AreasComponent implements OnInit {
 
   ngOnInit() {}
 
-  AreaUpdated() {
+  AreaUpdated($event) {
     try {
       this.filledAreas = !this.areas
         ? 0
@@ -39,7 +39,9 @@ export class AreasComponent implements OnInit {
       if (this.filledAreas >= 1) {
         this.progressColor = "success";
         this.progressPercentage = 1;
-        this.AreasListChanged.emit(this.areas);
+        if ($event == "save") {
+          this.AreasListChanged.emit(this.areas);
+        }
       }
     } catch (error) {
       console.log("Unspected error changing model.");

@@ -515,12 +515,17 @@ export class SyncInspectionService {
         var x =
           task.environmentalForm.generalInfoInspection.picturesFrontHouse.images.map(
             (x, index) => {
+              if (!x.format || x.format == "") {
+                x.format = "jpeg";
+              }
               return {
                 fileData: [
                   `FrontHouse-${index}-${task.id}-${Math.floor(
                     Math.random() * 1000
-                  )}.png`,
-                  x.base64Image.replace("data:image/png;base64,", ""),
+                  )}.${x.format}`,
+                  x.base64Image
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", ""),
                 ],
               };
             }
@@ -532,13 +537,25 @@ export class SyncInspectionService {
         task.environmentalForm.generalInfoInspection.pictureHouseNumbers.images
           .length > 0
       ) {
+        if (
+          !task.environmentalForm.generalInfoInspection.pictureHouseNumbers
+            .images[0].format ||
+          task.environmentalForm.generalInfoInspection.pictureHouseNumbers
+            .images[0].format == ""
+        ) {
+          task.environmentalForm.generalInfoInspection.pictureHouseNumbers.images[0].format =
+            "jpeg";
+        }
         postData.fields[ITestDealMapping.pictureHouseNumbersCode] = {
           fileData: [
-            `HouseNumber-${task.id}-${Math.floor(Math.random() * 1000)}.png`,
-            task.environmentalForm.generalInfoInspection.pictureHouseNumbers.images[0].base64Image.replace(
-              "data:image/png;base64,",
-              ""
-            ),
+            `HouseNumber-${task.id}-${Math.floor(Math.random() * 1000)}.${
+              task.environmentalForm.generalInfoInspection.pictureHouseNumbers
+                .images[0].format
+            }`,
+            task.environmentalForm.generalInfoInspection.pictureHouseNumbers.images[0].base64Image
+              .replace("data:image/png;base64,", "")
+              .replace("data:image/jpeg;base64,", ""),
+            ,
           ],
         };
       }
@@ -888,7 +905,8 @@ export class SyncInspectionService {
           STAGE_ID:
             scheduling.serviceType == EnumEnterprise.itest
               ? "PREPAYMENT_INVOICE"
-              : "NEW",
+              : "C15:FINAL_INVOICE",
+
           COMPANY_ID: "",
           CONTACT_ID: scheduling.contact.idContact,
           OPENED: "N",
@@ -919,6 +937,16 @@ export class SyncInspectionService {
           scheduling.inspectionTypes; //UF_CRM_1612433280
         postData.fields[ITestDealMapping.referenceContact] = referalContact; //UF_CRM_1612691326
       } else {
+        postData.fields["CATEGORY_ID"] = "15";
+        postData.fields[ENDealMapping.contactReviewed] =
+          ENDealMapping.contactReviewed_Val;
+        postData.fields[ENDealMapping.damagesReviewed] =
+          ENDealMapping.damagesReviewedVal;
+
+        postData.fields[ENDealMapping.paymentType] =
+          ENDealMapping.paymentType_pendingVal;
+        postData.fields[ENDealMapping.propertyYearCode] = 0;
+
         //postData.fields[ENDealMapping.segments] = [4315];
         postData.fields[ENDealMapping.paymentType] =
           ENDealMapping.paymentType_pendingVal;
@@ -961,12 +989,17 @@ export class SyncInspectionService {
     fieldName: string
   ) {
     var image = imagesList.images.map((s, imageIndex) => {
+      if (!s.format || s.format == "") {
+        s.format = "jpeg";
+      }
       return {
         fileData: [
           `${fieldName}-${imageIndex}-${taskId}-${Math.floor(
             Math.random() * 1000
-          )}.png`,
-          s.base64Image.replace("data:image/png;base64,", ""),
+          )}.${s.format}`,
+          s.base64Image
+            .replace("data:image/png;base64,", "")
+            .replace("data:image/jpeg;base64,", ""),
         ],
       };
     });
@@ -982,11 +1015,14 @@ export class SyncInspectionService {
         await this.inspectionStorage.update(task);
       }
 
-      task = await this.syncENTaskImages(task);
+      // task = await this.syncENTaskImages(task);
 
       let postData = {
         id: task.id,
-        fields: { STAGE_ID: "1" },
+        fields: {
+          STAGE_ID: "C15:FINAL_INVOICE",
+          CATEGORY_ID: "15",
+        },
       };
 
       if (task.comprehesiveForm.generalInfoInspection.propertyYear)
@@ -1023,17 +1059,22 @@ export class SyncInspectionService {
       var list = entries(bitrixMappingComprehensive.Area);
       task.comprehesiveForm.areas.map((x, index: number) => {
         //Object.entries(x.areaBitrixMapping)
-        list.map((y) => {
+        list.map(async (y) => {
           var item = x[y[0].replace("Code", "")];
           if (item) {
             if (item.images) {
               var image = item.images.map((s, imageIndex) => {
+                if (!s.format || s.format == "") {
+                  s.format = "jpeg";
+                }
                 return {
                   fileData: [
                     `Area${index + 1}-${imageIndex}-${task.id}-${Math.floor(
                       Math.random() * 1000
-                    )}.png`,
-                    s.base64Image.replace("data:image/png;base64,", ""),
+                    )}.${s.format}`,
+                    s.base64Image
+                      .replace("data:image/png;base64,", "")
+                      .replace("data:image/jpeg;base64,", ""),
                   ],
                 };
               });
@@ -1054,12 +1095,17 @@ export class SyncInspectionService {
           if (item) {
             if (item.images) {
               var image = item.images.map((s, imageIndex) => {
+                if (!s.format || s.format == "") {
+                  s.format = "jpeg";
+                }
                 return {
                   fileData: [
-                    `Bathroom-${index + 1}-${imageIndex}-${
-                      task.id
-                    }-${Math.floor(Math.random() * 1000)}.png`,
-                    s.base64Image.replace("data:image/png;base64,", ""),
+                    `Bathroom${index + 1}-${imageIndex}-${task.id}-${Math.floor(
+                      Math.random() * 1000
+                    )}.${s.format}`,
+                    s.base64Image
+                      .replace("data:image/png;base64,", "")
+                      .replace("data:image/jpeg;base64,", ""),
                   ],
                 };
               });
@@ -1079,12 +1125,17 @@ export class SyncInspectionService {
         if (item) {
           if (item.images) {
             var image = item.images.map((s, imageIndex) => {
+              if (!s.format || s.format == "") {
+                s.format = "jpeg";
+              }
               return {
                 fileData: [
                   `Kitchen-${imageIndex}-${task.id}-${Math.floor(
                     Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
+                  )}.${s.format}`,
+                  s.base64Image
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", ""),
                 ],
               };
             });
@@ -1103,12 +1154,17 @@ export class SyncInspectionService {
         if (item) {
           if (item.images) {
             var image = item.images.map((s, imageIndex) => {
+              if (!s.format || s.format == "") {
+                s.format = "jpeg";
+              }
               return {
                 fileData: [
-                  `HVAC_AC-${imageIndex}-${task.id}-${Math.floor(
+                  `HVAC-${imageIndex}-${task.id}-${Math.floor(
                     Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
+                  )}.${s.format}`,
+                  s.base64Image
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", ""),
                 ],
               };
             });
@@ -1126,12 +1182,17 @@ export class SyncInspectionService {
         if (item) {
           if (item.images) {
             var image = item.images.map((s, imageIndex) => {
+              if (!s.format || s.format == "") {
+                s.format = "jpeg";
+              }
               return {
                 fileData: [
                   `UtilityRoom-${imageIndex}-${task.id}-${Math.floor(
                     Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
+                  )}.${s.format}`,
+                  s.base64Image
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", ""),
                 ],
               };
             });
@@ -1150,12 +1211,17 @@ export class SyncInspectionService {
         if (item) {
           if (item.images) {
             var image = item.images.map((s, imageIndex) => {
+              if (!s.format || s.format == "") {
+                s.format = "jpeg";
+              }
               return {
                 fileData: [
                   `Atic-${imageIndex}-${task.id}-${Math.floor(
                     Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
+                  )}.${s.format}`,
+                  s.base64Image
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", ""),
                 ],
               };
             });
@@ -1175,12 +1241,17 @@ export class SyncInspectionService {
         if (item) {
           if (item.images) {
             var image = item.images.map((s, imageIndex) => {
+              if (!s.format || s.format == "") {
+                s.format = "jpeg";
+              }
               return {
                 fileData: [
-                  `environmental-${imageIndex}-${task.id}-${Math.floor(
+                  `Environmental-${imageIndex}-${task.id}-${Math.floor(
                     Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
+                  )}.${s.format}`,
+                  s.base64Image
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", ""),
                 ],
               };
             });
@@ -1199,12 +1270,17 @@ export class SyncInspectionService {
         if (item) {
           if (item.images) {
             var image = item.images.map((s, imageIndex) => {
+              if (!s.format || s.format == "") {
+                s.format = "jpeg";
+              }
               return {
                 fileData: [
-                  `exterior-${imageIndex}-${task.id}-${Math.floor(
+                  `Exterior-${imageIndex}-${task.id}-${Math.floor(
                     Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
+                  )}.${s.format}`,
+                  s.base64Image
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", ""),
                 ],
               };
             });
@@ -1232,12 +1308,17 @@ export class SyncInspectionService {
         if (item) {
           if (item.images) {
             var image = item.images.map((s, imageIndex) => {
+              if (!s.format || s.format == "") {
+                s.format = "jpeg";
+              }
               return {
                 fileData: [
-                  `insurance-${imageIndex}-${task.id}-${Math.floor(
+                  `Insurance-${imageIndex}-${task.id}-${Math.floor(
                     Math.random() * 1000
-                  )}.png`,
-                  s.base64Image.replace("data:image/png;base64,", ""),
+                  )}.${s.format}`,
+                  s.base64Image
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", ""),
                 ],
               };
             });

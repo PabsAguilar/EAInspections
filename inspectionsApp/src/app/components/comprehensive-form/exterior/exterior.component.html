@@ -46,6 +46,7 @@
       type="text"
       autocapitalize="sentences"
       required
+      debounce="500"
     ></ion-input>
   </ion-item>
 
@@ -64,6 +65,7 @@
       [(ngModel)]="_data.notes"
       (ionChange)="changeModel($event)"
       type="text"
+      debounce="500"
     ></ion-textarea>
   </ion-item>
 

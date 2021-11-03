@@ -26,6 +26,7 @@
       [disabled]="readonly"
       type="number"
       required
+      debounce="500"
     ></ion-input>
   </ion-item>
 
@@ -75,6 +76,7 @@
         name="interiorTemperature"
         type="number"
         required
+        debounce="500"
       ></ion-input>
     </ion-item>
 
@@ -87,6 +89,7 @@
         type="number"
         [readonly]="readonly"
         required
+        debounce="500"
       ></ion-input>
     </ion-item>
 
@@ -152,6 +155,7 @@
         [(ngModel)]="generalInfoInspection.typeOfLossDesc"
         name="typeOfLossDesc"
         type="text"
+        debounce="500"
       ></ion-textarea>
     </ion-item>
 
@@ -163,6 +167,7 @@
         name="affectedArea"
         [disabled]="readonly"
         type="text"
+        debounce="500"
       ></ion-textarea>
     </ion-item>
   </div>

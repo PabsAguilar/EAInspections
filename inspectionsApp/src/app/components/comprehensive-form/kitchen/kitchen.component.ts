@@ -60,6 +60,7 @@ export class KitchenComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.KitchenChanged.emit(this.kitchen);
   }
 
   changeModel($event) {
@@ -83,7 +84,7 @@ export class KitchenComponent implements OnInit {
         : this.filledProperties / this.totalProperties;
 
     if ($event != "init") {
-      this.KitchenChanged.emit(this.kitchen);
+      
     }
 
     switch (true) {
@@ -101,12 +102,12 @@ export class KitchenComponent implements OnInit {
         break;
     }
   }
-  onConditionChange($event, index: number) {
-    var x = this._conditions.reduce(
-      (result, { name, checked }) => [...result, ...(checked ? [name] : [])],
-      []
-    );
-    this.kitchen.condition = x;
-    this.changeModel(null);
-  }
+  // onConditionChange($event, index: number) {
+  //   var x = this._conditions.reduce(
+  //     (result, { name, checked }) => [...result, ...(checked ? [name] : [])],
+  //     []
+  //   );
+  //   this.kitchen.condition = x;
+  //   this.changeModel(null);
+  // }
 }

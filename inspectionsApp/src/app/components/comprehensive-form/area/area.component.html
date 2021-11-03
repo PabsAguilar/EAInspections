@@ -47,6 +47,8 @@
       type="number"
       required
       [readonly]="readonly"
+      debounce="500"
+
     ></ion-input>
   </ion-item>
 
@@ -68,6 +70,7 @@
       (ionChange)="changeModel($event)"
       type="text"
       [readonly]="readonly"
+      debounce="500"
     ></ion-textarea>
   </ion-item>
 

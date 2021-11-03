@@ -15,6 +15,7 @@ export class BathroomsComponent implements OnInit {
   progressPercentage: number = 0;
   toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.AreasListChanged.emit(this.bathrooms);
   }
 
   @Input()
@@ -42,7 +43,6 @@ export class BathroomsComponent implements OnInit {
       this.progressColor = "success";
       this.progressPercentage = 1;
       if ($event != "init") {
-        this.AreasListChanged.emit(this.bathrooms);
       }
     }
   }

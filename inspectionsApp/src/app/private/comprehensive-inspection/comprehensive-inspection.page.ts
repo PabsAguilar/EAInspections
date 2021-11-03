@@ -39,6 +39,7 @@ export class ComprehensiveInspectionPage implements OnInit {
     public syncInspectionService: SyncInspectionService,
     private popoverController: PopoverController,
     private emailComposer: EmailComposer,
+    private inspectionNavigateService: InspectionNavigateService,
     private file: File
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
@@ -62,6 +63,11 @@ export class ComprehensiveInspectionPage implements OnInit {
           });
       }
     }
+  }
+
+  async back() {
+    await this.UpdateEntity(null);
+    this.inspectionNavigateService.backToPending();
   }
 
   async ionViewDidEnter() {
@@ -377,7 +383,7 @@ export class ComprehensiveInspectionPage implements OnInit {
 
   public async UpdateEntity($event): Promise<void> {
     try {
-      console.log($event);
+      console.log("save event");
       if (this.task.internalStatus == InspectionStatus.New) {
         this.task.internalStatus = "In Progress";
       }

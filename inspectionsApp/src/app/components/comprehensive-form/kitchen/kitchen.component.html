@@ -31,6 +31,7 @@
       (ionChange)="changeModel($event)"
       type="number"
       required
+      debounce="500"
     ></ion-input>
   </ion-item>
 
@@ -80,6 +81,7 @@
       [(ngModel)]="kitchen.notes"
       (ionChange)="changeModel($event)"
       type="text"
+      debounce="500"
     ></ion-textarea>
   </ion-item>
   <ion-item

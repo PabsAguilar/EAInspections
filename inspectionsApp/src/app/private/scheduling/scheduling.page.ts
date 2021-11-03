@@ -85,14 +85,17 @@ export class SchedulingPage implements OnInit {
   }
 
   async ionViewDidEnter() {
-    var types = await this.inspectionService.getInspectionTasksTypesList();
+    if (this.user.enterprise == EnumEnterprise.itest) {
+      var types = await this.inspectionService.getInspectionTasksTypesList();
+      this.inspectionTypes = types.map((x) => {
+        return { name: x.name, value: x.id, selected: false };
+      });
+    }
+
     this.inspectorsList = await this.inspectionService.getInspectors(false);
     this.scheduling.inspectorUserId = this.user.userId;
     this.scheduling.enterprise = this.user.enterprise;
     this.scheduling.serviceType = this.user.enterprise;
-    this.inspectionTypes = types.map((x) => {
-      return { name: x.name, value: x.id, selected: false };
-    });
   }
 
   contactIsSync() {

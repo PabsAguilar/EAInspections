@@ -181,7 +181,7 @@ export enum ENDealMapping {
   serviceTypeList = "44",
   dealDateTime = "UF_CRM_1589438514",
   serviceAddress = "UF_CRM_1589612508058",
-  propertyYearCode = "UF_CRM_1591251407119",
+  propertyYearCode = "UF_CRM_1590682808448",
   pictureHouseNumbersCode = "UF_CRM_1591107425",
   picturesFrontHouseCode = "UF_CRM_1591107445",
   propertyTypeCode = "UF_CRM_1591170207",
@@ -195,6 +195,10 @@ export enum ENDealMapping {
   contactSegments = "UF_CRM_1622225712108",
   paymentType = "UF_CRM_1589398611",
   paymentType_pendingVal = "4539",
+  contactReviewed = "UF_CRM_1590682737840",
+  contactReviewed_Val = "1357",
+  damagesReviewed = "UF_CRM_1590683224234",
+  damagesReviewedVal = "1361",
 }
 
 export enum ENContactSegments {
@@ -319,7 +323,7 @@ export var bitrixMappingComprehensive: any = {
 
   Exterior: {
     conditionCode: "UF_CRM_1590125032",
-    otherCode: "UF_CRM_1590125250",
+    conditionOtherCode: "UF_CRM_1590125250",
     picturesCode: "UF_CRM_1590125270",
     notesCode: "UF_CRM_1605909665",
   },

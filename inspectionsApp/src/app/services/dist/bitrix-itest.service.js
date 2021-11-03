@@ -268,7 +268,7 @@ var BitrixItestService = /** @class */ (function () {
                         return [2 /*return*/, newDeals];
                     case 3: return [3 /*break*/, 5];
                     case 4: return [2 /*return*/, this.http
-                            .get(this.url + "/" + this.key + "/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=NEW&FILTER[" + inspectorField + "]=" + user.userId)
+                            .get(this.url + "/" + this.key + "/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=C15:FINAL_INVOICE&FILTER[" + inspectorField + "]=" + user.userId)
                             .toPromise()];
                     case 5: return [2 /*return*/];
                 }

@@ -242,7 +242,7 @@ export class BitrixItestService {
     } else {
       return this.http
         .get(
-          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=NEW&FILTER[${inspectorField}]=${user.userId}`
+          `${this.url}/${this.key}/crm.deal.list.json?SELECT[]=UF_*&SELECT[]=*&FILTER[STAGE_ID]=C15:FINAL_INVOICE&FILTER[${inspectorField}]=${user.userId}`
         )
         .toPromise();
     }

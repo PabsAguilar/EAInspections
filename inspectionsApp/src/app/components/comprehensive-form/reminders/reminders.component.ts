@@ -27,6 +27,7 @@ export class RemindersComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.dataChanged.emit(this._data);
   }
 
   changeModel($event) {
@@ -49,7 +50,7 @@ export class RemindersComponent implements OnInit {
         ? 0
         : this.filledProperties / this.totalProperties;
 
-    this.dataChanged.emit(this._data);
+    //this.dataChanged.emit(this._data);
 
     switch (true) {
       case this.progressPercentage < 0.5:

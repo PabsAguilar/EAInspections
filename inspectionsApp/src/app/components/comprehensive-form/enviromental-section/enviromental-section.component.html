@@ -41,6 +41,7 @@
       autocapitalize="sentences"
       [readonly]="readonly"
       required
+      debounce="500"
     ></ion-input>
   </ion-item>
 
@@ -81,6 +82,27 @@
     >
       <ion-select-option
         *ngFor="let item of waterSampleLocationList; let i = index"
+        [value]="item.value"
+      >
+        {{ item.name }}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating"
+      >Have you had any major reconstruction done after the property was
+      built?</ion-label
+    >
+    <ion-select
+      interface="popover"
+      name="MoldSampleTaken"
+      [disabled]="readonly"
+      [(ngModel)]="_data.MajorReconstruction"
+      (ionChange)="changeModel($event)"
+    >
+      <ion-select-option
+        *ngFor="let item of majorReconstructionList; let i = index"
         [value]="item.value"
       >
         {{ item.name }}</ion-select-option

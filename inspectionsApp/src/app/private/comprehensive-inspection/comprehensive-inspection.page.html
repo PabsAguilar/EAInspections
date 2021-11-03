@@ -5,7 +5,7 @@
       ?task.contactName : task.title) }}
     </ion-title>
     <ion-buttons slot="start">
-      <ion-back-button defaulthref=""> </ion-back-button>
+      <ion-back-button (click)="back($event)"> </ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button slot="end" (click)="presentPopover($event)">

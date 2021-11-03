@@ -106,13 +106,19 @@ export class AreaGeneralConditionComponent implements OnInit {
   changeModel($event) {
     this.filledProperties = 0;
 
-    if (this.generalCondition.condition.length > 0) {
+    if (
+      this.generalCondition.condition &&
+      this.generalCondition.condition.length > 0
+    ) {
       this.filledProperties++;
     }
     if (this.generalCondition.moistureLevel) {
       this.filledProperties++;
     }
-    if (this.generalCondition.pictures.images.length > 0) {
+    if (
+      this.generalCondition.pictures.images &&
+      this.generalCondition.pictures.images.length > 0
+    ) {
       this.filledProperties++;
     }
     if (this.generalCondition.notes) {
@@ -125,7 +131,6 @@ export class AreaGeneralConditionComponent implements OnInit {
 
     if ($event != "init") {
       //this.InspectionAreaGeneralChanged.emit(this.generalCondition);
-  
     }
 
     switch (true) {

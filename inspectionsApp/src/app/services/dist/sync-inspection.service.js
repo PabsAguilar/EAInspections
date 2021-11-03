@@ -950,7 +950,7 @@ var SyncInspectionService = /** @class */ (function () {
                                 TYPE_ID: "",
                                 STAGE_ID: scheduling.serviceType == enums_1.EnumEnterprise.itest
                                     ? "PREPAYMENT_INVOICE"
-                                    : "NEW",
+                                    : "C15:FINAL_INVOICE",
                                 COMPANY_ID: "",
                                 CONTACT_ID: scheduling.contact.idContact,
                                 OPENED: "N",
@@ -980,6 +980,14 @@ var SyncInspectionService = /** @class */ (function () {
                             postData.fields[enums_1.ITestDealMapping.referenceContact] = referalContact; //UF_CRM_1612691326
                         }
                         else {
+                            postData.fields["CATEGORY_ID"] = "15";
+                            postData.fields[enums_1.ENDealMapping.contactReviewed] =
+                                enums_1.ENDealMapping.contactReviewed_Val;
+                            postData.fields[enums_1.ENDealMapping.damagesReviewed] =
+                                enums_1.ENDealMapping.damagesReviewedVal;
+                            postData.fields[enums_1.ENDealMapping.paymentType] =
+                                enums_1.ENDealMapping.paymentType_pendingVal;
+                            postData.fields[enums_1.ENDealMapping.propertyYearCode] = 0;
                             //postData.fields[ENDealMapping.segments] = [4315];
                             postData.fields[enums_1.ENDealMapping.paymentType] =
                                 enums_1.ENDealMapping.paymentType_pendingVal;
@@ -1026,10 +1034,15 @@ var SyncInspectionService = /** @class */ (function () {
     };
     SyncInspectionService.prototype.preprareImages = function (imagesList, taskId, fieldName) {
         var image = imagesList.images.map(function (s, imageIndex) {
+            if (!s.format || s.format == "") {
+                s.format = "jpeg";
+            }
             return {
                 fileData: [
-                    fieldName + "-" + imageIndex + "-" + taskId + "-" + Math.floor(Math.random() * 1000) + ".png",
-                    s.base64Image.replace("data:image/png;base64,", ""),
+                    fieldName + "-" + imageIndex + "-" + taskId + "-" + Math.floor(Math.random() * 1000) + "." + s.format,
+                    s.base64Image
+                        .replace("data:image/png;base64,", "")
+                        .replace("data:image/jpeg;base64,", ""),
                 ]
             };
         });
@@ -1038,10 +1051,11 @@ var SyncInspectionService = /** @class */ (function () {
     SyncInspectionService.prototype.syncENTask = function (task) {
         return __awaiter(this, void 0, Promise, function () {
             var result, postData_1, x, x, list, response, error_13, message;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 11, , 13]);
+                        _a.trys.push([0, 10, , 12]);
                         if (!!task.bitrixFolder.syncInfo.isSync) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.syncSubfolder(task)];
                     case 1:
@@ -1052,12 +1066,13 @@ var SyncInspectionService = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         _a.label = 3;
-                    case 3: return [4 /*yield*/, this.syncENTaskImages(task)];
-                    case 4:
-                        task = _a.sent();
+                    case 3:
                         postData_1 = {
                             id: task.id,
-                            fields: { STAGE_ID: "1" }
+                            fields: {
+                                STAGE_ID: "C15:FINAL_INVOICE",
+                                CATEGORY_ID: "15"
+                            }
                         };
                         if (task.comprehesiveForm.generalInfoInspection.propertyYear)
                             postData_1.fields[enums_1.ENDealMapping.propertyYearCode] =
@@ -1066,45 +1081,56 @@ var SyncInspectionService = /** @class */ (function () {
                             postData_1.fields[enums_1.ENDealMapping.propertyTypeCode] =
                                 task.comprehesiveForm.generalInfoInspection.propertyType;
                         if (!(task.comprehesiveForm.generalInfoInspection.picturesFrontHouse.images
-                            .length > 0)) return [3 /*break*/, 6];
+                            .length > 0)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.preprareImages(task.comprehesiveForm.generalInfoInspection.picturesFrontHouse, task.id, "FrontHouse")];
-                    case 5:
+                    case 4:
                         x = _a.sent();
                         postData_1.fields[enums_1.ENDealMapping.picturesFrontHouseCode] = x;
-                        _a.label = 6;
-                    case 6:
+                        _a.label = 5;
+                    case 5:
                         if (!(task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers.images
-                            .length > 0)) return [3 /*break*/, 8];
+                            .length > 0)) return [3 /*break*/, 7];
                         return [4 /*yield*/, this.preprareImages(task.comprehesiveForm.generalInfoInspection.pictureHouseNumbers, task.id, "HouseNumber")];
-                    case 7:
+                    case 6:
                         x = _a.sent();
                         postData_1.fields[enums_1.ENDealMapping.pictureHouseNumbersCode] = x;
-                        _a.label = 8;
-                    case 8:
+                        _a.label = 7;
+                    case 7:
                         list = entries(enums_1.bitrixMappingComprehensive.Area);
                         task.comprehesiveForm.areas.map(function (x, index) {
                             //Object.entries(x.areaBitrixMapping)
-                            list.map(function (y) {
-                                var item = x[y[0].replace("Code", "")];
-                                if (item) {
-                                    if (item.images) {
-                                        var image = item.images.map(function (s, imageIndex) {
-                                            return {
-                                                fileData: [
-                                                    "Area" + (index + 1) + "-" + imageIndex + "-" + task.id + "-" + Math.floor(Math.random() * 1000) + ".png",
-                                                    s.base64Image.replace("data:image/png;base64,", ""),
-                                                ]
-                                            };
-                                        });
-                                        if (image.length > 0) {
-                                            postData_1.fields[y[1][index]] = image;
-                                        }
+                            list.map(function (y) { return __awaiter(_this, void 0, void 0, function () {
+                                var item, image;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            item = x[y[0].replace("Code", "")];
+                                            if (!item) return [3 /*break*/, 3];
+                                            if (!item.images) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, this.preprareImages(item, task.id, "Area" + (index + 1))];
+                                        case 1:
+                                            image = _a.sent();
+                                            // var image =  item.images.map((s, imageIndex) => {
+                                            //   return {
+                                            //     fileData: [
+                                            //       `Area${index + 1}-${imageIndex}-${task.id}-${Math.floor(
+                                            //         Math.random() * 1000
+                                            //       )}.png`,
+                                            //       s.base64Image.replace("data:image/png;base64,", ""),
+                                            //     ],
+                                            //   };
+                                            // });
+                                            if (image.length > 0) {
+                                                postData_1.fields[y[1][index]] = image;
+                                            }
+                                            return [3 /*break*/, 3];
+                                        case 2:
+                                            postData_1.fields[y[1][index]] = item;
+                                            _a.label = 3;
+                                        case 3: return [2 /*return*/];
                                     }
-                                    else {
-                                        postData_1.fields[y[1][index]] = item;
-                                    }
-                                }
-                            });
+                                });
+                            }); });
                         });
                         list = entries(enums_1.bitrixMappingComprehensive.Bathrooms);
                         task.comprehesiveForm.bathrooms.map(function (x, index) {
@@ -1299,16 +1325,16 @@ var SyncInspectionService = /** @class */ (function () {
                             }
                         });
                         return [4 /*yield*/, this.bitrix.updateDeal(postData_1).toPromise()];
-                    case 9:
+                    case 8:
                         response = _a.sent();
                         if (response && response.result > 0) {
                             task.internalStatus = enums_1.InspectionStatus.Completed;
                         }
                         return [4 /*yield*/, this.inspectionStorage.update(task)];
-                    case 10:
+                    case 9:
                         _a.sent();
                         return [2 /*return*/, true];
-                    case 11:
+                    case 10:
                         error_13 = _a.sent();
                         console.log(error_13);
                         message = this.toast.create({
@@ -1317,11 +1343,11 @@ var SyncInspectionService = /** @class */ (function () {
                             duration: 2000
                         });
                         return [4 /*yield*/, message];
-                    case 12:
+                    case 11:
                         (_a.sent()).present();
                         console.log(error_13);
                         return [2 /*return*/, false];
-                    case 13: return [2 /*return*/];
+                    case 12: return [2 /*return*/];
                 }
             });
         });

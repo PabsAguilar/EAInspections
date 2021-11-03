@@ -18,7 +18,9 @@ export class MultipleRadioComponent implements OnInit {
         const element = this.options[index];
         this.options[index].checked = !value
           ? false
-          : value.includes(element.value);
+          : value.find((y) => y == element.value)
+          ? true
+          : false;
       }
     }
     if (value) {

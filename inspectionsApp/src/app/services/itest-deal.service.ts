@@ -42,6 +42,12 @@ import { DamageAreas } from "../models/environmental-form/damage-areas";
 import { AsbestoAreas } from "../models/environmental-form/asbesto-areas";
 import { LeadAreas } from "../models/environmental-form/lead-areas";
 import { ToastController } from "@ionic/angular";
+import { AreasAsbestosComponent } from "../components/environmental-form/areas-asbestos/areas-asbestos.component";
+import { ComprehensiveEnvironmentalSection } from "../models/comprehensive-form/comprehensive-environmental-section";
+import { Exterior } from "../models/comprehensive-form/exterior";
+import { Recomendations } from "../models/comprehensive-form/recomendations";
+import { Insurance } from "../models/comprehensive-form/insurance";
+import { Reminders } from "../models/comprehensive-form/reminders";
 
 const SYNCSTAMPKEY = "inspection-stamp-key";
 @Injectable({
@@ -88,7 +94,7 @@ export class ItestDealService {
     return this.inspectionStorage.update(task);
   }
 
-  async getInspectionTask(id,enterprise): Promise<InspectionTask>{
+  async getInspectionTask(id, enterprise): Promise<InspectionTask> {
     return this.inspectionStorage.get(id, enterprise);
   }
 
@@ -616,7 +622,7 @@ export class ItestDealService {
     }
 
     item.bitrixFolder = itemStarted.bitrixFolder;
-    item.comprehesiveForm = itemStarted.comprehesiveForm;
+    //item.comprehesiveForm = itemStarted.comprehesiveForm;
 
     if (item.inspectionType == InspectionType.Environmental) {
       itemStarted.environmentalForm.generalInfoInspection.propertyYear =
@@ -1451,19 +1457,223 @@ export class ItestDealService {
             task.inspectionType = InspectionType.Comprehensive;
 
             task.enterprise = EnumEnterprise.expertNetworks;
-            // task.inspectionSubTypes = x[ENDealMapping.inspectionTypes].map(
-            //   (m) => {
-            //     if (m != 120) {
-            //       return subtypes.find((y) => y.id == m);
-            //     }
-            //   }
+            var arrayAreas = [];
+            for (
+              let index = 0;
+              index < bitrixMappingComprehensive.Area.nameCode.length;
+              index++
+            ) {
+              var fields = Object.entries(bitrixMappingComprehensive.Area);
+              var areaItem: Area = new Area();
+
+              Promise.all(
+                fields.map((y) => {
+                  if (y[0].toLowerCase().includes("pictures")) {
+                    return;
+                  }
+
+                  var field = y[0].replace("Code", "");
+                  var value = x[y[1][index]];
+                  if (value) {
+                    areaItem[field] = value === 0 ? null : value;
+                  }
+                })
+              );
+
+              arrayAreas.push(areaItem);
+            }
+            task.comprehesiveForm.areas = arrayAreas;
+
+            var arrayBathrooms = [];
+            for (
+              let index = 0;
+              index < bitrixMappingComprehensive.Bathrooms.conditionCode.length;
+              index++
+            ) {
+              var fields = Object.entries(bitrixMappingComprehensive.Bathrooms);
+              var areaItem: Area = new Area();
+
+              Promise.all(
+                fields.map((y) => {
+                  if (y[0].toLowerCase().includes("pictures")) {
+                    return;
+                  }
+
+                  var field = y[0].replace("Code", "");
+                  var value = x[y[1][index]];
+                  if (value) {
+                    areaItem[field] = value === 0 ? null : value;
+                  }
+                })
+              );
+
+              arrayBathrooms.push(areaItem);
+            }
+            task.comprehesiveForm.bathrooms = arrayBathrooms;
+
+            var fieldsKitchen = Object.entries(
+              bitrixMappingComprehensive.Kitchen
+            );
+            var item: Kitchen = new Kitchen();
+            Promise.all(
+              fieldsKitchen.map((y) => {
+                if (y[0].toLowerCase().includes("pictures")) {
+                  return;
+                }
+                var field = y[0].replace("Code", "");
+                var value = x[y[1] as string];
+                if (value) {
+                  item[field] = value === 0 ? null : value;
+                }
+              })
+            );
+            task.comprehesiveForm.kitchen = item;
+
+            var fieldsHVAC_AC = Object.entries(
+              bitrixMappingComprehensive.HVAC_AC
+            );
+            var hvacItem = new GeneralCondition();
+            Promise.all(
+              fieldsHVAC_AC.map((y) => {
+                if (y[0].toLowerCase().includes("pictures")) {
+                  return;
+                }
+                var field = y[0].replace("Code", "");
+                var value = x[y[1] as string];
+                if (value) {
+                  hvacItem[field] = value == 0 ? null : value;
+                }
+              })
+            );
+            task.comprehesiveForm.HVAC_AC = hvacItem;
+
+            var fieldsUtilityRoom = Object.entries(
+              bitrixMappingComprehensive.UtilityRoom
+            );
+            var utilityItem = new GeneralCondition();
+            Promise.all(
+              fieldsUtilityRoom.map((y) => {
+                if (y[0].toLowerCase().includes("pictures")) {
+                  return;
+                }
+                var field = y[0].replace("Code", "");
+                var value = x[y[1] as string];
+                if (value) {
+                  utilityItem[field] = value === 0 ? null : value;
+                }
+              })
+            );
+            task.comprehesiveForm.utilityRoom = utilityItem;
+
+            var fieldsAttic = Object.entries(bitrixMappingComprehensive.Attic);
+            var aticItem = new GeneralCondition();
+            Promise.all(
+              fieldsAttic.map((y) => {
+                if (y[0].toLowerCase().includes("pictures")) {
+                  return;
+                }
+                var field = y[0].replace("Code", "");
+                var value = x[y[1] as string];
+                if (value) {
+                  aticItem[field] = value === 0 ? null : value;
+                }
+              })
+            );
+            task.comprehesiveForm.atic = aticItem;
+
+            var fieldsEnvironmentalSection = Object.entries(
+              bitrixMappingComprehensive.EnvironmentalSection
+            );
+            var environmentalItem = new ComprehensiveEnvironmentalSection();
+            Promise.all(
+              fieldsEnvironmentalSection.map((y) => {
+                if (
+                  y[0].toLowerCase().includes("pictures") ||
+                  y[0].toLowerCase().includes("picture")
+                ) {
+                  return;
+                }
+                var field = y[0].replace("Code", "");
+                var value = x[y[1] as string];
+                if (value) {
+                  environmentalItem[field] = value === 0 ? null : value;
+                }
+              })
+            );
+            task.comprehesiveForm.enviromentalSection = environmentalItem;
+
+            var fieldsExterior = Object.entries(
+              bitrixMappingComprehensive.Exterior
+            );
+            var exteriorItem = new Exterior();
+            Promise.all(
+              fieldsExterior.map((y) => {
+                if (y[0].toLowerCase().includes("pictures")) {
+                  return;
+                }
+                var field = y[0].replace("Code", "");
+                var value = x[y[1] as string];
+                if (value) {
+                  exteriorItem[field] = value === 0 ? null : value;
+                }
+              })
+            );
+            task.comprehesiveForm.exterior = exteriorItem;
+
+            var fieldsRecomendations = Object.entries(
+              bitrixMappingComprehensive.Recomendations
+            );
+            var recommendationsItem = new Recomendations();
+            Promise.all(
+              fieldsRecomendations.map((y) => {
+                if (y[0].toLowerCase().includes("pictures")) {
+                  return;
+                }
+                var field = y[0].replace("Code", "");
+                var value = x[y[1] as string];
+                if (value) {
+                  recommendationsItem[field] = value === 0 ? null : value;
+                }
+              })
+            );
+            task.comprehesiveForm.recomendations = recommendationsItem;
+
+            var fieldsInsurance = Object.entries(
+              bitrixMappingComprehensive.Insurance
+            );
+            var insuranceItem = new Insurance();
+            Promise.all(
+              fieldsInsurance.map((y) => {
+                if (y[0].toLowerCase().includes("pictures")) {
+                  return;
+                }
+                var field = y[0].replace("Code", "");
+                var value = x[y[1] as string];
+                if (value) {
+                  insuranceItem[field] = value === 0 ? null : value;
+                }
+              })
+            );
+            task.comprehesiveForm.insurance = insuranceItem;
+
+            // var fieldsReminders = Object.entries(
+            //   bitrixMappingComprehensive.Reminders
             // );
-            // if (
-            //   task.inspectionSubTypes.length == 1 &&
-            //   !task.inspectionSubTypes[0]
-            // ) {
-            //   task.inspectionSubTypes = [];
-            // }
+            // var remindersItem = new Reminders();
+            // Promise.all(
+            //   fieldsReminders.map((y) => {
+            //     if (y[0].toLowerCase().includes("pictures")) {
+            //       return;
+            //     }
+            //     var field = y[0].replace("Code", "");
+            //     var value = x[y[1] as string];
+            //     if (value) {
+            //       remindersItem[field] = value === 0 ? null : value;
+            //     }
+            //   })
+            // );
+            // task.comprehesiveForm.reminders = remindersItem;
+
             task.inspectionSubTypes = [];
             task.inspectionSubTypesString = task.inspectionSubTypes
               .map((type) => {

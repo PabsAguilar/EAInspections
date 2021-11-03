@@ -66,42 +66,46 @@ export class EnviromentalSectionComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.dataChanged.emit(this._data);
   }
 
   changeModel($event) {
-    this.filledProperties = 0;
+    try {
+      this.filledProperties = 0;
 
-    if (this._data.MoldLocationPicture.images.length > 0) {
-      this.filledProperties++;
-    }
-    if (this._data.MoldSampleLocation) {
-      this.filledProperties++;
-    }
-    if (this._data.WaterSamplelocation) {
-      this.filledProperties++;
-    }
-    this.progressPercentage =
-      this.filledProperties == 0
-        ? 0
-        : this.filledProperties / this.totalProperties;
+      if (this._data.MoldLocationPicture.images.length > 0) {
+        this.filledProperties++;
+      }
+      if (this._data.MoldSampleLocation) {
+        this.filledProperties++;
+      }
+      if (this._data.WaterSamplelocation) {
+        this.filledProperties++;
+      }
+      this.progressPercentage =
+        this.filledProperties == 0
+          ? 0
+          : this.filledProperties / this.totalProperties;
 
-    if ($event != "init") {
-      this.dataChanged.emit(this._data);
-    }
+      if ($event != "init") {
+      }
 
-    switch (true) {
-      case this.progressPercentage < 0.5:
-        this.progressColor = "danger";
-        break;
-      case this.progressPercentage < 1:
-        this.progressColor = "warning";
-        break;
-      case this.progressPercentage >= 1:
-        this.progressColor = "success";
-        break;
-      default:
-        this.progressColor = "danger";
-        break;
+      switch (true) {
+        case this.progressPercentage < 0.5:
+          this.progressColor = "danger";
+          break;
+        case this.progressPercentage < 1:
+          this.progressColor = "warning";
+          break;
+        case this.progressPercentage >= 1:
+          this.progressColor = "success";
+          break;
+        default:
+          this.progressColor = "danger";
+          break;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 }

@@ -54,6 +54,7 @@ export class ExteriorComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.dataChanged.emit(this._data);
   }
 
   changeModel($event) {
@@ -75,7 +76,6 @@ export class ExteriorComponent implements OnInit {
         : this.filledProperties / this.totalProperties;
 
     if ($event != "init") {
-      this.dataChanged.emit(this._data);
     }
 
     switch (true) {

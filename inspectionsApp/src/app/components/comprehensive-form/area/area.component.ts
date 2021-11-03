@@ -55,6 +55,7 @@ export class AreaComponent implements OnInit {
 
   public toggleAccordion(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    this.InspectionAreaChanged.emit("save");
   }
 
   changeModel($event) {
@@ -65,7 +66,7 @@ export class AreaComponent implements OnInit {
         : this.areaNameList.find((x) => x.value == this.area.name)?.name;
       this.filledProperties++;
     }
-    if (this.area.condition.length > 0) {
+    if (this.area.condition && this.area.condition.length > 0) {
       this.filledProperties++;
     }
     if (this.area.moistureLevel) {
@@ -77,14 +78,14 @@ export class AreaComponent implements OnInit {
     if (this.area.notes) {
       this.filledProperties++;
     }
+    if ($event != "init") {
+      this.InspectionAreaChanged.emit("refresh");
+    }
+
     this.progressPercentage =
       this.filledProperties == 0
         ? 0
         : this.filledProperties / this.totalProperties;
-
-    if ($event != "init") {
-      this.InspectionAreaChanged.emit(this.area);
-    }
 
     switch (true) {
       case this.progressPercentage < 0.5:

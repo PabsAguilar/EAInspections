@@ -41,6 +41,7 @@
       type="text"
       [readonly]="readonly"
       required
+      debounce="500"
     ></ion-input>
   </ion-item>
 
@@ -101,6 +102,7 @@
       type="text"
       autocapitalize="sentences"
       required
+      debounce="500"
     ></ion-input>
   </ion-item>
 
@@ -132,6 +134,7 @@
       type="text"
       autocapitalize="sentences"
       required
+      debounce="500"
     ></ion-input>
   </ion-item>
 
@@ -142,6 +145,7 @@
       (ionChange)="changeModel($event)"
       type="number"
       required
+      debounce="500"
     ></ion-input>
   </ion-item>
 
@@ -152,6 +156,7 @@
       autocapitalize="sentences"
       (ionChange)="changeModel($event)"
       type="text"
+      debounce="500"
     ></ion-textarea>
   </ion-item>
   <ion-item lines="inset">
@@ -162,6 +167,7 @@
       [readonly]="readonly"
       autocapitalize="sentences"
       type="text"
+      debounce="500"
     ></ion-textarea>
   </ion-item>
   <ion-item
