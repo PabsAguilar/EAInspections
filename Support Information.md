@@ -18,6 +18,6 @@ Joe
 joe@itestenvironmental.com
 
 
-3. **Send a issue in the app**
+​3. **Send a issue in the app**
 Inside the inspection page you can use the menu options "Report an issue with this deal".
 This option will create an json file to send to the support contacts, so our team can review and give solution to your problem.  
