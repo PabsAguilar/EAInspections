@@ -11,9 +11,11 @@ Support information for inspection app **Expert Network Property Damage Restorat
 ​2. **Support Contacts**
 Please send your your comments or questions to: 
 
-Dev Pablo Aguilar
+Developer contact:
+Pablo Aguilar
 pabs.aguilar2806@gmail.com 
 
+Business Contact:
 Joe 
 joe@itestenvironmental.com
 
